@@ -11,7 +11,6 @@ import {
   View,
 } from "react-native";
 import { useTranslations } from "use-intl";
-import { hrefFor } from "@/lib/links";
 import {
   Avatar,
   Button,
@@ -105,7 +104,7 @@ function NewTalkBody({
               <Button
                 variant="secondary"
                 label={t("findMembers")}
-                onPress={() => router.push(hrefFor("/app/directory"))}
+                onPress={() => router.push("/directory")}
                 style={styles.find}
               />
             </>

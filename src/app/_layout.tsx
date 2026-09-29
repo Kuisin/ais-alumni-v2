@@ -31,8 +31,8 @@ export default function RootLayout() {
 
 /**
  * Which part of the app is reachable follows the account (src/lib/auth.tsx):
- * signed out → sign-in; not yet approved → onboarding (website screens in
- * the web view); ACTIVE members → everything under (member).
+ * signed out → sign-in; not yet approved → onboarding; ACTIVE members →
+ * everything under (member).
  */
 function Root() {
   const { status, me, locale } = useAuth();
@@ -69,12 +69,6 @@ function Root() {
             </Stack.Protected>
             <Stack.Protected guard={active}>
               <Stack.Screen name="(member)" options={{ headerShown: false }} />
-            </Stack.Protected>
-            <Stack.Protected guard={signedIn}>
-              <Stack.Screen
-                name="web"
-                options={{ presentation: "fullScreenModal" }}
-              />
             </Stack.Protected>
           </Stack>
         </RealtimeProvider>

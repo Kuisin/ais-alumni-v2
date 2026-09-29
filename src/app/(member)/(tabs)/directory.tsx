@@ -18,7 +18,6 @@ import {
 import { DirectorySearch } from "@/features/people/directory-filters";
 import { MemberCardView } from "@/features/people/member-card";
 import { useMe } from "@/lib/auth";
-import { hrefFor } from "@/lib/links";
 import {
   Button,
   colors,
@@ -71,9 +70,7 @@ export default function DirectoryTab() {
 
   const open = (id: string) =>
     router.push(
-      id === me.user.id
-        ? hrefFor("/app/profile")
-        : { pathname: "/members/[id]", params: { id } },
+      id === me.user.id ? "/me" : { pathname: "/members/[id]", params: { id } },
     );
 
   return (

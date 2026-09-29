@@ -1,6 +1,6 @@
 import type { EventDetail } from "@contract/events";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { CalendarX, ScanLine } from "lucide-react-native";
+import { CalendarX } from "lucide-react-native";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -10,7 +10,6 @@ import { FallbackTag } from "@/features/events/parts";
 import { RsvpCard } from "@/features/events/rsvp-card";
 import { TicketCard } from "@/features/events/ticket-card";
 import { isApiError } from "@/lib/api";
-import { webHref } from "@/lib/links";
 import {
   Button,
   Card,
@@ -80,25 +79,12 @@ export default function EventScreen() {
 
 function Heading({ event }: { event: EventDetail }) {
   const t = useTranslations("events");
-  const router = useRouter();
   return (
     <View style={styles.heading}>
       <Text variant="heading" accessibilityRole="header" selectable>
         {event.title.text || t("untitled")}
         <FallbackTag fallback={event.title.fallback} />
       </Text>
-      {event.checkInPath ? (
-        <Button
-          variant="secondary"
-          label={t("checkIn.open")}
-          icon={(c) => <ScanLine size={18} color={c} aria-hidden />}
-          onPress={() =>
-            event.checkInPath &&
-            router.push(webHref(event.checkInPath, t("checkIn.title")))
-          }
-          style={styles.start}
-        />
-      ) : null}
     </View>
   );
 }

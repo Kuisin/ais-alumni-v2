@@ -16,7 +16,6 @@ import {
   StageSection,
 } from "@/features/people/profile";
 import { useMe } from "@/lib/auth";
-import { hrefFor } from "@/lib/links";
 import { colors, QueryState, radius, Screen, TOUCH } from "@/ui";
 
 const AUDIENCES: readonly string[] = ["members", "followers", "family"];
@@ -45,7 +44,7 @@ export default function MemberScreen() {
   const [menu, setMenu] = useState(false);
   const profile = query.data;
 
-  if (self) return <Redirect href={hrefFor("/app/profile")} />;
+  if (self) return <Redirect href={"/me"} />;
 
   const refresh = async () => {
     setRefreshing(true);
@@ -87,7 +86,7 @@ export default function MemberScreen() {
               <PreviewBanner
                 preview={p.preview}
                 onView={(as) => router.setParams({ as })}
-                onBack={() => router.navigate(hrefFor("/app/profile"))}
+                onBack={() => router.navigate("/me")}
               />
             ) : null}
             <ProfileHeader profile={p} />

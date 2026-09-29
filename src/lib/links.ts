@@ -2,9 +2,9 @@ import type { Href } from "expo-router";
 import { SITE_URL } from "./config";
 
 /**
- * Website paths ↔ app screens. Pages the app has natively open natively —
- * from links in news posts, from the web view, from notifications — and
- * everything else opens in the web view (src/app/web.tsx), signed in.
+ * Website paths → app screens: links in news posts, notification paths and
+ * paths from the API ("/app/…") open the matching native screen; paths the
+ * app has no screen for aren't offered.
  *
  * Keep RULES in step with the routes under src/app/(member). A rule may
  * carry query parameters the native screen understands (`keep`).
@@ -94,24 +94,13 @@ export function nativeHref(
   return null;
 }
 
-/** Open a website page in the app's web view (signed in). */
-export function webHref(path: string, title?: string): Href {
-  return {
-    pathname: "/web",
-    params: title ? { path, title } : { path },
-  } as Href;
-}
-
 /**
- * Native screen if there is one, else the web view. Takes a site path
- * ("/app/follows?tab=requests") or an absolute URL on the website.
+ * The native screen for a website path or URL ("/app/follows?tab=requests",
+ * "https://ais.kai-lab.net/ja/app/news/…"), or null when the app has no such
+ * screen — callers then leave the entry out. The app never opens the
+ * website.
  */
-export function hrefFor(urlOrPath: string, title?: string): Href {
+export function hrefFor(urlOrPath: string): Href | null {
   const site = siteUrl(urlOrPath);
-  if (!site) return webHref(urlOrPath, title);
-  const search = site.query.toString();
-  return (
-    nativeHref(site.path, site.query) ??
-    webHref(search ? `${site.path}?${search}` : site.path, title)
-  );
+  return site ? nativeHref(site.path, site.query) : null;
 }

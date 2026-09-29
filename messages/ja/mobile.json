@@ -15,11 +15,8 @@
   "onboarding": {
     "signedInAs": "{name} としてログイン中",
     "continueTitle": "会員登録を続けてください",
-    "continueBody": "登録の手続きはウェブサイトの画面で行います。手続きが終わると、この画面は自動的に切り替わります。",
-    "continue": "手続きを続ける",
-    "viewStatus": "申請の詳細を見る",
-    "refresh": "状態を更新",
-    "contact": "お問い合わせ"
+    "continueBody": "会員登録の画面は、アプリに準備中です。手続きが終わると、この画面は自動的に切り替わります。",
+    "refresh": "状態を更新"
   },
   "web": {
     "title": "AIS 同窓会",
@@ -48,7 +45,6 @@
   },
   "people": {},
   "me": {
-    "editHint": "プロフィールの編集はウェブサイトの画面で行います。",
     "signOutConfirm": {
       "title": "ログアウトしますか？",
       "body": "この端末のアプリからログアウトします。"

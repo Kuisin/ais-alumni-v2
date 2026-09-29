@@ -1,18 +1,16 @@
 import type { MyProfile } from "@contract/account";
 import type { Me } from "@contract/core";
 import { type Href, useRouter } from "expo-router";
-import { Camera, Pencil } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { webHref } from "@/lib/links";
-import { Avatar, Badge, Button, Card, colors, space, Text, TOUCH } from "@/ui";
+import { Avatar, Badge, Card, space, Text, TOUCH } from "@/ui";
 
 const PHOTO = 96;
 
 /**
  * The top of my profile — what other members see first — as on the
- * website: photo (with 写真を変更), names, roles and follow counts. Shown
+ * website: photo, names, roles and follow counts. Shown
  * from /me right away; roles and counts arrive with /profile.
  */
 export function ProfileHeader({
@@ -24,7 +22,6 @@ export function ProfileHeader({
 }) {
   const t = useTranslations("profile");
   const tf = useTranslations("follows");
-  const tm = useTranslations("mobile.me");
   const router = useRouter();
   const name = profile?.name ?? me.user.name;
   const otherName = profile ? profile.otherName : me.user.otherName;
@@ -40,19 +37,6 @@ export function ProfileHeader({
     <Card style={styles.card}>
       <View style={styles.photo}>
         <Avatar uri={profile?.avatar ?? me.user.avatar} size={PHOTO} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t("photo.change")}
-          onPress={() =>
-            router.push(webHref("/app/profile#edit-photo", t("sections.photo")))
-          }
-          style={({ pressed }) => [
-            styles.camera,
-            pressed ? styles.cameraPressed : null,
-          ]}
-        >
-          <Camera size={18} color={colors.white} aria-hidden />
-        </Pressable>
       </View>
 
       <View style={styles.names}>
@@ -107,18 +91,6 @@ export function ProfileHeader({
           </Pressable>
         </View>
       ) : null}
-
-      <View style={styles.edit}>
-        <Button
-          variant="secondary"
-          label={t("editProfile")}
-          icon={(c) => <Pencil color={c} size={16} aria-hidden />}
-          onPress={() => router.push(webHref("/app/profile", t("title")))}
-        />
-        <Text variant="caption" tone="subtle" center>
-          {tm("editHint")}
-        </Text>
-      </View>
     </Card>
   );
 }
@@ -126,20 +98,6 @@ export function ProfileHeader({
 const styles = StyleSheet.create({
   card: { alignItems: "center", gap: space.md },
   photo: { width: PHOTO, height: PHOTO },
-  camera: {
-    position: "absolute",
-    right: -8,
-    bottom: -8,
-    width: TOUCH,
-    height: TOUCH,
-    borderRadius: TOUCH / 2,
-    borderWidth: 4,
-    borderColor: colors.white,
-    backgroundColor: colors.brand700,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cameraPressed: { backgroundColor: colors.brand800 },
   names: { alignItems: "center", gap: 2 },
   badges: {
     flexDirection: "row",
@@ -154,5 +112,4 @@ const styles = StyleSheet.create({
     columnGap: space.lg,
   },
   count: { minHeight: TOUCH, justifyContent: "center" },
-  edit: { alignSelf: "stretch", gap: space.xs },
 });

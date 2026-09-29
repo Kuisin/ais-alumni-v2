@@ -1,30 +1,28 @@
 import { Image } from "expo-image";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { PushPrompt } from "@/features/notifications/push-prompt";
 import { useAuth } from "@/lib/auth";
-import { webHref } from "@/lib/links";
 import { Button, Card, colors, Screen, space, Text } from "@/ui";
 
 const DECIDED = new Set(["PENDING_REVIEW", "REJECTED", "DEACTIVATED"]);
 
 /**
- * Accounts that aren't approved yet. Registration (email check, LINE, the
- * application form with evidence uploads) happens on the website's
- * onboarding screens, opened here in the web view; this screen follows the
- * account state and switches to the app once the member is ACTIVE.
+ * Accounts that aren't approved yet: where the application stands. The
+ * registration forms (email check, LINE, the application with evidence
+ * uploads) are being built into the app; this screen follows the account
+ * state and switches to the app once the member is ACTIVE.
  */
 export default function OnboardingScreen() {
   const t = useTranslations("mobile.onboarding");
   const ts = useTranslations("onboarding.status");
   const tc = useTranslations("common");
-  const router = useRouter();
   const { me, refreshMe, signOut } = useAuth();
 
-  // Back from the web view: the state may have changed.
+  // Back in the app: the state may have changed.
   useFocusEffect(
     useCallback(() => {
       void refreshMe();
@@ -34,7 +32,6 @@ export default function OnboardingScreen() {
   if (!me) return null;
   const state = me.user.state;
   const decided = DECIDED.has(state);
-  const path = me.onboardingPath ?? "/app/onboarding";
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
@@ -56,18 +53,6 @@ export default function OnboardingScreen() {
           <Text tone="muted">
             {decided ? ts(`${state}.body`) : t("continueBody")}
           </Text>
-          <Button
-            label={decided ? t("viewStatus") : t("continue")}
-            variant={decided ? "secondary" : "primary"}
-            onPress={() => router.push(webHref(path))}
-          />
-          {state === "REJECTED" || state === "DEACTIVATED" ? (
-            <Button
-              variant="ghost"
-              label={t("contact")}
-              onPress={() => router.push(webHref("/support"))}
-            />
-          ) : null}
         </Card>
         {state === "PENDING_REVIEW" || state === "NEEDS_INFO" ? (
           <PushPrompt variant="onboarding" />

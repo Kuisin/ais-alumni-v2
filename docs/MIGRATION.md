@@ -10,7 +10,7 @@ replacing the Next.js site's pages.
 | Native app | **here** (moved from ais-alumni-app `mobile/`) | Expo SDK 57, Expo Router |
 | App API (`/api/mobile/v1`), LINE sign-in, notifications | **here** (Expo API routes, `src/server/`) | same database |
 | Schema + migrations, scheduled jobs, LINE webhook, files | ais-alumni-app (Next.js) | Prisma, Supabase, Vercel |
-| Website pages (public, member, admin) | ais-alumni-app (Next.js) | the app opens the ones it lacks in a web view |
+| Website pages (public, member, admin) | ais-alumni-app (Next.js) | the app no longer opens them; missing screens are being rebuilt here |
 | Contract types, UI strings | server, copied here | `pnpm sync:server` |
 
 ## Steps
@@ -21,9 +21,12 @@ replacing the Next.js site's pages.
 2. **Web build of the member area.** The screens already run on web
    (react-native-web). Still needed:
    - a web sign-in (bearer token in storage, or a cookie session);
-   - native versions of what the app now opens in a web view (onboarding
-     forms, settings sections, admin tools), or links to the old site for
-     now;
+   - native versions of the website screens the app lacks, in this order:
+     onboarding / application, support, privacy; profile editing; settings
+     (sign-in methods, email, LINE link, data export, deactivate/delete);
+     family, invites, vouching; creating news and events, check-in,
+     messages; admin mode. Until then they are left out (no web view, no
+     links to the old site);
    - static rendering for the public pages (landing, privacy) for search
      and link previews (`web.output: "static"`);
    - hosting (EAS Hosting or Vercel) and moving ais.kai-lab.net over.
