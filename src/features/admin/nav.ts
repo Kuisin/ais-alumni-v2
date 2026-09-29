@@ -141,7 +141,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: CalendarDays,
     webPath: "/app/admin/events",
     allowed: (a) => a.news,
-    href: null,
+    href: "/admin/events",
   },
   {
     group: "outreach",

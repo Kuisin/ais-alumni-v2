@@ -131,7 +131,10 @@
     "notFound": "This notification couldn’t be found."
   },
   "admin": {
-    "empty": "No admin tools are available in the app yet."
+    "empty": "No admin tools are available in the app yet.",
+    "events": {
+      "exportFailed": "Couldn't save or share the file. Please try again."
+    }
   },
   "compose": {
     "dateNotSet": "Not set",
