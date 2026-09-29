@@ -66,6 +66,11 @@ const PATTERNS: Rule[] = [
   { re: /^\/support$/, to: () => "/support", keep: ["type", "topic"] },
   // 管理モード pages below a section (sections: src/features/admin/nav.ts)
   { re: /^\/app\/admin\/notify\/ID$/, to: (m) => `/admin/notify/${m[1]}` },
+  {
+    re: /^\/app\/admin\/news\/ID$/,
+    to: (m) => `/admin/news/${m[1]}`,
+    keep: ["created", "notify", "notified", "approved"],
+  },
 ];
 
 const RULES: Rule[] = PATTERNS.map((r) => ({
@@ -109,8 +114,6 @@ export function nativeHref(
 ): Href | null {
   // 管理モード: the sections built so far (src/features/admin/nav.ts); their
   // sub-pages (e.g. one event) are RULES below.
-  // 管理モード: the sections built so far (src/features/admin/nav.ts).
-  // Their pages below (admin-mode rules in RULES).
   if (path === "/app/admin" || path.startsWith("/app/admin/")) {
     const section = adminHrefFor(path);
     if (section) return section;

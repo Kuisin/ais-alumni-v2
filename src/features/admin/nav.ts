@@ -149,7 +149,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: Newspaper,
     webPath: "/app/admin/news",
     allowed: (a) => a.news,
-    href: null,
+    href: "/admin/news",
   },
   {
     group: "outreach",
