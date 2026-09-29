@@ -1,10 +1,11 @@
 import type { Href } from "expo-router";
+import { adminHrefFor } from "@/features/admin/nav";
 import { SITE_URL } from "./config";
 
 /**
- * Website paths ↔ app screens. Pages the app has natively open natively —
- * from links in news posts, from the web view, from notifications — and
- * everything else opens in the web view (src/app/web.tsx), signed in.
+ * Website paths → app screens: links in news posts, notification paths and
+ * paths from the API ("/app/…") open the matching native screen; paths the
+ * app has no screen for aren't offered.
  *
  * Keep RULES in step with the routes under src/app/(member). A rule may
  * carry query parameters the native screen understands (`keep`).
@@ -20,12 +21,25 @@ type Rule = {
 const ID = "([A-Za-z0-9_-]{1,64})";
 
 const PATTERNS: Rule[] = [
+  {
+    re: /^\/app\/admin\/events\/ID$/,
+    to: (m) => `/admin/events/${m[1]}`,
+    keep: ["created"],
+  },
   { re: /^\/app\/dashboard$/, to: () => "/home" },
   { re: /^\/app\/directory$/, to: () => "/directory" },
   { re: /^\/app\/members\/ID$/, to: (m) => `/members/${m[1]}`, keep: ["as"] },
   { re: /^\/app\/events$/, to: () => "/events" },
+  { re: /^\/app\/events\/new$/, to: () => "/events/new" },
   { re: /^\/app\/events\/(?!new$)ID$/, to: (m) => `/events/${m[1]}` },
-  { re: /^\/app\/news$/, to: () => "/news" },
+  {
+    re: /^\/app\/events\/(?!new$)ID\/check-in$/,
+    to: (m) => `/events/${m[1]}/check-in`,
+    keep: ["t"],
+  },
+  { re: /^\/app\/news$/, to: () => "/news", keep: ["tab"] },
+  { re: /^\/app\/news\/new$/, to: () => "/news/new" },
+  { re: /^\/app\/news\/messages\/ID$/, to: (m) => `/news/messages/${m[1]}` },
   {
     re: /^\/app\/news\/(?!new$|messages$)ID$/,
     to: (m) => `/news/${m[1]}`,
@@ -34,9 +48,29 @@ const PATTERNS: Rule[] = [
   { re: /^\/app\/chat\/new$/, to: () => "/chat/new" },
   { re: /^\/app\/chat\/(?!new$)ID$/, to: (m) => `/chat/${m[1]}` },
   { re: /^\/app\/chat\/ID\/info$/, to: (m) => `/chat/${m[1]}/info` },
-  { re: /^\/app\/profile$/, to: () => "/me" },
+  { re: /^\/app\/profile(\/edit)?$/, to: () => "/me" },
+  { re: /^\/app\/profile\/history$/, to: () => "/profile/history" },
+  { re: /^\/app\/profile\/record$/, to: () => "/profile/record" },
   { re: /^\/app\/follows$/, to: () => "/follows", keep: ["tab"] },
   { re: /^\/app\/settings$/, to: () => "/settings" },
+  { re: /^\/app\/family$/, to: () => "/family" },
+  { re: /^\/app\/invite$/, to: () => "/invite" },
+  { re: /^\/app\/vouch\/ID$/, to: (m) => `/vouch/${m[1]}` },
+  // Registration: /onboarding opens the step the account is on.
+  {
+    re: /^\/app\/onboarding(\/(email|line|verify|status))?$/,
+    to: () => "/onboarding",
+  },
+  { re: /^\/app\/handover\/ID$/, to: (m) => `/handover/${m[1]}` },
+  { re: /^\/privacy$/, to: () => "/privacy" },
+  { re: /^\/support$/, to: () => "/support", keep: ["type", "topic"] },
+  // 管理モード pages below a section (sections: src/features/admin/nav.ts)
+  { re: /^\/app\/admin\/notify\/ID$/, to: (m) => `/admin/notify/${m[1]}` },
+  {
+    re: /^\/app\/admin\/news\/ID$/,
+    to: (m) => `/admin/news/${m[1]}`,
+    keep: ["created", "notify", "notified", "approved"],
+  },
 ];
 
 const RULES: Rule[] = PATTERNS.map((r) => ({
@@ -78,6 +112,12 @@ export function nativeHref(
   path: string,
   query: URLSearchParams = new URLSearchParams(),
 ): Href | null {
+  // 管理モード: the sections built so far (src/features/admin/nav.ts); their
+  // sub-pages (e.g. one event) are RULES below.
+  if (path === "/app/admin" || path.startsWith("/app/admin/")) {
+    const section = adminHrefFor(path);
+    if (section) return section;
+  }
   for (const rule of RULES) {
     const m = rule.re.exec(path);
     if (!m) continue;
@@ -94,24 +134,13 @@ export function nativeHref(
   return null;
 }
 
-/** Open a website page in the app's web view (signed in). */
-export function webHref(path: string, title?: string): Href {
-  return {
-    pathname: "/web",
-    params: title ? { path, title } : { path },
-  } as Href;
-}
-
 /**
- * Native screen if there is one, else the web view. Takes a site path
- * ("/app/follows?tab=requests") or an absolute URL on the website.
+ * The native screen for a website path or URL ("/app/follows?tab=requests",
+ * "https://ais.kai-lab.net/ja/app/news/…"), or null when the app has no such
+ * screen — callers then leave the entry out. The app never opens the
+ * website.
  */
-export function hrefFor(urlOrPath: string, title?: string): Href {
+export function hrefFor(urlOrPath: string): Href | null {
   const site = siteUrl(urlOrPath);
-  if (!site) return webHref(urlOrPath, title);
-  const search = site.query.toString();
-  return (
-    nativeHref(site.path, site.query) ??
-    webHref(search ? `${site.path}?${search}` : site.path, title)
-  );
+  return site ? nativeHref(site.path, site.query) : null;
 }

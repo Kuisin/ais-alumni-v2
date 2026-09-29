@@ -4,7 +4,6 @@ import { ArrowRight, ChevronRight, Mail } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { hrefFor, webHref } from "@/lib/links";
 import { colors, radius, space, Text, TOUCH } from "@/ui";
 
 /**
@@ -86,14 +85,14 @@ export function TodoList({ todo }: { todo: HomeTodo }) {
         {todo.followRequests > 0 ? (
           <ActionItem
             label={t("followRequests", { count: todo.followRequests })}
-            href={hrefFor("/app/follows")}
+            href={"/follows"}
           />
         ) : null}
         {todo.vouches.map((v) => (
           <ActionItem
             key={v.id}
             label={t("vouch", { name: v.name })}
-            href={webHref(`/app/vouch/${v.id}`)}
+            href={{ pathname: "/vouch/[id]", params: { id: v.id } }}
           />
         ))}
         {todo.family.map((l) => (
@@ -105,7 +104,7 @@ export function TodoList({ todo }: { todo: HomeTodo }) {
                 : "familyFromChild",
               { name: l.name },
             )}
-            href={webHref("/app/family")}
+            href="/family"
           />
         ))}
       </View>
@@ -122,7 +121,9 @@ export function MessagesBanner({ count }: { count: number }) {
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={label}
-      onPress={() => router.push(webHref("/app/news?tab=messages"))}
+      onPress={() =>
+        router.push({ pathname: "/news", params: { tab: "messages" } })
+      }
       style={({ pressed }) => [
         styles.messages,
         pressed ? styles.messagesPressed : null,

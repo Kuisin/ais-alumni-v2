@@ -43,3 +43,6 @@ example
 /android
 .vercel
 src/server/generated/
+
+# local server data (dev mailbox, uploads, push outbox)
+.data/

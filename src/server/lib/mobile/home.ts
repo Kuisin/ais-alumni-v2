@@ -1,3 +1,4 @@
+import type { Home, HomeLineBanner, HomeNews } from "@contract/home";
 import {
   AccountState,
   FamilyLinkInitiator,
@@ -9,11 +10,6 @@ import { eventApprovedWhere } from "@/server/lib/approval";
 import { db } from "@/server/lib/db";
 import { displayName, localized } from "@/server/lib/format";
 import { lineAddFriendUrl } from "@/server/lib/line-link";
-import type {
-  Home,
-  HomeLineBanner,
-  HomeNews,
-} from "@/server/lib/mobile/contract/home";
 import type { Locale } from "@/server/lib/mobile/http";
 import { NEWS_CARD_SELECT, newsSummary } from "@/server/lib/mobile/news";
 import { awaitingResponse } from "@/server/lib/news-hub-db";

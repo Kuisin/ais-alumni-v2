@@ -1,3 +1,14 @@
+import type {
+  AcceptResult,
+  DirectoryOptions,
+  DirectoryPage,
+  FollowLists,
+  FollowResult,
+  MemberCard,
+  MemberProfile,
+  Ok,
+  RoleLine,
+} from "@contract/people";
 import { sortRoles } from "@/server/components/profile/role-details";
 import {
   parseSocialLinks,
@@ -63,17 +74,6 @@ import { displayName, otherNames } from "@/server/lib/format";
 import { isOngoing, sortHistory, visibleHistory } from "@/server/lib/history";
 import { industryLabel } from "@/server/lib/industries";
 import { jobTypeLabel } from "@/server/lib/job-types";
-import type {
-  AcceptResult,
-  DirectoryOptions,
-  DirectoryPage,
-  FollowLists,
-  FollowResult,
-  MemberCard,
-  MemberProfile,
-  Ok,
-  RoleLine,
-} from "@/server/lib/mobile/contract/people";
 import {
   ApiError,
   invalid,
@@ -120,7 +120,7 @@ export type Labels = {
   cohorts: Record<string, string>;
 };
 
-async function labelsFor(locale: Locale): Promise<Labels> {
+export async function labelsFor(locale: Locale): Promise<Labels> {
   const [tr, tp, cohorts] = await Promise.all([
     getTranslatorFor(locale, "roles"),
     getTranslatorFor(locale, "profile"),
@@ -197,7 +197,7 @@ export function roleLines(roles: readonly RoleRow[], l: Labels): RoleLine[] {
  * A member card (src/components/directory/member-card.tsx). Callers pass
  * only members the viewer may see; showPhoto=false for blocked members.
  */
-function memberCard(
+export function memberCard(
   c: Connections,
   l: Labels,
   m: PublicCard,

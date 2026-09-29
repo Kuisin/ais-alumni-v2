@@ -7,7 +7,7 @@ import type {
 import { useQuery } from "@tanstack/react-query";
 import { isRunningInExpoGo } from "expo";
 import { Image } from "expo-image";
-import * as WebBrowser from "expo-web-browser";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Mail, MessageCircle } from "lucide-react-native";
 import { useRef, useState } from "react";
 import {
@@ -22,7 +22,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { signInDevice, useAuth } from "@/lib/auth";
-import { API_URL, SITE_URL } from "@/lib/config";
+import { API_URL } from "@/lib/config";
+import { usePendingInvite } from "@/lib/invite";
 import { Button, Card, colors, Screen, space, Text, TextField } from "@/ui";
 
 type Step = { step: "email" } | { step: "code"; email: string; notice: string };
@@ -45,6 +46,7 @@ export default function SignInScreen() {
   const t = useTranslations("landing.signIn");
   const tc = useTranslations("common");
   const tm = useTranslations("mobile");
+  const router = useRouter();
   const { locale, setGuestLocale, signInWithProvider } = useAuth();
   const config = useQuery({
     queryKey: ["config"],
@@ -52,7 +54,9 @@ export default function SignInScreen() {
     staleTime: 5 * 60_000,
   });
   const [busy, setBusy] = useState<null | "line" | "google">(null);
-  const [providerError, setProviderError] = useState(false);
+  // Web: /auth sends us back here with ?failed=1 when LINE sign-in failed.
+  const { failed } = useLocalSearchParams<{ failed?: string }>();
+  const [providerError, setProviderError] = useState(failed === "1");
 
   const provider = async (p: "line" | "google") => {
     setBusy(p);
@@ -61,9 +65,6 @@ export default function SignInScreen() {
     setBusy(null);
     if (result === "failed") setProviderError(true);
   };
-
-  const openPage = (path: string) =>
-    WebBrowser.openBrowserAsync(`${SITE_URL}/${locale}${path}`);
 
   const other: Locale = locale === "ja" ? "en" : "ja";
   // Expo Go can only receive exp:// links, which deployed servers never send
@@ -109,6 +110,7 @@ export default function SignInScreen() {
           </View>
 
           <Card style={styles.card}>
+            <InviteBanner />
             <View style={styles.gapSm}>
               <Text variant="subheading" accessibilityRole="header">
                 {t("title")}
@@ -182,8 +184,9 @@ export default function SignInScreen() {
                     <Text
                       variant="caption"
                       tone="brand"
+                      accessibilityRole="link"
                       style={styles.link}
-                      onPress={() => openPage("/privacy")}
+                      onPress={() => router.push("/privacy")}
                     >
                       {chunks}
                     </Text>
@@ -196,9 +199,10 @@ export default function SignInScreen() {
                     <Text
                       variant="caption"
                       tone="brand"
+                      accessibilityRole="link"
                       style={styles.link}
                       onPress={() =>
-                        openPage("/support?type=ISSUE&topic=SIGN_IN")
+                        router.push("/support?type=ISSUE&topic=SIGN_IN")
                       }
                     >
                       {chunks}
@@ -212,6 +216,37 @@ export default function SignInScreen() {
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
+}
+
+/**
+ * Opened through a member's invitation link (src/app/invite/[token].tsx):
+ * who invited, or that the link can't be used.
+ */
+function InviteBanner() {
+  const t = useTranslations("landing.invite");
+  const { data } = usePendingInvite();
+  if (data?.invite) {
+    const i = data.invite;
+    return (
+      <View style={[styles.banner, styles.bannerOk]}>
+        <Text variant="small" style={{ color: colors.green700 }}>
+          {t("from", {
+            name: i.inviterName,
+            what: t(`types.${i.type}`, { cohort: i.cohortLabel ?? "" }),
+          })}
+        </Text>
+      </View>
+    );
+  }
+  if (data?.invalid)
+    return (
+      <View style={[styles.banner, styles.bannerWarn]}>
+        <Text variant="small" style={{ color: colors.amber900 }}>
+          {t("invalid")}
+        </Text>
+      </View>
+    );
+  return null;
 }
 
 function EmailCodeForm() {
@@ -355,6 +390,14 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   content: { gap: space.xl, paddingTop: space.md },
+  banner: {
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+  },
+  bannerOk: { backgroundColor: colors.green50, borderColor: colors.green100 },
+  bannerWarn: { backgroundColor: colors.amber50, borderColor: colors.amber100 },
   langRow: { flexDirection: "row", justifyContent: "flex-end" },
   brand: { alignItems: "center", gap: space.sm },
   logo: { width: 72, height: 72, borderRadius: 18 },
@@ -375,11 +418,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: space.sm,
   },
+  link: { textDecorationLine: "underline" },
   footer: {
     gap: space.sm,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.border,
     paddingTop: space.lg,
   },
-  link: { textDecorationLine: "underline" },
 });

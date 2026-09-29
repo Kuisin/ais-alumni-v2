@@ -11,9 +11,8 @@ import { ErrorState, Loading, Screen } from "@/ui";
 
 /**
  * マイページ (opened from the photo at the top left of every tab): my
- * profile as others see it (the website's /app/profile, read-only — each
- * section opens its website form) and the account menu (家族,
- * フォローリクエスト, 招待, 設定, お問い合わせ, 管理モード, ログアウト).
+ * profile as others see it, each section editable (the website's /app/profile)
+ * and the account menu (フォローリクエスト, 設定, ログアウト).
  */
 export default function MeScreen() {
   const t = useTranslations("common.nav");

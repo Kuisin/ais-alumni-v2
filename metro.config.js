@@ -26,4 +26,20 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   return context.resolveRequest(context, moduleName, platform);
 };
 
+// Keep Metro's cache in node_modules/.cache, which Vercel keeps between
+// builds (Metro's default, the OS temp dir, starts empty on every build).
+// metro-cache isn't a direct dependency (pnpm): load the one Expo's Metro uses.
+const { FileStore } = require(
+  require.resolve("metro-cache", {
+    paths: [
+      require.resolve("metro/package.json", {
+        paths: [require.resolve("expo/package.json")],
+      }),
+    ],
+  }),
+);
+config.cacheStores = [
+  new FileStore({ root: path.join(__dirname, "node_modules/.cache/metro") }),
+];
+
 module.exports = config;

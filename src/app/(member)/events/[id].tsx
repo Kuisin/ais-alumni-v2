@@ -10,7 +10,6 @@ import { FallbackTag } from "@/features/events/parts";
 import { RsvpCard } from "@/features/events/rsvp-card";
 import { TicketCard } from "@/features/events/ticket-card";
 import { isApiError } from "@/lib/api";
-import { webHref } from "@/lib/links";
 import {
   Button,
   Card,
@@ -25,7 +24,7 @@ import {
 /**
  * One event (the website's /app/events/[id]): the member's ticket, when /
  * where / capacity / deadline, the RSVP, and the details. Staff open the
- * website's check-in screen.
+ * check-in screen.
  */
 export default function EventScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -92,10 +91,7 @@ function Heading({ event }: { event: EventDetail }) {
           variant="secondary"
           label={t("checkIn.open")}
           icon={(c) => <ScanLine size={18} color={c} aria-hidden />}
-          onPress={() =>
-            event.checkInPath &&
-            router.push(webHref(event.checkInPath, t("checkIn.title")))
-          }
+          onPress={() => router.push(`/events/${event.id}/check-in`)}
           style={styles.start}
         />
       ) : null}

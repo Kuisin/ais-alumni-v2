@@ -1,0 +1,278 @@
+import type { LucideIcon } from "lucide-react-native";
+import { type ReactNode, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { useTranslations } from "use-intl";
+import {
+  type Choice,
+  ChoiceList,
+  SelectField,
+} from "@/features/people/choices";
+import { ApiError } from "@/lib/api";
+import { Card, CountDot, colors, radius, space, Text } from "@/ui";
+
+/**
+ * Building blocks of the admin screens: the website's AdminSection cards,
+ * definition lists, <select>s and form result alerts, for small screens.
+ */
+
+/** A titled card (the website's AdminSection). */
+export function AdminCard({
+  title,
+  icon: Icon,
+  description,
+  children,
+}: {
+  title: string;
+  icon?: LucideIcon;
+  description?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Card style={styles.card}>
+      <View style={styles.cardHeader}>
+        {Icon ? <Icon size={20} color={colors.brand700} aria-hidden /> : null}
+        <Text
+          variant="subheading"
+          accessibilityRole="header"
+          style={styles.flex}
+        >
+          {title}
+        </Text>
+      </View>
+      {description ? (
+        <Text variant="small" tone="muted">
+          {description}
+        </Text>
+      ) : null}
+      {children}
+    </Card>
+  );
+}
+
+/** Label / value pairs, stacked (a <dl>). */
+export function Facts({
+  rows,
+}: {
+  rows: [label: string, value: string | null | undefined][];
+}) {
+  return (
+    <View style={styles.facts}>
+      {rows.map(([label, value]) => (
+        <View key={label} style={styles.fact}>
+          <Text variant="caption" tone="subtle" weight="medium">
+            {label}
+          </Text>
+          <Text variant="small" selectable>
+            {value || "—"}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+/** A <select>: the chosen option; the list opens in place. */
+export function Picker({
+  label,
+  choices,
+  value,
+  onChange,
+  hint,
+}: {
+  label: string;
+  choices: Choice[];
+  value: string;
+  onChange: (value: string) => void;
+  hint?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const chosen = choices.find((c) => c.value === value)?.label ?? "—";
+  return (
+    <View style={styles.picker}>
+      <SelectField
+        label={label}
+        value={chosen}
+        expanded={open}
+        onPress={() => setOpen(!open)}
+      />
+      {open ? (
+        <ScrollView
+          style={choices.length > 8 ? styles.long : undefined}
+          nestedScrollEnabled
+        >
+          <ChoiceList
+            label={label}
+            choices={choices}
+            value={value}
+            onChange={(v) => {
+              onChange(v);
+              setOpen(false);
+            }}
+          />
+        </ScrollView>
+      ) : null}
+      {hint ? (
+        <Text variant="caption" tone="subtle">
+          {hint}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+/** The website's <Alert>: a tinted box announcing a result. */
+export function Notice({
+  tone,
+  children,
+}: {
+  tone: "success" | "error" | "info" | "warning";
+  children: ReactNode;
+}) {
+  const t = TONES[tone];
+  return (
+    <View
+      accessibilityRole="alert"
+      accessibilityLiveRegion="polite"
+      style={[
+        styles.noticeBox,
+        { backgroundColor: t.bg, borderColor: t.border },
+      ]}
+    >
+      {typeof children === "string" ? (
+        <Text variant="small" style={{ color: t.fg }}>
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
+    </View>
+  );
+}
+
+/** The website's <Tabs> on admin lists (確認待ち / 判断済み). */
+export function Tabs<K extends string>({
+  label,
+  items,
+  value,
+  onChange,
+}: {
+  label: string;
+  items: { key: K; label: string; count?: number }[];
+  value: K;
+  onChange: (key: K) => void;
+}) {
+  return (
+    <View
+      accessibilityRole="tablist"
+      accessibilityLabel={label}
+      style={styles.tabs}
+    >
+      {items.map((item) => {
+        const on = item.key === value;
+        return (
+          <Pressable
+            key={item.key}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: on }}
+            onPress={() => onChange(item.key)}
+            hitSlop={3}
+            style={({ pressed }) => [
+              styles.tab,
+              on ? styles.tabOn : null,
+              pressed && !on ? styles.tabPressed : null,
+            ]}
+          >
+            <Text
+              variant="small"
+              weight="semibold"
+              numberOfLines={1}
+              style={{ color: on ? colors.brand800 : colors.slate600 }}
+            >
+              {item.label}
+            </Text>
+            {item.count ? <CountDot count={item.count} /> : null}
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+const TONES = {
+  success: { bg: colors.green50, border: colors.green100, fg: colors.green700 },
+  error: { bg: colors.red50, border: colors.red100, fg: colors.red700 },
+  info: { bg: colors.brand50, border: colors.brand100, fg: colors.brand800 },
+  warning: { bg: colors.amber50, border: colors.amber100, fg: colors.amber900 },
+} as const;
+
+/** An action's `{ ok, message, error }` as a Notice. */
+export function ResultNotice({
+  result,
+}: {
+  result: { ok?: boolean; message?: string; error?: string } | null | undefined;
+}) {
+  if (!result) return null;
+  if (result.error) return <Notice tone="error">{result.error}</Notice>;
+  if (result.ok && result.message)
+    return <Notice tone="success">{result.message}</Notice>;
+  return null;
+}
+
+/** A request that failed (network, server error, no permission). */
+export function FailedNotice({ error }: { error: unknown }) {
+  const t = useTranslations("mobile.errors");
+  const tc = useTranslations("common.errors");
+  if (!error) return null;
+  const text =
+    error instanceof ApiError
+      ? error.status === 0
+        ? t("network")
+        : error.status === 403
+          ? tc("forbidden")
+          : error.status === 404
+            ? tc("notFound")
+            : t("generic")
+      : t("generic");
+  return <Notice tone="error">{text}</Notice>;
+}
+
+/** Buttons side by side, wrapping on narrow screens. */
+export function Actions({ children }: { children: ReactNode }) {
+  return <View style={styles.actions}>{children}</View>;
+}
+
+const styles = StyleSheet.create({
+  tabs: {
+    flexDirection: "row",
+    padding: 3,
+    gap: 3,
+    borderRadius: radius.md,
+    backgroundColor: colors.slate200,
+  },
+  tab: {
+    flex: 1,
+    minHeight: 38,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: space.xs,
+    borderRadius: radius.sm,
+    paddingHorizontal: space.sm,
+  },
+  tabOn: { backgroundColor: colors.white },
+  tabPressed: { backgroundColor: colors.slate100 },
+  noticeBox: {
+    borderWidth: 1,
+    borderRadius: radius.md,
+    padding: space.md,
+    gap: space.xs,
+  },
+  card: { gap: space.md },
+  cardHeader: { flexDirection: "row", alignItems: "center", gap: space.sm },
+  flex: { flex: 1 },
+  facts: { gap: space.sm },
+  fact: { gap: 2 },
+  picker: { gap: space.xs },
+  long: { maxHeight: 320 },
+  actions: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
+});

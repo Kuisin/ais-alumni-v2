@@ -326,7 +326,7 @@ export function PushProvider({ children }: { children: ReactNode }) {
       }
       if (!data.path) return;
       const href = hrefFor(data.path);
-      if (href !== here.current) router.push(href);
+      if (href && href !== here.current) router.push(href);
     });
   }, [signedIn, active, navReady, router, queryClient]);
 

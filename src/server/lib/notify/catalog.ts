@@ -122,11 +122,24 @@ export const NOTIFY_KINDS = {
   FAMILY_HANDOVER_DONE: { category: "family", emoji: "🔑" },
   // Profile
   STAGE_PROMPT: { category: "profile", emoji: "🎓" },
-  // Admin work
-  NAME_REQUEST_ADMIN: { category: "admin", emoji: "🗂️" },
-  BIRTH_DATE_REQUEST_ADMIN: { category: "admin", emoji: "🗂️" },
-  GENDER_REQUEST_ADMIN: { category: "admin", emoji: "🗂️" },
-  RECORD_REQUEST_ADMIN: { category: "admin", emoji: "🗂️" },
+  // Admin work: sent the moment it happens (src/lib/notify/staff.ts), and
+  // always by email too, so it reaches committee members at their desk even
+  // when they use the app.
+  VERIFICATION_SUBMITTED_ADMIN: {
+    category: "admin",
+    emoji: "🆕",
+    alwaysEmail: true,
+  },
+  NEWS_APPROVAL_ADMIN: { category: "admin", emoji: "📰", alwaysEmail: true },
+  EVENT_APPROVAL_ADMIN: { category: "admin", emoji: "📅", alwaysEmail: true },
+  NAME_REQUEST_ADMIN: { category: "admin", emoji: "🗂️", alwaysEmail: true },
+  BIRTH_DATE_REQUEST_ADMIN: {
+    category: "admin",
+    emoji: "🗂️",
+    alwaysEmail: true,
+  },
+  GENDER_REQUEST_ADMIN: { category: "admin", emoji: "🗂️", alwaysEmail: true },
+  RECORD_REQUEST_ADMIN: { category: "admin", emoji: "🗂️", alwaysEmail: true },
 } as const satisfies Record<string, KindSpec>;
 
 export type NotifyKind = keyof typeof NOTIFY_KINDS;

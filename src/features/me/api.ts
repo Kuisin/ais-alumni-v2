@@ -1,10 +1,16 @@
 import type {
+  DeactivateRequest,
+  DeleteAccountRequest,
   DeviceList,
   DeviceSignOutResult,
+  EmailChangeRequest,
+  EmailChangeState,
   MyProfile,
   MySettings,
   NotifyUpdate,
   OtherDevicesSignOutResult,
+  SchoolEmailResult,
+  SettingsResult,
 } from "@contract/account";
 import type { Locale } from "@contract/core";
 import {
@@ -170,4 +176,79 @@ export function useSignOutOtherDevices() {
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: DEVICES_KEY }),
   });
+}
+
+// ---- 設定: sign-in methods, email, school email, account ----
+
+/** Reload settings and /me after a change to the account. */
+function useAccountChanged() {
+  const queryClient = useQueryClient();
+  return () =>
+    Promise.all([
+      queryClient.invalidateQueries({ queryKey: SETTINGS_KEY }),
+      queryClient.invalidateQueries({ queryKey: ME_KEY }),
+    ]);
+}
+
+/** ログイン方法 → 解除 (Google / LINE). */
+export function useRemoveSignInMethod() {
+  const changed = useAccountChanged();
+  return useMutation({
+    mutationFn: (provider: "google" | "line") =>
+      api<SettingsResult>(`/settings/sign-in/${provider}`, {
+        method: "DELETE",
+      }),
+    onSuccess: (r) => (r.ok ? changed() : undefined),
+  });
+}
+
+/** メールアドレス: send / resend a code, or verify it. */
+export function useChangeEmail() {
+  const changed = useAccountChanged();
+  return useMutation({
+    mutationFn: (req: EmailChangeRequest) =>
+      api<EmailChangeState>("/settings/email", { body: req }),
+    onSuccess: (r) => (r.ok ? changed() : undefined),
+  });
+}
+
+/** 学校のメールアドレス (teachers): send a code, then confirm it. */
+export function useSchoolEmail() {
+  const changed = useAccountChanged();
+  const send = useMutation({
+    mutationFn: (email: string) =>
+      api<SchoolEmailResult>("/settings/school-email", { body: { email } }),
+  });
+  const verify = useMutation({
+    mutationFn: (v: { email: string; code: string }) =>
+      api<SchoolEmailResult>("/settings/school-email/verify", { body: v }),
+    onSuccess: (r) => (r.ok ? changed() : undefined),
+  });
+  return { send, verify };
+}
+
+/**
+ * アカウントの停止 / 削除. When done the account can't use the app any
+ * more: this device is signed out (the server ended its session).
+ */
+export function useCloseAccount() {
+  const { signOut } = useAuth();
+  const done = async (r: SettingsResult) => {
+    if (r.ok) await signOut();
+  };
+  const deactivate = useMutation({
+    mutationFn: () =>
+      api<SettingsResult>("/settings/deactivate", {
+        body: { confirm: "yes" } satisfies DeactivateRequest,
+      }),
+    onSuccess: done,
+  });
+  const remove = useMutation({
+    mutationFn: (confirmWord: string) =>
+      api<SettingsResult>("/settings/delete", {
+        body: { confirmWord } satisfies DeleteAccountRequest,
+      }),
+    onSuccess: done,
+  });
+  return { deactivate, remove };
 }

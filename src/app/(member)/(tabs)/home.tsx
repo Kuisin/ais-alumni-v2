@@ -10,7 +10,6 @@ import { SetupChecklist } from "@/features/home/setup-checklist";
 import { NewsCard } from "@/features/news/news-card";
 import { PushPrompt } from "@/features/notifications/push-prompt";
 import { useAuth, useMe } from "@/lib/auth";
-import { hrefFor } from "@/lib/links";
 import { EmptyState, ErrorState, Loading, Screen, Text } from "@/ui";
 
 /**
@@ -72,7 +71,7 @@ function HomeBody({ home }: { home: Home }) {
       <HomeSection
         title={t("events.title")}
         more={t("events.more")}
-        onMore={() => router.push(hrefFor("/app/events"))}
+        onMore={() => router.push("/events")}
       >
         {home.events.length === 0 ? (
           <EmptyState title={t("events.empty")} />
@@ -81,7 +80,7 @@ function HomeBody({ home }: { home: Home }) {
             <HomeEventCard
               key={e.id}
               event={e}
-              onPress={() => router.push(hrefFor(`/app/events/${e.id}`))}
+              onPress={() => router.push(`/events/${e.id}`)}
             />
           ))
         )}
@@ -90,7 +89,7 @@ function HomeBody({ home }: { home: Home }) {
       <HomeSection
         title={t("news.title")}
         more={t("news.more")}
-        onMore={() => router.push(hrefFor("/app/news"))}
+        onMore={() => router.push("/news")}
       >
         {home.news.length === 0 ? (
           <EmptyState title={t("news.empty")} />
@@ -99,7 +98,7 @@ function HomeBody({ home }: { home: Home }) {
             <NewsCard
               key={p.id}
               post={p}
-              onPress={() => router.push(hrefFor(`/app/news/${p.id}`))}
+              onPress={() => router.push(`/news/${p.id}`)}
             />
           ))
         )}

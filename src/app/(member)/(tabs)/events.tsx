@@ -13,7 +13,6 @@ import { useTranslations } from "use-intl";
 import { useEventList } from "@/features/events/api";
 import { EventCard } from "@/features/events/event-card";
 import { SegmentedTabs } from "@/features/events/parts";
-import { webHref } from "@/lib/links";
 import {
   Button,
   colors,
@@ -56,9 +55,7 @@ export default function EventsTab() {
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel={t("create")}
-                  onPress={() =>
-                    router.push(webHref("/app/events/new", t("create")))
-                  }
+                  onPress={() => router.push("/events/new")}
                   hitSlop={4}
                   style={({ pressed }) => [
                     styles.create,

@@ -1,6 +1,6 @@
+import type { ApiErrorBody } from "@contract/core";
 import { z } from "zod";
 import { AccountState } from "@/server/generated/prisma/enums";
-import type { ApiErrorBody } from "@/server/lib/mobile/contract/core";
 import { bearerToken } from "@/server/lib/mobile/tokens";
 import {
   AuthError,

@@ -1,8 +1,6 @@
-import type { Home, HomeLineLink } from "@contract/home";
+import type { Home } from "@contract/home";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import * as WebBrowser from "expo-web-browser";
 import { api } from "@/lib/api";
-import { ME_KEY } from "@/lib/auth";
 
 /** ホーム data (the website's dashboard). Key: ["home"]. */
 
@@ -12,27 +10,6 @@ export function useHome() {
   return useQuery({
     queryKey: HOME_KEY,
     queryFn: ({ signal }) => api<Home>("/home", { signal }),
-  });
-}
-
-/**
- * 「LINE を連携する」: a fresh linking URL (valid 10 minutes), opened in the
- * browser. When the member comes back, Home and the badges reload (the
- * checklist and the banner follow the new state).
- */
-export function useLinkLine() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async () => {
-      const { url } = await api<HomeLineLink>("/home/line-link", {
-        method: "POST",
-      });
-      await WebBrowser.openBrowserAsync(url);
-    },
-    onSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: HOME_KEY });
-      void queryClient.invalidateQueries({ queryKey: ME_KEY });
-    },
   });
 }
 

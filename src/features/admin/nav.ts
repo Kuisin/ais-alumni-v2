@@ -1,0 +1,243 @@
+import type { AdminCounts } from "@contract/admin";
+import type { StaffAccess } from "@contract/core";
+import type { Href } from "expo-router";
+import {
+  BadgeCheck,
+  Building2,
+  CalendarDays,
+  ChartColumn,
+  FilePen,
+  IdCard,
+  Layers,
+  LifeBuoy,
+  type LucideIcon,
+  Megaphone,
+  MessageCircle,
+  MessagesSquare,
+  Newspaper,
+  Route,
+  ScrollText,
+  TableProperties,
+  UserCheck,
+  Users,
+} from "lucide-react-native";
+
+/** The website's admin sidebar groups (common.adminGroups.<group>). */
+export type AdminGroup = "review" | "people" | "outreach" | "data";
+
+export const ADMIN_GROUPS: readonly AdminGroup[] = [
+  "review",
+  "people",
+  "outreach",
+  "data",
+];
+
+export type AdminNavItem = {
+  group: AdminGroup;
+  /** key in the "common" namespace */
+  label: string;
+  icon: LucideIcon;
+  /** the website's page (links in notifications open the screen) */
+  webPath: string;
+  /** who sees it: the same checks as the website's page */
+  allowed: (a: StaffAccess) => boolean;
+  /** the native screen; null = not built yet (the entry is left out) */
+  href: Href | null;
+  /** badge: work waiting (GET /admin) */
+  count?: keyof AdminCounts;
+};
+
+const admin = (a: StaffAccess) => a.admin;
+
+/**
+ * 管理モード's sections, in the website's sidebar order
+ * (src/components/layout/app-shell.tsx). Each screen sets `href` when it is
+ * built; entries with none are hidden.
+ */
+export const ADMIN_NAV: AdminNavItem[] = [
+  // 審査
+  {
+    group: "review",
+    label: "adminNav.verification",
+    icon: BadgeCheck,
+    webPath: "/app/admin/verification",
+    allowed: admin,
+    href: "/admin/verification",
+    count: "verification",
+  },
+  {
+    group: "review",
+    label: "adminNav.recordRequests",
+    icon: FilePen,
+    webPath: "/app/admin/record-requests",
+    allowed: admin,
+    href: "/admin/record-requests",
+    count: "recordRequests",
+  },
+  {
+    group: "review",
+    label: "adminNav.nameRequests",
+    icon: IdCard,
+    webPath: "/app/admin/name-requests",
+    allowed: admin,
+    href: "/admin/name-requests",
+    count: "nameRequests",
+  },
+  {
+    group: "review",
+    label: "adminNav.support",
+    icon: LifeBuoy,
+    webPath: "/app/admin/support",
+    allowed: admin,
+    href: "/admin/support",
+    count: "support",
+  },
+  {
+    group: "review",
+    label: "adminNav.chat",
+    icon: MessagesSquare,
+    webPath: "/app/admin/chat",
+    allowed: admin,
+    href: "/admin/chat",
+    count: "chat",
+  },
+  // 会員
+  {
+    group: "people",
+    label: "adminNav.members",
+    icon: Users,
+    webPath: "/app/admin/members",
+    allowed: admin,
+    href: "/admin/members",
+  },
+  {
+    group: "people",
+    label: "adminNav.teachers",
+    icon: UserCheck,
+    webPath: "/app/admin/teachers",
+    allowed: (a) => a.teachers,
+    href: "/admin/teachers",
+  },
+  {
+    group: "people",
+    label: "adminNav.cohorts",
+    icon: Layers,
+    webPath: "/app/admin/cohorts",
+    allowed: admin,
+    href: "/admin/cohorts",
+  },
+  // 発信
+  {
+    group: "outreach",
+    label: "nav.notify",
+    icon: Megaphone,
+    webPath: "/app/admin/notify",
+    allowed: (a) => a.broadcast,
+    href: "/admin/notify",
+  },
+  {
+    group: "outreach",
+    label: "adminNav.events",
+    icon: CalendarDays,
+    webPath: "/app/admin/events",
+    allowed: (a) => a.news,
+    href: "/admin/events",
+  },
+  {
+    group: "outreach",
+    label: "adminNav.news",
+    icon: Newspaper,
+    webPath: "/app/admin/news",
+    allowed: (a) => a.news,
+    href: "/admin/news",
+  },
+  {
+    group: "outreach",
+    label: "adminNav.line",
+    icon: MessageCircle,
+    webPath: "/app/admin/line",
+    allowed: admin,
+    href: "/admin/line",
+  },
+  // データ
+  {
+    group: "data",
+    label: "adminNav.destinations",
+    icon: Route,
+    webPath: "/app/admin/destinations",
+    allowed: admin,
+    href: "/admin/destinations",
+  },
+  {
+    group: "data",
+    label: "adminNav.stats",
+    icon: ChartColumn,
+    webPath: "/app/admin/stats",
+    allowed: admin,
+    href: "/admin/stats",
+  },
+  {
+    group: "data",
+    label: "adminNav.organizations",
+    icon: Building2,
+    webPath: "/app/admin/organizations",
+    allowed: admin,
+    href: "/admin/organizations",
+  },
+  {
+    group: "data",
+    label: "adminNav.roster",
+    icon: TableProperties,
+    webPath: "/app/admin/roster",
+    allowed: admin,
+    href: "/admin/roster",
+  },
+  {
+    group: "data",
+    label: "adminNav.audit",
+    icon: ScrollText,
+    webPath: "/app/admin/audit",
+    allowed: admin,
+    href: "/admin/audit",
+  },
+];
+
+/** Whether the member sees 管理モード at all (permissions.hasStaffAccess). */
+export function hasStaffAccess(a: StaffAccess): boolean {
+  return a.admin || a.broadcast || a.teachers || a.news;
+}
+
+/** The built sections this member may open, by group. */
+export function adminSections(
+  a: StaffAccess,
+): { group: AdminGroup; items: AdminNavItem[] }[] {
+  return ADMIN_GROUPS.map((group) => ({
+    group,
+    items: ADMIN_NAV.filter(
+      (i) => i.group === group && i.href !== null && i.allowed(a),
+    ),
+  })).filter((g) => g.items.length > 0);
+}
+
+/** Admin detail pages with a native screen: website path → app route. */
+export const ADMIN_DETAIL: { re: RegExp; to: (id: string) => Href }[] = [
+  {
+    re: /^\/app\/admin\/members\/([A-Za-z0-9_-]{1,64})$/,
+    to: (id) => ({ pathname: "/admin/members/[id]", params: { id } }),
+  },
+  // One application (notifications about new applications link here).
+  {
+    re: /^\/app\/admin\/verification\/([A-Za-z0-9_-]{1,64})$/,
+    to: (id) => ({ pathname: "/admin/verification/[id]", params: { id } }),
+  },
+];
+
+/** The native screen for a website admin page ("/app/admin/members"). */
+export function adminHrefFor(path: string): Href | null {
+  if (path === "/app/admin") return "/admin";
+  for (const d of ADMIN_DETAIL) {
+    const id = d.re.exec(path)?.[1];
+    if (id) return d.to(id);
+  }
+  return ADMIN_NAV.find((i) => i.webPath === path)?.href ?? null;
+}

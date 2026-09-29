@@ -1,3 +1,10 @@
+import type {
+  NewsDetail,
+  NewsHubOk,
+  NewsList,
+  NewsSummary,
+  NewsVote,
+} from "@contract/news";
 import type { HubResult } from "@/server/app/actions/news-hub";
 import { NewsPollKind } from "@/server/generated/prisma/enums";
 import { markNewsRead, readNewsIds } from "@/server/lib/announcements";
@@ -5,13 +12,6 @@ import { getNewsScope } from "@/server/lib/broadcasts";
 import { db } from "@/server/lib/db";
 import { localized } from "@/server/lib/format";
 import { markdownToPlain } from "@/server/lib/markdown";
-import type {
-  NewsDetail,
-  NewsHubOk,
-  NewsList,
-  NewsSummary,
-  NewsVote,
-} from "@/server/lib/mobile/contract/news";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import { iso } from "@/server/lib/mobile/present";
 import { isLive, NEWS_PAGE_SIZE } from "@/server/lib/news";

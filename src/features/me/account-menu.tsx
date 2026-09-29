@@ -11,8 +11,8 @@ import {
 import { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { useTranslations } from "use-intl";
+import { hasStaffAccess } from "@/features/admin/nav";
 import { useAuth, useMe } from "@/lib/auth";
-import { hrefFor, webHref } from "@/lib/links";
 import { CountDot, colors, ListGroup, ListRow, Separator } from "@/ui";
 import { confirmAction } from "./confirm";
 
@@ -21,23 +21,20 @@ const icon = (I: typeof Settings) => (
 );
 
 /**
- * The website's account menu (src/components/layout/app-shell.tsx):
- * 家族, フォローリクエスト (with the count waiting), 同窓生を招待, 設定,
- * お問い合わせ, and 管理モード for members with a staff role.
+ * The account menu (the website's app shell): 家族, フォローリクエスト
+ * (with the count waiting), 同窓生を招待, 設定, お問い合わせ and, for
+ * staff, 管理モード.
  */
 export function AccountMenu() {
   const tc = useTranslations("common");
   const router = useRouter();
-  const { access, badges } = useMe();
-  const staff = Object.values(access).some(Boolean);
-  const web = (path: string, title: string) => () =>
-    router.push(webHref(path, title));
+  const { badges, access } = useMe();
   return (
     <ListGroup>
       <ListRow
         leading={icon(HeartHandshake)}
         title={tc("nav.family")}
-        onPress={web("/app/family", tc("nav.family"))}
+        onPress={() => router.push("/family")}
       />
       <Separator />
       <ListRow
@@ -49,33 +46,33 @@ export function AccountMenu() {
             ? `${tc("nav.follows")}, ${tc("nav.pending", { count: badges.follows })}`
             : undefined
         }
-        onPress={() => router.push(hrefFor("/app/follows"))}
+        onPress={() => router.push("/follows")}
       />
       <Separator />
       <ListRow
         leading={icon(MailPlus)}
         title={tc("nav.invite")}
-        onPress={web("/app/invite", tc("nav.invite"))}
+        onPress={() => router.push("/invite")}
       />
       <Separator />
       <ListRow
         leading={icon(Settings)}
         title={tc("nav.settings")}
-        onPress={() => router.push(hrefFor("/app/settings"))}
+        onPress={() => router.push("/settings")}
       />
       <Separator />
       <ListRow
         leading={icon(LifeBuoy)}
         title={tc("nav.support")}
-        onPress={web("/support", tc("nav.support"))}
+        onPress={() => router.push("/support")}
       />
-      {staff ? (
+      {hasStaffAccess(access) ? (
         <>
           <Separator />
           <ListRow
             leading={icon(ShieldCheck)}
             title={tc("nav.adminMode")}
-            onPress={web("/app/admin", tc("nav.adminMode"))}
+            onPress={() => router.push("/admin")}
           />
         </>
       ) : null}

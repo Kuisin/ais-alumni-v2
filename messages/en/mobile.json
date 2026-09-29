@@ -13,13 +13,7 @@
     "expoGoLine": "LINE sign-in doesn't work in Expo Go (it does in the app and on the web). Sign in with an email code."
   },
   "onboarding": {
-    "signedInAs": "Signed in as {name}",
-    "continueTitle": "Finish your registration",
-    "continueBody": "Registration happens on website screens inside the app. When you're done, this screen updates by itself.",
-    "continue": "Continue registration",
-    "viewStatus": "View application details",
-    "refresh": "Check again",
-    "contact": "Contact us"
+    "signedInAs": "Signed in as {name}"
   },
   "web": {
     "title": "AIS Alumni",
@@ -48,7 +42,7 @@
   },
   "people": {},
   "me": {
-    "editHint": "You edit your profile on website screens inside the app.",
+    "editHint": "Edit your introduction and contact details. Change anything else with “Edit” on each section below.",
     "signOutConfirm": {
       "title": "Sign out?",
       "body": "You'll be signed out of the app on this device."
@@ -73,11 +67,6 @@
       "signOutOthersTitle": "Sign out of all other devices?",
       "signOutOthersBody": "Every device except this one will need to sign in again.",
       "noOthers": "You're not signed in on any other device."
-    },
-    "more": {
-      "title": "More settings",
-      "description": "These settings are changed on the website's screens.",
-      "all": "Open all settings"
     }
   },
   "push": {
@@ -132,5 +121,27 @@
     "bellUnread": "Notifications ({count} unread)",
     "unread": "Unread",
     "notFound": "This notification couldn’t be found."
+  },
+  "admin": {
+    "empty": "No admin tools are available in the app yet.",
+    "events": {
+      "exportFailed": "Couldn't save or share the file. Please try again."
+    }
+  },
+  "compose": {
+    "dateNotSet": "Not set",
+    "dateChoose": "Tap to choose a date and time (Japan time)",
+    "dateClear": "Clear {label}",
+    "cancel": "Cancel",
+    "done": "Done",
+    "network": "Couldn't connect. Check your connection and try again.",
+    "coverPick": "Choose an image",
+    "coverChange": "Choose another image",
+    "scanPermission": "Allow camera access to scan QR codes.",
+    "scanSettings": "Open Settings"
+  },
+  "verify": {
+    "pickPhoto": "Choose a photo",
+    "pickFile": "Choose a file"
   }
 }

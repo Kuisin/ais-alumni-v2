@@ -34,7 +34,7 @@ export type EventList = {
   page: number;
   hasNext: boolean;
   events: EventListItem[];
-  /** may create events (admins, teachers, 同窓会委員, 学年代表): website /app/events/new */
+  /** may create events (admins, teachers, 同窓会委員, 学年代表): /events/new */
   canCreate: boolean;
 };
 
@@ -73,7 +73,7 @@ export type EventDetail = {
   rsvp: EventRsvp;
   /** the entry ticket, once the member answered 参加 / 未定 (or was checked in) */
   ticket: EventTicket | null;
-  /** staff (admins, the author, assigned staff): the website's check-in screen */
+  /** staff (admins, the author, assigned staff): the check-in screen (/events/[id]/check-in) */
   checkInPath: string | null;
 };
 
@@ -113,3 +113,50 @@ export type RsvpResult = { ok: true; event: EventDetail };
 // errors (the website's events.rsvp.errors.*):
 //   closed, capacity (409) · guests, invalid (400) · not_found (404)
 //   · server_error (500)
+
+// ---- Check-in (staff: admins, the author, assigned staff) ----
+//   GET  /events/:id/check-in                 → CheckInBoard
+//   POST /events/:id/check-in  CheckInRequest → CheckInResult
+//   POST /events/:id/check-in/undo  { userId } → { ok: boolean }
+//   GET  /events/:id/check-in/search?q=…      → { candidates: CheckInCandidate[] }
+// errors: forbidden (403) — not staff for this event; not_found (404)
+
+export type CheckInAttendee = {
+  id: string;
+  name: string;
+  kanji: string | null;
+  /** null = walk-in without an RSVP */
+  answer: RsvpAnswer | null;
+  guests: number;
+  checkedInAt: IsoDate | null;
+};
+
+export type CheckInBoard = {
+  id: string;
+  title: EventText;
+  startsAt: IsoDate;
+  /** GOING / MAYBE answers and everyone checked in, by name */
+  attendees: CheckInAttendee[];
+};
+
+/** A scanned QR ticket (the link or the bare code), or a member from the list. */
+export type CheckInRequest = { ticket: string } | { userId: string };
+
+export type CheckInResult =
+  | {
+      status: "ok" | "already";
+      userId: string;
+      name: string;
+      kanji: string | null;
+      answer: RsvpAnswer | null;
+      guests: number;
+      at: IsoDate;
+    }
+  /** events.checkIn.result.* */
+  | { status: "invalid" | "notInvited" | "forbidden" | "notFound" };
+
+export type CheckInCandidate = {
+  id: string;
+  name: string;
+  kanji: string | null;
+};

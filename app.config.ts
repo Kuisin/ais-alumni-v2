@@ -32,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     infoPlist: {
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,
-      // Photo uploads on website screens opened in the app (web view).
+      // Choosing photos and documents to upload (e.g. the profile photo).
       NSCameraUsageDescription:
         "Used to take a photo when you upload a picture or a document.",
       NSPhotoLibraryUsageDescription:
@@ -104,6 +104,26 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         defaultChannel: "news",
       },
     ],
+    [
+      "expo-camera",
+      {
+        cameraPermission:
+          "イベントの受付で参加者のQRコードを読み取るためにカメラを使います。",
+        microphonePermission: false,
+        recordAudioAndroid: false,
+      },
+    ],
+    [
+      "expo-image-picker",
+      {
+        photosPermission:
+          "ニュースの画像や添付する写真を選ぶために写真へのアクセスを使います。",
+        cameraPermission:
+          "イベントの受付で参加者のQRコードを読み取るためにカメラを使います。",
+        microphonePermission: false,
+      },
+    ],
+    "@react-native-community/datetimepicker",
     // Native project fixes for building with Xcode 27 / from paths with
     // spaces (see each file).
     "./plugins/ios-scene-lifecycle",

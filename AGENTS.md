@@ -7,8 +7,9 @@ routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 "server"`, `api/index.ts`). It shares the database with the website in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
 server"/"the website" below), which still owns the schema and migrations,
-the pages the app opens in its web view (and their sign-in handoff), stored
-files, and scheduled jobs. Tokens live in the shared database, so either
+stored files, scheduled jobs and the LINE webhook. Every page of the
+website — public, onboarding, member and admin mode — has a native screen
+here; the app never opens the website. Tokens live in the shared database, so either
 side accepts them.
 
 `src/server/` came from the website's `src/lib` (Next.js APIs such as
@@ -16,14 +17,16 @@ side accepts them.
 metro.config.js). It is now this repo's copy: change it here. LINE sign-in
 is implemented directly (`src/server/lib/mobile/oauth.ts`); the LINE Login
 channel needs the callback
-`https://<domain>/api/mobile/v1/auth/oauth/callback/line`.
+`https://<domain>/api/mobile/v1/auth/oauth/callback/line` — also used to
+link LINE to a signed-in member (`src/server/lib/mobile/line-link.ts`,
+`src/features/line`).
 
-Shared with the server, copied here: the API contract types
-(`src/contract`, from the server's `src/lib/mobile/contract`) and the UI
-strings the app uses (`messages/<locale>/<namespace>.json`). The server is
-the source of truth for both — change them there, then `pnpm sync:server`
-(SERVER_DIR: your checkout of the server, default `../ais-alumni-app`;
-`--check` only reports differences).
+This repo owns the API contract types (`src/contract`, used by both the app
+and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);
+change them here. Only the database schema is still copied from the old
+website, which owns the migrations: `pnpm sync:server` (SERVER_DIR: your
+checkout of it, default `../ais-alumni-app`; `--check` only reports a
+difference), then `npx prisma generate`.
 
 ## Expo has changed — do not trust your training data
 
@@ -50,7 +53,7 @@ pnpm typecheck             # tsc --noEmit
 pnpm lint                  # Biome
 npx expo export --platform ios --output-dir /tmp/x   # bundle check
 pnpm icons                 # regenerate the app and web icons from the logo
-pnpm sync:server           # contract types + strings from the server checkout
+pnpm sync:server           # the database schema from the old website's checkout
 ```
 
 `expo-dev-client` is installed (for development builds), so a bare
@@ -79,14 +82,17 @@ project id in the config Expo Go needs no sign-in (with one, run
   only this header, never the website's cookie (no CSRF); each Google /
   LINE code works once, and `finish` only answers a sign-in `start` began in
   the same browser.
-- **Account state** (`GET /me`): not-yet-approved accounts see
-  `src/app/onboarding.tsx`, which opens the website's onboarding screens in
-  the web view; ACTIVE members get the tabs under `src/app/(member)`.
-- **Web view** (`src/app/web.tsx`, `/web?path=/app/…`): loads
-  `/api/mobile/v1/web?next=…` with the bearer token, which sets a website
-  session cookie (private cookie jar, 12 h, ended with the device session)
-  and the `ais_app` embed cookie, so the site hides its own navigation. Links to pages the app has
-  natively leave the web view (`src/lib/links.ts`).
+- **Account state** (`GET /me`): not-yet-approved accounts get the
+  registration screens under `src/app/onboarding` (email check, LINE, the
+  application with evidence uploads, status — one per state, following
+  `me.onboardingPath`; API `/onboarding/*`, `src/server/lib/mobile/onboarding.ts`);
+  ACTIVE members get the tabs under `src/app/(member)`. Public screens for
+  anyone: `privacy`, `support` (お問い合わせ), `handover/[token]`, and on
+  the web the landing page at `/` when signed out.
+- **Links** (`src/lib/links.ts`): website paths and URLs in content and
+  notifications map to the matching app screen (`hrefFor`); ones without
+  one are ignored, never opened in a browser or web view. Admin mode's
+  paths map through `src/features/admin/nav.ts` (`adminHrefFor`).
 - **Realtime** (`src/lib/realtime.tsx`): the website's signal-only Supabase
   Broadcast channels; topics come from `/me` (and room responses).
 - **Notifications** (`src/lib/push-core.ts`, `src/lib/push.tsx`; server:
@@ -158,9 +164,8 @@ project id in the config Expo Go needs no sign-in (with one, run
 3. A session token for a local member: `pnpm exec tsx --env-file=.env scripts/mobile-dev-token.ts hanako@example.com` (in the server checkout; refuses non-local databases) — for `curl -H "Authorization: Bearer …" localhost:3187/api/mobile/v1/me`.
 4. Screenshot a screen signed in: `node scripts/preview.mjs --email hanako@example.com --path /news --out /tmp/news.png` (`--click`, `--fill "selector=>value"`, `--full`, `--signed-out`; uses SERVER_DIR for tokens and playwright-core's Chromium).
 
-The web build can't show web views (native only) and runs with web
-security off; check native-only behavior (web view, sign-in with LINE /
-Google, keychain) in Expo Go or a development build.
+The web build runs with web security off; check native-only behavior
+(sign-in with LINE / Google, keychain) in Expo Go or a development build.
 
 ## Testing on the iOS Simulator (Xcode)
 
@@ -175,7 +180,7 @@ UI automation with [Maestro](https://maestro.dev) (needs Java 17+):
 signs in through the UI (code from the server's local dev mailbox,
 SERVER_DIR), then
 `maestro --device $UDID test -e APP_ID=host.exp.Exponent -e APP_URL=exp://127.0.0.1:8081 maestro/tour.yaml`
-visits every tab and the web view. Selectors: tabs are "Name, tab, n of 5" (マイページ is the header's top-left photo, "Me…");
+visits every tab. Selectors: tabs are "Name, tab, n of 5" (マイページ is the header's top-left photo, "Me…");
 cards are one pressable (match `.*title.*`); the header back button has id
 `BackButton`; Maestro's `back` is Android-only.
 

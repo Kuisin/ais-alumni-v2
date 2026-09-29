@@ -5,7 +5,6 @@ import { Camera, Pencil } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { webHref } from "@/lib/links";
 import { Avatar, Badge, Button, Card, colors, space, Text, TOUCH } from "@/ui";
 
 const PHOTO = 96;
@@ -43,9 +42,7 @@ export function ProfileHeader({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t("photo.change")}
-          onPress={() =>
-            router.push(webHref("/app/profile#edit-photo", t("sections.photo")))
-          }
+          onPress={() => router.push("/profile/photo" as Href)}
           style={({ pressed }) => [
             styles.camera,
             pressed ? styles.cameraPressed : null,
@@ -113,7 +110,7 @@ export function ProfileHeader({
           variant="secondary"
           label={t("editProfile")}
           icon={(c) => <Pencil color={c} size={16} aria-hidden />}
-          onPress={() => router.push(webHref("/app/profile", t("title")))}
+          onPress={() => router.push("/profile/about" as Href)}
         />
         <Text variant="caption" tone="subtle" center>
           {tm("editHint")}

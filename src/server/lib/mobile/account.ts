@@ -1,3 +1,15 @@
+import type {
+  ChangeRequest,
+  DeviceList,
+  MyProfile,
+  MySettings,
+  NotifyUpdate,
+  PersonalField,
+  ProfileRole,
+  SignedInDevice,
+  StaffArea,
+} from "@contract/account";
+import type { StaffAccess } from "@contract/core";
 import { updateLanguageAction } from "@/server/app/actions/settings";
 import { sortRoles } from "@/server/components/profile/role-details";
 import {
@@ -26,20 +38,10 @@ import { isOngoing, sortHistory } from "@/server/lib/history";
 import { industryLabel } from "@/server/lib/industries";
 import { jobTypeLabel } from "@/server/lib/job-types";
 import { lineAddFriendUrl } from "@/server/lib/line-link";
-import type {
-  ChangeRequest,
-  DeviceList,
-  MyProfile,
-  MySettings,
-  NotifyUpdate,
-  PersonalField,
-  ProfileRole,
-  SignedInDevice,
-  StaffArea,
-} from "@/server/lib/mobile/contract/account";
-import type { StaffAccess } from "@/server/lib/mobile/contract/core";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
+import { signInMethodRows } from "@/server/lib/mobile/settings";
 import { bearerToken, hashMobileToken } from "@/server/lib/mobile/tokens";
+import { namePartsOf } from "@/server/lib/names";
 import { chooseChannel } from "@/server/lib/notify";
 import {
   NOTIFY_CATEGORIES,
@@ -232,7 +234,11 @@ export async function loadMyProfile(
       autoAcceptSameYear: former ? me.autoAcceptSameYear : null,
     },
     directoryListed: parent ? !me.hideFromDirectory : null,
-    photo: { public: me.avatarPublic, reach: photoReach(me.avatarPublic) },
+    photo: {
+      public: me.avatarPublic,
+      reach: photoReach(me.avatarPublic),
+      uploaded: storedAvatarUrl(me.avatarUrl) !== null,
+    },
     sharedWithFollowers: PERSONAL_FIELDS.filter((f) => shared.has(f)),
     history: {
       education: sortHistory(education).map((e) => ({
@@ -270,6 +276,7 @@ export async function loadMyProfile(
       kana: me.nameKana,
       nameAtAis: me.nameAtAis,
       request: requestView(name),
+      parts: namePartsOf(me),
     },
     birthDate: {
       value: me.dateOfBirth ? day(me.dateOfBirth) : null,
@@ -352,6 +359,7 @@ export async function loadMySettings(user: CurrentUser): Promise<MySettings> {
     schoolEmail: teacher
       ? { email: teacher.schoolEmail, verified: teacher.schoolEmailVerified }
       : null,
+    signInMethods: await signInMethodRows(user),
   };
 }
 

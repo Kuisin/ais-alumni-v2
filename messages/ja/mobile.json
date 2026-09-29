@@ -13,13 +13,7 @@
     "expoGoLine": "Expo Go では LINE ログインを利用できません（アプリ版・ウェブ版では利用できます）。メールのコードでログインしてください。"
   },
   "onboarding": {
-    "signedInAs": "{name} としてログイン中",
-    "continueTitle": "会員登録を続けてください",
-    "continueBody": "登録の手続きはウェブサイトの画面で行います。手続きが終わると、この画面は自動的に切り替わります。",
-    "continue": "手続きを続ける",
-    "viewStatus": "申請の詳細を見る",
-    "refresh": "状態を更新",
-    "contact": "お問い合わせ"
+    "signedInAs": "{name} としてログイン中"
   },
   "web": {
     "title": "AIS 同窓会",
@@ -48,7 +42,7 @@
   },
   "people": {},
   "me": {
-    "editHint": "プロフィールの編集はウェブサイトの画面で行います。",
+    "editHint": "自己紹介や連絡先を編集できます。ほかの項目は、下の各項目の「編集」から変更できます。",
     "signOutConfirm": {
       "title": "ログアウトしますか？",
       "body": "この端末のアプリからログアウトします。"
@@ -73,11 +67,6 @@
       "signOutOthersTitle": "ほかのすべての端末からログアウトしますか？",
       "signOutOthersBody": "この端末以外では、もう一度ログインが必要になります。",
       "noOthers": "ほかの端末ではログインしていません。"
-    },
-    "more": {
-      "title": "その他の設定",
-      "description": "次の設定はウェブサイトの画面で変更します。",
-      "all": "すべての設定を開く"
     }
   },
   "push": {
@@ -132,5 +121,27 @@
     "bellUnread": "お知らせ（未読{count}件）",
     "unread": "未読",
     "notFound": "このお知らせは見つかりませんでした。"
+  },
+  "admin": {
+    "empty": "このアプリで使える管理機能は、まだありません。",
+    "events": {
+      "exportFailed": "ファイルを保存・共有できませんでした。もう一度お試しください。"
+    }
+  },
+  "compose": {
+    "dateNotSet": "未設定",
+    "dateChoose": "タップして日時を選びます（日本時間）",
+    "dateClear": "{label}をクリア",
+    "cancel": "キャンセル",
+    "done": "完了",
+    "network": "通信できませんでした。接続を確認してもう一度お試しください。",
+    "coverPick": "画像を選ぶ",
+    "coverChange": "別の画像を選ぶ",
+    "scanPermission": "QRコードを読み取るにはカメラへのアクセスを許可してください。",
+    "scanSettings": "設定を開く"
+  },
+  "verify": {
+    "pickPhoto": "写真を選ぶ",
+    "pickFile": "ファイルを選ぶ"
   }
 }

@@ -1,21 +1,18 @@
-import type { MySettings, StaffArea } from "@contract/account";
+import type { MySettings } from "@contract/account";
 import type { Locale } from "@contract/core";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
-import { useRouter } from "expo-router";
-import { Check, PauseCircle, ShieldCheck, Trash2 } from "lucide-react-native";
 import { Fragment, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { LineOutcomeNotice } from "@/features/line/outcome-notice";
+import { useLineLinkReturn, useLinkLine } from "@/features/line/use-link-line";
 import { isApiError } from "@/lib/api";
-import { webHref } from "@/lib/links";
 import {
   Badge,
   Button,
   Card,
-  colors,
   ListGroup,
-  ListRow,
   Section,
   Separator,
   space,
@@ -26,9 +23,8 @@ import { Notice } from "./parts";
 import { ChoiceRow, ToggleRow } from "./rows";
 
 /**
- * 設定 (the website's /app/settings): language and notifications are
- * changed here; LINE shows its state; everything else opens the website's
- * settings page at that section.
+ * 設定 (the website's /app/settings): language, notifications and LINE.
+ * The account sections are in ./account-sections.tsx.
  */
 
 /** A failed save, in the member's language. */
@@ -170,15 +166,20 @@ export function NotifySection({ settings }: { settings: MySettings }) {
 export function LineSection({ settings }: { settings: MySettings }) {
   const t = useTranslations("settings");
   const tl = useTranslations("line");
-  const router = useRouter();
   const { line, notify } = settings;
   const channel = t(`notifications.channel.${notify.route}`);
   const name = line.displayName;
+  const link = useLinkLine("/settings");
+  const returned = useLineLinkReturn();
+  const outcome = link.data ?? returned;
 
   return (
     <Section title={t("line.title")}>
       <Hint>{t("line.description")}</Hint>
       <Card style={styles.card}>
+        {outcome !== "linked" || line.linked ? (
+          <LineOutcomeNotice outcome={outcome} />
+        ) : null}
         <View style={styles.badges} accessibilityLabel={t("line.status")}>
           <Badge
             tone={line.linked ? "green" : "slate"}
@@ -230,131 +231,14 @@ export function LineSection({ settings }: { settings: MySettings }) {
           <Button
             variant="line"
             label={tl("linkButton")}
-            onPress={() =>
-              router.push(webHref("/app/settings#line", t("line.title")))
-            }
+            loading={link.isPending}
+            onPress={() => link.mutate()}
           />
         ) : (
           <Notice>{tl("panel.notReady")}</Notice>
         )}
+        {link.isError ? <ErrorLine error={link.error} /> : null}
       </Card>
-    </Section>
-  );
-}
-
-export function AdminModeSection({ areas }: { areas: StaffArea[] }) {
-  const t = useTranslations("settings.adminMode");
-  const tc = useTranslations("common");
-  const router = useRouter();
-  return (
-    <Section title={t("title")}>
-      <Hint>{t("description")}</Hint>
-      <Card style={styles.card}>
-        <View style={styles.gapXs}>
-          <Text variant="small" weight="medium">
-            {t("roles")}
-          </Text>
-          {areas.map((k) => (
-            <View key={k} style={styles.check}>
-              <Check color={colors.green600} size={16} aria-hidden />
-              <Text variant="small" style={styles.flex}>
-                {t(`access.${k}`)}
-              </Text>
-            </View>
-          ))}
-        </View>
-        <Button
-          label={t("button")}
-          icon={(c) => <ShieldCheck color={c} size={18} aria-hidden />}
-          onPress={() =>
-            router.push(webHref("/app/admin", tc("nav.adminMode")))
-          }
-        />
-      </Card>
-    </Section>
-  );
-}
-
-/** Settings the app doesn't have natively: the website's sections. */
-export function MoreSection({ settings }: { settings: MySettings }) {
-  const t = useTranslations("settings");
-  const tm = useTranslations("mobile.me.more");
-  const router = useRouter();
-  const open = (anchor: string, title: string) => () =>
-    router.push(webHref(`/app/settings${anchor}`, title));
-  const school = settings.schoolEmail;
-  const rows = [
-    { anchor: "#sign-in", title: t("methods.title"), subtitle: null },
-    {
-      anchor: "#edit-email",
-      title: t("email.title"),
-      subtitle: settings.email ?? "—",
-    },
-    ...(school
-      ? [
-          {
-            anchor: "#edit-school-email",
-            title: t("schoolEmail.title"),
-            subtitle: school.email ?? t("schoolEmail.none"),
-          },
-        ]
-      : []),
-    { anchor: "#data", title: t("export.title"), subtitle: null },
-  ];
-  return (
-    <Section title={tm("title")}>
-      <Hint>{tm("description")}</Hint>
-      <ListGroup>
-        {rows.map((r) => (
-          <Fragment key={r.anchor}>
-            <ListRow
-              title={r.title}
-              subtitle={r.subtitle}
-              onPress={open(r.anchor, r.title)}
-            />
-            <Separator />
-          </Fragment>
-        ))}
-        <ListRow
-          title={tm("all")}
-          onPress={open("", t("title"))}
-          accessibilityLabel={tm("all")}
-        />
-      </ListGroup>
-    </Section>
-  );
-}
-
-/**
- * 危険な操作: deactivating and deleting the account, on the website's
- * settings page (its #account / #delete parts of the danger zone). Kept as
- * its own, clearly labelled section so deletion is easy to find (App Store
- * guideline 5.1.1(v)).
- */
-export function DangerSection() {
-  const t = useTranslations("settings");
-  const router = useRouter();
-  const open = (hash: string, title: string) => () =>
-    router.push(webHref(`/app/settings${hash}`, title));
-  return (
-    <Section title={t("danger.title")}>
-      <Hint>{t("danger.description")}</Hint>
-      <ListGroup>
-        <ListRow
-          leading={
-            <PauseCircle color={colors.slate600} size={20} aria-hidden />
-          }
-          title={t("deactivate.title")}
-          onPress={open("#account", t("deactivate.title"))}
-        />
-        <Separator />
-        <ListRow
-          leading={<Trash2 color={colors.red700} size={20} aria-hidden />}
-          title={t("delete.title")}
-          destructive
-          onPress={open("#delete", t("delete.title"))}
-        />
-      </ListGroup>
     </Section>
   );
 }

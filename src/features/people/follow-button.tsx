@@ -6,7 +6,6 @@ import { type ReactNode, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
-import { hrefFor } from "@/lib/links";
 import { Button, space, Text } from "@/ui";
 import {
   CHAT_ERRORS,
@@ -206,7 +205,7 @@ export function MessageButton({ memberId }: { memberId: string }) {
       const r = await api<{ groupId: string }>("/chat/direct", {
         body: { userId: memberId },
       });
-      router.push(hrefFor(`/app/chat/${r.groupId}`));
+      router.push(`/chat/${r.groupId}`);
     } catch (e) {
       setError(
         isNetworkError(e)
