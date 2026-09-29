@@ -21,6 +21,11 @@ type Rule = {
 const ID = "([A-Za-z0-9_-]{1,64})";
 
 const PATTERNS: Rule[] = [
+  {
+    re: /^\/app\/admin\/events\/ID$/,
+    to: (m) => `/admin/events/${m[1]}`,
+    keep: ["created"],
+  },
   { re: /^\/app\/dashboard$/, to: () => "/home" },
   { re: /^\/app\/directory$/, to: () => "/directory" },
   { re: /^\/app\/members\/ID$/, to: (m) => `/members/${m[1]}`, keep: ["as"] },
@@ -92,9 +97,12 @@ export function nativeHref(
   path: string,
   query: URLSearchParams = new URLSearchParams(),
 ): Href | null {
-  // 管理モード: the sections built so far (src/features/admin/nav.ts).
-  if (path === "/app/admin" || path.startsWith("/app/admin/"))
-    return adminHrefFor(path);
+  // 管理モード: the sections built so far (src/features/admin/nav.ts); their
+  // sub-pages (e.g. one event) are RULES below.
+  if (path === "/app/admin" || path.startsWith("/app/admin/")) {
+    const section = adminHrefFor(path);
+    if (section) return section;
+  }
   for (const rule of RULES) {
     const m = rule.re.exec(path);
     if (!m) continue;

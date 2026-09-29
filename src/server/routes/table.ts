@@ -4,6 +4,13 @@
  * see src/app/api/mobile/v1/[...path]+api.ts.
  */
 import * as adminHome from "./mobile/v1/admin";
+import * as ae0 from "./mobile/v1/admin/events";
+import * as ae1 from "./mobile/v1/admin/events/[id]";
+import * as ae2 from "./mobile/v1/admin/events/[id]/approve";
+import * as ae3 from "./mobile/v1/admin/events/[id]/csv";
+import * as ae4 from "./mobile/v1/admin/events/[id]/rsvp-closed";
+import * as ae5 from "./mobile/v1/admin/events/[id]/staff";
+import * as ae6 from "./mobile/v1/admin/events/[id]/xlsx";
 import * as adminMembers from "./mobile/v1/admin/members";
 import * as adminMember from "./mobile/v1/admin/members/[id]";
 import * as adminMemberAdmin from "./mobile/v1/admin/members/[id]/admin";
@@ -188,6 +195,13 @@ export const ROUTES: [string, RouteModule][] = [
     adminMemberRole as unknown as RouteModule,
   ],
   ["admin/members/[id]/state", adminMemberState as unknown as RouteModule],
+  ["admin/events", ae0 as unknown as RouteModule],
+  ["admin/events/[id]", ae1 as unknown as RouteModule],
+  ["admin/events/[id]/approve", ae2 as unknown as RouteModule],
+  ["admin/events/[id]/csv", ae3 as unknown as RouteModule],
+  ["admin/events/[id]/rsvp-closed", ae4 as unknown as RouteModule],
+  ["admin/events/[id]/staff", ae5 as unknown as RouteModule],
+  ["admin/events/[id]/xlsx", ae6 as unknown as RouteModule],
   ["auth/email/request", r0 as unknown as RouteModule],
   ["auth/email/verify", r1 as unknown as RouteModule],
   ["auth/oauth/callback/line", r2 as unknown as RouteModule],
