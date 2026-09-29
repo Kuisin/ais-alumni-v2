@@ -71,7 +71,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: FilePen,
     webPath: "/app/admin/record-requests",
     allowed: admin,
-    href: null,
+    href: "/admin/record-requests",
     count: "recordRequests",
   },
   {
@@ -80,7 +80,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: IdCard,
     webPath: "/app/admin/name-requests",
     allowed: admin,
-    href: null,
+    href: "/admin/name-requests",
     count: "nameRequests",
   },
   {
@@ -116,7 +116,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: UserCheck,
     webPath: "/app/admin/teachers",
     allowed: (a) => a.teachers,
-    href: null,
+    href: "/admin/teachers",
   },
   {
     group: "people",
