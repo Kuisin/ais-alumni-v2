@@ -79,7 +79,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   web: {
     // Web is only used for local testing of the screens.
-    output: "single",
+    output: "server",
     favicon: "./assets/images/favicon.png",
   },
   plugins: [

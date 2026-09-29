@@ -3,7 +3,7 @@ import { type Href, useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { Fragment } from "react";
 import { StyleSheet, View } from "react-native";
-import { API_URL } from "@/lib/config";
+import { SITE_URL } from "@/lib/config";
 import { hrefFor, siteUrl } from "@/lib/links";
 import { type Inline, parseBlocks, parseInline } from "@/lib/markdown";
 import { Text } from "./text";
@@ -25,7 +25,7 @@ export function useOpenLink(): (url: string) => void {
       void Linking.openURL(url).catch(() => {});
       return;
     }
-    if (siteUrl(url, API_URL)) {
+    if (siteUrl(url, SITE_URL)) {
       router.push(hrefFor(url) as Href);
       return;
     }

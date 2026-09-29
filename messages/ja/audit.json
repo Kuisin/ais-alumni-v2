@@ -1,0 +1,137 @@
+{
+  "allActions": "すべての操作",
+  "category": "種類",
+  "timeJst": "時刻（日本時間）",
+  "showing": "{count}件を表示",
+  "range": "{from} 〜 {to}",
+  "older": "さらに古いログ",
+  "newest": "最新のログへ",
+  "customFilter": "「{value}」を含む操作",
+  "categories": {
+    "member": "会員の管理",
+    "verification": "入会審査",
+    "teacher": "教職員の登録",
+    "record_request": "在籍情報の修正依頼",
+    "event": "イベント",
+    "news": "ニュース",
+    "broadcast": "お知らせ送信",
+    "cohort": "学年",
+    "roster": "名簿",
+    "school": "学校",
+    "company": "会社",
+    "self": "本人による操作",
+    "user": "アカウントの自動統合"
+  },
+  "targetTypes": {
+    "User": "会員",
+    "VerificationRequest": "入会申請",
+    "Event": "イベント",
+    "NewsPost": "ニュース",
+    "Broadcast": "送信",
+    "Cohort": "学年",
+    "school": "学校",
+    "company": "会社",
+    "ChatReport": "トークの報告"
+  },
+  "actions": {
+    "member": {
+      "admin_granted": "管理者権限を付与",
+      "admin_revoked": "管理者権限を解除",
+      "deactivated": "アカウントを停止",
+      "reactivated": "アカウントを再開",
+      "merged": "アカウントを統合",
+      "position_granted": "役職を任命",
+      "position_removed": "役職を解除",
+      "profile_updated": "プロフィールを編集",
+      "role_added": "区分を追加",
+      "role_removed": "区分を削除",
+      "role_updated": "区分を編集",
+      "history_added": "学歴・職歴を追加",
+      "history_updated": "学歴・職歴を編集",
+      "history_deleted": "学歴・職歴を削除"
+    },
+    "verification": {
+      "approve": "入会申請を承認",
+      "reject": "入会申請を却下",
+      "needs_info": "追加情報を依頼",
+      "voucher": {
+        "add": "推薦者を追加"
+      }
+    },
+    "teacher": {
+      "assigned": "現職の教職員に登録",
+      "unassigned": "元教職員に変更"
+    },
+    "record_request": {
+      "approved": "在籍情報の修正を承認",
+      "rejected": "在籍情報の修正を却下"
+    },
+    "event": {
+      "create": "イベントを作成",
+      "update": "イベントを編集",
+      "delete": "イベントを削除",
+      "csv_export": "参加者CSVを出力"
+    },
+    "news": {
+      "create": "ニュースを作成",
+      "update": "ニュースを編集",
+      "delete": "ニュースを削除",
+      "notify": "ニュースを通知"
+    },
+    "broadcast": {
+      "sent": "お知らせを送信"
+    },
+    "cohort": {
+      "updated": "学年を編集",
+      "deleted": "学年を削除"
+    },
+    "roster": {
+      "import": "名簿を取り込み",
+      "deleteAll": "名簿をすべて削除"
+    },
+    "school": {
+      "renamed": "学校名を変更",
+      "merged": "学校を統合",
+      "deleted": "学校を削除"
+    },
+    "company": {
+      "renamed": "会社名を変更",
+      "merged": "会社を統合",
+      "deleted": "会社を削除"
+    },
+    "self": {
+      "deactivated": "本人がアカウントを停止",
+      "account_deleted": "本人がアカウントを削除",
+      "email_changed": "本人がメールアドレスを変更",
+      "signin_method_removed": "本人がログイン方法を削除"
+    },
+    "user": {
+      "merge": {
+        "line_email": "LINEとメールのアカウントを自動統合"
+      }
+    },
+    "family": {
+      "linked": "家族をつなげた",
+      "confirmed": "家族のつながりを確認",
+      "unlinked": "家族のつながりを解除"
+    },
+    "gender_request": {
+      "approved": "性別の変更を承認",
+      "rejected": "性別の変更を却下"
+    },
+    "birth_date_request": {
+      "approved": "生年月日の変更を承認",
+      "rejected": "生年月日の変更を却下"
+    },
+    "support": {
+      "close": "お問い合わせを対応済みに",
+      "reopen": "お問い合わせを未対応に戻す"
+    },
+    "chat": {
+      "message_delete": "チャットのメッセージを削除",
+      "report_close": "トークの報告を対応済みに",
+      "report_reopen": "トークの報告を未対応に戻す",
+      "direct_rules": "1対1のトークの設定を変更"
+    }
+  }
+}

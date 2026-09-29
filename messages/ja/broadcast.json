@@ -1,0 +1,110 @@
+{
+  "pageTitle": "お知らせを送る",
+  "descriptionAny": "会員にメッセージを送ります。会員にはメールで新着の通知が届き、メッセージはアプリで読みます。",
+  "descriptionLeader": "学年代表として、同じ学年の会員にメッセージを送れます。会員にはメールで新着の通知が届き、メッセージはアプリで読みます。",
+  "audience": {
+    "label": "送信先",
+    "ALL": "すべての会員",
+    "ROLES": "選択した立場の会員",
+    "COHORT": "学年",
+    "cohortHint": "この学年を選択している在校生・卒業生に送られます。",
+    "leaderOnly": "あなたの学年：",
+    "cohort": "学年",
+    "chooseCohort": "学年を選択",
+    "desc": {
+      "ALL": "有効なすべての会員に届きます。",
+      "ROLES": "在校生・卒業生・保護者・教職員など、選んだ立場の会員に届きます。",
+      "COHORT": "選んだ学年の在校生・卒業生に届きます。"
+    }
+  },
+  "title": "件名",
+  "body": "本文",
+  "bodyHint": "メッセージにはあなたの名前と役職が表示されます。メールの通知には件名・本文は含まれません。",
+  "preview": "送信先を確認",
+  "checking": "確認中…",
+  "confirmSummary": "{recipients}人の会員に届きます。メール（{email}人）で新着の通知が届き、メッセージはアプリで読みます。",
+  "send": "{count}人に送信",
+  "sending": "送信中…",
+  "edit": "修正する",
+  "sentSummary": "{recipients}人に送信しました（メール {email}人に通知）。既読状況は送信履歴で確認できます。",
+  "sendAnother": "続けて送る",
+  "history": "送信履歴",
+  "historyCounts": "通知 {recipients}人（LINE {line} / メール {email}）",
+  "signature": "— {name}（{position}）AIS同窓会より",
+  "signatureCommittee": "— AIS同窓会委員会",
+  "positions": {
+    "TEACHER_MANAGER": "教職員・管理者",
+    "STUDENT_LEADER": "学年代表",
+    "TEACHER_REGISTRAR": "教職員登録担当",
+    "ALUMNI_COMMITTEE": "同窓会委員"
+  },
+  "fieldErrors": {
+    "required": "この項目は必須です。",
+    "tooLong": "長すぎます。",
+    "rolesRequired": "1つ以上選択してください。",
+    "cohortRequired": "学年を選択してください。"
+  },
+  "errors": {
+    "forbidden": "もう一度ログインしてください。",
+    "validation": "入力内容を確認してください。",
+    "notAllowed": "この送信先には送信できません。",
+    "limit": "送信回数の上限に達しました。しばらくしてからお試しください。",
+    "noRecipients": "該当する会員がいません。"
+  },
+  "sent": "送信しました。",
+  "charCount": "{count} / {max}文字",
+  "fromPosition": "{name}（{position}）",
+  "fromCommittee": "AIS同窓会委員会",
+  "notifyContentless": {
+    "subject": "【AIS同窓会】新しい連絡が届きました",
+    "text": "{from}から新しい連絡が届きました。\n内容はアプリでご確認ください。"
+  },
+  "historyMine": "自分の送信",
+  "historyAll": "すべての送信者",
+  "historyTabs": "表示する送信履歴",
+  "historyEmpty": "まだ送信したメッセージはありません。",
+  "sentBy": "送信者：{name}",
+  "receipts": {
+    "title": "既読状況",
+    "readOf": "既読 {read} / {total}",
+    "percent": "{percent}%",
+    "none": "既読の記録なし",
+    "legacy": "既読の記録が始まる前に送信されたメッセージのため、既読状況はありません。",
+    "read": "既読",
+    "unread": "未読",
+    "noneRead": "まだ誰も読んでいません。",
+    "allRead": "全員が読みました。",
+    "showAll": "すべて表示（ほか{count}人）"
+  },
+  "detail": {
+    "pageTitle": "送信したメッセージ",
+    "back": "お知らせを送るへ戻る",
+    "sentAt": "送信日時",
+    "audience": "送信先",
+    "from": "送信者",
+    "body": "本文"
+  },
+  "manage": {
+    "title": "この連絡の管理",
+    "archivedBadge": "アーカイブ中",
+    "editedBadge": "編集済み",
+    "archivedHint": "受信者の「あなた宛ての連絡」には表示されていません。元に戻すと再び表示されます（再通知はしません）。",
+    "saved": "保存しました。受信者には「編集済み」と表示されます（再通知はしません）。",
+    "fieldTitle": "件名",
+    "fieldBody": "本文",
+    "editHint": "編集しても通知は送られません。",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "edit": "編集",
+    "archive": "アーカイブ",
+    "restore": "元に戻す",
+    "delete": "削除",
+    "deleteConfirm": "この連絡を削除しますか？受信者の画面からも消え、既読の記録も削除されます。元に戻せません。",
+    "errors": {
+      "invalid": "入力内容を確認してください。",
+      "forbidden": "この連絡を管理する権限がありません。",
+      "required": "必須です。",
+      "tooLong": "長すぎます。"
+    }
+  }
+}

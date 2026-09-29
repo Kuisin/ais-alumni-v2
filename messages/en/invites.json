@@ -1,0 +1,58 @@
+{
+  "title": "Invite alumni",
+  "description": "Invite alumni and students, parents or teachers you know. An individual invitation is for one person (a strong recommendation); a year-group invitation is a link for up to 10 people, e.g. for a class LINE group. Both last 30 days. The 学年 you give helps the committee check and approve faster.",
+  "type": "Who are you inviting?",
+  "types": {
+    "STUDENT": "Student / graduate",
+    "PARENT": "Parent",
+    "TEACHER": "Teacher / staff"
+  },
+  "cohort": "Their 学年 (class)",
+  "cohortChild": "Their child's 学年",
+  "cohortHint": "As far as you know. The committee uses it when checking.",
+  "name": "Their name (optional)",
+  "nameHint": "A note for you, and a help for the committee.",
+  "create": "Create invitation link",
+  "created": "Invitation link created. Send it to them (works once, for 30 days).",
+  "link": "Invitation link",
+  "linkHint": "This link can't be shown again. Copy it now or send it on LINE.",
+  "copy": "Copy link",
+  "copied": "Copied",
+  "shareLine": "Send on LINE",
+  "another": "Invite someone else",
+  "shareText": "You're invited to the AIS Alumni members' site. Sign up here (this link works once).",
+  "sent": "Your invitations",
+  "usedBy": "{name} signed up",
+  "revoke": "Cancel",
+  "status": {
+    "open": "Not used",
+    "used": "Signed up",
+    "revoked": "Cancelled",
+    "expired": "Expired",
+    "full": "Full"
+  },
+  "errors": {
+    "forbidden": "You can't create invitations.",
+    "cohort": "Please choose the 学年.",
+    "tooMany": "Too many unused individual invitations (100 max). Cancel unused ones first.",
+    "invalid": "Please check your input.",
+    "gradeOpen": "You already have a year-group link for this 学年 (one at a time). Use it up or cancel it first."
+  },
+  "kind": "Kind of invitation",
+  "kinds": {
+    "INDIVIDUAL": {
+      "title": "Individual (recommendation)",
+      "hint": "A one-time link for one person you know well. The committee treats it as your recommendation. Create as many as you need.",
+      "badge": "Individual"
+    },
+    "GRADE": {
+      "title": "Year group (up to 10)",
+      "hint": "A link to share with a 学年, e.g. in its LINE group. Up to 10 people can use it. One open link per 学年 at a time.",
+      "badge": "Year group"
+    }
+  },
+  "createdGrade": "Year-group link created. Share it with the group (up to 10 people, valid for 30 days).",
+  "shareTextGrade": "You're invited to the AIS Alumni member site. Sign up here (this link works for up to 10 people).",
+  "uses": "{count} / {max} signed up",
+  "usedByList": "Signed up: {names}"
+}

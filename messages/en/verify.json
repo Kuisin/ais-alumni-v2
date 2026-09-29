@@ -1,0 +1,270 @@
+{
+  "title": "Getting started",
+  "description": "Answer a few questions to register. It takes about 3 minutes.",
+  "resubmitDescription": "Please update your application and send it again.",
+  "needsInfo": {
+    "title": "The committee needs a little more information:"
+  },
+  "progressLabel": "Progress",
+  "stepOf": "Step {n} of {total}",
+  "steps": {
+    "basics": "Basics",
+    "type": "You",
+    "details": "At AIS",
+    "review": "Review"
+  },
+  "fixErrors": "{count, plural, one {Please fix 1 field.} other {Please fix # fields.}}",
+  "serverErrors": {
+    "validation": "Please check the highlighted fields.",
+    "evidence": "One of the uploaded files could not be verified. Please remove it and upload it again.",
+    "forbidden": "Your session has expired or this form is no longer available. Please reload the page.",
+    "generic": "Something went wrong while sending your application. Please try again."
+  },
+  "optional": "optional",
+  "select": "Select…",
+  "fields": {
+    "nameRomaji": "Name (romaji)",
+    "nameKanji": "Name (kanji / kana)",
+    "nameAtAis": "Name used at AIS",
+    "dateOfBirth": "Date of birth",
+    "roles": "Your connection to AIS",
+    "locale": "Preferred language",
+    "yearsFrom": "From (year)",
+    "yearsTo": "To (year)",
+    "present": "I still work at AIS",
+    "subjects": "Subjects / grades taught",
+    "schoolEmail": "School email",
+    "grade": "Grade",
+    "homeroomTeacher": "Homeroom teacher",
+    "homeroomTeacherThen": "Homeroom teacher (in your last year)",
+    "studentIdNo": "Student ID",
+    "childName": "Child’s name",
+    "lastDivision": "Last division attended",
+    "graduationOrLeaveYear": "Graduation / leaving year",
+    "didGraduate": "Did you graduate from AIS?",
+    "classmates": "Classmates who can confirm you",
+    "classmateN": "Classmate {n}",
+    "currentStage": "What are you doing now?",
+    "lastNameRomaji": "Last name",
+    "firstNameRomaji": "First name",
+    "middleNameRomaji": "Middle name",
+    "lastNameKanji": "Last name (姓)",
+    "firstNameKanji": "First name (名)",
+    "cohort": "学年 (class)",
+    "teacherStatus": "Status",
+    "joinedYear": "Year you joined AIS",
+    "leftYearStudent": "Year you left AIS",
+    "joinedYearTeacher": "Year you started",
+    "leftYearTeacher": "Year you left",
+    "lastNameKana": "Last name in katakana (フリガナ)",
+    "firstNameKana": "First name in katakana (フリガナ)",
+    "gender": "Gender"
+  },
+  "hints": {
+    "nameRomaji": "In Latin letters, e.g. Yamada / Taro.",
+    "nameKanji": "If you have a name in kanji, we recommend entering it with its katakana reading (フリガナ) so Japanese classmates and teachers can find you by name. After approval, changes need a request. Leave it empty if you don't have one (e.g. international students).",
+    "nameAtAis": "If different from your current name (e.g. maiden name or nickname).",
+    "dateOfBirth": "Used only for verification and age-appropriate privacy. Never shown to other members.",
+    "roles": "Choose all that apply.",
+    "locale": "Used for emails and LINE messages.",
+    "subjects": "e.g. Math, G9–12",
+    "schoolEmail": "Required if you currently work at AIS: confirm your @aisnagoya.net address with a code (it's not used for sign-in or notices). Optional for former staff.",
+    "parentConfirmation": "Student accounts must also be confirmed by a parent or guardian with an AIS Alumni account, or by the committee.",
+    "classmates": "If you add them, we can ask classmates or teachers to confirm you, which can speed up approval.",
+    "cohort": "Classes are numbered by the year they finish 6th grade (2016 = 第5期). If you joined or left partway, choose the class you were in.",
+    "types": "You can ask the committee to change this later.",
+    "leftYearStudent": "Only if you left AIS before graduating. Leave empty if you're still at AIS or graduated.",
+    "leftYearTeacher": "Leave empty if you still work at AIS.",
+    "gender": "Used for your default profile icon; not shown to other members. After sending, changes need a request."
+  },
+  "didGraduate": {
+    "yes": "Yes, I graduated",
+    "no": "No, I left before graduating"
+  },
+  "childN": "Child {n}",
+  "removeChild": "Remove",
+  "removeChildN": "Remove child {n}",
+  "addChild": "Add another child",
+  "errors": {
+    "required": "This field is required.",
+    "tooLong": "This is too long.",
+    "invalidYear": "Enter a valid 4-digit year.",
+    "invalidGrade": "Choose a grade.",
+    "invalidDate": "Enter a valid date.",
+    "invalidEmail": "Enter a valid email address.",
+    "yearsOrder": "The year you left must be the same as or after the year you joined.",
+    "rolesRequired": "Choose at least one.",
+    "childrenRequired": "Add at least one child.",
+    "classmateRequired": "Enter at least one classmate’s name.",
+    "tooManyFiles": "You can upload up to 3 files.",
+    "evidenceInvalid": "One of the files could not be verified. Please remove it and upload it again.",
+    "invalid": "This value is not valid.",
+    "typesRequired": "Choose at least one.",
+    "cohortRequired": "Choose a class.",
+    "childNotSelected": "Use “Find” to look up your child and select them.",
+    "kanaOnly": "Use katakana (hiragana is converted automatically).",
+    "kanaRequired": "Please add the katakana reading (フリガナ) for your kanji name.",
+    "diplomaRequired": "Upload your diploma, or tick “I don't have my diploma”.",
+    "genderRequired": "Choose your gender.",
+    "schoolEmailDomain": "Enter your school address (@aisnagoya.net).",
+    "schoolEmailRequired": "Current AIS staff need to give their school address (@aisnagoya.net).",
+    "schoolEmailUnverified": "Please confirm your school address (Send code → enter the 6-digit code).",
+    "schoolEmailTaken": "This school address is already registered to another member."
+  },
+  "evidence": {
+    "label": "Supporting documents (optional)",
+    "hint": "For example an AIS ID card, report card, diploma or yearbook page. JPG, PNG or PDF, up to 10 MB each, {max} files max. Only the committee can see them, and they are deleted 30 days after the decision.",
+    "remove": "Remove {name}",
+    "removeShort": "Remove",
+    "full": "You have added the maximum number of files.",
+    "uploading": "Uploading {name}…",
+    "uploaded": "Uploaded {name}.",
+    "errors": {
+      "type": "{name}: only JPG, PNG or PDF files can be uploaded.",
+      "size": "{name}: files must be 10 MB or smaller.",
+      "count": "You can upload up to 3 files in total.",
+      "forbidden": "Your session has expired. Please reload the page.",
+      "generic": "Upload failed. Please try again."
+    }
+  },
+  "schoolEmail": {
+    "send": "Send code",
+    "resend": "Resend code",
+    "sent": "We sent a 6-digit code to {email}.",
+    "codeLabel": "6-digit code",
+    "confirm": "Confirm",
+    "verified": "School email confirmed.",
+    "verifiedBadge": "Confirmed",
+    "errors": {
+      "forbidden": "Your session has expired. Please reload the page.",
+      "invalidEmail": "Enter a valid email address.",
+      "rateLimited": "Too many codes requested. Please wait a little and try again.",
+      "invalid": "That code is not correct.",
+      "expired": "That code has expired. Please request a new one.",
+      "tooManyAttempts": "Too many attempts. Please request a new code.",
+      "sendFailed": "We couldn't send the email right now. Please try again in a few minutes.",
+      "wrongDomain": "Only @aisnagoya.net addresses can be confirmed.",
+      "taken": "This school address is already registered to another member."
+    }
+  },
+  "review": {
+    "title": "Check your answers",
+    "files": "Documents",
+    "note": "After you send it, a committee member will review it. We'll let you know by email.",
+    "types": "You are",
+    "children": "Children",
+    "edit": "Review from the start",
+    "addDocuments": "Add ID documents (optional)"
+  },
+  "back": "Back",
+  "next": "Next",
+  "submit": "Submit application",
+  "submitting": "Submitting…",
+  "cohortNotListed": "Not listed / not sure",
+  "stepTitles": {
+    "type": "Who are you?",
+    "basics": "Your name and birthday",
+    "details": "Tell us about your time at AIS",
+    "review": "Check and send"
+  },
+  "stepIntros": {
+    "type": "Choose everything that applies — for example an alumnus whose child now attends AIS can pick both.",
+    "basics": "The committee uses this to confirm who you are. Your birthday is never shown to other members.",
+    "details": "Just give your class (学年) and years — whether you're a current student or an alumnus, and your grade, are worked out automatically.",
+    "review": "If everything looks right, send it. The committee will review it and let you know."
+  },
+  "types": {
+    "STUDENT": {
+      "title": "Student / Alumni",
+      "description": "You attend or attended AIS"
+    },
+    "PARENT": {
+      "title": "Parent",
+      "description": "Your child attends or attended AIS"
+    },
+    "TEACHER": {
+      "title": "Teacher / Staff",
+      "description": "You work or worked at AIS"
+    }
+  },
+  "sections": {
+    "student": "Tell us your class and the year you joined AIS.",
+    "studentMore": "Help us confirm you faster (optional)",
+    "parent": "Add each child who attends or attended AIS. Find a child who is already on AIS Alumni, or register your child if they aren’t yet.",
+    "teacher": "Tell us when you worked at AIS and what you taught."
+  },
+  "preview": {
+    "current": "You'll be registered as a current student ({grade})",
+    "upcoming": "You'll be registered as an incoming student",
+    "graduated": "You'll be registered as a graduate ({year})",
+    "left": "You'll be registered as a former student (left in {year})",
+    "teacherCurrent": "You'll be registered as current teacher / staff",
+    "teacherFormer": "You'll be registered as former teacher / staff (left in {year})"
+  },
+  "child": {
+    "reviewNote": "The committee reviews your children’s details, not yours. Your account opens once a child is approved (or, for a registered child, once they confirm you).",
+    "modeLegend": "How would you like to add this child?",
+    "modes": {
+      "existing": {
+        "title": "Already registered",
+        "description": "For example, a graduate with their own account, or a child another parent already registered."
+      },
+      "new": {
+        "title": "Register my child",
+        "description": "We’ll create your child’s record; you manage it. Our committee checks these details."
+      }
+    },
+    "searchIntro": "Your child appears only if their full name (romaji or kanji) and date of birth exactly match their registration.",
+    "searchName": "Child’s full name",
+    "searchNameHint": "In romaji or kanji, as registered. e.g. Hanako Yamada or 山田花子",
+    "dateOfBirth": "Child’s date of birth",
+    "find": "Find",
+    "searching": "Searching…",
+    "found": "{count, plural, one {# match found} other {# matches found}}. Select your child.",
+    "notFound": "No registered member matches this name and date of birth. Check the spelling, or register your child as new.",
+    "switchToNew": "Switch to “Register my child”",
+    "searchIncomplete": "Enter your child’s full name and date of birth.",
+    "searchFailed": "The search didn’t work. Please try again.",
+    "select": "Select",
+    "selected": "Selected",
+    "change": "Change",
+    "changeNamed": "Change selected child ({name})",
+    "confirmNote": "We’ll ask your child (or the parent who manages their account) to confirm that you’re their parent.",
+    "newIntro": "We’ll create your child’s record; you manage it. Our committee checks these details.",
+    "nameRomaji": "Child’s name (romaji)",
+    "nameKanji": "Child’s name (kanji / kana)",
+    "joinedYear": "Year your child joined AIS",
+    "leftYear": "Year your child left AIS",
+    "leftYearHint": "Only if your child left AIS before graduating. Leave empty if they’re still at AIS or graduated."
+  },
+  "placeholders": {
+    "lastNameKana": "e.g. ヤマダ",
+    "firstNameKana": "e.g. タロウ"
+  },
+  "diploma": {
+    "title": "Diploma (卒業証書)",
+    "intro": "If you graduated from AIS, upload a photo or scan of your diploma. The committee uses it to confirm you attended, and deletes it 30 days after deciding.",
+    "label": "Diploma file",
+    "hint": "JPG, PNG or PDF (up to 10 MB). Make sure your name and graduation year are readable.",
+    "unavailable": "I don't have my diploma",
+    "unavailableHint": "If so, add any other document that shows you attended (report card, a yearbook photo, …) below."
+  },
+  "parentRegistered": {
+    "title": "It looks like a parent has already registered you.",
+    "body": "Ask them to send you a link with “Hand over to my child” on their Family page: you'll get the approved record with no new review. You can also continue here; the committee will then combine the two accounts."
+  },
+  "classYears": {
+    "title": "Class {number}: classes by year (to check)",
+    "hint": "The class for each school year (April–March). Check it matches the classes you remember.",
+    "year": "School year",
+    "class": "Class",
+    "now": "(this year)"
+  },
+  "choose": "Choose…",
+  "recommended": "Recommended",
+  "kanjiReminder": {
+    "title": "No kanji / kana name yet",
+    "body": "You can send without it, but we recommend adding it so Japanese classmates and teachers can find you by name (adding it after approval needs a request). If you don't have a kanji name, just send.",
+    "action": "Go back and add it"
+  }
+}

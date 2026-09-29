@@ -1,5 +1,5 @@
 import type { Href } from "expo-router";
-import { API_URL } from "./config";
+import { SITE_URL } from "./config";
 
 /**
  * Website paths ↔ app screens. Pages the app has natively open natively —
@@ -51,7 +51,7 @@ export type SiteUrl = { path: string; query: URLSearchParams };
  * "https://ais.kai-lab.net/ja/app/follows?tab=x" → { path: "/app/follows",
  * query: tab=x }. Null for other sites (or anything unparsable).
  */
-export function siteUrl(urlOrPath: string, origin = API_URL): SiteUrl | null {
+export function siteUrl(urlOrPath: string, origin = SITE_URL): SiteUrl | null {
   let rest = urlOrPath;
   if (/^[a-z][a-z0-9+.-]*:/i.test(urlOrPath)) {
     try {
@@ -69,7 +69,7 @@ export function siteUrl(urlOrPath: string, origin = API_URL): SiteUrl | null {
 }
 
 /** Just the path of siteUrl() (null for other sites). */
-export function sitePath(urlOrPath: string, origin = API_URL): string | null {
+export function sitePath(urlOrPath: string, origin = SITE_URL): string | null {
   return siteUrl(urlOrPath, origin)?.path ?? null;
 }
 

@@ -1,0 +1,22 @@
+{
+  "title": "Teachers",
+  "description": "Add or remove current teachers. Current teachers can see the profiles of current (under-age) students, so every change is logged.",
+  "add": {
+    "title": "Add a current teacher",
+    "search": "Search",
+    "placeholder": "Search by name (romaji or kanji)",
+    "hint": "Search for a member by name, then press “Make current”.",
+    "none": "No one found. Only approved members are listed.",
+    "button": "Make current"
+  },
+  "current": {
+    "title": "Current teachers",
+    "hint": "When someone leaves, press “Move to former”. This year is recorded as their leave year; their record stays.",
+    "since": "since {year}",
+    "remove": "Move to former",
+    "none": "No current teachers yet.",
+    "removeConfirm": "Remove this teacher's registration?",
+    "schoolEmail": "School email verified",
+    "schoolEmailMissing": "School email not confirmed"
+  }
+}

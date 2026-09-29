@@ -2,7 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "npx expo export --platform web",
-  "outputDirectory": "dist",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "buildCommand": "prisma generate && expo export -p web",
+  "outputDirectory": "dist/client",
+  "functions": {
+    "api/index.ts": {
+      "includeFiles": "dist/server/**"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
 }

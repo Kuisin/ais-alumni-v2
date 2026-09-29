@@ -1,0 +1,70 @@
+{
+  "metaTitle": "AIS Alumni — the Aichi International School community",
+  "hero": {
+    "eyebrow": "Aichi International School",
+    "title": "Stay connected with the AIS community",
+    "lead": "One place for former students, parents, teachers and staff to find each other, join reunions and hear news from the AIS Alumni Committee.",
+    "signUp": "Sign up",
+    "logIn": "Log in",
+    "openApp": "Open the app",
+    "signedInAs": "You're signed in."
+  },
+  "features": {
+    "title": "What you can do",
+    "items": {
+      "directory": {
+        "title": "Find classmates and teachers",
+        "body": "Search by graduation year, division or what people are doing now. Contact details are shared only with people you accept."
+      },
+      "events": {
+        "title": "Reunions and events",
+        "body": "RSVP in one tap and get email reminders a week and a day before."
+      },
+      "news": {
+        "title": "News from the committee",
+        "body": "Announcements for alumni, parents and staff, in Japanese and English."
+      },
+      "line": {
+        "title": "Updates on LINE",
+        "body": "Link LINE to get news and chat mentions from the AIS Alumni Committee official account. Email works too."
+      },
+      "privacy": {
+        "title": "Verified members only",
+        "body": "Every account is checked by the committee before it can see other members."
+      },
+      "family": {
+        "title": "Families together",
+        "body": "Parents and children can link their accounts, and students' privacy is protected."
+      }
+    }
+  },
+  "steps": {
+    "title": "How to join",
+    "items": {
+      "signup": {
+        "title": "Sign up",
+        "body": "Use your email, Google or LINE. It takes a minute."
+      },
+      "verify": {
+        "title": "Tell us your AIS connection",
+        "body": "Your years at AIS, your role and a classmate or teacher who knows you."
+      },
+      "approved": {
+        "title": "Get approved",
+        "body": "The committee reviews your application and lets you know by email."
+      }
+    }
+  },
+  "audience": {
+    "title": "Who can join",
+    "body": "Teachers and staff, current students and parents, former students, and parents of former students."
+  },
+  "cta": {
+    "title": "Ready to reconnect?",
+    "body": "Create your account and apply for membership today."
+  },
+  "about": {
+    "title": "Who runs this",
+    "body": "This app is run independently by the AIS Alumni Committee, a volunteer group of AIS graduates. It is not operated or managed by Aichi International School."
+  }
+}
