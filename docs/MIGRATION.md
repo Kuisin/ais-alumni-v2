@@ -8,7 +8,8 @@ replacing the Next.js site's pages.
 | | Lives in | Notes |
 |---|---|---|
 | Native app | **here** (moved from ais-alumni-app `mobile/`) | Expo SDK 57, Expo Router |
-| API, auth, database, jobs, LINE, email | ais-alumni-app (Next.js) | `/api/mobile/v1`, Prisma, Supabase, Vercel |
+| App API (`/api/mobile/v1`), LINE sign-in, notifications | **here** (Expo API routes, `src/server/`) | same database |
+| Schema + migrations, scheduled jobs, LINE webhook, files | ais-alumni-app (Next.js) | Prisma, Supabase, Vercel |
 | Website pages (public, member, admin) | ais-alumni-app (Next.js) | the app opens the ones it lacks in a web view |
 | Contract types, UI strings | server, copied here | `pnpm sync:server` |
 

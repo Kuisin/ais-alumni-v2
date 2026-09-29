@@ -3,7 +3,7 @@ import * as WebBrowser from "expo-web-browser";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useAuth } from "@/lib/auth";
-import { API_URL, PRODUCTION_URL } from "@/lib/config";
+import { API_URL, PRODUCTION_URL, SITE_URL } from "@/lib/config";
 import { space, Text, TOUCH } from "@/ui";
 
 /**
@@ -21,7 +21,7 @@ export function AppInfo() {
       <Pressable
         accessibilityRole="link"
         onPress={() =>
-          void WebBrowser.openBrowserAsync(`${API_URL}/${locale}/privacy`)
+          void WebBrowser.openBrowserAsync(`${SITE_URL}/${locale}/privacy`)
         }
         style={styles.link}
       >

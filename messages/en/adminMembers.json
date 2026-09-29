@@ -1,0 +1,334 @@
+{
+  "title": "Members",
+  "description": "Search, review and edit member accounts.",
+  "noName": "(no name yet)",
+  "empty": "No members match these filters.",
+  "resultCount": "{count, plural, one {# member} other {# members}}",
+  "pagination": "Pages",
+  "nextPage": "Next page",
+  "firstPage": "First page",
+  "filters": {
+    "label": "Filter members",
+    "search": "Name or email",
+    "searchPlaceholder": "e.g. Tanaka, taro@example.com",
+    "state": "State",
+    "role": "Role",
+    "line": "LINE",
+    "any": "Any",
+    "lineLinked": "Linked",
+    "lineFollowing": "Linked and following",
+    "lineUnlinked": "Not linked",
+    "adminOnly": "Admins only",
+    "more": "Filters",
+    "activeCount": "{count} on"
+  },
+  "columns": {
+    "name": "Name",
+    "email": "Email",
+    "state": "State",
+    "roles": "Roles",
+    "line": "LINE",
+    "created": "Joined"
+  },
+  "badge": {
+    "admin": "Admin"
+  },
+  "line": {
+    "notLinked": "Not linked",
+    "linkedNotFollowing": "Linked, not following",
+    "following": "Linked and following",
+    "short": {
+      "notLinked": "Not linked",
+      "linkedNotFollowing": "Linked",
+      "following": "Following"
+    }
+  },
+  "detail": {
+    "title": "Member",
+    "back": "All members",
+    "unverified": "unverified",
+    "providers": "Sign-in methods",
+    "notifyVia": "Notifications",
+    "deactivatedAt": "Deactivated",
+    "merged": "Accounts merged. The duplicate account has been removed.",
+    "sections": "Sections on this page",
+    "overview": "Overview",
+    "account": "Account"
+  },
+  "profile": {
+    "title": "Profile",
+    "nameRomaji": "Name (romaji)",
+    "nameKanji": "Name (kanji/kana)",
+    "nameAtAis": "Name at AIS",
+    "dateOfBirth": "Date of birth",
+    "bio": "Bio",
+    "phone": "Phone",
+    "save": "Save profile",
+    "gender": "Gender",
+    "nameKana": "Name in katakana"
+  },
+  "roles": {
+    "title": "Roles",
+    "none": "No roles.",
+    "addTitle": "Add a role",
+    "addRole": "Role to add",
+    "add": "Add role",
+    "save": "Save role",
+    "remove": "Remove role",
+    "removeConfirm": "Remove this role?",
+    "removed": "Role removed.",
+    "lastRole": "A member must keep at least one role.",
+    "noFields": "This role has no extra details.",
+    "unknown": "Not set",
+    "yearsFrom": "Taught from (year)",
+    "yearsTo": "Taught until (year)",
+    "yearsToHint": "Leave empty if still at AIS.",
+    "subjects": "Subjects / position",
+    "schoolEmail": "School email",
+    "verified": "Verified",
+    "unverified": "Not verified",
+    "currentGrade": "Current grade",
+    "studentIdNo": "Student ID",
+    "aisRecord": "AIS record",
+    "lastDivision": "Last division at AIS",
+    "graduationOrLeaveYear": "Graduation / leaving year",
+    "didGraduate": "Graduated from AIS?",
+    "didGraduateYes": "Graduated",
+    "didGraduateNo": "Left before graduating",
+    "currentStatus": "Current status",
+    "currentStage": "Current stage",
+    "currentStageDetail": "Details (school, company…)",
+    "stageUpdatedAt": "Current stage last updated {date}",
+    "cohort": "学年 (class)",
+    "yearsToAny": "To (year)",
+    "yearsFromAny": "From (year)",
+    "teacherStatus": "Status",
+    "teacherStatusHint": "Former teachers lose teacher access (e.g. seeing students, 教職員・管理者).",
+    "derivedLabel": "Worked out",
+    "joinedYear": "Joined (year)",
+    "leftYear": "Left (year)",
+    "leftYearTeacherHint": "Empty = still at AIS",
+    "leftYearStudentHint": "Only if they left before graduating; empty = at AIS or graduated",
+    "derivedGraduated": "Graduated {year}",
+    "derivedLeft": "Left in {year} (before graduating)",
+    "parentDerived": "Whether a parent is current or former follows their children (family links).",
+    "addTypes": {
+      "CURRENT_STUDENT": "Student / Alumni",
+      "CURRENT_PARENT": "Parent",
+      "TEACHER": "Teacher / Staff"
+    },
+    "schoolEmailVerified": "Verified",
+    "stageFromHistory": "Worked out from the member's schools & work.",
+    "schoolEmailHint": "@aisnagoya.net only. The member confirms it with a code to mark it verified.",
+    "schoolEmailDomain": "Enter an @aisnagoya.net address.",
+    "schoolEmailInvalid": "Enter a valid email address.",
+    "schoolEmailRequired": "Current teachers need a school address.",
+    "schoolEmailTaken": "This address is already registered to another member."
+  },
+  "status": {
+    "title": "Account status",
+    "deactivate": "Deactivate account",
+    "deactivateConfirm": "Deactivate this account? The member is signed out of member pages and notified by email.",
+    "reactivate": "Reactivate account",
+    "notSelf": "You can't change your own account status here. Use Settings instead.",
+    "noActions": "Status changes for accounts under review are made on the Verification screen.",
+    "invalidTransition": "This status change isn't allowed.",
+    "deactivatedDone": "Account deactivated.",
+    "reactivatedDone": "Account reactivated."
+  },
+  "admin": {
+    "title": "Admin rights",
+    "isAdmin": "This member is an admin.",
+    "notAdmin": "This member is not an admin.",
+    "grant": "Make admin",
+    "revoke": "Remove admin rights",
+    "grantConfirm": "Give this member full admin access, including private member data?",
+    "revokeConfirm": "Remove this member's admin rights?",
+    "revokeSelfConfirm": "Remove your own admin rights? You will lose access to the admin area immediately.",
+    "lastAdmin": "There must always be at least one active admin.",
+    "mustBeActive": "Only active members can be made admins.",
+    "granted": "Admin rights granted.",
+    "revoked": "Admin rights removed."
+  },
+  "merge": {
+    "title": "Merge duplicate account",
+    "description": "If this person has two accounts, merge them into one. Sign-in methods, LINE, roles, follows, RSVPs and family links move to the kept account; the other account is deleted.",
+    "other": "Other account (ID or email)",
+    "otherHint": "Find the ID on the other member's page.",
+    "keep": "Which account should remain?",
+    "keepThis": "Keep this account",
+    "keepOther": "Keep the other account",
+    "preview": "Review merge",
+    "confirmTitle": "Confirm merge",
+    "keepLabel": "Keep",
+    "duplicateLabel": "Merge in and delete",
+    "whatHappens": "Empty profile fields on the kept account are filled from the other one. Where both have the same role, the kept account's details win. This cannot be undone.",
+    "confirm": "Merge accounts",
+    "working": "Merging…",
+    "notFound": "No account found with that ID or email.",
+    "same": "That's this same account.",
+    "notSelf": "You can't merge away your own account.",
+    "keepsManaged": "Keep the account the member signs in to; a parent-managed account can't absorb it.",
+    "bypass": "Merge anyway (skip this check)",
+    "bypassHint": {
+      "keepsManaged": "Keeps the parent-managed account and moves the member's sign-in methods to it. The parent no longer manages it (as after a handover)."
+    }
+  },
+  "audit": {
+    "title": "Audit trail",
+    "viewAll": "View the full audit log for this member"
+  },
+  "auditLog": {
+    "title": "Audit log",
+    "description": "Every admin action, newest first. Times are JST.",
+    "filterLabel": "Filter audit log",
+    "action": "Action",
+    "targetOrActorId": "Target or actor ID",
+    "actor": "By",
+    "target": "Target",
+    "data": "Details",
+    "system": "System / deleted user",
+    "empty": "No audit entries.",
+    "pagination": "Pages",
+    "older": "Older entries",
+    "newest": "Newest entries"
+  },
+  "notify": {
+    "deactivated": {
+      "subject": "Your AIS Alumni account was deactivated",
+      "text": "Your AIS Alumni account has been deactivated by the committee. If you think this is a mistake, please reply to this email or contact the committee."
+    },
+    "reactivated": {
+      "subject": "Your AIS Alumni account is active again",
+      "text": "Welcome back! Your AIS Alumni account has been reactivated."
+    }
+  },
+  "positions": {
+    "title": "Positions",
+    "held": "Assigned",
+    "heldCohort": "Assigned · {cohort}",
+    "grant": "Assign",
+    "update": "Update",
+    "remove": "Remove",
+    "names": {
+      "TEACHER_MANAGER": "Teacher manager",
+      "STUDENT_LEADER": "Class representative",
+      "TEACHER_REGISTRAR": "Teacher registrar",
+      "ALUMNI_COMMITTEE": "Alumni committee member (同窓会委員)"
+    },
+    "descriptions": {
+      "TEACHER_MANAGER": "Can send notifications to all members, selected roles or any class (up to 20 per day).",
+      "STUDENT_LEADER": "Represents their own 学年: joins the 学年代表 chat and is the contact for their class. You can also manage class reps per 学年 on the 学年 page.",
+      "TEACHER_REGISTRAR": "Can mark members as current teachers or move them to former (Admin mode → Teachers). Current teachers can see children's profiles, so grant this only to someone you trust.",
+      "ALUMNI_COMMITTEE": "Can post news to any members. Each post goes out after another 同窓会委員 (or an admin) approves it."
+    },
+    "requires": {
+      "TEACHER_MANAGER": "Requires the Teacher / Staff role.",
+      "STUDENT_LEADER": "Requires a current or former student role.",
+      "TEACHER_REGISTRAR": "",
+      "ALUMNI_COMMITTEE": "Requires a student or parent role."
+    },
+    "granted": "Position assigned.",
+    "removed": "Position removed.",
+    "errors": {
+      "forbidden": "You don't have permission to do that.",
+      "invalid": "Please check the input.",
+      "notEligible": "This member doesn't have the role this position requires.",
+      "cohort": "Choose the 学年 they represent.",
+      "ownCohort": "A 学年代表 must be a student or graduate of that 学年 (their own class)."
+    },
+    "cohort": "学年 (class)",
+    "removeConfirm": "Remove this position?"
+  },
+  "nameRequests": {
+    "title": "Name, birth date and gender changes",
+    "description": "Members can't change their name or date of birth after approval. Review requests here; approving applies them.",
+    "tabsLabel": "Name change requests",
+    "tabs": {
+      "pending": "To review",
+      "decided": "Decided"
+    },
+    "emptyPending": "No requests to review.",
+    "emptyHint": "Requests appear here when members ask for a name change from their profile.",
+    "emptyDecided": "No decided requests.",
+    "decision": "Decision",
+    "decisions": {
+      "APPROVE": "Approve and apply",
+      "REJECT": "Reject"
+    },
+    "noteOptional": "Note (optional, sent to the member)",
+    "noteRequired": "Reason (sent to the member)",
+    "submit": {
+      "APPROVE": "Approve and apply",
+      "REJECT": "Reject"
+    },
+    "approved": "Approved; the name has been updated.",
+    "rejected": "Rejected.",
+    "errors": {
+      "noteRequired": "Please give a reason when rejecting.",
+      "decided": "This request has already been decided."
+    }
+  },
+  "birthDateRequests": {
+    "title": "Date of birth changes",
+    "current": "Current",
+    "proposed": "Requested",
+    "notSet": "Not registered",
+    "approved": "Approved; the date of birth has been updated."
+  },
+  "genderRequests": {
+    "title": "Gender changes",
+    "current": "Current",
+    "proposed": "Requested",
+    "notSet": "Not registered",
+    "approved": "Approved; the gender has been updated."
+  },
+  "family": {
+    "title": "Family",
+    "as": {
+      "parent": "Parent",
+      "child": "Child"
+    },
+    "noAccount": "(no account)",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "confirm": "Confirm",
+    "remove": "Unlink",
+    "removeLabel": "Unlink {name}",
+    "removeConfirmed": "Unlink them? If nothing else connects them, the family is split.",
+    "removePending": "Cancel this pending link?",
+    "none": "No family linked.",
+    "relatives": "Same family:",
+    "add": "Link family",
+    "addAs": "Link as",
+    "addChild": "Add a child",
+    "addParent": "Add a parent",
+    "search": "Search by name",
+    "addHint": "A parent needs a parent role and a child a student / graduate role. Links made by an admin are confirmed right away.",
+    "addLabel": "Link {name} as {as}",
+    "noResults": "No one found.",
+    "family": {
+      "linked": "Linked.",
+      "confirmed": "Confirmed.",
+      "removed": "Unlinked.",
+      "errors": {
+        "self": "They can't be linked to themselves.",
+        "wrongRole": "Wrong type (a parent needs a parent role, a child a student / graduate role).",
+        "already": "They're already linked.",
+        "notFound": "Not found.",
+        "forbidden": "Not allowed."
+      }
+    },
+    "errors": {
+      "self": "They can't be linked to themselves.",
+      "wrongRole": "Wrong type (a parent needs a parent role, a child a student / graduate role).",
+      "already": "They're already linked.",
+      "notFound": "Not found.",
+      "forbidden": "Not allowed."
+    }
+  },
+  "history": {
+    "title": "Education & work",
+    "intro": "Add, edit or remove entries for the member (including who can see them). Changes are logged in the audit log and update their current status."
+  }
+}

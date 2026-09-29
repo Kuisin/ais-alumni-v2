@@ -1,0 +1,334 @@
+{
+  "title": "会員",
+  "description": "会員アカウントの検索・確認・編集",
+  "noName": "（氏名未登録）",
+  "empty": "条件に合う会員はいません。",
+  "resultCount": "{count}件",
+  "pagination": "ページ",
+  "nextPage": "次のページ",
+  "firstPage": "最初のページ",
+  "filters": {
+    "label": "会員の絞り込み",
+    "search": "氏名またはメールアドレス",
+    "searchPlaceholder": "例：田中、taro@example.com",
+    "state": "状態",
+    "role": "区分",
+    "line": "LINE",
+    "any": "すべて",
+    "lineLinked": "連携済み",
+    "lineFollowing": "連携済み・友だち追加済み",
+    "lineUnlinked": "未連携",
+    "adminOnly": "管理者のみ",
+    "more": "絞り込み",
+    "activeCount": "{count}件"
+  },
+  "columns": {
+    "name": "氏名",
+    "email": "メールアドレス",
+    "state": "状態",
+    "roles": "区分",
+    "line": "LINE",
+    "created": "登録日"
+  },
+  "badge": {
+    "admin": "管理者"
+  },
+  "line": {
+    "notLinked": "未連携",
+    "linkedNotFollowing": "連携済み・友だち未追加",
+    "following": "連携済み・友だち追加済み",
+    "short": {
+      "notLinked": "未連携",
+      "linkedNotFollowing": "連携のみ",
+      "following": "友だち"
+    }
+  },
+  "detail": {
+    "title": "会員詳細",
+    "back": "会員一覧",
+    "unverified": "未確認",
+    "providers": "ログイン方法",
+    "notifyVia": "通知",
+    "deactivatedAt": "停止日時",
+    "merged": "アカウントを統合しました。重複アカウントは削除されました。",
+    "sections": "ページ内の項目",
+    "overview": "概要",
+    "account": "アカウント"
+  },
+  "profile": {
+    "title": "プロフィール",
+    "nameRomaji": "氏名（ローマ字）",
+    "nameKanji": "氏名（漢字・かな）",
+    "nameAtAis": "AIS在籍時の氏名",
+    "dateOfBirth": "生年月日",
+    "bio": "自己紹介",
+    "phone": "電話番号",
+    "save": "プロフィールを保存",
+    "gender": "性別",
+    "nameKana": "フリガナ"
+  },
+  "roles": {
+    "title": "区分",
+    "none": "区分がありません。",
+    "addTitle": "区分を追加",
+    "addRole": "追加する区分",
+    "add": "区分を追加",
+    "save": "区分を保存",
+    "remove": "区分を削除",
+    "removeConfirm": "この区分を削除しますか？",
+    "removed": "区分を削除しました。",
+    "lastRole": "区分は少なくとも1つ必要です。",
+    "noFields": "この区分には追加の項目はありません。",
+    "unknown": "未設定",
+    "yearsFrom": "在職開始年",
+    "yearsTo": "在職終了年",
+    "yearsToHint": "現在も在職中の場合は空欄にしてください。",
+    "subjects": "担当教科・役職",
+    "schoolEmail": "学校のメールアドレス",
+    "verified": "確認済み",
+    "unverified": "未確認",
+    "currentGrade": "現在の学年",
+    "studentIdNo": "生徒番号",
+    "aisRecord": "AISでの在籍記録",
+    "lastDivision": "最後に在籍した課程",
+    "graduationOrLeaveYear": "卒業・退学した年",
+    "didGraduate": "AISを卒業しましたか？",
+    "didGraduateYes": "卒業",
+    "didGraduateNo": "卒業前に退学・転校",
+    "currentStatus": "現在の状況",
+    "currentStage": "現在の所属",
+    "currentStageDetail": "詳細（学校名・勤務先など）",
+    "stageUpdatedAt": "現在の所属の最終更新：{date}",
+    "cohort": "学年",
+    "yearsToAny": "在籍終了（年）",
+    "yearsFromAny": "在籍開始（年）",
+    "teacherStatus": "ステータス",
+    "teacherStatusHint": "元教職員には教職員としての権限（生徒の閲覧、教職員・管理者など）がありません。",
+    "derivedLabel": "自動判定",
+    "joinedYear": "入った年",
+    "leftYear": "離れた年",
+    "leftYearTeacherHint": "空欄 = 現職",
+    "leftYearStudentHint": "卒業前に離れた場合のみ。空欄 = 在校中または卒業",
+    "derivedGraduated": "{year}年 卒業",
+    "derivedLeft": "{year}年 退学（卒業前）",
+    "parentDerived": "保護者の在校・卒業はお子さま（家族の連携）から自動で判定されます。",
+    "addTypes": {
+      "CURRENT_STUDENT": "在校生・卒業生",
+      "CURRENT_PARENT": "保護者",
+      "TEACHER": "教職員"
+    },
+    "schoolEmailVerified": "確認済み",
+    "stageFromHistory": "学歴・職歴から自動で計算されます（編集は会員の学歴・職歴で）。",
+    "schoolEmailHint": "@aisnagoya.net のアドレスのみ。確認済みにするには本人がコードで確認します。",
+    "schoolEmailDomain": "@aisnagoya.net のアドレスを入力してください。",
+    "schoolEmailInvalid": "正しいメールアドレスを入力してください。",
+    "schoolEmailRequired": "現職の教職員には学校のメールアドレスが必要です。",
+    "schoolEmailTaken": "このアドレスはすでに別の会員が登録しています。"
+  },
+  "status": {
+    "title": "アカウントの状態",
+    "deactivate": "アカウントを停止",
+    "deactivateConfirm": "このアカウントを停止しますか？会員ページを利用できなくなり、本人にメールで通知されます。",
+    "reactivate": "アカウントを再開",
+    "notSelf": "ご自身のアカウントの状態はここでは変更できません。「設定」から操作してください。",
+    "noActions": "審査中のアカウントの状態は「本人確認」画面で変更します。",
+    "invalidTransition": "この状態には変更できません。",
+    "deactivatedDone": "アカウントを停止しました。",
+    "reactivatedDone": "アカウントを再開しました。"
+  },
+  "admin": {
+    "title": "管理者権限",
+    "isAdmin": "この会員は管理者です。",
+    "notAdmin": "この会員は管理者ではありません。",
+    "grant": "管理者にする",
+    "revoke": "管理者権限を外す",
+    "grantConfirm": "この会員に、会員の非公開情報を含むすべての管理機能へのアクセスを与えますか？",
+    "revokeConfirm": "この会員の管理者権限を外しますか？",
+    "revokeSelfConfirm": "ご自身の管理者権限を外しますか？すぐに管理画面を利用できなくなります。",
+    "lastAdmin": "有効な管理者が少なくとも1人必要です。",
+    "mustBeActive": "有効な会員のみ管理者にできます。",
+    "granted": "管理者権限を付与しました。",
+    "revoked": "管理者権限を外しました。"
+  },
+  "merge": {
+    "title": "重複アカウントの統合",
+    "description": "同じ人が2つのアカウントを持っている場合に、1つにまとめます。ログイン方法・LINE・区分・フォロー・出欠・家族のつながりは残すアカウントに移り、もう一方は削除されます。",
+    "other": "もう一方のアカウント（IDまたはメールアドレス）",
+    "otherHint": "IDはもう一方の会員詳細ページで確認できます。",
+    "keep": "どちらのアカウントを残しますか？",
+    "keepThis": "このアカウントを残す",
+    "keepOther": "もう一方のアカウントを残す",
+    "preview": "統合内容を確認",
+    "confirmTitle": "統合の確認",
+    "keepLabel": "残す",
+    "duplicateLabel": "統合して削除",
+    "whatHappens": "残すアカウントの空欄の項目は、もう一方の情報で補完されます。同じ区分がある場合は残すアカウントの内容が優先されます。この操作は元に戻せません。",
+    "confirm": "アカウントを統合",
+    "working": "統合しています…",
+    "notFound": "そのIDまたはメールアドレスのアカウントが見つかりません。",
+    "same": "同じアカウントです。",
+    "notSelf": "ご自身のアカウントを統合して削除することはできません。",
+    "keepsManaged": "保護者が管理するアカウントは残せません。本人がログインするアカウントを残してください。",
+    "bypass": "チェックを無視して統合する",
+    "bypassHint": {
+      "keepsManaged": "保護者が管理するアカウントを残し、本人のログイン方法を移します。残すアカウントの保護者による管理は解除されます（引き継ぎ済みと同じ扱い）。"
+    }
+  },
+  "audit": {
+    "title": "操作履歴",
+    "viewAll": "この会員の操作履歴をすべて表示"
+  },
+  "auditLog": {
+    "title": "操作ログ",
+    "description": "管理者によるすべての操作（新しい順・日本時間）",
+    "filterLabel": "操作ログの絞り込み",
+    "action": "操作",
+    "targetOrActorId": "対象または実行者のID",
+    "actor": "実行者",
+    "target": "対象",
+    "data": "詳細",
+    "system": "システム／削除済みユーザー",
+    "empty": "操作ログはありません。",
+    "pagination": "ページ",
+    "older": "古いログ",
+    "newest": "最新のログ"
+  },
+  "notify": {
+    "deactivated": {
+      "subject": "AIS同窓会のアカウントが停止されました",
+      "text": "委員会により、AIS同窓会のアカウントが停止されました。お心当たりがない場合は、このメールに返信するか委員会までご連絡ください。"
+    },
+    "reactivated": {
+      "subject": "AIS同窓会のアカウントが再開されました",
+      "text": "おかえりなさい！AIS同窓会のアカウントが再開されました。"
+    }
+  },
+  "positions": {
+    "title": "役職",
+    "held": "任命済み",
+    "heldCohort": "任命済み・{cohort}",
+    "grant": "任命する",
+    "update": "更新",
+    "remove": "解除",
+    "names": {
+      "TEACHER_MANAGER": "教職員・管理者",
+      "STUDENT_LEADER": "学年代表",
+      "TEACHER_REGISTRAR": "教職員登録担当",
+      "ALUMNI_COMMITTEE": "同窓会委員"
+    },
+    "descriptions": {
+      "TEACHER_MANAGER": "すべての会員、選択した立場、または任意の学年にお知らせを送れます（1日20件まで）。",
+      "STUDENT_LEADER": "自分の学年の代表です。「学年代表」チャットに参加し、学年の会員の窓口になります。学年ごとの管理は「学年」ページからもできます。",
+      "TEACHER_REGISTRAR": "会員を現職の教職員として登録したり、元教職員に変更したりできます（管理モードの「教職員」）。現職の教職員はお子さんのプロフィールを見られるため、信頼できる方に付与してください。",
+      "ALUMNI_COMMITTEE": "すべての会員にニュースを送れます。ほかの同窓会委員（または管理者）が承認すると公開されます。"
+    },
+    "requires": {
+      "TEACHER_MANAGER": "教職員の立場が必要です。",
+      "STUDENT_LEADER": "在校生または卒業生の立場が必要です。",
+      "TEACHER_REGISTRAR": "",
+      "ALUMNI_COMMITTEE": "在校生・卒業生または保護者の立場が必要です。"
+    },
+    "granted": "役職を任命しました。",
+    "removed": "役職を解除しました。",
+    "errors": {
+      "forbidden": "この操作を行う権限がありません。",
+      "invalid": "入力内容を確認してください。",
+      "notEligible": "この役職に必要な立場がありません。",
+      "cohort": "担当する学年を選択してください。",
+      "ownCohort": "学年代表は、その学年の在校生・卒業生から選んでください（自分の学年のみ）。"
+    },
+    "cohort": "担当学年",
+    "removeConfirm": "この役職を外しますか？"
+  },
+  "nameRequests": {
+    "title": "氏名・生年月日・性別の変更",
+    "description": "承認後の氏名と生年月日は会員自身では変更できません。変更の申請を確認し、承認すると反映されます。",
+    "tabsLabel": "氏名の変更申請",
+    "tabs": {
+      "pending": "確認待ち",
+      "decided": "判断済み"
+    },
+    "emptyPending": "確認待ちの申請はありません。",
+    "emptyHint": "会員がプロフィール編集から氏名の変更を申請すると、ここに表示されます。",
+    "emptyDecided": "判断済みの申請はありません。",
+    "decision": "判断",
+    "decisions": {
+      "APPROVE": "承認して反映",
+      "REJECT": "却下"
+    },
+    "noteOptional": "メモ（任意・会員に送信されます）",
+    "noteRequired": "却下の理由（会員に送信されます）",
+    "submit": {
+      "APPROVE": "承認して反映",
+      "REJECT": "却下する"
+    },
+    "approved": "承認し、氏名を変更しました。",
+    "rejected": "却下しました。",
+    "errors": {
+      "noteRequired": "却下する場合は理由を入力してください。",
+      "decided": "この申請はすでに判断されています。"
+    }
+  },
+  "birthDateRequests": {
+    "title": "生年月日の変更",
+    "current": "現在",
+    "proposed": "申請",
+    "notSet": "未登録",
+    "approved": "承認し、生年月日を変更しました。"
+  },
+  "genderRequests": {
+    "title": "性別の変更",
+    "current": "現在",
+    "proposed": "申請",
+    "notSet": "未登録",
+    "approved": "承認し、性別を変更しました。"
+  },
+  "family": {
+    "title": "家族",
+    "as": {
+      "parent": "保護者",
+      "child": "子ども"
+    },
+    "noAccount": "（アカウントなし）",
+    "confirmed": "確認済み",
+    "pending": "確認待ち",
+    "confirm": "確認する",
+    "remove": "解除",
+    "removeLabel": "{name}とのつながりを解除",
+    "removeConfirmed": "このつながりを解除しますか？ほかのつながりがなければ、家族が分かれます。",
+    "removePending": "この確認待ちのつながりを取り消しますか？",
+    "none": "つながっている家族はいません。",
+    "relatives": "同じ家族：",
+    "add": "家族をつなげる",
+    "addAs": "つなげる相手",
+    "addChild": "子どもを追加",
+    "addParent": "保護者を追加",
+    "search": "名前で検索",
+    "addHint": "保護者には保護者、子どもには在校生・卒業生の区分が必要です。管理者がつなげたつながりはすぐに確認済みになります。",
+    "addLabel": "{name}を{as}としてつなげる",
+    "noResults": "見つかりませんでした。",
+    "family": {
+      "linked": "家族をつなげました。",
+      "confirmed": "確認しました。",
+      "removed": "解除しました。",
+      "errors": {
+        "self": "本人とはつなげられません。",
+        "wrongRole": "区分が合いません（保護者には保護者、子どもには在校生・卒業生の区分が必要です）。",
+        "already": "すでにつながっています。",
+        "notFound": "見つかりませんでした。",
+        "forbidden": "権限がありません。"
+      }
+    },
+    "errors": {
+      "self": "本人とはつなげられません。",
+      "wrongRole": "区分が合いません（保護者には保護者、子どもには在校生・卒業生の区分が必要です）。",
+      "already": "すでにつながっています。",
+      "notFound": "見つかりませんでした。",
+      "forbidden": "権限がありません。"
+    }
+  },
+  "history": {
+    "title": "学歴・職歴",
+    "intro": "会員に代わって追加・編集・削除できます（公開範囲の設定も含みます）。変更は監査ログに記録され、現在の状況にも反映されます。"
+  }
+}

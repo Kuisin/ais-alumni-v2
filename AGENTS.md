@@ -1,12 +1,22 @@
 # AIS Alumni — app (Expo: iOS, Android, web)
 
-The AIS Alumni app, one Expo Router codebase for iOS, Android and (see
-docs/MIGRATION.md) the web. The backend is the Next.js site in
+The AIS Alumni app, one Expo Router codebase for iOS, Android and the web
+— and its own backend: the JSON API under `/api/mobile/v1` is Expo API
+routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
+`src/server/`), deployed with the web app on Vercel (`web.output:
+"server"`, `api/index.ts`). It shares the database with the website in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
-server" below): the app talks to its JSON API under `/api/mobile/v1` (route
-handlers in the server's `src/app/api/mobile/v1`, helpers in
-`src/lib/mobile`) and shows the server's pages it doesn't have natively in a
-signed-in web view.
+server"/"the website" below), which still owns the schema and migrations,
+the pages the app opens in its web view (and their sign-in handoff), stored
+files, and scheduled jobs. Tokens live in the shared database, so either
+side accepts them.
+
+`src/server/` came from the website's `src/lib` (Next.js APIs such as
+`headers()` resolve to stand-ins in `src/server/shims`, see
+metro.config.js). It is now this repo's copy: change it here. LINE sign-in
+is implemented directly (`src/server/lib/mobile/oauth.ts`); the LINE Login
+channel needs the callback
+`https://<domain>/api/mobile/v1/auth/oauth/callback/line`.
 
 Shared with the server, copied here: the API contract types
 (`src/contract`, from the server's `src/lib/mobile/contract`) and the UI

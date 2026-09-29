@@ -1,0 +1,32 @@
+{
+  "title": "進路",
+  "description": "卒業・退学した会員が、AISの後にどの学校・会社へ進んだかを学歴・職歴から集計します。",
+  "cohort": "学年",
+  "allCohorts": "すべての学年",
+  "apply": "表示",
+  "summary": "概要",
+  "formerStudents": "卒業・退学した会員",
+  "withHistory": "学歴・職歴を登録済み",
+  "topSchools": "主な進学先（{level}）",
+  "topWork": "主な勤務先（現在）",
+  "chartNote": "学歴・職歴を登録した会員のうち、各校・各社の人数（1人1回）。",
+  "graduated": "{year}年 卒業",
+  "left": "{year}年 退学",
+  "table": {
+    "title": "一人ひとりの進路",
+    "hint": "各段階で最初に通った学校と、現在の勤務先（なければ在学中の学校）です。名前から会員の詳細を開けます。",
+    "name": "名前",
+    "now": "現在",
+    "noHistory": "未登録",
+    "empty": "該当する会員はいません。",
+    "count": "{total}人中 {shown}人を表示",
+    "showAll": "すべて表示（{count}人）"
+  },
+  "filterLabel": "進路の絞り込み",
+  "onlyHistory": "未登録を除く",
+  "rate": "登録率 {percent}%",
+  "chartsLabel": "主な進学先・勤務先",
+  "noHistory": "まだ学歴・職歴を登録した会員がいません。",
+  "noHistoryHint": "会員が学歴・職歴を登録すると、ここに進学先や勤務先が表示されます。ニュースで登録をお願いしてみましょう。",
+  "askMembers": "会員に登録をお願いする"
+}

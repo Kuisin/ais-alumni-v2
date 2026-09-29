@@ -1,0 +1,110 @@
+{
+  "pageTitle": "Send a notification",
+  "descriptionAny": "Send a message to members. They get a notification by email and read the message in the app.",
+  "descriptionLeader": "As class representative, you can send a message to members of your 学年. They get a notification by email and read the message in the app.",
+  "audience": {
+    "label": "Send to",
+    "ALL": "All members",
+    "ROLES": "Members with selected roles",
+    "COHORT": "A 学年 (class)",
+    "cohortHint": "Current and former students who selected this 学年.",
+    "leaderOnly": "Your 学年:",
+    "cohort": "学年 (class)",
+    "chooseCohort": "Choose a class",
+    "desc": {
+      "ALL": "Reaches every active member.",
+      "ROLES": "Reaches members in the roles you pick (students, alumni, parents, teachers…).",
+      "COHORT": "Reaches the students and alumni of the class you pick."
+    }
+  },
+  "title": "Title",
+  "body": "Message",
+  "bodyHint": "Your name and position are shown with the message. The email notification doesn't include the title or message.",
+  "preview": "Check recipients",
+  "checking": "Checking…",
+  "confirmSummary": "This will reach {recipients} members. {email} get a notification by email, then read the message in the app.",
+  "send": "Send to {count} members",
+  "sending": "Sending…",
+  "edit": "Edit",
+  "sentSummary": "Sent to {recipients} members ({email} notified by email). You can see who has read it in the history.",
+  "sendAnother": "Send another",
+  "history": "Sent messages",
+  "historyCounts": "Notified {recipients} (LINE {line} / email {email})",
+  "signature": "— {name} ({position}), via AIS Alumni",
+  "signatureCommittee": "— AIS Alumni Committee",
+  "positions": {
+    "TEACHER_MANAGER": "Teacher manager",
+    "STUDENT_LEADER": "Class representative",
+    "TEACHER_REGISTRAR": "Teacher registrar",
+    "ALUMNI_COMMITTEE": "Alumni committee member"
+  },
+  "fieldErrors": {
+    "required": "This field is required.",
+    "tooLong": "This is too long.",
+    "rolesRequired": "Choose at least one role.",
+    "cohortRequired": "Choose a 学年."
+  },
+  "errors": {
+    "forbidden": "Please sign in again.",
+    "validation": "Please check the highlighted fields.",
+    "notAllowed": "You can't send to this audience.",
+    "limit": "You've reached your sending limit. Please try again later.",
+    "noRecipients": "No members match this audience."
+  },
+  "sent": "Sent.",
+  "charCount": "{count} / {max} characters",
+  "fromPosition": "{name} ({position})",
+  "fromCommittee": "the AIS Alumni Committee",
+  "notifyContentless": {
+    "subject": "[AIS Alumni] You have a new message",
+    "text": "You have a new message from {from}.\nOpen the app to read it."
+  },
+  "historyMine": "Sent by you",
+  "historyAll": "All senders",
+  "historyTabs": "Messages to show",
+  "historyEmpty": "You haven't sent any messages yet.",
+  "sentBy": "From {name}",
+  "receipts": {
+    "title": "Read receipts",
+    "readOf": "Read {read} / {total}",
+    "percent": "{percent}%",
+    "none": "No read receipts",
+    "legacy": "This message was sent before read receipts were recorded, so there is no read status.",
+    "read": "Read",
+    "unread": "Unread",
+    "noneRead": "No one has read it yet.",
+    "allRead": "Everyone has read it.",
+    "showAll": "Show all ({count} more)"
+  },
+  "detail": {
+    "pageTitle": "Sent message",
+    "back": "Back to Send a notification",
+    "sentAt": "Sent",
+    "audience": "Sent to",
+    "from": "From",
+    "body": "Message"
+  },
+  "manage": {
+    "title": "Manage this message",
+    "archivedBadge": "Archived",
+    "editedBadge": "Edited",
+    "archivedHint": "It's hidden from recipients' “Messages for you”. Restore it to show it again (no new notification).",
+    "saved": "Saved. Recipients see it marked “Edited” (no new notification).",
+    "fieldTitle": "Title",
+    "fieldBody": "Message",
+    "editHint": "Editing doesn't send a new notification.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "archive": "Archive",
+    "restore": "Restore",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this message? It disappears for recipients and its read receipts are deleted. This can't be undone.",
+    "errors": {
+      "invalid": "Please check the fields.",
+      "forbidden": "You can't manage this message.",
+      "required": "Required.",
+      "tooLong": "Too long."
+    }
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "saving": "Saving…",
+  "queue": {
+    "title": "Verification queue",
+    "description": "Oldest applications first.",
+    "tabsLabel": "Queue",
+    "tabs": {
+      "pending": "Pending",
+      "needsInfo": "Waiting for applicant"
+    },
+    "empty": "No applications here.",
+    "submitted": "Submitted {date}",
+    "emptyHint": "New membership applications appear here, oldest first.",
+    "emptyNeedsInfoHint": "Applications you asked for more information on wait here until the applicant replies.",
+    "pagination": "Pages",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {pages}",
+    "search": "Search",
+    "searchPlaceholder": "Search by name (romaji or kanji)",
+    "children": "Children: {names}",
+    "registeredBy": "Registered by parent: {name}"
+  },
+  "badges": {
+    "noRoster": "No roster data",
+    "roster": "Roster {score}",
+    "vouches": "Vouches ✓{yes} ✗{no} ?{unsure} …{pending}",
+    "evidence": "{count, plural, =0 {No files} one {1 file} other {# files}}",
+    "schoolEmail": "School email verified",
+    "minor": "Minor",
+    "parentConfirmed": "Parent confirmed",
+    "parentUnconfirmed": "No parent confirmation",
+    "rosterMatch": "Roster match {score}",
+    "vouchCounts": "Vouches: {yes} yes · {no} no · {unsure} unsure · {pending} waiting",
+    "noVouches": "No vouches",
+    "diploma": "Diploma",
+    "invited": "Invited"
+  },
+  "status": {
+    "PENDING": "Pending",
+    "NEEDS_INFO": "Needs more info",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected"
+  },
+  "detail": {
+    "title": "Application",
+    "back": "Back to queue",
+    "submitted": "Submitted {date}",
+    "basics": "Basic information",
+    "years": "Years",
+    "minorNote": "This applicant is a minor. Approving counts as the committee’s confirmation, even without a parent confirmation.",
+    "lastDecision": "Previous decision",
+    "decidedAt": "Decided",
+    "note": "Note",
+    "account": "Account",
+    "email": "Email",
+    "state": "Account state",
+    "dob": "Date of birth",
+    "schoolEmail": "School email",
+    "verified": "(verified)",
+    "unverified": "(not verified)",
+    "parents": "Parents",
+    "children": "Children listed",
+    "confirmed": "confirmed",
+    "unconfirmed": "not confirmed",
+    "linked": "linked",
+    "answers": "Answers",
+    "roster": "Roster match",
+    "noRoster": "No roster rows to compare with.",
+    "rosterMatch": "Likely the same person.",
+    "rosterWeak": "Weak match — check carefully.",
+    "rosterRowGone": "The matched roster row has since been deleted.",
+    "vouches": "Vouches",
+    "evidence": "Documents",
+    "noEvidence": "No documents uploaded.",
+    "linkExpiry": "Links are valid for 15 minutes. Reload the page for new links.",
+    "deleteAfter": "deleted after {date}",
+    "status": "Status",
+    "oldFormat": "This application was sent with the earlier form; see the applicant's profile for details."
+  },
+  "roster": {
+    "title": "Roster",
+    "description": "Optional list of past students and staff. Applications are scored against it; matched rows are claimed on approval.",
+    "current": "Current roster",
+    "empty": "The roster is empty. Verification works without it.",
+    "kind": "Kind",
+    "count": "Rows",
+    "total": "Total",
+    "claimedCount": "{count, plural, one {1 row is} other {# rows are}} claimed by approved members.",
+    "importTitle": "Import CSV",
+    "file": "CSV file",
+    "fileTooLarge": "The file is too large (max 5 MB).",
+    "paste": "Or paste CSV",
+    "preview": "Preview",
+    "import": "Import",
+    "lineError": "Line {line}: {error}",
+    "rowErrors": {
+      "missingName": "name (romaji) is missing",
+      "badDate": "date of birth must be YYYY-MM-DD",
+      "badYear": "years must be 4-digit years",
+      "yearsOrder": "yearsTo is before yearsFrom",
+      "badKind": "unknown kind",
+      "tooManyColumns": "too many columns"
+    },
+    "messages": {
+      "preview": "{total, plural, one {1 row} other {# rows}} ready to import.",
+      "imported": "Imported {imported, plural, one {1 row} other {# rows}}.",
+      "empty": "No rows found.",
+      "tooMany": "Too many rows (max 20,000 per import).",
+      "hasErrors": "{errors, plural, one {1 row has} other {# rows have}} errors. Fix them and try again — nothing was imported.",
+      "generic": "Import failed. Please try again.",
+      "forbidden": "You don’t have permission to do that.",
+      "confirm": "Please tick the confirmation box.",
+      "deleted": "Deleted {deleted, plural, one {1 row} other {# rows}}."
+    },
+    "nameRomaji": "Name (romaji)",
+    "nameKanji": "Name (kanji)",
+    "dob": "Date of birth",
+    "years": "Years",
+    "claimed": "Claimed",
+    "claimedByApplicant": "By this applicant",
+    "claimedByOther": "By another member",
+    "deleteTitle": "Delete roster",
+    "deleteDescription": "Removes every roster row. Existing members are not affected.",
+    "deleteConfirm": "I understand that all roster rows will be deleted.",
+    "deleteAll": "Delete all rows",
+    "chooseFile": "Choose file",
+    "noFile": "No file chosen",
+    "columnsHint": "Columns in the order shown in the table above.",
+    "emptyHint": "Import a roster to score applications against it. Add one under “Import CSV” below.",
+    "goToImport": "Import a CSV",
+    "spec": {
+      "title": "CSV columns (in this order)",
+      "column": "Column",
+      "meaning": "Contents",
+      "required": "required",
+      "note": "A header row is optional. Use UTF-8 encoding.",
+      "cols": {
+        "nameRomaji": "Name (romaji)",
+        "nameKanji": "Name (kanji / kana)",
+        "dateOfBirth": "Date of birth (YYYY-MM-DD)",
+        "yearsFrom": "First year at AIS (4 digits)",
+        "yearsTo": "Last year at AIS (4 digits)",
+        "kind": "Kind: TEACHER, CURRENT_STUDENT, CURRENT_PARENT, FORMER_STUDENT, FORMER_PARENT (blank = FORMER_STUDENT)"
+      }
+    }
+  },
+  "vouches": {
+    "pending": "No answer yet",
+    "none": "No vouchers have been asked yet.",
+    "searchLabel": "Ask another member (search by name)",
+    "search": "Search",
+    "noResults": "No active members match that name.",
+    "add": "Ask",
+    "addNamed": "Ask {name}"
+  },
+  "aisRecord": {
+    "title": "AIS record",
+    "description": "Current / former status and grade are worked out from the 学年 and years. Edit them in the member editor.",
+    "edit": "Edit the member's roles"
+  },
+  "decision": {
+    "title": "Decision",
+    "label": "Decision",
+    "APPROVE": "Approve",
+    "NEEDS_INFO": "Ask for more information",
+    "REJECT": "Reject",
+    "reason": "Reason (sent to the applicant)",
+    "message": "Message to the applicant",
+    "noteOptional": "Note (optional, sent to the applicant)",
+    "noteHint": "The applicant receives this by email.",
+    "submit": {
+      "APPROVE": "Approve",
+      "NEEDS_INFO": "Send request",
+      "REJECT": "Reject"
+    },
+    "closed": "This application has been decided.",
+    "jump": "Go to decision",
+    "next": "Next application",
+    "backToQueue": "Back to applications"
+  },
+  "errors": {
+    "reasonRequired": "Please give a reason.",
+    "messageRequired": "Please write a message to the applicant.",
+    "required": "This field is required.",
+    "invalidYear": "Enter a valid 4-digit year."
+  },
+  "messages": {
+    "saved": "Saved.",
+    "forbidden": "You don’t have permission to do that.",
+    "validation": "Please check the form.",
+    "notFound": "Not found.",
+    "conflict": "This was already changed by someone else. Reload the page.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "notify": {
+    "approved": {
+      "subject": "Welcome to AIS Alumni",
+      "body": "Your application has been approved. You can now use all member features.",
+      "bodyWithNote": "Your application has been approved. You can now use all member features.\n\nMessage from the committee:\n{note}"
+    },
+    "rejected": {
+      "subject": "About your AIS Alumni application",
+      "body": "We’re sorry, but we could not approve your application.",
+      "bodyWithNote": "We’re sorry, but we could not approve your application.\n\nReason:\n{note}"
+    },
+    "needsInfo": {
+      "subject": "AIS Alumni: more information needed",
+      "body": "The committee needs a little more information to verify you. Please update your application from the link below.",
+      "bodyWithNote": "The committee needs a little more information to verify you:\n\n{note}\n\nPlease update your application from the link below."
+    }
+  },
+  "children": {
+    "title": "Children's AIS records",
+    "description": "Parents aren't reviewed themselves: once a child is approved and the relationship confirmed, the parent's account opens automatically.",
+    "none": "No children listed.",
+    "dob": "Date of birth",
+    "cohort": "Class",
+    "status": "Status",
+    "years": "At AIS",
+    "studentId": "Student ID",
+    "roster": "Roster check",
+    "rosterNone": "No roster data to compare with",
+    "rosterMatch": "Matches the roster ({score})",
+    "rosterWeak": "Weak roster match ({score})",
+    "source": {
+      "created": "Registered by this parent",
+      "registered": "Existing member",
+      "nameOnly": "Name only (older form)",
+      "title": "Source"
+    },
+    "link": {
+      "confirmed": "Relationship confirmed",
+      "onApproval": "Confirmed when the child is approved",
+      "childToConfirm": "Waiting for the child to confirm"
+    },
+    "nameOnlyHint": "Only a name was given (older form). Ask the parent to resubmit, or link them on the family page."
+  },
+  "managedDuplicate": {
+    "title": "A parent already registered this person",
+    "body": "A child account created by a parent has the same name and birth date as this applicant. Merging moves its AIS record and family links into the applicant's account (the applicant's account is kept). Then decide the application as usual.",
+    "registeredBy": "Registered by: {parent}",
+    "merge": "Merge into applicant's account",
+    "mergeConfirm": "Merge “{name}” into this applicant's account? This can't be undone."
+  },
+  "invite": {
+    "title": "Invitation",
+    "by": "Signed up through an invitation from <name></name> (created {date}).",
+    "said": "The inviter said: {what}",
+    "name": "Name note: {name}",
+    "match": {
+      "match": "Matches the application",
+      "mismatch": "Differs from the application. Please check",
+      "unknown": "The 学年 can't be compared"
+    },
+    "kindIndividual": "Individual invitation (strong recommendation)",
+    "kindGrade": "Year-group invitation ({count}/{max} used)",
+    "badgeIndividual": "Recommended",
+    "badgeGrade": "Year-group invite"
+  }
+}

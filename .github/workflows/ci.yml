@@ -17,6 +17,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: npx prisma generate
       - run: pnpm typecheck
       - run: pnpm lint
       - run: npx expo export --platform ios --platform android --platform web --output-dir /tmp/expo-export

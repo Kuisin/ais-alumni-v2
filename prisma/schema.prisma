@@ -1,0 +1,1322 @@
+// AIS Alumni — data model. Derived from spec §13 with the additions noted inline.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/server/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountState {
+  UNVERIFIED_EMAIL
+  EMAIL_VERIFIED
+  PENDING_REVIEW
+  NEEDS_INFO
+  ACTIVE
+  REJECTED
+  DEACTIVATED
+}
+
+enum Locale {
+  ja
+  en
+}
+
+enum NotifyChannel {
+  AUTO
+  EMAIL_ONLY
+}
+
+enum TeacherStatus {
+  CURRENT
+  FORMER
+}
+
+enum RoleKey {
+  TEACHER
+  CURRENT_STUDENT
+  CURRENT_PARENT
+  FORMER_STUDENT
+  FORMER_PARENT
+}
+
+// Added: who content / notifications are aimed at. Like RoleKey, but former
+// students are split by UserRole.didGraduate into 卒業生 and 元在校生
+// (src/lib/audience.ts). targetRoles stays written for older code.
+enum AudienceKey {
+  TEACHER
+  CURRENT_STUDENT
+  CURRENT_PARENT
+  GRADUATE
+  LEFT_STUDENT
+  FORMER_PARENT
+}
+
+// AIS has kindergarten and elementary only (AIS_DIVISIONS in src/lib/school.ts).
+// JUNIOR_HIGH / HIGH_SCHOOL are deprecated: kept until the code on main stops
+// writing them, then removed in a later release (expand → contract).
+enum Division {
+  KINDERGARTEN
+  ELEMENTARY
+  JUNIOR_HIGH
+  HIGH_SCHOOL
+}
+
+enum LifeStage {
+  ELEMENTARY
+  JUNIOR_HIGH
+  HIGH_SCHOOL
+  UNIVERSITY_COLLEGE
+  WORKING
+}
+
+model User {
+  id                    String               @id @default(cuid())
+  // Nullable (spec says required): a LINE-first sign-up has no verified email
+  // until it passes the mandatory OTP step (§4.2). Postgres allows many NULLs
+  // under a unique index.
+  primaryEmail          String?              @unique
+  emailVerifiedAt       DateTime?
+  state                 AccountState         @default(UNVERIFIED_EMAIL)
+  isAdmin               Boolean              @default(false)
+  locale                Locale               @default(ja)
+  // Name parts are what members enter. nameRomaji ("First Middle Last") and
+  // nameKanji ("姓 名") are the combined display/search names, always
+  // recomputed from the parts by src/lib/names.ts when a name is saved.
+  lastNameRomaji        String?
+  firstNameRomaji       String?
+  middleNameRomaji      String?
+  lastNameKanji         String?
+  firstNameKanji        String?
+  // Added: フリガナ (katakana) for the kanji name, required when kanji is given.
+  lastNameKana          String?
+  firstNameKana         String?
+  nameKana              String?
+  nameRomaji            String?
+  nameKanji             String?
+  nameAtAis             String?
+  dateOfBirth           DateTime?            @db.Date
+  avatarUrl             String?
+  /// profile photo shown to every member; otherwise only to family and
+  /// follow connections (src/lib/avatar.ts)
+  avatarPublic          Boolean              @default(false)
+  /// parents only: leave me out of the member directory (src/lib/directory.ts);
+  /// ignored once the member has no parent role
+  hideFromDirectory     Boolean              @default(false)
+  /// MALE | FEMALE | OTHER (default profile icon); null = not given
+  gender                String?
+  bio                   String?
+  phone                 String?
+  socialLinks           Json?
+  lineUserId            String?              @unique
+  lineDisplayName       String?
+  lineFollowing         Boolean              @default(false)
+  /// LINE rich menu variant linked to the member ("ja", "en-chat-news" …;
+  /// src/lib/line-menu-sync.ts); null = unknown, relinked on the next sync
+  lineMenu              String?
+  lineBannerDismissedAt DateTime?
+  lineOnboardingSeenAt  DateTime?
+  notifyVia             NotifyChannel        @default(AUTO)
+  // Added: notification categories the member turned off (src/lib/notify/catalog.ts)
+  notifyOff             String[]             @default([])
+  /// short code in notification links (/n/<linkCode>/<token>) for read receipts
+  linkCode              String?              @unique
+  autoAcceptSameYear    Boolean              @default(false)
+  /// personal fields also shown to accepted followers (src/lib/personal-fields.ts);
+  /// otherwise only family (and admins) see them
+  followerFields        String[]             @default([])
+  familyId              String?
+  family                Family?              @relation(fields: [familyId], references: [id], onDelete: SetNull)
+  deactivatedAt         DateTime?
+  // Added: a child account created by a parent during sign-up. It has no
+  // sign-in of its own; the parent manages it until the child takes it over.
+  managedById           String?
+  managedBy             User?                @relation("managedChildren", fields: [managedById], references: [id], onDelete: SetNull)
+  managedChildren       User[]               @relation("managedChildren")
+  handoversAsChild      ChildHandover[]      @relation("handoverChild")
+  handoversSent         ChildHandover[]      @relation("handoverParent")
+  broadcastInbox        BroadcastRecipient[] @relation("broadcastInbox")
+  newsReads             NewsRead[]           @relation("newsReads")
+
+  roles                UserRole[]
+  accounts             Account[]
+  verification         VerificationRequest?  @relation("applicant")
+  reviewed             VerificationRequest[] @relation("reviewer")
+  followsOut           Follow[]              @relation("follower")
+  followsIn            Follow[]              @relation("followee")
+  blocksOut            Block[]               @relation("blocker")
+  blocksIn             Block[]               @relation("blocked")
+  rsvps                Rsvp[]
+  eventStaff           EventStaff[]
+  newsConfirms         NewsConfirm[]
+  newsVotes            NewsPollVote[]
+  newsComments         NewsComment[]         @relation("newsComments")
+  newsHidden           NewsComment[]         @relation("newsCommentsHidden")
+  newsReactions        NewsReaction[]
+  chatMembers          ChatMember[]
+  birthDateRequests    BirthDateRequest[]    @relation("birthDateRequester")
+  invitesSent          Invite[]              @relation("invitesSent")
+  inviteUsed           Invite?               @relation("inviteUsed")
+  inviteUse            InviteUse?
+  birthDateReviews     BirthDateRequest[]    @relation("birthDateReviewer")
+  genderRequests       GenderRequest[]       @relation("genderRequester")
+  genderReviews        GenderRequest[]       @relation("genderReviewer")
+  chatMessages         ChatMessage[]         @relation("chatMessages")
+  chatReportsSent      ChatReport[]          @relation("chatReporter")
+  chatReportsAbout     ChatReport[]          @relation("chatReported")
+  chatDeleted          ChatMessage[]         @relation("chatDeleted")
+  eventCheckIns        EventCheckIn[]        @relation("CheckedIn")
+  checkInsDone         EventCheckIn[]        @relation("CheckedInBy")
+  parentLinks          FamilyLink[]          @relation("parent")
+  childLinks           FamilyLink[]          @relation("child")
+  vouchesGiven         Vouch[]
+  notifications        NotificationLog[]
+  notificationReceipts NotificationReceipt[]
+  supportRequests      SupportRequest[]
+  eventsCreated        Event[]
+  newsCreated          NewsPost[]
+  auditActions         AuditLog[]
+  recordRequests       RecordChangeRequest[] @relation("recordRequester")
+  recordReviews        RecordChangeRequest[] @relation("recordReviewer")
+  nameRequests         NameChangeRequest[]   @relation("nameRequester")
+  nameReviews          NameChangeRequest[]   @relation("nameReviewer")
+  positions            UserPosition[]        @relation("positionHolder")
+  positionGrants       UserPosition[]        @relation("positionGrantor")
+  broadcasts           Broadcast[]
+  education            EducationEntry[]
+  work                 WorkEntry[]
+  mobileSessions       MobileSession[]
+  pushDevices          PushDevice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([state])
+  @@index([managedById])
+}
+
+// Auth.js account table (OAuth providers). Email OTP sign-in does not create rows here.
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// Added: when two users are merged (LINE-first sign-up whose OTP email matches
+// an existing account, or admin merge), live JWTs for the old id are remapped.
+model UserMerge {
+  fromUserId String   @id
+  toUserId   String
+  createdAt  DateTime @default(now())
+}
+
+enum OtpPurpose {
+  SIGN_IN
+  VERIFY_EMAIL
+  SCHOOL_EMAIL
+  CHANGE_EMAIL
+}
+
+// Added: 6-digit one-time codes (§4.1). Only a hash of the code is stored.
+model OtpCode {
+  id         String     @id @default(cuid())
+  email      String
+  purpose    OtpPurpose
+  userId     String?
+  codeHash   String
+  attempts   Int        @default(0)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime   @default(now())
+
+  @@index([email, purpose, createdAt])
+}
+
+model UserRole {
+  id                    String         @id @default(cuid())
+  userId                String
+  user                  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role                  RoleKey
+  // TEACHER
+  yearsFrom             Int?
+  yearsTo               Int? // null with TEACHER = "present"
+  subjects              String?
+  // TEACHER: 現職 (CURRENT) or 元教職員 (FORMER). Access tied to being a teacher
+  // (minors, TEACHER_MANAGER) applies to current teachers only.
+  teacherStatus         TeacherStatus?
+  /// teachers' @aisnagoya.net work address — one member per address
+  schoolEmail           String?        @unique
+  schoolEmailVerified   Boolean        @default(false)
+  // CURRENT_STUDENT
+  currentGrade          Int? // 0 = K
+  studentIdNo           String?
+  // FORMER_STUDENT — AIS record
+  lastDivision          Division?
+  graduationOrLeaveYear Int?
+  didGraduate           Boolean?
+  // FORMER_STUDENT — current stage
+  currentStage          LifeStage?
+  currentStageUpdatedAt DateTime?
+  currentStageDetail    String? // private tier
+  // Students (CURRENT_STUDENT / FORMER_STUDENT): their 学年 (class). Kept
+  // separate from their own join / leave / graduation years above.
+  cohortId              String?
+  cohort                Cohort?        @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, role])
+  @@index([role])
+  @@index([graduationOrLeaveYear])
+  @@index([currentStage])
+  @@index([lastDivision])
+  @@index([cohortId])
+}
+
+model Family {
+  id      String       @id @default(cuid())
+  members User[]
+  links   FamilyLink[]
+}
+
+enum FamilyLinkInitiator {
+  PARENT
+  CHILD
+}
+
+model FamilyLink {
+  id            String              @id @default(cuid())
+  familyId      String
+  family        Family              @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  parentId      String
+  parent        User                @relation("parent", fields: [parentId], references: [id], onDelete: Cascade)
+  childId       String? // null if child has no account yet
+  child         User?               @relation("child", fields: [childId], references: [id], onDelete: Cascade)
+  childName     String?
+  // The child's 学年 and the year they left AIS early (if any); a parent is
+  // "current" while any child is a current student (src/lib/school.ts).
+  childCohortId String?
+  childCohort   Cohort?             @relation(fields: [childCohortId], references: [id], onDelete: SetNull)
+  childLeftYear Int?
+  initiatedBy   FamilyLinkInitiator @default(PARENT)
+  confirmedAt   DateTime?
+  confirmedBy   String? // userId or "ADMIN"
+  createdAt     DateTime            @default(now())
+
+  @@index([parentId])
+  @@index([childId])
+}
+
+enum VerificationStatus {
+  PENDING
+  NEEDS_INFO
+  APPROVED
+  REJECTED
+}
+
+model VerificationRequest {
+  id              String                 @id @default(cuid())
+  userId          String                 @unique
+  user            User                   @relation("applicant", fields: [userId], references: [id], onDelete: Cascade)
+  answers         Json
+  rosterScore     Int?
+  rosterRowId     String?
+  status          VerificationStatus     @default(PENDING)
+  reviewerId      String?
+  reviewer        User?                  @relation("reviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewNote      String?
+  submittedAt     DateTime               @default(now())
+  decidedAt       DateTime?
+  /// Added: parent-only application. Not reviewed by admins; approved when
+  /// a linked child is approved and the link confirmed (parent-onboarding.ts).
+  followsChildren Boolean                @default(false)
+  evidence        VerificationEvidence[]
+  vouches         Vouch[]
+
+  @@index([status, submittedAt])
+}
+
+model VerificationEvidence {
+  id          String              @id @default(cuid())
+  requestId   String
+  request     VerificationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  storageKey  String
+  fileName    String
+  mimeType    String
+  size        Int
+  // Added: 卒業証書 (DIPLOMA) or any other supporting document
+  kind        EvidenceKind        @default(OTHER)
+  // null while the request is undecided; set to decidedAt + 30 days (§6.3)
+  deleteAfter DateTime?
+  createdAt   DateTime            @default(now())
+
+  @@index([deleteAfter])
+}
+
+enum VouchAnswer {
+  YES
+  NO
+  NOT_SURE
+}
+
+model Vouch {
+  id         String              @id @default(cuid())
+  requestId  String
+  request    VerificationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  voucherId  String
+  voucher    User                @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+  answer     VouchAnswer?
+  askedAt    DateTime            @default(now())
+  answeredAt DateTime?
+
+  @@unique([requestId, voucherId])
+}
+
+model RosterEntry {
+  id              String    @id @default(cuid())
+  nameRomaji      String
+  nameKanji       String?
+  dateOfBirth     DateTime? @db.Date
+  yearsFrom       Int?
+  yearsTo         Int?
+  kind            RoleKey
+  claimedByUserId String?   @unique
+  createdAt       DateTime  @default(now())
+}
+
+enum FollowStatus {
+  REQUESTED
+  ACCEPTED
+}
+
+model Follow {
+  id         String       @id @default(cuid())
+  followerId String
+  follower   User         @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followeeId String
+  followee   User         @relation("followee", fields: [followeeId], references: [id], onDelete: Cascade)
+  status     FollowStatus @default(REQUESTED)
+  createdAt  DateTime     @default(now())
+
+  @@unique([followerId, followeeId])
+  @@index([followeeId, status])
+}
+
+model Block {
+  id        String   @id @default(cuid())
+  blockerId String
+  blocker   User     @relation("blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockedId String
+  blocked   User     @relation("blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+model Event {
+  id               String         @id @default(cuid())
+  titleJa          String?
+  titleEn          String?
+  bodyJa           String?
+  bodyEn           String?
+  startsAt         DateTime
+  endsAt           DateTime?
+  location         String?
+  mapUrl           String?
+  capacity         Int?
+  rsvpDeadline     DateTime?
+  // Added: RSVPs closed early by the organiser (null = open until the deadline)
+  rsvpClosedAt     DateTime?
+  targetRoles      RoleKey[] // empty = all members
+  // Added: preferred over targetRoles when non-empty
+  targetAudiences  AudienceKey[]  @default([])
+  // Added: who it's for, same conditions as ニュース (src/lib/news-audience.ts)
+  audience         Json?
+  // Added: as NewsPost — the role it was created as (shown to members), and
+  // a 同窓会委員's event is hidden until another 同窓会委員 approves it
+  senderRole       SenderRole?
+  approvalRequired Boolean        @default(false)
+  approvedAt       DateTime?
+  approvedById     String?
+  createdById      String
+  createdBy        User           @relation(fields: [createdById], references: [id])
+  rsvps            Rsvp[]
+  staff            EventStaff[]
+  checkIns         EventCheckIn[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([startsAt])
+}
+
+enum RsvpAnswer {
+  GOING
+  MAYBE
+  NOT_GOING
+}
+
+model Rsvp {
+  id        String     @id @default(cuid())
+  eventId   String
+  event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answer    RsvpAnswer
+  guests    Int        @default(0)
+  updatedAt DateTime   @updatedAt
+
+  @@unique([eventId, userId])
+}
+
+/// Members who may check people in at an event (besides admins).
+model EventStaff {
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([eventId, userId])
+  @@index([userId])
+}
+
+/// Attendance: one row when a member's QR ticket is scanned (or staff tick them).
+model EventCheckIn {
+  id            String   @id @default(cuid())
+  eventId       String
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User     @relation("CheckedIn", fields: [userId], references: [id], onDelete: Cascade)
+  checkedInById String?
+  checkedInBy   User?    @relation("CheckedInBy", fields: [checkedInById], references: [id], onDelete: SetNull)
+  checkedInAt   DateTime @default(now())
+
+  @@unique([eventId, userId])
+}
+
+model NewsPost {
+  id               String           @id @default(cuid())
+  titleJa          String?
+  titleEn          String?
+  bodyJa           String?
+  bodyEn           String?
+  coverUrl         String?
+  targetRoles      RoleKey[]
+  // Added: preferred over targetRoles when non-empty
+  targetAudiences  AudienceKey[]    @default([])
+  pinned           Boolean          @default(false)
+  publishedAt      DateTime?
+  notifiedAt       DateTime? // added: set once the publish notification batch has gone out
+  /// lease while the publish notification is being sent; an expired lease
+  /// with notifiedAt set = unfinished (failed / paused / killed) → retried
+  notifyingUntil   DateTime?
+  // Added: hidden from members and never notified; admins can restore it
+  archivedAt       DateTime?
+  // Added: who receives it (src/lib/news-audience.ts AudienceSpec: groups,
+  // 学年, individual members). null = derive from targetAudiences/targetRoles.
+  audience         Json?
+  // Added: send a LINE/email notification when it goes live (now or at the
+  // reserved publishedAt); false = publish in the app only
+  notifyOnPublish  Boolean          @default(true)
+  // Added (hub): members press 「確認しました」
+  requireConfirm   Boolean          @default(false)
+  // Added (hub): members may comment / react
+  allowComments    Boolean          @default(true)
+  // Added (hub): answer (confirm / poll / 日程調整) by; one reminder to
+  // those who haven't, a day before (remindedAt)
+  deadline         DateTime?
+  remindedAt       DateTime?
+  /// lease while a cron call sends the reminder; an expired lease with
+  /// remindedAt set = unfinished (failed / paused / killed) → retried
+  remindingUntil   DateTime?
+  // Added (hub): answers closed early by the sender (null = open until deadline)
+  closedAt         DateTime?
+  // Added: posted by a 同窓会委員 — hidden and not notified until another
+  // 同窓会委員 (or an admin) approves it; the author's edits reset approval
+  approvalRequired Boolean          @default(false)
+  // Added: the role the author posted as, shown to members instead of their
+  // name. null = older posts (all by admins → ADMIN)
+  senderRole       SenderRole?
+  approvedAt       DateTime?
+  approvedById     String?
+  createdById      String
+  createdBy        User             @relation(fields: [createdById], references: [id])
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  reads            NewsRead[]
+  confirms         NewsConfirm[]
+  polls            NewsPoll[]
+  comments         NewsComment[]
+  reactions        NewsReaction[]
+  attachments      NewsAttachment[]
+
+  @@index([publishedAt])
+}
+
+/// Added: short link in a notification (/n/<token>). Opens the app page for
+/// the member and gives link-preview bots a card image built from `title`
+/// and `body` (no private content). One row per send and language.
+model NotificationLink {
+  id           String                @id @default(cuid())
+  token        String                @unique
+  kind         String
+  refId        String?
+  /// legacy (per-language links); now null — see texts
+  locale       Locale?
+  /// app path without the locale, e.g. /app/news/<id>
+  path         String
+  /// legacy; now in texts
+  title        String?
+  body         String?
+  /// { ja: { title, body }, en: { title, body } } — previews use the
+  /// opener's language
+  texts        Json?
+  category     String
+  createdAt    DateTime              @default(now())
+  expiresAt    DateTime
+  opens        Int                   @default(0)
+  lastOpenedAt DateTime?
+  receipts     NotificationReceipt[]
+
+  @@index([kind, refId])
+}
+
+/// One recipient of a notification link: sent, and when they opened it.
+model NotificationReceipt {
+  id           String           @id @default(cuid())
+  linkId       String
+  link         NotificationLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// LINE | EMAIL | PUSH
+  channels     String[]
+  sentAt       DateTime         @default(now())
+  /// seen in the app's notification list ("mark as read"); openedAt is set
+  /// only when the member actually opened it
+  seenAt       DateTime?
+  openedAt     DateTime?
+  lastOpenedAt DateTime?
+  opens        Int              @default(0)
+
+  @@unique([linkId, userId])
+  @@index([userId])
+}
+
+/// お問い合わせ: sent from /support (members or visitors); emailed to admins.
+model SupportRequest {
+  id         String    @id @default(cuid())
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name       String
+  email      String
+  /// ISSUE | QUESTION | COMPLAINT | FEATURE (src/lib/support.ts)
+  type       String
+  topic      String
+  subject    String
+  message    String
+  locale     Locale
+  /// page the form was sent from (e.g. onboarding step)
+  page       String?
+  createdAt  DateTime  @default(now())
+  closedAt   DateTime?
+  closedById String?
+
+  @@index([closedAt, createdAt])
+  @@index([email, createdAt])
+}
+
+model NotificationLog {
+  id      String   @id @default(cuid())
+  userId  String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel String // LINE | EMAIL | PUSH
+  kind    String // EVENT_REMINDER_7D | EVENT_REMINDER_1D | NEWS | VERIFICATION | STAGE_PROMPT | ...
+  refId   String?
+  sentAt  DateTime @default(now())
+
+  @@index([userId, kind, refId])
+}
+
+// Added (§15 Observability): every admin action.
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  targetType String?
+  targetId   String?
+  data       Json?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([targetType, targetId])
+}
+
+enum ChangeRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+// Added: a member's request to correct their AIS record (在籍情報), which only
+// admins can edit. `current` is a snapshot at request time; `proposed` holds
+// only the fields the member wants changed (see src/lib/record-requests.ts).
+model RecordChangeRequest {
+  id         String              @id @default(cuid())
+  userId     String
+  user       User                @relation("recordRequester", fields: [userId], references: [id], onDelete: Cascade)
+  role       RoleKey
+  current    Json
+  proposed   Json
+  reason     String
+  status     ChangeRequestStatus @default(PENDING)
+  reviewerId String?
+  reviewer   User?               @relation("recordReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewNote String?
+  createdAt  DateTime            @default(now())
+  decidedAt  DateTime?
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+// Added: positions that grant extra permissions (src/lib/permissions.ts).
+// TEACHER_MANAGER (teacher) may notify all members or chosen roles;
+// STUDENT_LEADER (student) may notify their own 学年 (cohortId).
+/// The role a ニュース post / event was sent as (shown to members)
+enum SenderRole {
+  /// AIS同窓会委員会 (an admin)
+  ADMIN
+  /// 現職の教職員
+  TEACHER
+  /// 同窓会委員
+  ALUMNI_COMMITTEE
+  /// 学年代表 (their 学年 = the post's audience)
+  STUDENT_LEADER
+}
+
+enum PositionKey {
+  TEACHER_MANAGER
+  STUDENT_LEADER
+  /// may mark members as current teachers (現職) or remove them
+  TEACHER_REGISTRAR
+  /// 同窓会委員 (students / parents): may post ニュース to anyone, published
+  /// once another 同窓会委員 approves
+  ALUMNI_COMMITTEE
+}
+
+model UserPosition {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation("positionHolder", fields: [userId], references: [id], onDelete: Cascade)
+  position    PositionKey
+  // STUDENT_LEADER: the 学年 they represent.
+  cohortId    String?
+  cohort      Cohort?     @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  grantedById String?
+  grantedBy   User?       @relation("positionGrantor", fields: [grantedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime    @default(now())
+
+  @@unique([userId, position])
+}
+
+enum BroadcastScope {
+  ALL
+  COHORT
+}
+
+// Added: notifications sent by members holding a position (history, limits).
+model Broadcast {
+  id              String               @id @default(cuid())
+  senderId        String
+  sender          User                 @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  position        PositionKey? // null when sent by an admin
+  scope           BroadcastScope
+  targetRoles     RoleKey[] // ALL scope: empty = every member
+  // Added: preferred over targetRoles when non-empty
+  targetAudiences AudienceKey[]        @default([])
+  cohortId        String? // COHORT scope: the 学年
+  cohort          Cohort?              @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  title           String
+  body            String
+  recipientCount  Int
+  lineCount       Int
+  emailCount      Int
+  createdAt       DateTime             @default(now())
+  // Added: who received it and who has read it (read receipts)
+  recipients      BroadcastRecipient[]
+  // Added: set when the sender/admin edits it after sending (no re-notify)
+  editedAt        DateTime?
+  // Added: hidden from recipients' inboxes (kept for the sender / admins)
+  archivedAt      DateTime?
+
+  @@index([senderId, createdAt])
+}
+
+// Added: one row per member a Broadcast was sent to; readAt = opened in the
+// app. Notifications carry no content, so members read it in the app.
+model BroadcastRecipient {
+  broadcastId String
+  broadcast   Broadcast @relation(fields: [broadcastId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation("broadcastInbox", fields: [userId], references: [id], onDelete: Cascade)
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@id([broadcastId, userId])
+  @@index([userId, readAt])
+}
+
+// Added: members who have opened a news post (read counts for admins).
+enum NewsPollKind {
+  POLL // choose one (or several) options
+  SCHEDULE // 日程調整: ○△× for each candidate date
+}
+
+enum NewsVote {
+  YES // poll choice / ○
+  MAYBE // △
+  NO // ×
+}
+
+/// 「確認しました」 on a news post.
+model NewsConfirm {
+  postId      String
+  post        NewsPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  confirmedAt DateTime @default(now())
+
+  @@id([postId, userId])
+  @@index([userId])
+}
+
+/// A poll or 日程調整 in a news post (at most one of each).
+model NewsPoll {
+  id       String           @id @default(cuid())
+  postId   String
+  post     NewsPost         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  kind     NewsPollKind
+  question String
+  multiple Boolean          @default(false)
+  options  NewsPollOption[]
+  votes    NewsPollVote[]
+
+  @@unique([postId, kind])
+}
+
+model NewsPollOption {
+  id       String         @id @default(cuid())
+  pollId   String
+  poll     NewsPoll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  label    String
+  /// 日程調整: the candidate date and time
+  startsAt DateTime?
+  position Int
+  votes    NewsPollVote[]
+
+  @@index([pollId])
+}
+
+model NewsPollVote {
+  optionId String
+  option   NewsPollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  pollId   String
+  poll     NewsPoll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answer   NewsVote       @default(YES)
+  votedAt  DateTime       @default(now())
+
+  @@id([optionId, userId])
+  @@index([pollId, userId])
+}
+
+model NewsComment {
+  id         String    @id @default(cuid())
+  postId     String
+  post       NewsPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User      @relation("newsComments", fields: [userId], references: [id], onDelete: Cascade)
+  body       String
+  createdAt  DateTime  @default(now())
+  /// hidden by an admin (moderation); kept for the record
+  hiddenAt   DateTime?
+  hiddenById String?
+  hiddenBy   User?     @relation("newsCommentsHidden", fields: [hiddenById], references: [id], onDelete: SetNull)
+
+  @@index([postId, createdAt])
+}
+
+model NewsReaction {
+  postId    String
+  post      NewsPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emoji     String
+  createdAt DateTime @default(now())
+
+  @@id([postId, userId, emoji])
+}
+
+/// Files attached to a news post (private storage, signed links).
+model NewsAttachment {
+  id         String   @id @default(cuid())
+  postId     String
+  post       NewsPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  storageKey String
+  fileName   String
+  mimeType   String
+  size       Int
+  position   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([postId])
+}
+
+enum ChatGroupKind {
+  TEACHERS // 教職員
+  CURRENT_STUDENTS // 在校生
+  FORMER_STUDENTS // 元在校生 (everyone who left AIS, graduates included)
+  CURRENT_PARENTS // 在校生保護者
+  FORMER_PARENTS // 卒業生保護者
+  COHORT // 第N期（生徒・卒業生）
+  COHORT_PARENTS // 第N期 保護者
+  ADULTS // 元在校生（成人）: former students from the April 1 after turning 18
+  DIRECT // 1対1のトーク (key DIRECT:<userId>:<userId>, sorted)
+  CLASS_REPS // 学年代表（STUDENT_LEADER の役職を持つ会員）
+  GRADUATES // 卒業生 (graduated from AIS)
+  GRADUATES_ADULTS // 卒業生（成人）
+  ALUMNI_COMMITTEE // 同窓会委員（ALUMNI_COMMITTEE の役職を持つ会員と管理者）
+}
+
+/// Group chats by member type and 学年. Members are added automatically
+/// (src/lib/chat.ts syncChatMembership); `key` is unique per kind (+ cohort).
+model ChatGroup {
+  id        String        @id @default(cuid())
+  key       String        @unique
+  kind      ChatGroupKind
+  cohortId  String?
+  cohort    Cohort?       @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+  members   ChatMember[]
+  messages  ChatMessage[]
+  reports   ChatReport[]
+}
+
+model ChatMember {
+  groupId    String
+  group      ChatGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt   DateTime  @default(now())
+  lastReadAt DateTime  @default(now())
+  /// no daily digest for this group
+  muted      Boolean   @default(false)
+  /// app push for every message in this group (default: only 1:1 messages
+  /// and personal mentions are pushed; src/lib/push/chat.ts)
+  pushAll    Boolean   @default(false)
+
+  @@id([groupId, userId])
+  @@index([userId])
+}
+
+model ChatMessage {
+  id             String    @id @default(cuid())
+  groupId        String
+  group          ChatGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User      @relation("chatMessages", fields: [userId], references: [id], onDelete: Cascade)
+  body           String
+  /// Added: members mentioned with @name, and @全員 (group chats)
+  mentionUserIds String[]  @default([])
+  mentionAll     Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  /// deleted by the author or an admin (the text is removed)
+  deletedAt      DateTime?
+  deletedById    String?
+  deletedBy      User?     @relation("chatDeleted", fields: [deletedById], references: [id], onDelete: SetNull)
+
+  @@index([groupId, createdAt])
+}
+
+/// Who a member type may have 1:1 talks with (admin → チャット設定).
+/// ANYONE: the usual rules (mutual followers); SAME_ROLE: only members with
+/// the same type; NOBODY: no 1:1 talks. A member with several types gets the
+/// strictest combination (src/lib/direct-policy.ts).
+enum DirectChatRule {
+  ANYONE
+  SAME_ROLE
+  NOBODY
+}
+
+/// One row per member type; a missing row uses the default in
+/// src/lib/direct-policy.ts.
+model DirectChatPolicy {
+  role        RoleKey        @id
+  rule        DirectChatRule
+  updatedById String?
+  updatedAt   DateTime       @updatedAt
+}
+
+/// A member's report about a chat (or someone in it), for admins to review.
+/// `messages` is a snapshot of recent messages (admins can't open 1:1 talks).
+model ChatReport {
+  id             String     @id @default(cuid())
+  groupId        String?
+  group          ChatGroup? @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  reporterId     String?
+  reporter       User?      @relation("chatReporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  reportedUserId String?
+  reportedUser   User?      @relation("chatReported", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  /// HARASSMENT | SPAM | INAPPROPRIATE | IMPERSONATION | PRIVACY | OTHER (src/lib/chat-report.ts)
+  reason         String
+  detail         String
+  messages       Json?
+  createdAt      DateTime   @default(now())
+  closedAt       DateTime?
+  closedById     String?
+
+  @@index([closedAt, createdAt])
+  @@index([reporterId, createdAt])
+}
+
+model NewsRead {
+  postId String
+  post   NewsPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String
+  user   User     @relation("newsReads", fields: [userId], references: [id], onDelete: Cascade)
+  readAt DateTime @default(now())
+
+  @@id([postId, userId])
+  @@index([userId])
+}
+
+// Added: 学年 (class), created on first use. Numbered 第N期 by the year the
+// class finishes 6th grade (2016 = 第5期). Grade and graduation are computed
+// from elementaryEndYear and today's date (src/lib/school.ts).
+model Cohort {
+  id                  String         @id @default(cuid())
+  number              Int            @unique // 第N期
+  elementaryStartYear Int
+  elementaryEndYear   Int // year the class finishes 6th grade
+  note                String?
+  roles               UserRole[]
+  positions           UserPosition[]
+  broadcasts          Broadcast[]
+  childLinks          FamilyLink[]
+  chatGroups          ChatGroup[]
+  invites             Invite[]
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+}
+
+// Added: 学歴 / 職歴 lists on the profile. Ongoing entries (no end year)
+// also set the member's current stage automatically.
+enum EducationLevel {
+  JUNIOR_HIGH
+  HIGH_SCHOOL
+  UNIVERSITY
+  GRADUATE_SCHOOL
+  VOCATIONAL
+  OTHER
+}
+
+// Who can see an entry: every member, or only accepted followers (+ family).
+enum HistoryVisibility {
+  MEMBERS
+  FOLLOWERS
+}
+
+model EducationEntry {
+  id         String            @id @default(cuid())
+  userId     String
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level      EducationLevel
+  schoolId   String
+  school     School            @relation(fields: [schoolId], references: [id])
+  field      String? // department / major
+  startYear  Int?
+  endYear    Int? // null = still attending
+  visibility HistoryVisibility @default(MEMBERS)
+  createdAt  DateTime          @default(now())
+
+  @@index([userId])
+  @@index([schoolId])
+}
+
+model WorkEntry {
+  id         String            @id @default(cuid())
+  userId     String
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId  String
+  company    Company           @relation(fields: [companyId], references: [id])
+  title      String? // position / department
+  // Added: 業種 code from src/lib/industries.ts (大分類 or 中分類)
+  industry   String?
+  // Added: 職種 code from src/lib/job-types.ts (大分類 or 職種)
+  jobType    String?
+  startYear  Int?
+  endYear    Int? // null = current job
+  visibility HistoryVisibility @default(FOLLOWERS)
+  createdAt  DateTime          @default(now())
+
+  @@index([userId])
+  @@index([companyId])
+}
+
+// Added: shared lists of schools and companies used by 学歴 / 職歴. Members
+// pick an existing one (search) or add a new one; admins rename / merge.
+// nameKey (normalized name) prevents near-duplicate entries.
+model School {
+  id          String           @id @default(cuid())
+  name        String
+  nameKey     String           @unique
+  createdById String?
+  entries     EducationEntry[]
+  createdAt   DateTime         @default(now())
+}
+
+model Company {
+  id          String      @id @default(cuid())
+  name        String
+  nameKey     String      @unique
+  createdById String?
+  entries     WorkEntry[]
+  createdAt   DateTime    @default(now())
+}
+
+// Added: names are fixed once a member is approved; changes go through the
+// committee. `current` / `proposed` hold the name parts (src/lib/names.ts).
+model NameChangeRequest {
+  id         String              @id @default(cuid())
+  userId     String
+  user       User                @relation("nameRequester", fields: [userId], references: [id], onDelete: Cascade)
+  current    Json
+  proposed   Json
+  reason     String
+  status     ChangeRequestStatus @default(PENDING)
+  reviewerId String?
+  reviewer   User?               @relation("nameReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewNote String?
+  createdAt  DateTime            @default(now())
+  decidedAt  DateTime?
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+/// 個別招待: one person, one use — a strong recommendation.
+/// 学年招待: one link for a 学年, shared with up to `maxUses` people.
+enum InviteKind {
+  INDIVIDUAL
+  GRADE
+}
+
+enum InviteType {
+  STUDENT // 卒業生・在校生
+  PARENT // 保護者
+  TEACHER // 教職員
+}
+
+/// Added: a member invites someone with a one-time link (token hashed).
+/// The inviter vouches for who they are (type, 学年); admins see it on the
+/// application to approve faster.
+model Invite {
+  id          String      @id @default(cuid())
+  tokenHash   String      @unique
+  inviterId   String
+  inviter     User        @relation("invitesSent", fields: [inviterId], references: [id], onDelete: Cascade)
+  type        InviteType
+  /// the invitee's 学年 (STUDENT) or their child's (PARENT)
+  cohortId    String?
+  cohort      Cohort?     @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  inviteeName String?
+  createdAt   DateTime    @default(now())
+  expiresAt   DateTime
+  usedAt      DateTime?
+  usedById    String?     @unique
+  usedBy      User?       @relation("inviteUsed", fields: [usedById], references: [id], onDelete: SetNull)
+  revokedAt   DateTime?
+  kind        InviteKind  @default(INDIVIDUAL)
+  /// how many people may use it (学年招待); usedAt is set when it's full
+  maxUses     Int         @default(1)
+  uses        InviteUse[]
+
+  @@index([inviterId])
+}
+
+/// Who signed up through a 学年招待 link (individual links use usedById).
+model InviteUse {
+  id        String   @id @default(cuid())
+  inviteId  String
+  invite    Invite   @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([inviteId])
+}
+
+/// Added: a member asks the committee to set or correct their birth date
+/// (fixed after approval, like names). Approving applies `proposed`.
+model BirthDateRequest {
+  id         String              @id @default(cuid())
+  userId     String
+  user       User                @relation("birthDateRequester", fields: [userId], references: [id], onDelete: Cascade)
+  current    DateTime?           @db.Date
+  proposed   DateTime            @db.Date
+  reason     String
+  status     ChangeRequestStatus @default(PENDING)
+  reviewerId String?
+  reviewer   User?               @relation("birthDateReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewNote String?
+  createdAt  DateTime            @default(now())
+  decidedAt  DateTime?
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+// Added: type of an uploaded verification document.
+enum EvidenceKind {
+  DIPLOMA
+  OTHER
+}
+
+// Added: a parent hands a child account they manage over to the child. The
+// emailed link attaches the child's own email to the account (or merges it
+// into the child's own account if that email is already registered).
+model ChildHandover {
+  id        String    @id @default(cuid())
+  childId   String
+  child     User      @relation("handoverChild", fields: [childId], references: [id], onDelete: Cascade)
+  parentId  String
+  parent    User      @relation("handoverParent", fields: [parentId], references: [id], onDelete: Cascade)
+  email     String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([childId])
+}
+
+/// 性別 change requests (fixed after the application, like the birth date).
+model GenderRequest {
+  id         String              @id @default(cuid())
+  userId     String
+  user       User                @relation("genderRequester", fields: [userId], references: [id], onDelete: Cascade)
+  current    String?
+  /// MALE | FEMALE | OTHER
+  proposed   String
+  reason     String
+  status     ChangeRequestStatus @default(PENDING)
+  reviewerId String?
+  reviewer   User?               @relation("genderReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewNote String?
+  createdAt  DateTime            @default(now())
+  decidedAt  DateTime?
+
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
+/// Recurring tasks run by GET /api/cron (src/lib/jobs), one row per task.
+/// A call claims the task's latest slot with a lease (lockedUntil), works
+/// until its time budget, and either finishes it (doneAt) or leaves it
+/// pending with its progress (cursor) — the next call (a minute later)
+/// continues or retries. A call killed mid-run frees it when the lease ends.
+model CronRun {
+  task        String    @id
+  /// the latest slot claimed (daily / yearly time, or the minute)
+  slot        DateTime
+  /// when that slot finished; null = pending (in progress, paused or failed)
+  doneAt      DateTime?
+  lockedUntil DateTime?
+  /// progress within the slot (e.g. the last member id done)
+  cursor      Json?
+  /// calls that worked on this slot
+  attempts    Int       @default(0)
+  lastResult  Json?
+  lastError   String?
+  updatedAt   DateTime  @updatedAt
+}
+
+// Added: sign-ins from the app (Kuisin/ais-alumni-v2). The app keeps a random
+// bearer token in the device keychain; only its SHA-256 is stored here
+// (src/lib/mobile/tokens.ts). Deleted when the member signs out on the device.
+model MobileSession {
+  id         String      @id @default(cuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String      @unique
+  /// "ios" | "android" | "web"
+  platform   String?
+  /// e.g. "iPhone 16" — for the member's list of signed-in devices
+  deviceName String?
+  /// the Google / LINE sign-in code this session came from: each code
+  /// starts one session at most (src/lib/mobile/handoff.ts)
+  handoffJti String?     @unique
+  createdAt  DateTime    @default(now())
+  /// refreshed at most once a day; each refresh also extends expiresAt
+  lastUsedAt DateTime    @default(now())
+  expiresAt  DateTime
+  pushDevice PushDevice?
+
+  @@index([userId])
+}
+
+// Added: push notifications to the native app (src/lib/push). One row per
+// signed-in device that allowed notifications: its Expo push token. Removed
+// with the device session (sign-out), so a signed-out phone gets nothing.
+model PushDevice {
+  id         String        @id @default(cuid())
+  sessionId  String        @unique
+  session    MobileSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// ExponentPushToken[…]; a phone signed in to another account takes it over
+  token      String        @unique
+  /// "ios" | "android"
+  platform   String?
+  /// app notifications switched off on this device (the app's settings)
+  enabled    Boolean       @default(true)
+  /// Expo reported the token dead (DeviceNotRegistered): not used again
+  failedAt   DateTime?
+  lastSentAt DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  tickets    PushTicket[]
+
+  @@index([userId])
+}
+
+// Added: Expo push tickets waiting for their delivery receipt (checked by
+// the push-receipts job ~15 minutes after sending; dead tokens are retired).
+model PushTicket {
+  /// Expo's ticket (receipt) id
+  id        String     @id
+  deviceId  String
+  device    PushDevice @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+
+  @@index([createdAt])
+}

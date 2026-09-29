@@ -21,7 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { signInDevice, useAuth } from "@/lib/auth";
-import { API_URL } from "@/lib/config";
+import { SITE_URL } from "@/lib/config";
 import { Button, Card, colors, Screen, space, Text, TextField } from "@/ui";
 
 type Step = { step: "email" } | { step: "code"; email: string; notice: string };
@@ -62,7 +62,7 @@ export default function SignInScreen() {
   };
 
   const openPage = (path: string) =>
-    WebBrowser.openBrowserAsync(`${API_URL}/${locale}${path}`);
+    WebBrowser.openBrowserAsync(`${SITE_URL}/${locale}${path}`);
 
   const other: Locale = locale === "ja" ? "en" : "ja";
   const sso = config.data?.sso;
