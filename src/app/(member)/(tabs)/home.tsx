@@ -5,7 +5,7 @@ import { useTranslations } from "use-intl";
 import { useHome } from "@/features/home/api";
 import { HomeEventCard } from "@/features/home/event-card";
 import { LineBanner } from "@/features/home/line-banner";
-import { HomeSection, TodoList } from "@/features/home/parts";
+import { HomeSection, MessagesBanner, TodoList } from "@/features/home/parts";
 import { SetupChecklist } from "@/features/home/setup-checklist";
 import { NewsCard } from "@/features/news/news-card";
 import { PushPrompt } from "@/features/notifications/push-prompt";
@@ -63,6 +63,10 @@ function HomeBody({ home }: { home: Home }) {
       ) : (
         <SetupChecklist setup={home.setup} />
       )}
+
+      {home.unreadMessages > 0 ? (
+        <MessagesBanner count={home.unreadMessages} />
+      ) : null}
 
       <HomeSection
         title={t("events.title")}

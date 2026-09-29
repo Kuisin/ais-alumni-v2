@@ -32,8 +32,9 @@ const PATTERNS: Rule[] = [
     to: (m) => `/events/${m[1]}/check-in`,
     keep: ["t"],
   },
-  { re: /^\/app\/news$/, to: () => "/news" },
+  { re: /^\/app\/news$/, to: () => "/news", keep: ["tab"] },
   { re: /^\/app\/news\/new$/, to: () => "/news/new" },
+  { re: /^\/app\/news\/messages\/ID$/, to: (m) => `/news/messages/${m[1]}` },
   {
     re: /^\/app\/news\/(?!new$|messages$)ID$/,
     to: (m) => `/news/${m[1]}`,

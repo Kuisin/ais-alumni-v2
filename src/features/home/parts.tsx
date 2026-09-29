@@ -1,6 +1,6 @@
 import type { HomeTodo } from "@contract/home";
 import { type Href, useRouter } from "expo-router";
-import { ArrowRight, ChevronRight } from "lucide-react-native";
+import { ArrowRight, ChevronRight, Mail } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -109,6 +109,32 @@ export function TodoList({ todo }: { todo: HomeTodo }) {
         ))}
       </View>
     </View>
+  );
+}
+
+/** 「新しい連絡が N 件あります」 (only while messages are switched on). */
+export function MessagesBanner({ count }: { count: number }) {
+  const t = useTranslations("news.messages");
+  const router = useRouter();
+  const label = t("newCount", { count });
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel={label}
+      onPress={() =>
+        router.push({ pathname: "/news", params: { tab: "messages" } })
+      }
+      style={({ pressed }) => [
+        styles.messages,
+        pressed ? styles.messagesPressed : null,
+      ]}
+    >
+      <Mail size={20} color={colors.brand900} aria-hidden />
+      <Text variant="body" weight="medium" style={styles.messagesText}>
+        {label}
+      </Text>
+      <ArrowRight size={18} color={colors.brand900} aria-hidden />
+    </Pressable>
   );
 }
 
