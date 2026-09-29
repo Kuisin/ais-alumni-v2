@@ -7,7 +7,7 @@ import type {
 import { useQuery } from "@tanstack/react-query";
 import { isRunningInExpoGo } from "expo";
 import { Image } from "expo-image";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Mail, MessageCircle } from "lucide-react-native";
 import { useRef, useState } from "react";
 import {
@@ -46,6 +46,7 @@ export default function SignInScreen() {
   const t = useTranslations("landing.signIn");
   const tc = useTranslations("common");
   const tm = useTranslations("mobile");
+  const router = useRouter();
   const { locale, setGuestLocale, signInWithProvider } = useAuth();
   const config = useQuery({
     queryKey: ["config"],
@@ -178,7 +179,36 @@ export default function SignInScreen() {
 
             <View style={styles.footer}>
               <Text variant="caption" tone="muted">
-                {t.rich("privacy", { link: (chunks) => chunks })}
+                {t.rich("privacy", {
+                  link: (chunks) => (
+                    <Text
+                      variant="caption"
+                      tone="brand"
+                      accessibilityRole="link"
+                      style={styles.link}
+                      onPress={() => router.push("/privacy")}
+                    >
+                      {chunks}
+                    </Text>
+                  ),
+                })}
+              </Text>
+              <Text variant="caption" tone="muted">
+                {t.rich("help", {
+                  link: (chunks) => (
+                    <Text
+                      variant="caption"
+                      tone="brand"
+                      accessibilityRole="link"
+                      style={styles.link}
+                      onPress={() =>
+                        router.push("/support?type=ISSUE&topic=SIGN_IN")
+                      }
+                    >
+                      {chunks}
+                    </Text>
+                  ),
+                })}
               </Text>
             </View>
           </Card>
@@ -388,6 +418,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: space.sm,
   },
+  link: { textDecorationLine: "underline" },
   footer: {
     gap: space.sm,
     borderTopWidth: StyleSheet.hairlineWidth,
