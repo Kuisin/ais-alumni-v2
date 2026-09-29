@@ -5,6 +5,8 @@ import * as Linking from "expo-linking";
 import { Fragment, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { LineOutcomeNotice } from "@/features/line/outcome-notice";
+import { useLineLinkReturn, useLinkLine } from "@/features/line/use-link-line";
 import { isApiError } from "@/lib/api";
 import {
   Badge,
@@ -17,6 +19,7 @@ import {
   Text,
 } from "@/ui";
 import { SETTINGS_KEY, useSaveLanguage, useSaveNotify } from "./api";
+import { Notice } from "./parts";
 import { ChoiceRow, ToggleRow } from "./rows";
 
 /**
@@ -167,11 +170,17 @@ export function LineSection({ settings }: { settings: MySettings }) {
   const { line, notify } = settings;
   const channel = t(`notifications.channel.${notify.route}`);
   const name = line.displayName;
+  const link = useLinkLine("/settings");
+  const returned = useLineLinkReturn();
+  const outcome = link.data ?? returned;
 
   return (
     <Section title={t("line.title")}>
       <Hint>{t("line.description")}</Hint>
       <Card style={styles.card}>
+        {outcome !== "linked" || line.linked ? (
+          <LineOutcomeNotice outcome={outcome} />
+        ) : null}
         <View style={styles.badges} accessibilityLabel={t("line.status")}>
           <Badge
             tone={line.linked ? "green" : "slate"}
@@ -219,7 +228,17 @@ export function LineSection({ settings }: { settings: MySettings }) {
               />
             ) : null}
           </>
-        ) : null}
+        ) : line.linkReady ? (
+          <Button
+            variant="line"
+            label={tl("linkButton")}
+            loading={link.isPending}
+            onPress={() => link.mutate()}
+          />
+        ) : (
+          <Notice>{tl("panel.notReady")}</Notice>
+        )}
+        {link.isError ? <ErrorLine error={link.error} /> : null}
       </Card>
     </Section>
   );

@@ -3,8 +3,10 @@ import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { LineOutcomeNotice } from "@/features/line/outcome-notice";
+import { useLineLinkReturn, useLinkLine } from "@/features/line/use-link-line";
 import { Button, colors, radius, space, Text } from "@/ui";
-import { useDismissLineBanner, useLinkLine } from "./api";
+import { useDismissLineBanner } from "./api";
 
 /**
  * 「LINEで最新情報を受け取る」 (the website's LineBanner): link LINE, or —
@@ -14,7 +16,9 @@ import { useDismissLineBanner, useLinkLine } from "./api";
 export function LineBanner({ banner }: { banner: HomeLineBanner }) {
   const t = useTranslations("line");
   const tm = useTranslations("mobile.errors");
-  const link = useLinkLine();
+  const link = useLinkLine("/home");
+  const returned = useLineLinkReturn();
+  const outcome = link.data ?? returned;
   const dismiss = useDismissLineBanner();
   const addFriend = banner.linked ? banner.addFriendUrl : null;
 
@@ -26,6 +30,9 @@ export function LineBanner({ banner }: { banner: HomeLineBanner }) {
       <Text variant="small" style={styles.body}>
         {banner.linked ? t("banner.bodyNotFollowing") : t("banner.body")}
       </Text>
+      {outcome && outcome !== "linked" ? (
+        <LineOutcomeNotice outcome={outcome} />
+      ) : null}
       {link.isError ? (
         <Text variant="small" tone="danger" accessibilityRole="alert">
           {tm("generic")}

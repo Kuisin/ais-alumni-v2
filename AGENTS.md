@@ -18,7 +18,9 @@ side accepts them.
 metro.config.js). It is now this repo's copy: change it here. LINE sign-in
 is implemented directly (`src/server/lib/mobile/oauth.ts`); the LINE Login
 channel needs the callback
-`https://<domain>/api/mobile/v1/auth/oauth/callback/line`.
+`https://<domain>/api/mobile/v1/auth/oauth/callback/line` — also used to
+link LINE to a signed-in member (`src/server/lib/mobile/line-link.ts`,
+`src/features/line`).
 
 This repo owns the API contract types (`src/contract`, used by both the app
 and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);
