@@ -164,7 +164,7 @@ UI automation with [Maestro](https://maestro.dev) (needs Java 17+):
 signs in through the UI (code from the server's local dev mailbox,
 SERVER_DIR), then
 `maestro --device $UDID test -e APP_ID=host.exp.Exponent -e APP_URL=exp://127.0.0.1:8081 maestro/tour.yaml`
-visits every tab and the web view. Selectors: tabs are "Name, tab, n of 6";
+visits every tab and the web view. Selectors: tabs are "Name, tab, n of 5" (マイページ is the header's top-left photo, "Me…");
 cards are one pressable (match `.*title.*`); the header back button has id
 `BackButton`; Maestro's `back` is Android-only.
 

@@ -15,7 +15,7 @@ appId: ${APP_ID}
 - takeScreenshot: 04-news
 - tapOn: "(Chat|チャット), tab.*"
 - takeScreenshot: 05-chat
-- tapOn: "(Me|マイページ), tab.*"
+- tapOn: "(Me|マイページ).*"
 - takeScreenshot: 06-me
 - tapOn: "(Settings|設定)"
 - takeScreenshot: 07-settings
