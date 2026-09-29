@@ -4,6 +4,15 @@
  * see src/app/api/mobile/v1/[...path]+api.ts.
  */
 import * as adminHome from "./mobile/v1/admin";
+import * as adminAudit from "./mobile/v1/admin/audit";
+import * as adminChat from "./mobile/v1/admin/chat";
+import * as adminChatReport from "./mobile/v1/admin/chat/reports/[id]";
+import * as adminChatRules from "./mobile/v1/admin/chat/rules";
+import * as adminCohorts from "./mobile/v1/admin/cohorts";
+import * as adminCohort from "./mobile/v1/admin/cohorts/[id]";
+import * as adminCohortReps from "./mobile/v1/admin/cohorts/[id]/reps";
+import * as adminCohortStudents from "./mobile/v1/admin/cohorts/[id]/students";
+import * as adminDestinations from "./mobile/v1/admin/destinations";
 import * as ae0 from "./mobile/v1/admin/events";
 import * as ae1 from "./mobile/v1/admin/events/[id]";
 import * as ae2 from "./mobile/v1/admin/events/[id]/approve";
@@ -11,6 +20,9 @@ import * as ae3 from "./mobile/v1/admin/events/[id]/csv";
 import * as ae4 from "./mobile/v1/admin/events/[id]/rsvp-closed";
 import * as ae5 from "./mobile/v1/admin/events/[id]/staff";
 import * as ae6 from "./mobile/v1/admin/events/[id]/xlsx";
+import * as adminLine from "./mobile/v1/admin/line";
+import * as adminLinePreview from "./mobile/v1/admin/line/preview";
+import * as adminLineRichMenu from "./mobile/v1/admin/line/richmenu";
 import * as adminMembers from "./mobile/v1/admin/members";
 import * as adminMember from "./mobile/v1/admin/members/[id]";
 import * as adminMemberAdmin from "./mobile/v1/admin/members/[id]/admin";
@@ -31,10 +43,17 @@ import * as adminNameRequestDecide from "./mobile/v1/admin/name-requests/[id]/de
 import * as adminNotify from "./mobile/v1/admin/notify";
 import * as adminNotifyId from "./mobile/v1/admin/notify/[id]";
 import * as adminNotifyIdArchive from "./mobile/v1/admin/notify/[id]/archive";
+import * as adminOrgs from "./mobile/v1/admin/organizations";
+import * as adminOrgDelete from "./mobile/v1/admin/organizations/delete";
+import * as adminOrgMerge from "./mobile/v1/admin/organizations/merge";
+import * as adminOrgRename from "./mobile/v1/admin/organizations/rename";
 import * as adminRecordRequests from "./mobile/v1/admin/record-requests";
 import * as adminRecordRequestDecide from "./mobile/v1/admin/record-requests/[id]/decide";
 import * as adminRoster from "./mobile/v1/admin/roster";
 import * as adminRosterImport from "./mobile/v1/admin/roster/import";
+import * as adminStats from "./mobile/v1/admin/stats";
+import * as adminSupport from "./mobile/v1/admin/support";
+import * as adminSupportRequest from "./mobile/v1/admin/support/[id]";
 import * as adminTeachers from "./mobile/v1/admin/teachers";
 import * as adminTeacher from "./mobile/v1/admin/teachers/[id]";
 import * as adminVerification from "./mobile/v1/admin/verification";
@@ -241,6 +260,28 @@ export const ROUTES: [string, RouteModule][] = [
   ["admin/notify", adminNotify as unknown as RouteModule],
   ["admin/notify/[id]", adminNotifyId as unknown as RouteModule],
   ["admin/notify/[id]/archive", adminNotifyIdArchive as unknown as RouteModule],
+  ["admin/audit", adminAudit as unknown as RouteModule],
+  ["admin/chat", adminChat as unknown as RouteModule],
+  ["admin/chat/reports/[id]", adminChatReport as unknown as RouteModule],
+  ["admin/chat/rules", adminChatRules as unknown as RouteModule],
+  ["admin/cohorts", adminCohorts as unknown as RouteModule],
+  ["admin/cohorts/[id]", adminCohort as unknown as RouteModule],
+  ["admin/cohorts/[id]/reps", adminCohortReps as unknown as RouteModule],
+  [
+    "admin/cohorts/[id]/students",
+    adminCohortStudents as unknown as RouteModule,
+  ],
+  ["admin/destinations", adminDestinations as unknown as RouteModule],
+  ["admin/line", adminLine as unknown as RouteModule],
+  ["admin/line/preview", adminLinePreview as unknown as RouteModule],
+  ["admin/line/richmenu", adminLineRichMenu as unknown as RouteModule],
+  ["admin/organizations", adminOrgs as unknown as RouteModule],
+  ["admin/organizations/delete", adminOrgDelete as unknown as RouteModule],
+  ["admin/organizations/merge", adminOrgMerge as unknown as RouteModule],
+  ["admin/organizations/rename", adminOrgRename as unknown as RouteModule],
+  ["admin/stats", adminStats as unknown as RouteModule],
+  ["admin/support", adminSupport as unknown as RouteModule],
+  ["admin/support/[id]", adminSupportRequest as unknown as RouteModule],
   ["auth/email/request", r0 as unknown as RouteModule],
   ["auth/email/verify", r1 as unknown as RouteModule],
   ["auth/oauth/callback/line", r2 as unknown as RouteModule],

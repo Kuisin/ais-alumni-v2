@@ -89,7 +89,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: LifeBuoy,
     webPath: "/app/admin/support",
     allowed: admin,
-    href: null,
+    href: "/admin/support",
     count: "support",
   },
   {
@@ -98,7 +98,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: MessagesSquare,
     webPath: "/app/admin/chat",
     allowed: admin,
-    href: null,
+    href: "/admin/chat",
     count: "chat",
   },
   // 会員
@@ -124,7 +124,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: Layers,
     webPath: "/app/admin/cohorts",
     allowed: admin,
-    href: null,
+    href: "/admin/cohorts",
   },
   // 発信
   {
@@ -157,7 +157,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: MessageCircle,
     webPath: "/app/admin/line",
     allowed: admin,
-    href: null,
+    href: "/admin/line",
   },
   // データ
   {
@@ -166,7 +166,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: Route,
     webPath: "/app/admin/destinations",
     allowed: admin,
-    href: null,
+    href: "/admin/destinations",
   },
   {
     group: "data",
@@ -174,7 +174,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: ChartColumn,
     webPath: "/app/admin/stats",
     allowed: admin,
-    href: null,
+    href: "/admin/stats",
   },
   {
     group: "data",
@@ -182,7 +182,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: Building2,
     webPath: "/app/admin/organizations",
     allowed: admin,
-    href: null,
+    href: "/admin/organizations",
   },
   {
     group: "data",
@@ -198,7 +198,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: ScrollText,
     webPath: "/app/admin/audit",
     allowed: admin,
-    href: null,
+    href: "/admin/audit",
   },
 ];
 
