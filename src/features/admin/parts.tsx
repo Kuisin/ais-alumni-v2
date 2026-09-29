@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react-native";
 import { type ReactNode, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import {
   type Choice,
@@ -8,7 +8,7 @@ import {
   SelectField,
 } from "@/features/people/choices";
 import { ApiError } from "@/lib/api";
-import { Card, colors, radius, space, Text } from "@/ui";
+import { Card, CountDot, colors, radius, space, Text } from "@/ui";
 
 /**
  * Building blocks of the admin screens: the website's AdminSection cards,
@@ -149,6 +149,55 @@ export function Notice({
   );
 }
 
+/** The website's <Tabs> on admin lists (確認待ち / 判断済み). */
+export function Tabs<K extends string>({
+  label,
+  items,
+  value,
+  onChange,
+}: {
+  label: string;
+  items: { key: K; label: string; count?: number }[];
+  value: K;
+  onChange: (key: K) => void;
+}) {
+  return (
+    <View
+      accessibilityRole="tablist"
+      accessibilityLabel={label}
+      style={styles.tabs}
+    >
+      {items.map((item) => {
+        const on = item.key === value;
+        return (
+          <Pressable
+            key={item.key}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: on }}
+            onPress={() => onChange(item.key)}
+            hitSlop={3}
+            style={({ pressed }) => [
+              styles.tab,
+              on ? styles.tabOn : null,
+              pressed && !on ? styles.tabPressed : null,
+            ]}
+          >
+            <Text
+              variant="small"
+              weight="semibold"
+              numberOfLines={1}
+              style={{ color: on ? colors.brand800 : colors.slate600 }}
+            >
+              {item.label}
+            </Text>
+            {item.count ? <CountDot count={item.count} /> : null}
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 const TONES = {
   success: { bg: colors.green50, border: colors.green100, fg: colors.green700 },
   error: { bg: colors.red50, border: colors.red100, fg: colors.red700 },
@@ -193,6 +242,25 @@ export function Actions({ children }: { children: ReactNode }) {
 }
 
 const styles = StyleSheet.create({
+  tabs: {
+    flexDirection: "row",
+    padding: 3,
+    gap: 3,
+    borderRadius: radius.md,
+    backgroundColor: colors.slate200,
+  },
+  tab: {
+    flex: 1,
+    minHeight: 38,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: space.xs,
+    borderRadius: radius.sm,
+    paddingHorizontal: space.sm,
+  },
+  tabOn: { backgroundColor: colors.white },
+  tabPressed: { backgroundColor: colors.slate100 },
   noticeBox: {
     borderWidth: 1,
     borderRadius: radius.md,

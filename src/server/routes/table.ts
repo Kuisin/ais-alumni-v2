@@ -26,8 +26,14 @@ import * as adminMemberProfile from "./mobile/v1/admin/members/[id]/profile";
 import * as adminMemberRoles from "./mobile/v1/admin/members/[id]/roles";
 import * as adminMemberRole from "./mobile/v1/admin/members/[id]/roles/[role]";
 import * as adminMemberState from "./mobile/v1/admin/members/[id]/state";
+import * as adminNameRequests from "./mobile/v1/admin/name-requests";
+import * as adminNameRequestDecide from "./mobile/v1/admin/name-requests/[id]/decide";
+import * as adminRecordRequests from "./mobile/v1/admin/record-requests";
+import * as adminRecordRequestDecide from "./mobile/v1/admin/record-requests/[id]/decide";
 import * as adminRoster from "./mobile/v1/admin/roster";
 import * as adminRosterImport from "./mobile/v1/admin/roster/import";
+import * as adminTeachers from "./mobile/v1/admin/teachers";
+import * as adminTeacher from "./mobile/v1/admin/teachers/[id]";
 import * as adminVerification from "./mobile/v1/admin/verification";
 import * as adminVerificationDetail from "./mobile/v1/admin/verification/[id]";
 import * as adminVerificationDecision from "./mobile/v1/admin/verification/[id]/decision";
@@ -143,8 +149,20 @@ export type RouteModule = Partial<Record<string, Handler>>;
 /** [path pattern, module]; static segments before [params]. */
 export const ROUTES: [string, RouteModule][] = [
   ["admin", adminHome as unknown as RouteModule],
+  ["admin/name-requests", adminNameRequests as unknown as RouteModule],
+  [
+    "admin/name-requests/[id]/decide",
+    adminNameRequestDecide as unknown as RouteModule,
+  ],
+  ["admin/record-requests", adminRecordRequests as unknown as RouteModule],
+  [
+    "admin/record-requests/[id]/decide",
+    adminRecordRequestDecide as unknown as RouteModule,
+  ],
   ["admin/roster", adminRoster as unknown as RouteModule],
   ["admin/roster/import", adminRosterImport as unknown as RouteModule],
+  ["admin/teachers", adminTeachers as unknown as RouteModule],
+  ["admin/teachers/[id]", adminTeacher as unknown as RouteModule],
   ["admin/verification", adminVerification as unknown as RouteModule],
   [
     "admin/verification/[id]",

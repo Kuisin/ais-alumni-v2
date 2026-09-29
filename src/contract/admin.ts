@@ -281,3 +281,140 @@ export type VerificationActionResult = {
 };
 
 export type VerificationDecision = "APPROVE" | "REJECT" | "NEEDS_INFO";
+// ---- Change requests (氏名・生年月日・性別, 在籍情報; committee admins) ----
+
+/** ?tab= of the review lists. */
+export type AdminRequestTab = "pending" | "decided";
+
+export type AdminRequestStatus =
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "CANCELLED";
+
+/** Who asked (links to the member's admin page when the app has one). */
+export type AdminRequestMember = { id: string; name: string };
+
+/** Shared by every request kind. */
+export type AdminRequestBase = {
+  id: string;
+  member: AdminRequestMember;
+  createdAt: string;
+  status: AdminRequestStatus;
+  /** decided ones */
+  reviewer: string | null;
+  reviewNote: string | null;
+  decidedAt: string | null;
+};
+
+/** One line of a name request: before → after, composed as on the website. */
+export type AdminNameLine = {
+  /** romaji / kanji → common.names.{romaji,kanjiShort}; kana → kanaShort;
+   * nameAtAis → profile.nameRequest.nameAtAis */
+  field: "romaji" | "kanji" | "kana" | "nameAtAis";
+  before: string | null;
+  after: string | null;
+};
+
+export type AdminNameRequest = AdminRequestBase & {
+  lines: AdminNameLine[];
+  reason: string;
+};
+
+export type AdminBirthDateRequest = AdminRequestBase & {
+  /** YYYY-MM-DD */
+  current: string | null;
+  proposed: string;
+  reason: string | null;
+};
+
+export type AdminGenderRequest = AdminRequestBase & {
+  /** MALE / FEMALE / OTHER (profile.photo.genders); null = not set */
+  current: string | null;
+  proposed: string | null;
+  reason: string | null;
+};
+
+/** GET /admin/name-requests?tab= — the three kinds, 50 each. */
+export type AdminNameRequests = {
+  tab: AdminRequestTab;
+  /** name + birth date + gender requests waiting */
+  pendingCount: number;
+  names: AdminNameRequest[];
+  birthDates: AdminBirthDateRequest[];
+  genders: AdminGenderRequest[];
+};
+
+export type AdminDecision = "APPROVE" | "REJECT";
+
+/**
+ * POST /admin/name-requests/[id]/decide { kind, decision, note } — note is
+ * required to reject.
+ */
+export type AdminNameDecisionBody = {
+  kind: "name" | "birthDate" | "gender";
+  decision: AdminDecision;
+  note: string;
+};
+
+/** `message`: key in the adminMembers namespace. */
+export type AdminNameDecisionResult = { ok: boolean; message: string };
+
+/** One field of a 在籍情報 correction (records.fields.<field>). */
+export type AdminRecordDiffRow = {
+  field: "cohort" | "yearsFrom" | "yearsTo" | "subjects" | "studentIdNo";
+  /** display text (学年 labels resolved); null = empty */
+  before: string | null;
+  after: string | null;
+};
+
+export type AdminRecordRequest = AdminRequestBase & {
+  /** RoleKey (roles.role.<role>) */
+  role: string;
+  diff: AdminRecordDiffRow[];
+  reason: string;
+};
+
+/** GET /admin/record-requests?tab= — 50 at most. */
+export type AdminRecordRequests = {
+  tab: AdminRequestTab;
+  pendingCount: number;
+  requests: AdminRecordRequest[];
+};
+
+/** POST /admin/record-requests/[id]/decide { decision, note }. */
+export type AdminRecordDecisionBody = { decision: AdminDecision; note: string };
+
+/** `message`: key in the records namespace. */
+export type AdminRecordDecisionResult = {
+  ok: boolean;
+  message?: string;
+  fieldErrors?: { reason?: string };
+};
+
+// ---- 教職員 (admins and 教職員登録担当) ----
+
+export type AdminTeacher = {
+  id: string;
+  name: string;
+  /** a verified school address */
+  schoolEmailVerified: boolean;
+  schoolEmail: string | null;
+  yearsFrom: number | null;
+  subjects: string | null;
+};
+
+/** A member who could be made a current teacher (search results). */
+export type AdminTeacherCandidate = {
+  id: string;
+  name: string;
+  /** RoleKeys (roles.role.<role>) */
+  roles: string[];
+};
+
+/** GET /admin/teachers?q= — current teachers; candidates when q is given (20). */
+export type AdminTeachers = {
+  current: AdminTeacher[];
+  q: string;
+  results: AdminTeacherCandidate[];
+};
