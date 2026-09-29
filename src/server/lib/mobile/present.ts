@@ -1,6 +1,6 @@
+import type { MemberRef } from "@contract/core";
 import { AVATAR_SELECT, type Connections, photoFor } from "@/server/lib/avatar";
 import { displayName, otherNames } from "@/server/lib/format";
-import type { MemberRef } from "@/server/lib/mobile/contract/core";
 
 /**
  * Shapes shared by the mobile API's responses. Photos go through

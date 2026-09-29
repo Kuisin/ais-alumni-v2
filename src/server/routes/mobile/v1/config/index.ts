@@ -1,4 +1,4 @@
-import type { AppConfig } from "@/server/lib/mobile/contract/core";
+import type { AppConfig } from "@contract/core";
 import { publicRoute } from "@/server/lib/mobile/http";
 import { ssoReady } from "@/server/lib/sso";
 

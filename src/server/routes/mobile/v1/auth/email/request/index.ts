@@ -1,7 +1,7 @@
+import type { EmailCodeResult } from "@contract/core";
 import { z } from "zod";
 import { OtpPurpose } from "@/server/generated/prisma/enums";
 import { issueOtp, normalizeEmail } from "@/server/lib/auth/otp";
-import type { EmailCodeResult } from "@/server/lib/mobile/contract/core";
 import { ApiError, publicRoute, readJson } from "@/server/lib/mobile/http";
 
 const Body = z.object({

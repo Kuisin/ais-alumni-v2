@@ -1,3 +1,4 @@
+import type { Me, StaffAccess } from "@contract/core";
 import { AccountState, FollowStatus } from "@/server/generated/prisma/enums";
 import { unreadCounts } from "@/server/lib/announcements";
 import { defaultAvatar, storedAvatarUrl } from "@/server/lib/avatar";
@@ -6,7 +7,6 @@ import { chatUnreadTotal } from "@/server/lib/chat-db";
 import { db } from "@/server/lib/db";
 import { MESSAGES_ENABLED } from "@/server/lib/features";
 import { displayName, otherNames } from "@/server/lib/format";
-import type { Me, StaffAccess } from "@/server/lib/mobile/contract/core";
 import { inboxUnread } from "@/server/lib/mobile/notifications";
 import { channelTopic, realtimePublic } from "@/server/lib/realtime";
 import type { CurrentUser } from "@/server/lib/session";

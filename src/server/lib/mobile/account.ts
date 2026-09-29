@@ -1,3 +1,15 @@
+import type {
+  ChangeRequest,
+  DeviceList,
+  MyProfile,
+  MySettings,
+  NotifyUpdate,
+  PersonalField,
+  ProfileRole,
+  SignedInDevice,
+  StaffArea,
+} from "@contract/account";
+import type { StaffAccess } from "@contract/core";
 import { updateLanguageAction } from "@/server/app/actions/settings";
 import { sortRoles } from "@/server/components/profile/role-details";
 import {
@@ -26,18 +38,6 @@ import { isOngoing, sortHistory } from "@/server/lib/history";
 import { industryLabel } from "@/server/lib/industries";
 import { jobTypeLabel } from "@/server/lib/job-types";
 import { lineAddFriendUrl } from "@/server/lib/line-link";
-import type {
-  ChangeRequest,
-  DeviceList,
-  MyProfile,
-  MySettings,
-  NotifyUpdate,
-  PersonalField,
-  ProfileRole,
-  SignedInDevice,
-  StaffArea,
-} from "@/server/lib/mobile/contract/account";
-import type { StaffAccess } from "@/server/lib/mobile/contract/core";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import { bearerToken, hashMobileToken } from "@/server/lib/mobile/tokens";
 import { chooseChannel } from "@/server/lib/notify";

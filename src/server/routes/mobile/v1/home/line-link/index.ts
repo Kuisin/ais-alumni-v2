@@ -1,5 +1,5 @@
+import type { HomeLineLink } from "@contract/home";
 import { lineLinkStartUrl } from "@/server/lib/line-link";
-import type { HomeLineLink } from "@/server/lib/mobile/contract/home";
 import { ApiError, mobileRoute } from "@/server/lib/mobile/http";
 import { ssoReady } from "@/server/lib/sso";
 
