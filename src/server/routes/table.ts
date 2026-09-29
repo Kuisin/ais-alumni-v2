@@ -40,6 +40,12 @@ import * as adminMemberRole from "./mobile/v1/admin/members/[id]/roles/[role]";
 import * as adminMemberState from "./mobile/v1/admin/members/[id]/state";
 import * as adminNameRequests from "./mobile/v1/admin/name-requests";
 import * as adminNameRequestDecide from "./mobile/v1/admin/name-requests/[id]/decide";
+import * as adminNews from "./mobile/v1/admin/news";
+import * as adminNewsId from "./mobile/v1/admin/news/[id]";
+import * as adminNewsIdApprove from "./mobile/v1/admin/news/[id]/approve";
+import * as adminNewsIdArchive from "./mobile/v1/admin/news/[id]/archive";
+import * as adminNewsIdClose from "./mobile/v1/admin/news/[id]/close";
+import * as adminNewsIdNotify from "./mobile/v1/admin/news/[id]/notify";
 import * as adminNotify from "./mobile/v1/admin/notify";
 import * as adminNotifyId from "./mobile/v1/admin/notify/[id]";
 import * as adminNotifyIdArchive from "./mobile/v1/admin/notify/[id]/archive";
@@ -257,6 +263,12 @@ export const ROUTES: [string, RouteModule][] = [
   ["admin/events/[id]/rsvp-closed", ae4 as unknown as RouteModule],
   ["admin/events/[id]/staff", ae5 as unknown as RouteModule],
   ["admin/events/[id]/xlsx", ae6 as unknown as RouteModule],
+  ["admin/news", adminNews as unknown as RouteModule],
+  ["admin/news/[id]", adminNewsId as unknown as RouteModule],
+  ["admin/news/[id]/approve", adminNewsIdApprove as unknown as RouteModule],
+  ["admin/news/[id]/archive", adminNewsIdArchive as unknown as RouteModule],
+  ["admin/news/[id]/close", adminNewsIdClose as unknown as RouteModule],
+  ["admin/news/[id]/notify", adminNewsIdNotify as unknown as RouteModule],
   ["admin/notify", adminNotify as unknown as RouteModule],
   ["admin/notify/[id]", adminNotifyId as unknown as RouteModule],
   ["admin/notify/[id]/archive", adminNotifyIdArchive as unknown as RouteModule],
