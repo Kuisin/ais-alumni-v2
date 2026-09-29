@@ -9,6 +9,7 @@ import enEvents from "@messages/en/events.json";
 import enFamily from "@messages/en/family.json";
 import enFollows from "@messages/en/follows.json";
 import enHistory from "@messages/en/history.json";
+import enInvites from "@messages/en/invites.json";
 import enLanding from "@messages/en/landing.json";
 import enLine from "@messages/en/line.json";
 import enMobile from "@messages/en/mobile.json";
@@ -21,6 +22,7 @@ import enRoles from "@messages/en/roles.json";
 import enSettings from "@messages/en/settings.json";
 import enSetup from "@messages/en/setup.json";
 import enSupport from "@messages/en/support.json";
+import enVouch from "@messages/en/vouch.json";
 import jaAuth from "@messages/ja/auth.json";
 import jaChat from "@messages/ja/chat.json";
 import jaCohorts from "@messages/ja/cohorts.json";
@@ -31,6 +33,7 @@ import jaEvents from "@messages/ja/events.json";
 import jaFamily from "@messages/ja/family.json";
 import jaFollows from "@messages/ja/follows.json";
 import jaHistory from "@messages/ja/history.json";
+import jaInvites from "@messages/ja/invites.json";
 import jaLanding from "@messages/ja/landing.json";
 import jaLine from "@messages/ja/line.json";
 import jaMobile from "@messages/ja/mobile.json";
@@ -43,6 +46,7 @@ import jaRoles from "@messages/ja/roles.json";
 import jaSettings from "@messages/ja/settings.json";
 import jaSetup from "@messages/ja/setup.json";
 import jaSupport from "@messages/ja/support.json";
+import jaVouch from "@messages/ja/vouch.json";
 import type { ReactNode } from "react";
 import { type AbstractIntlMessages, IntlProvider } from "use-intl";
 import { TIME_ZONE } from "./format";
@@ -68,6 +72,8 @@ const JA = {
   history: jaHistory,
   follows: jaFollows,
   family: jaFamily,
+  invites: jaInvites,
+  vouch: jaVouch,
   chat: jaChat,
   notifications: jaNotifications,
   settings: jaSettings,
@@ -92,6 +98,8 @@ const EN = {
   history: enHistory,
   follows: enFollows,
   family: enFamily,
+  invites: enInvites,
+  vouch: enVouch,
   chat: enChat,
   notifications: enNotifications,
   settings: enSettings,

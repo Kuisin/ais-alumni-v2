@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 import {
   RefreshControl,
   ScrollView,
@@ -18,15 +18,19 @@ export function Screen({
   refreshing = false,
   onRefresh,
   contentStyle,
+  ref,
   ...props
 }: ScrollViewProps & {
   children: ReactNode;
+  /** the ScrollView (scrollTo) */
+  ref?: Ref<ScrollView>;
   refreshing?: boolean;
   onRefresh?: () => void;
   contentStyle?: ViewStyle;
 }) {
   return (
     <ScrollView
+      ref={ref}
       style={styles.screen}
       contentContainerStyle={[styles.content, contentStyle]}
       keyboardShouldPersistTaps="handled"

@@ -26,6 +26,13 @@ import * as r18 from "./mobile/v1/directory/options";
 import * as r19 from "./mobile/v1/events";
 import * as r20 from "./mobile/v1/events/[id]";
 import * as r21 from "./mobile/v1/events/[id]/rsvp";
+import * as fam0 from "./mobile/v1/family";
+import * as fam1 from "./mobile/v1/family/children";
+import * as fam2 from "./mobile/v1/family/links";
+import * as fam3 from "./mobile/v1/family/links/[id]";
+import * as fam4 from "./mobile/v1/family/links/[id]/confirm";
+import * as fam5 from "./mobile/v1/family/managed/[childId]/handover";
+import * as fam6 from "./mobile/v1/family/search";
 import * as r22 from "./mobile/v1/follows";
 import * as r23 from "./mobile/v1/follows/followers/[userId]";
 import * as r24 from "./mobile/v1/follows/requests/[followId]/accept";
@@ -33,6 +40,9 @@ import * as r25 from "./mobile/v1/follows/requests/[followId]/decline";
 import * as r26 from "./mobile/v1/home";
 import * as r27 from "./mobile/v1/home/line-banner/dismiss";
 import * as r28 from "./mobile/v1/home/line-link";
+import * as inv0 from "./mobile/v1/invite/[token]";
+import * as inv1 from "./mobile/v1/invites";
+import * as inv2 from "./mobile/v1/invites/[id]/revoke";
 import * as lineLink from "./mobile/v1/line/link";
 import * as lineLinkStart from "./mobile/v1/line/link/start";
 import * as r29 from "./mobile/v1/me";
@@ -75,6 +85,7 @@ import * as r48 from "./mobile/v1/settings/devices";
 import * as r49 from "./mobile/v1/settings/devices/[id]";
 import * as r50 from "./mobile/v1/settings/language";
 import * as r51 from "./mobile/v1/settings/notifications";
+import * as vch0 from "./mobile/v1/vouch/[id]";
 
 export type Handler = (
   request: Request,
@@ -171,4 +182,15 @@ export const ROUTES: [string, RouteModule][] = [
   ["settings/devices/[id]", r49 as unknown as RouteModule],
   ["settings/language", r50 as unknown as RouteModule],
   ["settings/notifications", r51 as unknown as RouteModule],
+  ["family", fam0 as unknown as RouteModule],
+  ["family/children", fam1 as unknown as RouteModule],
+  ["family/links", fam2 as unknown as RouteModule],
+  ["family/links/[id]", fam3 as unknown as RouteModule],
+  ["family/links/[id]/confirm", fam4 as unknown as RouteModule],
+  ["family/managed/[childId]/handover", fam5 as unknown as RouteModule],
+  ["family/search", fam6 as unknown as RouteModule],
+  ["invite/[token]", inv0 as unknown as RouteModule],
+  ["invites", inv1 as unknown as RouteModule],
+  ["invites/[id]/revoke", inv2 as unknown as RouteModule],
+  ["vouch/[id]", vch0 as unknown as RouteModule],
 ];

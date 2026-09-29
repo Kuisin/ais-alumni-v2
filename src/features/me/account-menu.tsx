@@ -1,5 +1,12 @@
 import { useRouter } from "expo-router";
-import { LogOut, Settings, ShieldCheck, UserPlus } from "lucide-react-native";
+import {
+  HeartHandshake,
+  LogOut,
+  MailPlus,
+  Settings,
+  ShieldCheck,
+  UserPlus,
+} from "lucide-react-native";
 import { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { useTranslations } from "use-intl";
@@ -13,9 +20,9 @@ const icon = (I: typeof Settings) => (
 );
 
 /**
- * The account menu: フォローリクエスト (with the count waiting), 設定 and,
- * for staff, 管理モード. 家族, 同窓生を招待 and お問い合わせ come back as
- * their native screens are built (the app no longer opens website pages).
+ * The account menu: 家族, フォローリクエスト (with the count waiting),
+ * 同窓生を招待, 設定 and, for staff, 管理モード. お問い合わせ comes back as
+ * its native screen is built (the app no longer opens website pages).
  */
 export function AccountMenu() {
   const tc = useTranslations("common");
@@ -23,6 +30,12 @@ export function AccountMenu() {
   const { badges, access } = useMe();
   return (
     <ListGroup>
+      <ListRow
+        leading={icon(HeartHandshake)}
+        title={tc("nav.family")}
+        onPress={() => router.push("/family")}
+      />
+      <Separator />
       <ListRow
         leading={icon(UserPlus)}
         title={tc("nav.follows")}
@@ -33,6 +46,12 @@ export function AccountMenu() {
             : undefined
         }
         onPress={() => router.push("/follows")}
+      />
+      <Separator />
+      <ListRow
+        leading={icon(MailPlus)}
+        title={tc("nav.invite")}
+        onPress={() => router.push("/invite")}
       />
       <Separator />
       <ListRow

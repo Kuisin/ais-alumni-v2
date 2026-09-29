@@ -8,9 +8,9 @@
 export type HomeTodo = {
   /** follow requests to review (→ /app/follows) */
   followRequests: number;
-  /** vouch requests to answer (→ website /app/vouch/[id]) */
+  /** vouch requests to answer (→ /app/vouch/[id]) */
   vouches: { id: string; name: string }[];
-  /** family links the other side added, to confirm (→ website /app/family) */
+  /** family links the other side added, to confirm (→ /app/family) */
   family: { id: string; initiatedBy: "PARENT" | "CHILD"; name: string }[];
 };
 
