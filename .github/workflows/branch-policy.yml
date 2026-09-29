@@ -1,0 +1,24 @@
+name: Branch policy
+
+# main only accepts pull requests from dev (make it a required check on main).
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+
+jobs:
+  source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Only dev may be merged into main
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ "${{ github.head_ref }}" != "dev" ]; then
+            echo "::error::Pull requests into main must come from dev (got '${{ github.head_ref }}'). Target dev instead."
+            exit 1
+          fi
+      - run: echo "ok"
