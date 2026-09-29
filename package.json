@@ -73,6 +73,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
+    "@types/node": "26.6.3",
     "@types/pg": "^8.23.1",
     "@types/qrcode": "^1.5.6",
     "@types/react": "~19.2.2",

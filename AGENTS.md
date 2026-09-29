@@ -7,10 +7,9 @@ routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 "server"`, `api/index.ts`). It shares the database with the website in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
 server"/"the website" below), which still owns the schema and migrations,
-stored files and scheduled jobs. The app never opens the website: what it
-doesn't have natively yet (the rest of
-settings, family/invites/vouching,
-admin mode) is left out until it is built here. Tokens live in the shared database, so either
+stored files, scheduled jobs and the LINE webhook. Every page of the
+website — public, onboarding, member and admin mode — has a native screen
+here; the app never opens the website. Tokens live in the shared database, so either
 side accepts them.
 
 `src/server/` came from the website's `src/lib` (Next.js APIs such as
@@ -92,7 +91,8 @@ project id in the config Expo Go needs no sign-in (with one, run
   the web the landing page at `/` when signed out.
 - **Links** (`src/lib/links.ts`): website paths and URLs in content and
   notifications map to the matching app screen (`hrefFor`); ones without
-  one are left out, never opened in a browser or web view.
+  one are ignored, never opened in a browser or web view. Admin mode's
+  paths map through `src/features/admin/nav.ts` (`adminHrefFor`).
 - **Realtime** (`src/lib/realtime.tsx`): the website's signal-only Supabase
   Broadcast channels; topics come from `/me` (and room responses).
 - **Notifications** (`src/lib/push-core.ts`, `src/lib/push.tsx`; server:
