@@ -4,7 +4,7 @@ import type {
   SignInMethodRow,
   StaffArea,
 } from "@contract/account";
-import { type Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import {
   Check,
   Download,
@@ -544,7 +544,7 @@ export function AdminModeSection({ areas }: { areas: StaffArea[] }) {
         <Button
           label={t("button")}
           icon={(c) => <ShieldCheck color={c} size={18} aria-hidden />}
-          onPress={() => router.push("/admin" as Href)}
+          onPress={() => router.push("/admin")}
         />
       </Card>
     </Section>
