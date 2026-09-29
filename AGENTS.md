@@ -58,9 +58,10 @@ pnpm sync:server           # contract types + strings from the server checkout
 "Cannot find native module …". Use `pnpm start` (`--go`) for Expo Go.
 
 Point the app at a server with `EXPO_PUBLIC_API_URL`. Without it, Metro
-(Expo Go, development builds) uses the staging site ais-dev.kai-lab.net —
-which shares the production database — and release builds production
-(`src/lib/config.ts`; eas.json sets it per profile). For a local website:
+(Expo Go, development builds) uses this repo's staging server
+ais-alumni-dev.kai-lab.net — which shares the production database — and
+release builds production, ais-alumni.kai-lab.net (`src/lib/config.ts`;
+eas.json sets the same per profile). For a local website:
 `EXPO_PUBLIC_API_URL=http://<your-LAN-IP>:3000 pnpm start`. A phone on the
 same Wi-Fi opens `exp://<Mac's LAN IP>:8081` in Expo Go; without an EAS
 project id in the config Expo Go needs no sign-in (with one, run
@@ -200,8 +201,9 @@ failing on development-build bundles.
 
 ## Builds and release (EAS)
 
-`eas.json` has `development` (dev client, ais-dev), `preview` (internal,
-ais-dev) and `production` (ais.kai-lab.net) profiles. First time:
+`eas.json` has `development` (dev client, ais-alumni-dev), `preview`
+(internal, ais-alumni-dev) and `production` (ais-alumni.kai-lab.net)
+profiles — this repo's own server. First time:
 `npx eas-cli@latest init` (adds the project id), then
 `npx eas-cli@latest build --profile preview --platform all`.
 Google / LINE sign-in need the `aisalumni://` scheme, so they work in
