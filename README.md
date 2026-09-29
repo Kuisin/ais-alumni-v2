@@ -16,3 +16,5 @@ Without `EXPO_PUBLIC_API_URL` the app uses ais-alumni-dev.kai-lab.net (productio
 Push notifications and LINE / Google sign-in need a development build (`npx expo run:ios`) or an EAS build — not Expo Go.
 
 See [AGENTS.md](AGENTS.md) for how the app is put together, conventions, testing (Simulator, Maestro, local push) and releases.
+
+App Store submission (build, upload, listing, privacy answers): [docs/APP_STORE.md](docs/APP_STORE.md).
