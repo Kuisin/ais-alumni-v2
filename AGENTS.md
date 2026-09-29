@@ -20,12 +20,12 @@ is implemented directly (`src/server/lib/mobile/oauth.ts`); the LINE Login
 channel needs the callback
 `https://<domain>/api/mobile/v1/auth/oauth/callback/line`.
 
-Shared with the server, copied here: the API contract types
-(`src/contract`, from the server's `src/lib/mobile/contract`) and the UI
-strings the app uses (`messages/<locale>/<namespace>.json`). The server is
-the source of truth for both — change them there, then `pnpm sync:server`
-(SERVER_DIR: your checkout of the server, default `../ais-alumni-app`;
-`--check` only reports differences).
+This repo owns the API contract types (`src/contract`, used by both the app
+and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);
+change them here. Only the database schema is still copied from the old
+website, which owns the migrations: `pnpm sync:server` (SERVER_DIR: your
+checkout of it, default `../ais-alumni-app`; `--check` only reports a
+difference), then `npx prisma generate`.
 
 ## Expo has changed — do not trust your training data
 
@@ -52,7 +52,7 @@ pnpm typecheck             # tsc --noEmit
 pnpm lint                  # Biome
 npx expo export --platform ios --output-dir /tmp/x   # bundle check
 pnpm icons                 # regenerate the app and web icons from the logo
-pnpm sync:server           # contract types + strings from the server checkout
+pnpm sync:server           # the database schema from the old website's checkout
 ```
 
 `expo-dev-client` is installed (for development builds), so a bare

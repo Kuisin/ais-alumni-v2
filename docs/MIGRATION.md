@@ -11,7 +11,7 @@ replacing the Next.js site's pages.
 | App API (`/api/mobile/v1`), LINE sign-in, notifications | **here** (Expo API routes, `src/server/`) | same database |
 | Schema + migrations, scheduled jobs, LINE webhook, files | ais-alumni-app (Next.js) | Prisma, Supabase, Vercel |
 | Website pages (public, member, admin) | ais-alumni-app (Next.js) | the app no longer opens them; missing screens are being rebuilt here |
-| Contract types, UI strings | server, copied here | `pnpm sync:server` |
+| Contract types, UI strings | **here** | the schema is still copied: `pnpm sync:server` |
 
 ## Steps
 

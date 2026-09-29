@@ -1,3 +1,4 @@
+import type { SessionResult } from "@contract/core";
 import { z } from "zod";
 import {
   diagnoseSignInCode,
@@ -5,7 +6,6 @@ import {
 } from "@/server/lib/auth/email-sign-in";
 import { normalizeEmail } from "@/server/lib/auth/otp";
 import { db } from "@/server/lib/db";
-import type { SessionResult } from "@/server/lib/mobile/contract/core";
 import {
   ApiError,
   DeviceSchema,

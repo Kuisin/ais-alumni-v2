@@ -1,14 +1,14 @@
-import { z } from "zod";
-import type { Prisma } from "@/server/generated/prisma/client";
-import { ChatGroupKind } from "@/server/generated/prisma/enums";
-import { getTranslatorFor } from "@/server/i18n/translator";
-import { db } from "@/server/lib/db";
 import type {
   ChatNotifyLevel,
   InboxItem,
   InboxPage,
   PushState,
-} from "@/server/lib/mobile/contract/notifications";
+} from "@contract/notifications";
+import { z } from "zod";
+import type { Prisma } from "@/server/generated/prisma/client";
+import { ChatGroupKind } from "@/server/generated/prisma/enums";
+import { getTranslatorFor } from "@/server/i18n/translator";
+import { db } from "@/server/lib/db";
 import { ApiError, notFound } from "@/server/lib/mobile/http";
 import { NOTIFY_KINDS } from "@/server/lib/notify/catalog";
 import { linkText } from "@/server/lib/notify/links";

@@ -1,3 +1,14 @@
+import type {
+  AcceptResult,
+  DirectoryOptions,
+  DirectoryPage,
+  FollowLists,
+  FollowResult,
+  MemberCard,
+  MemberProfile,
+  Ok,
+  RoleLine,
+} from "@contract/people";
 import { sortRoles } from "@/server/components/profile/role-details";
 import {
   parseSocialLinks,
@@ -63,17 +74,6 @@ import { displayName, otherNames } from "@/server/lib/format";
 import { isOngoing, sortHistory, visibleHistory } from "@/server/lib/history";
 import { industryLabel } from "@/server/lib/industries";
 import { jobTypeLabel } from "@/server/lib/job-types";
-import type {
-  AcceptResult,
-  DirectoryOptions,
-  DirectoryPage,
-  FollowLists,
-  FollowResult,
-  MemberCard,
-  MemberProfile,
-  Ok,
-  RoleLine,
-} from "@/server/lib/mobile/contract/people";
 import {
   ApiError,
   invalid,

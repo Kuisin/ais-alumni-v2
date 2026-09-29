@@ -1,3 +1,11 @@
+import type {
+  EventDetail,
+  EventList,
+  EventRsvp,
+  EventTab,
+  EventTicket,
+  RsvpResult,
+} from "@contract/events";
 import { toString as qrToString } from "qrcode";
 import { z } from "zod";
 import { type RsvpState, rsvpAction } from "@/server/app/actions/events";
@@ -20,14 +28,6 @@ import {
   rsvpClosesAt,
 } from "@/server/lib/events";
 import { localized } from "@/server/lib/format";
-import type {
-  EventDetail,
-  EventList,
-  EventRsvp,
-  EventTab,
-  EventTicket,
-  RsvpResult,
-} from "@/server/lib/mobile/contract/events";
 import {
   ApiError,
   forbidden,
