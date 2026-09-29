@@ -1,0 +1,38 @@
+name: Release PR (dev → main)
+
+# Whenever dev changes, make sure an open PR from dev to main exists.
+# The maintainer reviews and merges it; nothing is merged automatically.
+on:
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: release-pr
+  cancel-in-progress: false
+
+jobs:
+  ensure-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open dev → main PR if missing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          ahead=$(gh api "repos/$REPO/compare/main...dev" --jq .ahead_by)
+          if [ "$ahead" = "0" ]; then
+            echo "dev has no commits beyond main; nothing to release."
+            exit 0
+          fi
+          existing=$(gh pr list --repo "$REPO" --base main --head dev --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "Release PR #$existing already open."
+            exit 0
+          fi
+          gh pr create --repo "$REPO" --base main --head dev \
+            --title "Release: dev → main" \
+            --body "Automatically opened because \`dev\` changed. Review the included commits and merge (merge commit) to deploy to production (ais-alumni.kai-lab.net)."
