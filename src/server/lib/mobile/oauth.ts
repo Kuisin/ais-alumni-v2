@@ -164,12 +164,18 @@ type Flow = {
   redirect: string;
   locale: "ja" | "en";
   e: number;
+  /**
+   * Linking LINE to this member (src/server/lib/mobile/line-link.ts)
+   * instead of signing in; `challenge` is then unused.
+   */
+  link?: string;
 };
 
 export function newFlow(
   challenge: string,
   redirect: string,
   locale: "ja" | "en",
+  link?: string,
 ): { flow: Flow; cookie: string } {
   const flow: Flow = {
     state: randomBytes(16).toString("base64url"),
@@ -178,9 +184,12 @@ export function newFlow(
     redirect,
     locale,
     e: Date.now() + FLOW_TTL_MS,
+    ...(link ? { link } : {}),
   };
   return { flow, cookie: sign(flow, "oauth-flow") };
 }
+
+export type { Flow as OAuthFlow };
 
 export function readFlow(cookie: unknown, state: unknown): Flow | null {
   const flow = unsign<Flow>(cookie, "oauth-flow");
@@ -233,11 +242,12 @@ export function lineAuthorizeUrl(flow: Flow, origin: string): string {
   return `${LINE_AUTHORIZE}?${q.toString()}`;
 }
 
-type LineIdentity = {
+export type LineIdentity = {
   sub: string;
   name: string | null;
   picture: string | null;
   accessToken: string;
+  idToken: string;
 };
 
 /** Trade LINE's code for tokens and verify the ID token. */
@@ -285,6 +295,7 @@ export async function lineIdentity(
     name: claims.name ?? null,
     picture: claims.picture ?? null,
     accessToken: tokens.access_token,
+    idToken: tokens.id_token,
   };
 }
 

@@ -32,6 +32,8 @@ import * as r25 from "./mobile/v1/follows/requests/[followId]/decline";
 import * as r26 from "./mobile/v1/home";
 import * as r27 from "./mobile/v1/home/line-banner/dismiss";
 import * as r28 from "./mobile/v1/home/line-link";
+import * as lineLink from "./mobile/v1/line/link";
+import * as lineLinkStart from "./mobile/v1/line/link/start";
 import * as r29 from "./mobile/v1/me";
 import * as r30 from "./mobile/v1/members/[id]";
 import * as r31 from "./mobile/v1/members/[id]/block";
@@ -93,6 +95,8 @@ export const ROUTES: [string, RouteModule][] = [
   ["home", r26 as unknown as RouteModule],
   ["home/line-banner/dismiss", r27 as unknown as RouteModule],
   ["home/line-link", r28 as unknown as RouteModule],
+  ["line/link", lineLink as unknown as RouteModule],
+  ["line/link/start", lineLinkStart as unknown as RouteModule],
   ["me", r29 as unknown as RouteModule],
   ["members/[id]", r30 as unknown as RouteModule],
   ["members/[id]/block", r31 as unknown as RouteModule],
