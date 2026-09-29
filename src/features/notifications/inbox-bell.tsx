@@ -22,7 +22,7 @@ export function InboxBell() {
     >
       <Bell color={colors.slate700} size={22} aria-hidden />
       {unread > 0 ? (
-        <View style={styles.dot} pointerEvents="none">
+        <View style={styles.dot}>
           <CountDot count={unread} />
         </View>
       ) : null}
@@ -39,5 +39,5 @@ const styles = StyleSheet.create({
     borderRadius: TOUCH / 2,
   },
   pressed: { backgroundColor: colors.slate100 },
-  dot: { position: "absolute", top: 2, right: 0 },
+  dot: { pointerEvents: "none", position: "absolute", top: 2, right: 0 },
 });
