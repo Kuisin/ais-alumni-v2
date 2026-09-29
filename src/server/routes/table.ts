@@ -6,6 +6,11 @@
 import * as adminHome from "./mobile/v1/admin";
 import * as adminRoster from "./mobile/v1/admin/roster";
 import * as adminRosterImport from "./mobile/v1/admin/roster/import";
+import * as adminVerification from "./mobile/v1/admin/verification";
+import * as adminVerificationDetail from "./mobile/v1/admin/verification/[id]";
+import * as adminVerificationDecision from "./mobile/v1/admin/verification/[id]/decision";
+import * as adminVerificationMerge from "./mobile/v1/admin/verification/[id]/merge";
+import * as adminVerificationVouchers from "./mobile/v1/admin/verification/[id]/vouchers";
 import * as r0 from "./mobile/v1/auth/email/request";
 import * as r1 from "./mobile/v1/auth/email/verify";
 import * as r2 from "./mobile/v1/auth/oauth/callback/line";
@@ -100,6 +105,23 @@ export const ROUTES: [string, RouteModule][] = [
   ["admin", adminHome as unknown as RouteModule],
   ["admin/roster", adminRoster as unknown as RouteModule],
   ["admin/roster/import", adminRosterImport as unknown as RouteModule],
+  ["admin/verification", adminVerification as unknown as RouteModule],
+  [
+    "admin/verification/[id]",
+    adminVerificationDetail as unknown as RouteModule,
+  ],
+  [
+    "admin/verification/[id]/decision",
+    adminVerificationDecision as unknown as RouteModule,
+  ],
+  [
+    "admin/verification/[id]/merge",
+    adminVerificationMerge as unknown as RouteModule,
+  ],
+  [
+    "admin/verification/[id]/vouchers",
+    adminVerificationVouchers as unknown as RouteModule,
+  ],
   ["auth/email/request", r0 as unknown as RouteModule],
   ["auth/email/verify", r1 as unknown as RouteModule],
   ["auth/oauth/callback/line", r2 as unknown as RouteModule],

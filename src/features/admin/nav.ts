@@ -62,7 +62,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: BadgeCheck,
     webPath: "/app/admin/verification",
     allowed: admin,
-    href: null,
+    href: "/admin/verification",
     count: "verification",
   },
   {
@@ -222,5 +222,13 @@ export function adminSections(
 /** The native screen for a website admin page ("/app/admin/members"). */
 export function adminHrefFor(path: string): Href | null {
   if (path === "/app/admin") return "/admin";
+  // One application (notifications about new applications link here).
+  const verification =
+    /^\/app\/admin\/verification\/([A-Za-z0-9_-]{1,64})$/.exec(path);
+  if (verification?.[1])
+    return {
+      pathname: "/admin/verification/[id]",
+      params: { id: verification[1] },
+    };
   return ADMIN_NAV.find((i) => i.webPath === path)?.href ?? null;
 }
