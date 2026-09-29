@@ -4,3 +4,12 @@ packages:
 allowBuilds:
   '@prisma/engines': true
   prisma: true
+minimumReleaseAgeExclude:
+  - expo-constants@57.0.20
+  - expo-modules-core@57.0.20
+  - expo@57.0.26
+  - '@expo/ui@57.0.21'
+  - expo-camera@57.0.6
+  - expo-document-picker@57.0.3
+  - expo-router@57.0.24
+  - expo-task-manager@57.0.21

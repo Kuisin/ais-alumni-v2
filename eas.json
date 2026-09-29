@@ -7,17 +7,21 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": { "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net"
+      }
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview",
-      "env": { "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net"
+      }
     },
     "production": {
       "autoIncrement": true,
-      "channel": "production",
-      "env": { "EXPO_PUBLIC_API_URL": "https://ais-alumni.kai-lab.net" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni.kai-lab.net"
+      }
     }
   },
   "submit": {
