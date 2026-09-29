@@ -40,6 +40,7 @@ import { jobTypeLabel } from "@/server/lib/job-types";
 import { lineAddFriendUrl } from "@/server/lib/line-link";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import { bearerToken, hashMobileToken } from "@/server/lib/mobile/tokens";
+import { namePartsOf } from "@/server/lib/names";
 import { chooseChannel } from "@/server/lib/notify";
 import {
   NOTIFY_CATEGORIES,
@@ -270,6 +271,7 @@ export async function loadMyProfile(
       kana: me.nameKana,
       nameAtAis: me.nameAtAis,
       request: requestView(name),
+      parts: namePartsOf(me),
     },
     birthDate: {
       value: me.dateOfBirth ? day(me.dateOfBirth) : null,

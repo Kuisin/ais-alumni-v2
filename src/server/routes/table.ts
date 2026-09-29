@@ -51,6 +51,23 @@ import * as r41 from "./mobile/v1/notifications";
 import * as r42 from "./mobile/v1/notifications/open";
 import * as r43 from "./mobile/v1/notifications/read";
 import * as r44 from "./mobile/v1/profile";
+import * as profileAbout from "./mobile/v1/profile/about";
+import * as profileBirthDateRequest from "./mobile/v1/profile/birth-date-request";
+import * as profileBirthDateRequestId from "./mobile/v1/profile/birth-date-request/[id]";
+import * as profileDirectory from "./mobile/v1/profile/directory";
+import * as profileFollowerFields from "./mobile/v1/profile/follower-fields";
+import * as profileGender from "./mobile/v1/profile/gender";
+import * as profileGenderRequest from "./mobile/v1/profile/gender-request";
+import * as profileGenderRequestId from "./mobile/v1/profile/gender-request/[id]";
+import * as profileHistory from "./mobile/v1/profile/history";
+import * as profileHistoryKindId from "./mobile/v1/profile/history/[kind]/[id]";
+import * as profileNameRequest from "./mobile/v1/profile/name-request";
+import * as profileNameRequestId from "./mobile/v1/profile/name-request/[id]";
+import * as profileOrgs from "./mobile/v1/profile/orgs";
+import * as profilePhoto from "./mobile/v1/profile/photo";
+import * as profilePhotoVisibility from "./mobile/v1/profile/photo/visibility";
+import * as profileRecord from "./mobile/v1/profile/record";
+import * as profileRecordId from "./mobile/v1/profile/record/[id]";
 import * as r45 from "./mobile/v1/push";
 import * as r46 from "./mobile/v1/push/test";
 import * as r47 from "./mobile/v1/settings";
@@ -115,6 +132,38 @@ export const ROUTES: [string, RouteModule][] = [
   ["notifications/open", r42 as unknown as RouteModule],
   ["notifications/read", r43 as unknown as RouteModule],
   ["profile", r44 as unknown as RouteModule],
+  ["profile/about", profileAbout as unknown as RouteModule],
+  [
+    "profile/birth-date-request",
+    profileBirthDateRequest as unknown as RouteModule,
+  ],
+  [
+    "profile/birth-date-request/[id]",
+    profileBirthDateRequestId as unknown as RouteModule,
+  ],
+  ["profile/directory", profileDirectory as unknown as RouteModule],
+  ["profile/follower-fields", profileFollowerFields as unknown as RouteModule],
+  ["profile/gender", profileGender as unknown as RouteModule],
+  ["profile/gender-request", profileGenderRequest as unknown as RouteModule],
+  [
+    "profile/gender-request/[id]",
+    profileGenderRequestId as unknown as RouteModule,
+  ],
+  ["profile/history", profileHistory as unknown as RouteModule],
+  [
+    "profile/history/[kind]/[id]",
+    profileHistoryKindId as unknown as RouteModule,
+  ],
+  ["profile/name-request", profileNameRequest as unknown as RouteModule],
+  ["profile/name-request/[id]", profileNameRequestId as unknown as RouteModule],
+  ["profile/orgs", profileOrgs as unknown as RouteModule],
+  ["profile/photo", profilePhoto as unknown as RouteModule],
+  [
+    "profile/photo/visibility",
+    profilePhotoVisibility as unknown as RouteModule,
+  ],
+  ["profile/record", profileRecord as unknown as RouteModule],
+  ["profile/record/[id]", profileRecordId as unknown as RouteModule],
   ["push", r45 as unknown as RouteModule],
   ["push/test", r46 as unknown as RouteModule],
   ["settings", r47 as unknown as RouteModule],
