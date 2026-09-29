@@ -190,7 +190,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: TableProperties,
     webPath: "/app/admin/roster",
     allowed: admin,
-    href: null,
+    href: "/admin/roster",
   },
   {
     group: "data",
