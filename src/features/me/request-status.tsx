@@ -21,7 +21,8 @@ export function RequestStatus({
   statusLabel: (status: ChangeRequest["status"]) => string;
   reviewNoteLabel: string;
   withdrawLabel: string;
-  onWithdraw: () => void;
+  /** Omitted: no withdraw button (the app can't withdraw this one yet). */
+  onWithdraw?: () => void;
 }) {
   if (!request) return null;
   if (request.status === "PENDING")
@@ -33,14 +34,16 @@ export function RequestStatus({
             {pendingText}
           </Text>
         </View>
-        <Button
-          variant="secondary"
-          compact
-          hitSlop={4}
-          label={withdrawLabel}
-          onPress={onWithdraw}
-          style={styles.withdraw}
-        />
+        {onWithdraw ? (
+          <Button
+            variant="secondary"
+            compact
+            hitSlop={4}
+            label={withdrawLabel}
+            onPress={onWithdraw}
+            style={styles.withdraw}
+          />
+        ) : null}
       </View>
     );
   return (

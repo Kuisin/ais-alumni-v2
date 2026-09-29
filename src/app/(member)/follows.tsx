@@ -17,7 +17,6 @@ import {
   OutgoingRow,
 } from "@/features/people/follow-rows";
 import { useMe } from "@/lib/auth";
-import { hrefFor } from "@/lib/links";
 import {
   Button,
   colors,
@@ -61,7 +60,7 @@ export default function FollowsScreen() {
   const open = (m: MemberCard) =>
     router.push(
       m.id === me.user.id
-        ? hrefFor("/app/profile")
+        ? "/me"
         : { pathname: "/members/[id]", params: { id: m.id } },
     );
   const refresh = async () => {
@@ -124,7 +123,7 @@ export default function FollowsScreen() {
                   <Button
                     label={t("findInDirectory")}
                     icon={(c) => <Search size={18} color={c} aria-hidden />}
-                    onPress={() => router.push(hrefFor("/app/directory"))}
+                    onPress={() => router.push("/directory")}
                   />
                 )
               }

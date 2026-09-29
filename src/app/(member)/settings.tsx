@@ -9,11 +9,8 @@ import {
 } from "@/features/me/api";
 import { DevicesSection } from "@/features/me/devices-section";
 import {
-  AdminModeSection,
-  DangerSection,
   LanguageSection,
   LineSection,
-  MoreSection,
   NotifySection,
 } from "@/features/me/settings-sections";
 import { PushSection } from "@/features/notifications/push-section";
@@ -57,11 +54,6 @@ export default function SettingsScreen() {
             <NotifySection settings={s} />
             <LineSection settings={s} />
             <DevicesSection />
-            {s.adminMode.length ? (
-              <AdminModeSection areas={s.adminMode} />
-            ) : null}
-            <MoreSection settings={s} />
-            <DangerSection />
           </Screen>
         )}
       </QueryState>

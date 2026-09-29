@@ -15,11 +15,8 @@
   "onboarding": {
     "signedInAs": "Signed in as {name}",
     "continueTitle": "Finish your registration",
-    "continueBody": "Registration happens on website screens inside the app. When you're done, this screen updates by itself.",
-    "continue": "Continue registration",
-    "viewStatus": "View application details",
-    "refresh": "Check again",
-    "contact": "Contact us"
+    "continueBody": "Registration screens are coming to the app. When you're done, this screen updates by itself.",
+    "refresh": "Check again"
   },
   "web": {
     "title": "AIS Alumni",
@@ -48,7 +45,6 @@
   },
   "people": {},
   "me": {
-    "editHint": "You edit your profile on website screens inside the app.",
     "signOutConfirm": {
       "title": "Sign out?",
       "body": "You'll be signed out of the app on this device."

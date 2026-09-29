@@ -1,19 +1,12 @@
 import type { EventTab } from "@contract/events";
-import { Tabs, useRouter } from "expo-router";
-import { CalendarDays, Plus } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import { CalendarDays } from "lucide-react-native";
 import { useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useEventList } from "@/features/events/api";
 import { EventCard } from "@/features/events/event-card";
 import { SegmentedTabs } from "@/features/events/parts";
-import { webHref } from "@/lib/links";
 import {
   Button,
   colors,
@@ -39,7 +32,6 @@ export default function EventsTab() {
   const [refreshing, setRefreshing] = useState(false);
   const list = useEventList(tab);
   const events = list.data?.pages.flatMap((p) => p.events) ?? [];
-  const canCreate = list.data?.pages[0]?.canCreate ?? false;
 
   const refresh = async () => {
     setRefreshing(true);
@@ -49,31 +41,6 @@ export default function EventsTab() {
 
   return (
     <ScreenView>
-      <Tabs.Screen
-        options={{
-          headerRight: canCreate
-            ? () => (
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={t("create")}
-                  onPress={() =>
-                    router.push(webHref("/app/events/new", t("create")))
-                  }
-                  hitSlop={4}
-                  style={({ pressed }) => [
-                    styles.create,
-                    pressed ? styles.pressed : null,
-                  ]}
-                >
-                  <Plus size={20} color={colors.brand700} aria-hidden />
-                  <Text variant="small" weight="semibold" tone="brand">
-                    {t("create")}
-                  </Text>
-                </Pressable>
-              )
-            : undefined,
-        }}
-      />
       <FlatList
         data={events}
         keyExtractor={(e) => e.id}

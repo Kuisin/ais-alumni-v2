@@ -8,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { isRunningInExpoGo } from "expo";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 import { Mail, MessageCircle } from "lucide-react-native";
 import { useRef, useState } from "react";
 import {
@@ -23,7 +22,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { signInDevice, useAuth } from "@/lib/auth";
-import { API_URL, SITE_URL } from "@/lib/config";
+import { API_URL } from "@/lib/config";
 import { Button, Card, colors, Screen, space, Text, TextField } from "@/ui";
 
 type Step = { step: "email" } | { step: "code"; email: string; notice: string };
@@ -64,9 +63,6 @@ export default function SignInScreen() {
     setBusy(null);
     if (result === "failed") setProviderError(true);
   };
-
-  const openPage = (path: string) =>
-    WebBrowser.openBrowserAsync(`${SITE_URL}/${locale}${path}`);
 
   const other: Locale = locale === "ja" ? "en" : "ja";
   // Expo Go can only receive exp:// links, which deployed servers never send
@@ -180,34 +176,7 @@ export default function SignInScreen() {
 
             <View style={styles.footer}>
               <Text variant="caption" tone="muted">
-                {t.rich("privacy", {
-                  link: (chunks) => (
-                    <Text
-                      variant="caption"
-                      tone="brand"
-                      style={styles.link}
-                      onPress={() => openPage("/privacy")}
-                    >
-                      {chunks}
-                    </Text>
-                  ),
-                })}
-              </Text>
-              <Text variant="caption" tone="muted">
-                {t.rich("help", {
-                  link: (chunks) => (
-                    <Text
-                      variant="caption"
-                      tone="brand"
-                      style={styles.link}
-                      onPress={() =>
-                        openPage("/support?type=ISSUE&topic=SIGN_IN")
-                      }
-                    >
-                      {chunks}
-                    </Text>
-                  ),
-                })}
+                {t.rich("privacy", { link: (chunks) => chunks })}
               </Text>
             </View>
           </Card>
@@ -384,5 +353,4 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     paddingTop: space.lg,
   },
-  link: { textDecorationLine: "underline" },
 });

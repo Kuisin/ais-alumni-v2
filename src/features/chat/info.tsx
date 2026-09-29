@@ -16,7 +16,6 @@ import {
 import { useTranslations } from "use-intl";
 import { ChoiceRow } from "@/features/me/rows";
 import { useChatNotifyLevel } from "@/features/notifications/api";
-import { hrefFor } from "@/lib/links";
 import { usePush } from "@/lib/push";
 import {
   Avatar,
@@ -212,7 +211,7 @@ function MemberRow({
       accessibilityLabel={[m.name, m.self ? t("you") : null, m.otherNames]
         .filter(Boolean)
         .join(", ")}
-      onPress={() => router.push(hrefFor(`/app/members/${m.id}`))}
+      onPress={() => router.push(`/members/${m.id}`)}
       style={({ pressed }) => [...shape, pressed ? styles.pressed : null]}
     >
       {body}

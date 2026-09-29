@@ -77,7 +77,8 @@ export default function NotificationsScreen() {
 
   const onOpen = (item: InboxItem) => {
     open.mutate(item.id);
-    if (item.path) router.push(hrefFor(item.path, item.title));
+    const href = item.path ? hrefFor(item.path) : null;
+    if (href) router.push(href);
   };
 
   return (

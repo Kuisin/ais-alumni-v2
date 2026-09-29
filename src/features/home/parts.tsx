@@ -1,10 +1,9 @@
 import type { HomeTodo } from "@contract/home";
 import { type Href, useRouter } from "expo-router";
-import { ArrowRight, ChevronRight, Mail } from "lucide-react-native";
+import { ArrowRight, ChevronRight } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { hrefFor, webHref } from "@/lib/links";
 import { colors, radius, space, Text, TOUCH } from "@/ui";
 
 /**
@@ -72,11 +71,13 @@ function ActionItem({ label, href }: { label: string; href: Href }) {
   );
 }
 
-/** 「対応が必要な項目」: follow requests, vouch requests, family links. */
+/**
+ * 「対応が必要な項目」: follow requests. (Vouch requests and family links
+ * come back with their native screens.)
+ */
 export function TodoList({ todo }: { todo: HomeTodo }) {
   const t = useTranslations("dashboard.todo");
-  if (!todo.followRequests && !todo.vouches.length && !todo.family.length)
-    return null;
+  if (!todo.followRequests) return null;
   return (
     <View style={styles.section}>
       <Text variant="subheading" accessibilityRole="header">
@@ -86,54 +87,11 @@ export function TodoList({ todo }: { todo: HomeTodo }) {
         {todo.followRequests > 0 ? (
           <ActionItem
             label={t("followRequests", { count: todo.followRequests })}
-            href={hrefFor("/app/follows")}
+            href={"/follows"}
           />
         ) : null}
-        {todo.vouches.map((v) => (
-          <ActionItem
-            key={v.id}
-            label={t("vouch", { name: v.name })}
-            href={webHref(`/app/vouch/${v.id}`)}
-          />
-        ))}
-        {todo.family.map((l) => (
-          <ActionItem
-            key={l.id}
-            label={t(
-              l.initiatedBy === "PARENT"
-                ? "familyFromParent"
-                : "familyFromChild",
-              { name: l.name },
-            )}
-            href={webHref("/app/family")}
-          />
-        ))}
       </View>
     </View>
-  );
-}
-
-/** 「新しい連絡が N 件あります」 (only while messages are switched on). */
-export function MessagesBanner({ count }: { count: number }) {
-  const t = useTranslations("news.messages");
-  const router = useRouter();
-  const label = t("newCount", { count });
-  return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={label}
-      onPress={() => router.push(webHref("/app/news?tab=messages"))}
-      style={({ pressed }) => [
-        styles.messages,
-        pressed ? styles.messagesPressed : null,
-      ]}
-    >
-      <Mail size={20} color={colors.brand900} aria-hidden />
-      <Text variant="body" weight="medium" style={styles.messagesText}>
-        {label}
-      </Text>
-      <ArrowRight size={18} color={colors.brand900} aria-hidden />
-    </Pressable>
   );
 }
 

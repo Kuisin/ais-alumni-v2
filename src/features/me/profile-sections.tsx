@@ -6,7 +6,6 @@ import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useAuth } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
-import { webHref } from "@/lib/links";
 import { Badge, Button, colors, space, Text } from "@/ui";
 import { formatBirthDate, historyYears } from "./format";
 import { Field, Fields, Notice, ReachTag, SectionCard } from "./parts";
@@ -14,8 +13,7 @@ import { RequestStatus } from "./request-status";
 
 /**
  * My profile below the header, section by section as on the website's
- * /app/profile: read-only here, each with the website's own edit button,
- * which opens that section of the website.
+ * /app/profile, read-only until editing is built into the app.
  */
 export function ProfileSections({ profile }: { profile: MyProfile }) {
   return (
@@ -41,17 +39,6 @@ export function ProfileSections({ profile }: { profile: MyProfile }) {
 const icon = (I: typeof Lock) => (
   <I size={18} color={colors.slate600} aria-hidden />
 );
-
-/**
- * Opens the website's profile page at a section: `#edit-<id>` opens its
- * form right away (as the website's own links do), `#<id>` just shows it.
- */
-function useOpenProfile() {
-  const router = useRouter();
-  const t = useTranslations("profile");
-  return (hash: string) => () =>
-    router.push(webHref(`/app/profile#${hash}`, t("title")));
-}
 
 function VisibilityCard({ id }: { id: string }) {
   const tv = useTranslations("profile.visibility");
@@ -86,13 +73,9 @@ function VisibilityCard({ id }: { id: string }) {
 function AboutCard({ profile }: { profile: MyProfile }) {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
-  const open = useOpenProfile();
   const { bio, phone, phoneReach, social, autoAcceptSameYear } = profile.about;
   return (
-    <SectionCard
-      title={t("sections.about")}
-      action={{ label: tc("edit"), onPress: open("edit-about") }}
-    >
+    <SectionCard title={t("sections.about")}>
       <Fields>
         <Field label={t("fields.bio")} reach="members">
           {bio ? (
@@ -137,13 +120,8 @@ function AboutCard({ profile }: { profile: MyProfile }) {
 
 function DirectoryCard({ listed }: { listed: boolean }) {
   const t = useTranslations("profile.directory");
-  const tc = useTranslations("common");
-  const open = useOpenProfile();
   return (
-    <SectionCard
-      title={t("title")}
-      action={{ label: tc("edit"), onPress: open("edit-directory") }}
-    >
+    <SectionCard title={t("title")}>
       <Text>{listed ? t("shown") : t("hidden")}</Text>
     </SectionCard>
   );
@@ -151,13 +129,8 @@ function DirectoryCard({ listed }: { listed: boolean }) {
 
 function PhotoCard({ photo }: { photo: MyProfile["photo"] }) {
   const t = useTranslations("profile");
-  const tc = useTranslations("common");
-  const open = useOpenProfile();
   return (
-    <SectionCard
-      title={t("sections.photo")}
-      action={{ label: tc("edit"), onPress: open("edit-photo") }}
-    >
+    <SectionCard title={t("sections.photo")}>
       <Field label={t("photo.visibility")} reach={photo.reach}>
         {photo.public ? t("photo.everyone") : t("photo.onlyConnected")}
       </Field>
@@ -171,13 +144,10 @@ function FollowerFieldsCard({
   shared: MyProfile["sharedWithFollowers"];
 }) {
   const t = useTranslations("profile");
-  const tc = useTranslations("common");
-  const open = useOpenProfile();
   return (
     <SectionCard
       title={t("followerFields.title")}
       description={t("hints.privateTier")}
-      action={{ label: tc("edit"), onPress: open("edit-follower-fields") }}
     >
       {shared.length ? (
         <View style={styles.wrap}>
@@ -201,18 +171,9 @@ function FollowerFieldsCard({
 function HistoryCard({ history }: { history: MyProfile["history"] }) {
   const t = useTranslations("profile");
   const th = useTranslations("history");
-  const tc = useTranslations("common");
-  const router = useRouter();
   const { education, work } = history;
   return (
-    <SectionCard
-      title={t("sections.history")}
-      action={{
-        label: tc("edit"),
-        onPress: () =>
-          router.push(webHref("/app/profile/history", th("title"))),
-      }}
-    >
+    <SectionCard title={t("sections.history")}>
       {education.length || work.length ? (
         <View style={styles.history}>
           {education.length ? (
@@ -305,17 +266,10 @@ function StageCard({
 
 function RecordCard({ roles }: { roles: MyProfile["roles"] }) {
   const t = useTranslations("profile");
-  const trec = useTranslations("records");
-  const router = useRouter();
   return (
     <SectionCard
       title={t("sections.aisRecord")}
       description={t("recordReadOnly")}
-      action={{
-        label: t("requestCorrection"),
-        onPress: () =>
-          router.push(webHref("/app/profile/record", trec("title"))),
-      }}
     >
       <View style={styles.gapMd}>
         {roles.map((r) => (
@@ -344,11 +298,9 @@ function useRequestLabels() {
 }
 
 function NameCard({ names }: { names: MyProfile["names"] }) {
-  const t = useTranslations("profile");
   const tn = useTranslations("profile.nameRequest");
   const tnames = useTranslations("common.names");
   const { locale } = useAuth();
-  const open = useOpenProfile();
   const statusLabel = useRequestLabels();
   const req = names.request;
   const rows: [string, string | null][] = [
@@ -362,11 +314,6 @@ function NameCard({ names }: { names: MyProfile["names"] }) {
       icon={icon(Lock)}
       title={tn("title")}
       description={tn("lockedNote")}
-      action={
-        req?.status === "PENDING"
-          ? null
-          : { label: t("requestChange"), onPress: open("edit-name") }
-      }
     >
       <View style={styles.gapXs}>
         {rows.map(([label, value]) => (
@@ -391,17 +338,14 @@ function NameCard({ names }: { names: MyProfile["names"] }) {
         statusLabel={statusLabel}
         reviewNoteLabel={tn("reviewNote")}
         withdrawLabel={tn("cancel")}
-        onWithdraw={open("name")}
       />
     </SectionCard>
   );
 }
 
 function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
-  const t = useTranslations("profile");
   const tb = useTranslations("profile.birthDate");
   const { locale } = useAuth();
-  const open = useOpenProfile();
   const statusLabel = useRequestLabels();
   const { value, request: req } = birthDate;
   const pending = req?.status === "PENDING";
@@ -410,14 +354,6 @@ function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
       icon={icon(Cake)}
       title={tb("title")}
       description={tb("lockedNote")}
-      action={
-        pending
-          ? null
-          : {
-              label: value ? t("requestChange") : t("requestAdd"),
-              onPress: open("edit-birth-date"),
-            }
-      }
     >
       <View>
         {value ? (
@@ -445,7 +381,6 @@ function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
         statusLabel={statusLabel}
         reviewNoteLabel={tb("reviewNote")}
         withdrawLabel={tb("cancel")}
-        onWithdraw={open("birth-date")}
       />
     </SectionCard>
   );
@@ -454,11 +389,9 @@ function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
 const GENDERS = new Set(["MALE", "FEMALE", "OTHER"]);
 
 function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
-  const t = useTranslations("profile");
   const tg = useTranslations("profile.gender");
   const tgs = useTranslations("profile.photo.genders");
   const { locale } = useAuth();
-  const open = useOpenProfile();
   const statusLabel = useRequestLabels();
   const { value, request: req } = gender;
   return (
@@ -466,14 +399,6 @@ function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
       icon={icon(UserRound)}
       title={tg("title")}
       description={tg("lockedNote")}
-      action={
-        req?.status === "PENDING"
-          ? null
-          : {
-              label: value ? t("requestChange") : tg("openSetOnce"),
-              onPress: open("edit-gender"),
-            }
-      }
     >
       <View>
         {value ? (
@@ -503,7 +428,6 @@ function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
         statusLabel={statusLabel}
         reviewNoteLabel={tg("reviewNote")}
         withdrawLabel={tg("cancel")}
-        onWithdraw={open("gender")}
       />
     </SectionCard>
   );
@@ -511,17 +435,8 @@ function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
 
 function AccountCard({ account }: { account: MyProfile["account"] }) {
   const t = useTranslations("profile");
-  const ts = useTranslations("settings");
-  const router = useRouter();
   return (
-    <SectionCard
-      title={t("sections.account")}
-      action={{
-        label: t("changeInSettings"),
-        onPress: () =>
-          router.push(webHref("/app/settings#edit-email", ts("email.title"))),
-      }}
-    >
+    <SectionCard title={t("sections.account")}>
       <Fields>
         <Field label={t("fields.email")} reach={account.emailReach}>
           <Text selectable>{account.email || "—"}</Text>

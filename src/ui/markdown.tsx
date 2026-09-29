@@ -1,9 +1,8 @@
 import * as Linking from "expo-linking";
-import { type Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { Fragment } from "react";
 import { StyleSheet, View } from "react-native";
-import { SITE_URL } from "@/lib/config";
 import { hrefFor, siteUrl } from "@/lib/links";
 import { type Inline, parseBlocks, parseInline } from "@/lib/markdown";
 import { Text } from "./text";
@@ -25,8 +24,10 @@ export function useOpenLink(): (url: string) => void {
       void Linking.openURL(url).catch(() => {});
       return;
     }
-    if (siteUrl(url, SITE_URL)) {
-      router.push(hrefFor(url) as Href);
+    if (siteUrl(url)) {
+      // A page of the site: its app screen, if the app has one yet.
+      const href = hrefFor(url);
+      if (href) router.push(href);
       return;
     }
     void WebBrowser.openBrowserAsync(url);

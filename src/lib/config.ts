@@ -5,9 +5,9 @@ import { Platform } from "react-native";
  *  - API_URL — this app's own server (Expo API routes, src/app/api): the
  *    /api/mobile/v1 JSON API, sign-in and notifications. On the web it's the
  *    page's own origin; native builds use ais-alumni(-dev).kai-lab.net.
- *  - SITE_URL — the website (Kuisin/ais-alumni-app), only for the pages it
- *    still has and the app doesn't: opened in the web view (onboarding
- *    forms, admin mode…), links into them, the privacy notice.
+ *  - SITE_URL — the old website (Kuisin/ais-alumni-app), only to recognise
+ *    links into it (in content and notifications) and open the matching app
+ *    screen instead. The app never opens the old website itself.
  * Development (Metro, and the web app on its -dev domain) uses the staging
  * pair, which shares the production database; release builds production.
  * Override with EXPO_PUBLIC_API_URL / EXPO_PUBLIC_SITE_URL (.env.local).

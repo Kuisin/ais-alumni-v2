@@ -127,13 +127,14 @@ export function SetupChecklist({ setup }: { setup: HomeSetup }) {
                     <Text variant="caption" tone="subtle">
                       {t("afterApproval")}
                     </Text>
-                  ) : item.href ? (
+                  ) : item.href && hrefFor(item.href) ? (
                     <Button
                       variant={item === next ? "primary" : "secondary"}
                       label={t(`items.${item.key}.action`)}
-                      onPress={() =>
-                        item.href && router.push(hrefFor(item.href, title))
-                      }
+                      onPress={() => {
+                        const href = item.href ? hrefFor(item.href) : null;
+                        if (href) router.push(href);
+                      }}
                       style={styles.action}
                     />
                   ) : null}

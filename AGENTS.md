@@ -7,8 +7,10 @@ routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 "server"`, `api/index.ts`). It shares the database with the website in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
 server"/"the website" below), which still owns the schema and migrations,
-the pages the app opens in its web view (and their sign-in handoff), stored
-files, and scheduled jobs. Tokens live in the shared database, so either
+stored files and scheduled jobs. The app never opens the website: what it
+doesn't have natively yet (registration forms, profile editing, the rest of
+settings, family/invites/vouching, creating news and events, check-in,
+admin mode) is left out until it is built here. Tokens live in the shared database, so either
 side accepts them.
 
 `src/server/` came from the website's `src/lib` (Next.js APIs such as
@@ -80,13 +82,11 @@ project id in the config Expo Go needs no sign-in (with one, run
   LINE code works once, and `finish` only answers a sign-in `start` began in
   the same browser.
 - **Account state** (`GET /me`): not-yet-approved accounts see
-  `src/app/onboarding.tsx`, which opens the website's onboarding screens in
-  the web view; ACTIVE members get the tabs under `src/app/(member)`.
-- **Web view** (`src/app/web.tsx`, `/web?path=/app/…`): loads
-  `/api/mobile/v1/web?next=…` with the bearer token, which sets a website
-  session cookie (private cookie jar, 12 h, ended with the device session)
-  and the `ais_app` embed cookie, so the site hides its own navigation. Links to pages the app has
-  natively leave the web view (`src/lib/links.ts`).
+  `src/app/onboarding.tsx` (where the application stands); ACTIVE members
+  get the tabs under `src/app/(member)`.
+- **Links** (`src/lib/links.ts`): website paths and URLs in content and
+  notifications map to the matching app screen (`hrefFor`); ones without
+  one are left out, never opened in a browser or web view.
 - **Realtime** (`src/lib/realtime.tsx`): the website's signal-only Supabase
   Broadcast channels; topics come from `/me` (and room responses).
 - **Notifications** (`src/lib/push-core.ts`, `src/lib/push.tsx`; server:
@@ -158,9 +158,8 @@ project id in the config Expo Go needs no sign-in (with one, run
 3. A session token for a local member: `pnpm exec tsx --env-file=.env scripts/mobile-dev-token.ts hanako@example.com` (in the server checkout; refuses non-local databases) — for `curl -H "Authorization: Bearer …" localhost:3187/api/mobile/v1/me`.
 4. Screenshot a screen signed in: `node scripts/preview.mjs --email hanako@example.com --path /news --out /tmp/news.png` (`--click`, `--fill "selector=>value"`, `--full`, `--signed-out`; uses SERVER_DIR for tokens and playwright-core's Chromium).
 
-The web build can't show web views (native only) and runs with web
-security off; check native-only behavior (web view, sign-in with LINE /
-Google, keychain) in Expo Go or a development build.
+The web build runs with web security off; check native-only behavior
+(sign-in with LINE / Google, keychain) in Expo Go or a development build.
 
 ## Testing on the iOS Simulator (Xcode)
 
@@ -175,7 +174,7 @@ UI automation with [Maestro](https://maestro.dev) (needs Java 17+):
 signs in through the UI (code from the server's local dev mailbox,
 SERVER_DIR), then
 `maestro --device $UDID test -e APP_ID=host.exp.Exponent -e APP_URL=exp://127.0.0.1:8081 maestro/tour.yaml`
-visits every tab and the web view. Selectors: tabs are "Name, tab, n of 5" (マイページ is the header's top-left photo, "Me…");
+visits every tab. Selectors: tabs are "Name, tab, n of 5" (マイページ is the header's top-left photo, "Me…");
 cards are one pressable (match `.*title.*`); the header back button has id
 `BackButton`; Maestro's `back` is Android-only.
 
