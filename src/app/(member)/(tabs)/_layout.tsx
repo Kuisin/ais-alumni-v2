@@ -4,17 +4,20 @@ import {
   House,
   MessagesSquare,
   Newspaper,
-  UserRound,
   Users,
 } from "lucide-react-native";
 import { useTranslations } from "use-intl";
+import { ProfileButton } from "@/features/me/profile-button";
 import { InboxBell } from "@/features/notifications/inbox-bell";
 import { useMe } from "@/lib/auth";
 import { colors, font } from "@/ui/theme";
 
 const badge = (n: number) => (n > 0 ? (n > 99 ? "99+" : n) : undefined);
 
-/** The website's bottom tab bar on phones: the same six places. */
+/**
+ * The bottom tab bar: the website's places, with マイページ as the photo at
+ * the top left of every tab (it carries the follow-request count).
+ */
 export default function TabLayout() {
   const t = useTranslations("common.nav");
   const { badges } = useMe();
@@ -31,6 +34,7 @@ export default function TabLayout() {
         },
         headerStyle: { backgroundColor: colors.surface },
         sceneStyle: { backgroundColor: colors.background },
+        headerLeft: () => <ProfileButton />,
       }}
     >
       <Tabs.Screen
@@ -74,16 +78,6 @@ export default function TabLayout() {
           tabBarBadge: badge(badges.chat),
           tabBarIcon: ({ color, size }) => (
             <MessagesSquare color={color} size={size} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="me"
-        options={{
-          title: t("profileShort"),
-          tabBarBadge: badge(badges.follows),
-          tabBarIcon: ({ color, size }) => (
-            <UserRound color={color} size={size} />
           ),
         }}
       />
