@@ -153,10 +153,9 @@ export function FamilyCard({ m }: { m: AdminMemberDetail }) {
         added={result?.ok ? result : null}
       />
       {result ? (
-        <Notice
-          tone={result.ok ? "success" : "error"}
-          text={t(result.message ?? "errors.notFound")}
-        />
+        <Notice tone={result.ok ? "success" : "error"}>
+          {t(result.message ?? "errors.notFound")}
+        </Notice>
       ) : null}
       <FailedNotice error={error} />
     </AdminCard>
