@@ -1,8 +1,9 @@
 import { useRouter } from "expo-router";
-import { LogOut, Settings, UserPlus } from "lucide-react-native";
+import { LogOut, Settings, ShieldCheck, UserPlus } from "lucide-react-native";
 import { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { useTranslations } from "use-intl";
+import { hasStaffAccess } from "@/features/admin/nav";
 import { useAuth, useMe } from "@/lib/auth";
 import { CountDot, colors, ListGroup, ListRow, Separator } from "@/ui";
 import { confirmAction } from "./confirm";
@@ -12,14 +13,14 @@ const icon = (I: typeof Settings) => (
 );
 
 /**
- * The account menu: フォローリクエスト (with the count waiting) and 設定.
- * 家族, 同窓生を招待, お問い合わせ and 管理モード come back as their native
- * screens are built (the app no longer opens website pages).
+ * The account menu: フォローリクエスト (with the count waiting), 設定 and,
+ * for staff, 管理モード. 家族, 同窓生を招待 and お問い合わせ come back as
+ * their native screens are built (the app no longer opens website pages).
  */
 export function AccountMenu() {
   const tc = useTranslations("common");
   const router = useRouter();
-  const { badges } = useMe();
+  const { badges, access } = useMe();
   return (
     <ListGroup>
       <ListRow
@@ -39,6 +40,16 @@ export function AccountMenu() {
         title={tc("nav.settings")}
         onPress={() => router.push("/settings")}
       />
+      {hasStaffAccess(access) ? (
+        <>
+          <Separator />
+          <ListRow
+            leading={icon(ShieldCheck)}
+            title={tc("nav.adminMode")}
+            onPress={() => router.push("/admin")}
+          />
+        </>
+      ) : null}
     </ListGroup>
   );
 }

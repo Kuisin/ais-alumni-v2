@@ -11,6 +11,8 @@ export default function MemberLayout() {
   return (
     <Stack screenOptions={stackScreenOptions}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      {/* 管理モード has its own stack (and headers) */}
+      <Stack.Screen name="admin" options={{ headerShown: false }} />
     </Stack>
   );
 }

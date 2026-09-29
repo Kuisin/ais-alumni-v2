@@ -128,5 +128,8 @@
     "bellUnread": "Notifications ({count} unread)",
     "unread": "Unread",
     "notFound": "This notification couldn’t be found."
+  },
+  "admin": {
+    "empty": "No admin tools are available in the app yet."
   }
 }
