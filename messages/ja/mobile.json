@@ -13,10 +13,7 @@
     "expoGoLine": "Expo Go では LINE ログインを利用できません（アプリ版・ウェブ版では利用できます）。メールのコードでログインしてください。"
   },
   "onboarding": {
-    "signedInAs": "{name} としてログイン中",
-    "continueTitle": "会員登録を続けてください",
-    "continueBody": "会員登録の画面は、アプリに準備中です。手続きが終わると、この画面は自動的に切り替わります。",
-    "refresh": "状態を更新"
+    "signedInAs": "{name} としてログイン中"
   },
   "web": {
     "title": "AIS 同窓会",
@@ -147,5 +144,9 @@
     "coverChange": "別の画像を選ぶ",
     "scanPermission": "QRコードを読み取るにはカメラへのアクセスを許可してください。",
     "scanSettings": "設定を開く"
+  },
+  "verify": {
+    "pickPhoto": "写真を選ぶ",
+    "pickFile": "ファイルを選ぶ"
   }
 }

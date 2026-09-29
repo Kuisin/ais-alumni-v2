@@ -56,6 +56,14 @@ const PATTERNS: Rule[] = [
   { re: /^\/app\/family$/, to: () => "/family" },
   { re: /^\/app\/invite$/, to: () => "/invite" },
   { re: /^\/app\/vouch\/ID$/, to: (m) => `/vouch/${m[1]}` },
+  // Registration: /onboarding opens the step the account is on.
+  {
+    re: /^\/app\/onboarding(\/(email|line|verify|status))?$/,
+    to: () => "/onboarding",
+  },
+  { re: /^\/app\/handover\/ID$/, to: (m) => `/handover/${m[1]}` },
+  { re: /^\/privacy$/, to: () => "/privacy" },
+  { re: /^\/support$/, to: () => "/support", keep: ["type", "topic"] },
 ];
 
 const RULES: Rule[] = PATTERNS.map((r) => ({

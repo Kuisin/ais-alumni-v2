@@ -10,6 +10,7 @@ import enEvents from "@messages/en/events.json";
 import enFamily from "@messages/en/family.json";
 import enFollows from "@messages/en/follows.json";
 import enHistory from "@messages/en/history.json";
+import enHome from "@messages/en/home.json";
 import enInvites from "@messages/en/invites.json";
 import enLanding from "@messages/en/landing.json";
 import enLine from "@messages/en/line.json";
@@ -36,6 +37,7 @@ import jaEvents from "@messages/ja/events.json";
 import jaFamily from "@messages/ja/family.json";
 import jaFollows from "@messages/ja/follows.json";
 import jaHistory from "@messages/ja/history.json";
+import jaHome from "@messages/ja/home.json";
 import jaInvites from "@messages/ja/invites.json";
 import jaLanding from "@messages/ja/landing.json";
 import jaLine from "@messages/ja/line.json";
@@ -67,6 +69,7 @@ const JA = {
   landing: jaLanding,
   auth: jaAuth,
   onboarding: jaOnboarding,
+  home: jaHome,
   dashboard: jaDashboard,
   events: jaEvents,
   news: jaNews,
@@ -95,6 +98,7 @@ const EN = {
   landing: enLanding,
   auth: enAuth,
   onboarding: enOnboarding,
+  home: enHome,
   dashboard: enDashboard,
   events: enEvents,
   news: enNews,

@@ -8,7 +8,7 @@ routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
 server"/"the website" below), which still owns the schema and migrations,
 stored files and scheduled jobs. The app never opens the website: what it
-doesn't have natively yet (registration forms, the rest of
+doesn't have natively yet (the rest of
 settings, family/invites/vouching,
 admin mode) is left out until it is built here. Tokens live in the shared database, so either
 side accepts them.
@@ -83,9 +83,13 @@ project id in the config Expo Go needs no sign-in (with one, run
   only this header, never the website's cookie (no CSRF); each Google /
   LINE code works once, and `finish` only answers a sign-in `start` began in
   the same browser.
-- **Account state** (`GET /me`): not-yet-approved accounts see
-  `src/app/onboarding.tsx` (where the application stands); ACTIVE members
-  get the tabs under `src/app/(member)`.
+- **Account state** (`GET /me`): not-yet-approved accounts get the
+  registration screens under `src/app/onboarding` (email check, LINE, the
+  application with evidence uploads, status — one per state, following
+  `me.onboardingPath`; API `/onboarding/*`, `src/server/lib/mobile/onboarding.ts`);
+  ACTIVE members get the tabs under `src/app/(member)`. Public screens for
+  anyone: `privacy`, `support` (お問い合わせ), `handover/[token]`, and on
+  the web the landing page at `/` when signed out.
 - **Links** (`src/lib/links.ts`): website paths and URLs in content and
   notifications map to the matching app screen (`hrefFor`); ones without
   one are left out, never opened in a browser or web view.

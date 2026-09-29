@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import {
   HeartHandshake,
+  LifeBuoy,
   LogOut,
   MailPlus,
   Settings,
@@ -20,9 +21,9 @@ const icon = (I: typeof Settings) => (
 );
 
 /**
- * The account menu: 家族, フォローリクエスト (with the count waiting),
- * 同窓生を招待, 設定 and, for staff, 管理モード. お問い合わせ comes back as
- * its native screen is built (the app no longer opens website pages).
+ * The account menu (the website's app shell): 家族, フォローリクエスト
+ * (with the count waiting), 同窓生を招待, 設定, お問い合わせ and, for
+ * staff, 管理モード.
  */
 export function AccountMenu() {
   const tc = useTranslations("common");
@@ -58,6 +59,12 @@ export function AccountMenu() {
         leading={icon(Settings)}
         title={tc("nav.settings")}
         onPress={() => router.push("/settings")}
+      />
+      <Separator />
+      <ListRow
+        leading={icon(LifeBuoy)}
+        title={tc("nav.support")}
+        onPress={() => router.push("/support")}
       />
       {hasStaffAccess(access) ? (
         <>

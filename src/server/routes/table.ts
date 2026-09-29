@@ -81,6 +81,8 @@ import * as r22 from "./mobile/v1/follows";
 import * as r23 from "./mobile/v1/follows/followers/[userId]";
 import * as r24 from "./mobile/v1/follows/requests/[followId]/accept";
 import * as r25 from "./mobile/v1/follows/requests/[followId]/decline";
+import * as obHandover from "./mobile/v1/handover/[token]";
+import * as obHandoverClaim from "./mobile/v1/handover/[token]/claim";
 import * as r26 from "./mobile/v1/home";
 import * as r27 from "./mobile/v1/home/line-banner/dismiss";
 import * as r28 from "./mobile/v1/home/line-link";
@@ -107,6 +109,18 @@ import * as messages1 from "./mobile/v1/news/messages/[id]";
 import * as r41 from "./mobile/v1/notifications";
 import * as r42 from "./mobile/v1/notifications/open";
 import * as r43 from "./mobile/v1/notifications/read";
+import * as obEmailRequest from "./mobile/v1/onboarding/email/request";
+import * as obEmailVerify from "./mobile/v1/onboarding/email/verify";
+import * as obLine from "./mobile/v1/onboarding/line";
+import * as obLineSkip from "./mobile/v1/onboarding/line/skip";
+import * as obStatus from "./mobile/v1/onboarding/status";
+import * as obVerify from "./mobile/v1/onboarding/verify";
+import * as obChildSearch from "./mobile/v1/onboarding/verify/children/search";
+import * as obEvidence from "./mobile/v1/onboarding/verify/evidence";
+import * as obEvidenceDiscard from "./mobile/v1/onboarding/verify/evidence/discard";
+import * as obManagedDuplicate from "./mobile/v1/onboarding/verify/managed-duplicate";
+import * as obSchoolEmailConfirm from "./mobile/v1/onboarding/verify/school-email/confirm";
+import * as obSchoolEmailSend from "./mobile/v1/onboarding/verify/school-email/send";
 import * as r44 from "./mobile/v1/profile";
 import * as profileAbout from "./mobile/v1/profile/about";
 import * as profileBirthDateRequest from "./mobile/v1/profile/birth-date-request";
@@ -138,6 +152,7 @@ import * as r51 from "./mobile/v1/settings/notifications";
 import * as settingsSchoolEmail from "./mobile/v1/settings/school-email";
 import * as settingsSchoolEmailVerify from "./mobile/v1/settings/school-email/verify";
 import * as settingsSignIn from "./mobile/v1/settings/sign-in/[provider]";
+import * as obSupport from "./mobile/v1/support";
 import * as vch0 from "./mobile/v1/vouch/[id]";
 
 export type Handler = (
@@ -255,6 +270,8 @@ export const ROUTES: [string, RouteModule][] = [
   ["follows/followers/[userId]", r23 as unknown as RouteModule],
   ["follows/requests/[followId]/accept", r24 as unknown as RouteModule],
   ["follows/requests/[followId]/decline", r25 as unknown as RouteModule],
+  ["handover/[token]", obHandover as unknown as RouteModule],
+  ["handover/[token]/claim", obHandoverClaim as unknown as RouteModule],
   ["home", r26 as unknown as RouteModule],
   ["home/line-banner/dismiss", r27 as unknown as RouteModule],
   ["home/line-link", r28 as unknown as RouteModule],
@@ -278,6 +295,33 @@ export const ROUTES: [string, RouteModule][] = [
   ["notifications", r41 as unknown as RouteModule],
   ["notifications/open", r42 as unknown as RouteModule],
   ["notifications/read", r43 as unknown as RouteModule],
+  ["onboarding/email/request", obEmailRequest as unknown as RouteModule],
+  ["onboarding/email/verify", obEmailVerify as unknown as RouteModule],
+  ["onboarding/line", obLine as unknown as RouteModule],
+  ["onboarding/line/skip", obLineSkip as unknown as RouteModule],
+  ["onboarding/status", obStatus as unknown as RouteModule],
+  ["onboarding/verify", obVerify as unknown as RouteModule],
+  [
+    "onboarding/verify/children/search",
+    obChildSearch as unknown as RouteModule,
+  ],
+  ["onboarding/verify/evidence", obEvidence as unknown as RouteModule],
+  [
+    "onboarding/verify/evidence/discard",
+    obEvidenceDiscard as unknown as RouteModule,
+  ],
+  [
+    "onboarding/verify/managed-duplicate",
+    obManagedDuplicate as unknown as RouteModule,
+  ],
+  [
+    "onboarding/verify/school-email/confirm",
+    obSchoolEmailConfirm as unknown as RouteModule,
+  ],
+  [
+    "onboarding/verify/school-email/send",
+    obSchoolEmailSend as unknown as RouteModule,
+  ],
   ["profile", r44 as unknown as RouteModule],
   ["profile/about", profileAbout as unknown as RouteModule],
   [
@@ -338,4 +382,5 @@ export const ROUTES: [string, RouteModule][] = [
     settingsSchoolEmailVerify as unknown as RouteModule,
   ],
   ["settings/sign-in/[provider]", settingsSignIn as unknown as RouteModule],
+  ["support", obSupport as unknown as RouteModule],
 ];

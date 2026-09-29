@@ -13,10 +13,7 @@
     "expoGoLine": "LINE sign-in doesn't work in Expo Go (it does in the app and on the web). Sign in with an email code."
   },
   "onboarding": {
-    "signedInAs": "Signed in as {name}",
-    "continueTitle": "Finish your registration",
-    "continueBody": "Registration screens are coming to the app. When you're done, this screen updates by itself.",
-    "refresh": "Check again"
+    "signedInAs": "Signed in as {name}"
   },
   "web": {
     "title": "AIS Alumni",
@@ -147,5 +144,9 @@
     "coverChange": "Choose another image",
     "scanPermission": "Allow camera access to scan QR codes.",
     "scanSettings": "Open Settings"
+  },
+  "verify": {
+    "pickPhoto": "Choose a photo",
+    "pickFile": "Choose a file"
   }
 }
