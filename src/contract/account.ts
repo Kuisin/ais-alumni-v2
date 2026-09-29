@@ -10,7 +10,7 @@ type IsoDate = string;
 type Day = string;
 type Language = "ja" | "en";
 
-// ---- GET /profile — my profile, read-only (editing is on the website) ----
+// ---- GET /profile — my profile (editing: profile.ts) ----
 
 /**
  * 「公開範囲」: the smallest audience that sees a field (family see what
@@ -127,13 +127,23 @@ export type MyProfile = {
     kana: string | null;
     nameAtAis: string | null;
     request: ChangeRequest | null;
+    /** the name parts, as the name change form starts with them */
+    parts?: {
+      lastNameRomaji: string;
+      firstNameRomaji: string;
+      middleNameRomaji: string;
+      lastNameKanji: string;
+      firstNameKanji: string;
+      lastNameKana: string;
+      firstNameKana: string;
+    };
   };
   birthDate: {
     value: Day | null;
     request: (ChangeRequest & { proposed: Day }) | null;
   };
   gender: {
-    /** null = not given yet (can be set once on the website) */
+    /** null = not given yet (can be set once: POST /profile/gender) */
     value: "MALE" | "FEMALE" | "OTHER" | null;
     /** proposed: MALE | FEMALE | OTHER */
     request: (ChangeRequest & { proposed: string }) | null;
