@@ -25,8 +25,15 @@ const PATTERNS: Rule[] = [
   { re: /^\/app\/directory$/, to: () => "/directory" },
   { re: /^\/app\/members\/ID$/, to: (m) => `/members/${m[1]}`, keep: ["as"] },
   { re: /^\/app\/events$/, to: () => "/events" },
+  { re: /^\/app\/events\/new$/, to: () => "/events/new" },
   { re: /^\/app\/events\/(?!new$)ID$/, to: (m) => `/events/${m[1]}` },
+  {
+    re: /^\/app\/events\/(?!new$)ID\/check-in$/,
+    to: (m) => `/events/${m[1]}/check-in`,
+    keep: ["t"],
+  },
   { re: /^\/app\/news$/, to: () => "/news" },
+  { re: /^\/app\/news\/new$/, to: () => "/news/new" },
   {
     re: /^\/app\/news\/(?!new$|messages$)ID$/,
     to: (m) => `/news/${m[1]}`,

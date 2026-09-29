@@ -48,21 +48,31 @@ type Options = {
   signal?: AbortSignal;
 };
 
-/** `path` is relative to /api/mobile/v1, e.g. "/news?page=2". */
+/**
+ * `path` is relative to /api/mobile/v1, e.g. "/news?page=2". `body`: JSON,
+ * or FormData for multipart uploads.
+ */
 export async function api<T>(path: string, options: Options = {}): Promise<T> {
   const headers: Record<string, string> = {
     Accept: "application/json",
     "X-NEXT-INTL-LOCALE": session.locale,
   };
   if (session.token) headers.Authorization = `Bearer ${session.token}`;
-  if (options.body !== undefined) headers["Content-Type"] = "application/json";
+  // FormData (file uploads) sets its own multipart Content-Type.
+  const form = options.body instanceof FormData;
+  if (options.body !== undefined && !form)
+    headers["Content-Type"] = "application/json";
   let res: Response;
   try {
     res = await fetch(`${API_URL}/api/mobile/v1${path}`, {
       method: options.method ?? (options.body === undefined ? "GET" : "POST"),
       headers,
       body:
-        options.body === undefined ? undefined : JSON.stringify(options.body),
+        options.body === undefined
+          ? undefined
+          : form
+            ? (options.body as FormData)
+            : JSON.stringify(options.body),
       signal: options.signal,
     });
   } catch (e) {

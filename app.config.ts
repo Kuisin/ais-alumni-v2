@@ -104,6 +104,26 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         defaultChannel: "news",
       },
     ],
+    [
+      "expo-camera",
+      {
+        cameraPermission:
+          "イベントの受付で参加者のQRコードを読み取るためにカメラを使います。",
+        microphonePermission: false,
+        recordAudioAndroid: false,
+      },
+    ],
+    [
+      "expo-image-picker",
+      {
+        photosPermission:
+          "ニュースの画像や添付する写真を選ぶために写真へのアクセスを使います。",
+        cameraPermission:
+          "イベントの受付で参加者のQRコードを読み取るためにカメラを使います。",
+        microphonePermission: false,
+      },
+    ],
+    "@react-native-community/datetimepicker",
     // Native project fixes for building with Xcode 27 / from paths with
     // spaces (see each file).
     "./plugins/ios-scene-lifecycle",

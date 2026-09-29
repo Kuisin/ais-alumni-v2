@@ -9,7 +9,7 @@ routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 server"/"the website" below), which still owns the schema and migrations,
 stored files and scheduled jobs. The app never opens the website: what it
 doesn't have natively yet (registration forms, profile editing, the rest of
-settings, family/invites/vouching, creating news and events, check-in,
+settings, family/invites/vouching,
 admin mode) is left out until it is built here. Tokens live in the shared database, so either
 side accepts them.
 

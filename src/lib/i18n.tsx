@@ -1,4 +1,5 @@
 import type { Locale } from "@contract/core";
+import enAdminContent from "@messages/en/adminContent.json";
 import enAuth from "@messages/en/auth.json";
 import enChat from "@messages/en/chat.json";
 import enCohorts from "@messages/en/cohorts.json";
@@ -23,6 +24,7 @@ import enSettings from "@messages/en/settings.json";
 import enSetup from "@messages/en/setup.json";
 import enSupport from "@messages/en/support.json";
 import enVouch from "@messages/en/vouch.json";
+import jaAdminContent from "@messages/ja/adminContent.json";
 import jaAuth from "@messages/ja/auth.json";
 import jaChat from "@messages/ja/chat.json";
 import jaCohorts from "@messages/ja/cohorts.json";
@@ -81,6 +83,7 @@ const JA = {
   support: jaSupport,
   line: jaLine,
   cohorts: jaCohorts,
+  adminContent: jaAdminContent,
   mobile: jaMobile,
 };
 const EN = {
@@ -107,6 +110,7 @@ const EN = {
   support: enSupport,
   line: enLine,
   cohorts: enCohorts,
+  adminContent: enAdminContent,
   mobile: enMobile,
 };
 

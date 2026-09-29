@@ -38,7 +38,7 @@ export type NewsList = {
   /** page size: 10 (NEWS_PAGE_SIZE), pinned posts first */
   posts: NewsSummary[];
   hasNext: boolean;
-  /** may post ニュース (「ニュースを作成」 → website /app/news/new) */
+  /** may post ニュース (「ニュースを作成」 → /news/new) */
   canCreate: boolean;
 };
 
