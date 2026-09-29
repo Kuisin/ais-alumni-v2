@@ -71,13 +71,11 @@ function ActionItem({ label, href }: { label: string; href: Href }) {
   );
 }
 
-/**
- * 「対応が必要な項目」: follow requests. (Vouch requests and family links
- * come back with their native screens.)
- */
+/** 「対応が必要な項目」: follow requests, vouch requests, family links. */
 export function TodoList({ todo }: { todo: HomeTodo }) {
   const t = useTranslations("dashboard.todo");
-  if (!todo.followRequests) return null;
+  if (!todo.followRequests && !todo.vouches.length && !todo.family.length)
+    return null;
   return (
     <View style={styles.section}>
       <Text variant="subheading" accessibilityRole="header">
@@ -90,6 +88,25 @@ export function TodoList({ todo }: { todo: HomeTodo }) {
             href={"/follows"}
           />
         ) : null}
+        {todo.vouches.map((v) => (
+          <ActionItem
+            key={v.id}
+            label={t("vouch", { name: v.name })}
+            href={{ pathname: "/vouch/[id]", params: { id: v.id } }}
+          />
+        ))}
+        {todo.family.map((l) => (
+          <ActionItem
+            key={l.id}
+            label={t(
+              l.initiatedBy === "PARENT"
+                ? "familyFromParent"
+                : "familyFromChild",
+              { name: l.name },
+            )}
+            href="/family"
+          />
+        ))}
       </View>
     </View>
   );

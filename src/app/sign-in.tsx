@@ -23,6 +23,7 @@ import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { signInDevice, useAuth } from "@/lib/auth";
 import { API_URL } from "@/lib/config";
+import { usePendingInvite } from "@/lib/invite";
 import { Button, Card, colors, Screen, space, Text, TextField } from "@/ui";
 
 type Step = { step: "email" } | { step: "code"; email: string; notice: string };
@@ -108,6 +109,7 @@ export default function SignInScreen() {
           </View>
 
           <Card style={styles.card}>
+            <InviteBanner />
             <View style={styles.gapSm}>
               <Text variant="subheading" accessibilityRole="header">
                 {t("title")}
@@ -184,6 +186,37 @@ export default function SignInScreen() {
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
+}
+
+/**
+ * Opened through a member's invitation link (src/app/invite/[token].tsx):
+ * who invited, or that the link can't be used.
+ */
+function InviteBanner() {
+  const t = useTranslations("landing.invite");
+  const { data } = usePendingInvite();
+  if (data?.invite) {
+    const i = data.invite;
+    return (
+      <View style={[styles.banner, styles.bannerOk]}>
+        <Text variant="small" style={{ color: colors.green700 }}>
+          {t("from", {
+            name: i.inviterName,
+            what: t(`types.${i.type}`, { cohort: i.cohortLabel ?? "" }),
+          })}
+        </Text>
+      </View>
+    );
+  }
+  if (data?.invalid)
+    return (
+      <View style={[styles.banner, styles.bannerWarn]}>
+        <Text variant="small" style={{ color: colors.amber900 }}>
+          {t("invalid")}
+        </Text>
+      </View>
+    );
+  return null;
 }
 
 function EmailCodeForm() {
@@ -327,6 +360,14 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   flex: { flex: 1 },
   content: { gap: space.xl, paddingTop: space.md },
+  banner: {
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+  },
+  bannerOk: { backgroundColor: colors.green50, borderColor: colors.green100 },
+  bannerWarn: { backgroundColor: colors.amber50, borderColor: colors.amber100 },
   langRow: { flexDirection: "row", justifyContent: "flex-end" },
   brand: { alignItems: "center", gap: space.sm },
   logo: { width: 72, height: 72, borderRadius: 18 },
