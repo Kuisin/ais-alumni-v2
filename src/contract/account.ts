@@ -109,7 +109,12 @@ export type MyProfile = {
   };
   /** parents only (null otherwise): listed in the member directory */
   directoryListed: boolean | null;
-  photo: { public: boolean; reach: Reach };
+  photo: {
+    public: boolean;
+    reach: Reach;
+    /** a photo is set (not the default icon): it can be removed */
+    uploaded?: boolean;
+  };
   /** personal fields also shown to followers, in the website's order */
   sharedWithFollowers: PersonalField[];
   /** current first, then most recent */

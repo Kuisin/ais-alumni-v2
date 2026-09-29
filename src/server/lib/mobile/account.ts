@@ -234,7 +234,11 @@ export async function loadMyProfile(
       autoAcceptSameYear: former ? me.autoAcceptSameYear : null,
     },
     directoryListed: parent ? !me.hideFromDirectory : null,
-    photo: { public: me.avatarPublic, reach: photoReach(me.avatarPublic) },
+    photo: {
+      public: me.avatarPublic,
+      reach: photoReach(me.avatarPublic),
+      uploaded: storedAvatarUrl(me.avatarUrl) !== null,
+    },
     sharedWithFollowers: PERSONAL_FIELDS.filter((f) => shared.has(f)),
     history: {
       education: sortHistory(education).map((e) => ({

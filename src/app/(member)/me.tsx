@@ -11,7 +11,7 @@ import { ErrorState, Loading, Screen } from "@/ui";
 
 /**
  * マイページ (opened from the photo at the top left of every tab): my
- * profile as others see it (the website's /app/profile, read-only for now)
+ * profile as others see it, each section editable (the website's /app/profile)
  * and the account menu (フォローリクエスト, 設定, ログアウト).
  */
 export default function MeScreen() {

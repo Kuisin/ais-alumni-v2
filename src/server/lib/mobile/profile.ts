@@ -204,9 +204,13 @@ function twoLevel(list: IndustryGroup[], locale: Locale): TwoLevelGroup[] {
   }));
 }
 
-/** The website's HistoryEditor for the member's own history. */
+/**
+ * The website's HistoryEditor for a member's history: `user` is whose it
+ * is — the caller must have checked access (own history, or an admin on
+ * 管理 → 会員, as the website's pages do).
+ */
 export async function loadHistoryEditor(
-  user: CurrentUser,
+  user: { id: string },
   locale: Locale,
 ): Promise<HistoryEditor> {
   const [education, work] = await Promise.all([
@@ -290,21 +294,32 @@ export const HistoryBody = z.discriminatedUnion("kind", [
   }),
 ]);
 
-/** Add or edit one of my entries (never another member's: no userId). */
-export async function saveHistory(input: HistoryInput): Promise<FormOk> {
+/**
+ * Add or edit an entry: my own, or with `userId` another member's (the
+ * action then requires an admin, as on the website's 管理 → 会員).
+ */
+export async function saveHistory(
+  input: HistoryInput,
+  userId = "",
+): Promise<FormOk> {
   const { kind, id, ...rest } = input;
   return formResult(
-    await saveHistoryAction(null, form({ kind, id: id ?? "", ...rest })),
+    await saveHistoryAction(
+      null,
+      form({ kind, id: id ?? "", userId, ...rest }),
+    ),
   );
 }
 
 export const HistoryKind = z.enum(["education", "work"]);
 
+/** Remove an entry: mine, or with `userId` (admins) another member's. */
 export async function deleteHistory(
   kind: "education" | "work",
   id: string,
+  userId = "",
 ): Promise<{ ok: true }> {
-  await deleteHistoryAction(kind, id);
+  await deleteHistoryAction(kind, id, userId);
   return { ok: true };
 }
 

@@ -45,6 +45,7 @@
   },
   "people": {},
   "me": {
+    "editHint": "Edit your introduction and contact details. Change anything else with “Edit” on each section below.",
     "signOutConfirm": {
       "title": "Sign out?",
       "body": "You'll be signed out of the app on this device."

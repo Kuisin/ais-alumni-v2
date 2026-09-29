@@ -32,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     infoPlist: {
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,
-      // Photo uploads on website screens opened in the app (web view).
+      // Choosing photos and documents to upload (e.g. the profile photo).
       NSCameraUsageDescription:
         "Used to take a photo when you upload a picture or a document.",
       NSPhotoLibraryUsageDescription:
