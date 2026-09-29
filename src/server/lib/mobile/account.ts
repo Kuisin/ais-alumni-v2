@@ -39,6 +39,7 @@ import { industryLabel } from "@/server/lib/industries";
 import { jobTypeLabel } from "@/server/lib/job-types";
 import { lineAddFriendUrl } from "@/server/lib/line-link";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
+import { signInMethodRows } from "@/server/lib/mobile/settings";
 import { bearerToken, hashMobileToken } from "@/server/lib/mobile/tokens";
 import { namePartsOf } from "@/server/lib/names";
 import { chooseChannel } from "@/server/lib/notify";
@@ -354,6 +355,7 @@ export async function loadMySettings(user: CurrentUser): Promise<MySettings> {
     schoolEmail: teacher
       ? { email: teacher.schoolEmail, verified: teacher.schoolEmailVerified }
       : null,
+    signInMethods: await signInMethodRows(user),
   };
 }
 

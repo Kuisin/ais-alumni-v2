@@ -193,7 +193,79 @@ export type MySettings = {
   adminMode: StaffArea[];
   /** teachers only (null otherwise): their school (work) email */
   schoolEmail: { email: string | null; verified: boolean } | null;
+  /** ログイン方法: the email code, then Google and LINE */
+  signInMethods?: SignInMethodRow[];
 };
+
+export type SignInMethodRow = {
+  method: "email" | "google" | "line";
+  linked: boolean;
+  /** linked, and not the last way to sign in (email can't be removed) */
+  removable: boolean;
+  /** set up on this server (else 準備中) */
+  ready: boolean;
+  /**
+   * can be added in the app (LINE: 設定 → LINE). Google can only be added
+   * on the website for now (settings.methods.googleInApp).
+   */
+  addable: boolean;
+};
+
+// ---- 設定 forms. Messages are already in the member's language. ----
+
+/** The result of a settings form (the website's SettingsFormState). */
+export type SettingsResult = { ok?: boolean; message?: string; error?: string };
+
+/**
+ * DELETE /settings/sign-in/{google|line} → SettingsResult (then refetch
+ * /settings; removing LINE also stops LINE notifications).
+ */
+
+/**
+ * POST /settings/email → EmailChangeState: "send" a code to `email`,
+ * "resend" it, or "verify" `code` for `email`. Changed when ok.
+ */
+export type EmailChangeRequest = {
+  intent: "send" | "resend" | "verify";
+  email: string;
+  code?: string;
+};
+export type EmailChangeState = SettingsResult & {
+  step: "email" | "code";
+  email?: string;
+};
+
+/**
+ * Teachers' school email: POST /settings/school-email { email } sends a
+ * code; POST /settings/school-email/verify { email, code } saves it.
+ * error → verify.schoolEmail.errors.<error>.
+ */
+export type SchoolEmailResult = {
+  ok: boolean;
+  error?:
+    | "forbidden"
+    | "invalidEmail"
+    | "wrongDomain"
+    | "taken"
+    | "rateLimited"
+    | "sendFailed"
+    | "invalid"
+    | "expired"
+    | "tooManyAttempts";
+};
+
+/**
+ * POST /settings/deactivate { confirm: "yes" } and POST /settings/delete
+ * { confirmWord } → SettingsResult. When ok, this device is signed out
+ * (the token no longer works): forget it and go to sign-in.
+ */
+export type DeactivateRequest = { confirm: "yes" };
+export type DeleteAccountRequest = { confirmWord: string };
+
+/**
+ * GET /me/export: the member's data as a JSON file (the website's
+ * /api/me/export), for any signed-in account.
+ */
 
 /** PUT /settings/language → MySettings. Then refetch /me: the app's language follows it. */
 export type LanguageUpdate = { locale: Language };

@@ -10,6 +10,9 @@ export async function auth(): Promise<null> {
 export async function signIn(..._args: unknown[]): Promise<never> {
   throw new Error("signIn is only available on the website");
 }
-export async function signOut(..._args: unknown[]): Promise<never> {
-  throw new Error("signOut is only available on the website");
-}
+/**
+ * Nothing to do here: the shared settings actions (deactivate, delete) end
+ * with the website's sign-out; in the API the route ends the app's session
+ * itself (src/server/lib/mobile/settings.ts).
+ */
+export async function signOut(..._args: unknown[]): Promise<void> {}

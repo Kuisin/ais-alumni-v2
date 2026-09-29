@@ -23,9 +23,8 @@ import { Notice } from "./parts";
 import { ChoiceRow, ToggleRow } from "./rows";
 
 /**
- * 設定 (the website's /app/settings): language and notifications are
- * changed here; LINE shows its state. Sign-in methods, email, data export
- * and closing the account are still to be built into the app.
+ * 設定 (the website's /app/settings): language, notifications and LINE.
+ * The account sections are in ./account-sections.tsx.
  */
 
 /** A failed save, in the member's language. */
