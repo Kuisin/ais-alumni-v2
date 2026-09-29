@@ -1,6 +1,6 @@
 import type { EventDetail } from "@contract/events";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { CalendarX } from "lucide-react-native";
+import { CalendarX, ScanLine } from "lucide-react-native";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -24,7 +24,7 @@ import {
 /**
  * One event (the website's /app/events/[id]): the member's ticket, when /
  * where / capacity / deadline, the RSVP, and the details. Staff open the
- * website's check-in screen.
+ * check-in screen.
  */
 export default function EventScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -79,12 +79,22 @@ export default function EventScreen() {
 
 function Heading({ event }: { event: EventDetail }) {
   const t = useTranslations("events");
+  const router = useRouter();
   return (
     <View style={styles.heading}>
       <Text variant="heading" accessibilityRole="header" selectable>
         {event.title.text || t("untitled")}
         <FallbackTag fallback={event.title.fallback} />
       </Text>
+      {event.checkInPath ? (
+        <Button
+          variant="secondary"
+          label={t("checkIn.open")}
+          icon={(c) => <ScanLine size={18} color={c} aria-hidden />}
+          onPress={() => router.push(`/events/${event.id}/check-in`)}
+          style={styles.start}
+        />
+      ) : null}
     </View>
   );
 }

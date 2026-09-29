@@ -131,5 +131,17 @@
   },
   "admin": {
     "empty": "No admin tools are available in the app yet."
+  },
+  "compose": {
+    "dateNotSet": "Not set",
+    "dateChoose": "Tap to choose a date and time (Japan time)",
+    "dateClear": "Clear {label}",
+    "cancel": "Cancel",
+    "done": "Done",
+    "network": "Couldn't connect. Check your connection and try again.",
+    "coverPick": "Choose an image",
+    "coverChange": "Choose another image",
+    "scanPermission": "Allow camera access to scan QR codes.",
+    "scanSettings": "Open Settings"
   }
 }

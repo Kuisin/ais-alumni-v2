@@ -131,5 +131,17 @@
   },
   "admin": {
     "empty": "このアプリで使える管理機能は、まだありません。"
+  },
+  "compose": {
+    "dateNotSet": "未設定",
+    "dateChoose": "タップして日時を選びます（日本時間）",
+    "dateClear": "{label}をクリア",
+    "cancel": "キャンセル",
+    "done": "完了",
+    "network": "通信できませんでした。接続を確認してもう一度お試しください。",
+    "coverPick": "画像を選ぶ",
+    "coverChange": "別の画像を選ぶ",
+    "scanPermission": "QRコードを読み取るにはカメラへのアクセスを許可してください。",
+    "scanSettings": "設定を開く"
   }
 }

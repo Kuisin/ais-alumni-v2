@@ -24,8 +24,7 @@ replacing the Next.js site's pages.
    - native versions of the website screens the app lacks, in this order:
      onboarding / application, support, privacy; profile editing; settings
      (sign-in methods, email, LINE link, data export, deactivate/delete);
-     family, invites, vouching; creating news and events, check-in,
-     messages; admin mode. Until then they are left out (no web view, no
+     family, invites, vouching; messages; admin mode. Until then they are left out (no web view, no
      links to the old site);
    - static rendering for the public pages (landing, privacy) for search
      and link previews (`web.output: "static"`);

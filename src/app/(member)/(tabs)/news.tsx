@@ -1,6 +1,6 @@
 import type { NewsSummary } from "@contract/news";
 import { useRouter } from "expo-router";
-import { Newspaper } from "lucide-react-native";
+import { Newspaper, Plus } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -37,6 +37,7 @@ export default function NewsScreen() {
         seen.add(p.id);
         posts.push(p);
       }
+  const canCreate = list.data?.pages[0]?.canCreate ?? false;
 
   const refresh = async () => {
     setRefreshing(true);
@@ -67,6 +68,14 @@ export default function NewsScreen() {
           <Text variant="small" tone="muted">
             {t("description")}
           </Text>
+          {canCreate ? (
+            <Button
+              variant="secondary"
+              label={t("create")}
+              icon={(c) => <Plus size={18} color={c} aria-hidden />}
+              onPress={() => router.push("/news/new")}
+            />
+          ) : null}
         </View>
       }
       ListEmptyComponent={

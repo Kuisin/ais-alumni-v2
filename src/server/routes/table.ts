@@ -22,11 +22,20 @@ import * as r13 from "./mobile/v1/chat/[id]/notifications";
 import * as r14 from "./mobile/v1/chat/[id]/read";
 import * as r15 from "./mobile/v1/chat/[id]/report";
 import * as r7 from "./mobile/v1/chat/direct";
+import * as compose0 from "./mobile/v1/compose";
+import * as compose1 from "./mobile/v1/compose/audience";
+import * as compose2 from "./mobile/v1/compose/events";
+import * as compose3 from "./mobile/v1/compose/files";
+import * as compose4 from "./mobile/v1/compose/members";
+import * as compose5 from "./mobile/v1/compose/news";
 import * as r16 from "./mobile/v1/config";
 import * as r17 from "./mobile/v1/directory";
 import * as r18 from "./mobile/v1/directory/options";
 import * as r19 from "./mobile/v1/events";
 import * as r20 from "./mobile/v1/events/[id]";
+import * as checkIn0 from "./mobile/v1/events/[id]/check-in";
+import * as checkIn1 from "./mobile/v1/events/[id]/check-in/search";
+import * as checkIn2 from "./mobile/v1/events/[id]/check-in/undo";
 import * as r21 from "./mobile/v1/events/[id]/rsvp";
 import * as fam0 from "./mobile/v1/family";
 import * as fam1 from "./mobile/v1/family/children";
@@ -116,11 +125,20 @@ export const ROUTES: [string, RouteModule][] = [
   ["chat/[id]/notifications", r13 as unknown as RouteModule],
   ["chat/[id]/read", r14 as unknown as RouteModule],
   ["chat/[id]/report", r15 as unknown as RouteModule],
+  ["compose", compose0 as unknown as RouteModule],
+  ["compose/audience", compose1 as unknown as RouteModule],
+  ["compose/events", compose2 as unknown as RouteModule],
+  ["compose/files", compose3 as unknown as RouteModule],
+  ["compose/members", compose4 as unknown as RouteModule],
+  ["compose/news", compose5 as unknown as RouteModule],
   ["config", r16 as unknown as RouteModule],
   ["directory", r17 as unknown as RouteModule],
   ["directory/options", r18 as unknown as RouteModule],
   ["events", r19 as unknown as RouteModule],
   ["events/[id]", r20 as unknown as RouteModule],
+  ["events/[id]/check-in", checkIn0 as unknown as RouteModule],
+  ["events/[id]/check-in/search", checkIn1 as unknown as RouteModule],
+  ["events/[id]/check-in/undo", checkIn2 as unknown as RouteModule],
   ["events/[id]/rsvp", r21 as unknown as RouteModule],
   ["follows", r22 as unknown as RouteModule],
   ["follows/followers/[userId]", r23 as unknown as RouteModule],

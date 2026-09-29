@@ -48,7 +48,10 @@ type Options = {
   signal?: AbortSignal;
 };
 
-/** `path` is relative to /api/mobile/v1, e.g. "/news?page=2". */
+/**
+ * `path` is relative to /api/mobile/v1, e.g. "/news?page=2". `body`: JSON,
+ * or FormData for multipart uploads.
+ */
 export async function api<T>(path: string, options: Options = {}): Promise<T> {
   const headers: Record<string, string> = {
     Accept: "application/json",
