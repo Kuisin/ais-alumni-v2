@@ -108,7 +108,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: Users,
     webPath: "/app/admin/members",
     allowed: admin,
-    href: null,
+    href: "/admin/members",
   },
   {
     group: "people",
@@ -219,16 +219,25 @@ export function adminSections(
   })).filter((g) => g.items.length > 0);
 }
 
+/** Admin detail pages with a native screen: website path → app route. */
+export const ADMIN_DETAIL: { re: RegExp; to: (id: string) => Href }[] = [
+  {
+    re: /^\/app\/admin\/members\/([A-Za-z0-9_-]{1,64})$/,
+    to: (id) => ({ pathname: "/admin/members/[id]", params: { id } }),
+  },
+  // One application (notifications about new applications link here).
+  {
+    re: /^\/app\/admin\/verification\/([A-Za-z0-9_-]{1,64})$/,
+    to: (id) => ({ pathname: "/admin/verification/[id]", params: { id } }),
+  },
+];
+
 /** The native screen for a website admin page ("/app/admin/members"). */
 export function adminHrefFor(path: string): Href | null {
   if (path === "/app/admin") return "/admin";
-  // One application (notifications about new applications link here).
-  const verification =
-    /^\/app\/admin\/verification\/([A-Za-z0-9_-]{1,64})$/.exec(path);
-  if (verification?.[1])
-    return {
-      pathname: "/admin/verification/[id]",
-      params: { id: verification[1] },
-    };
+  for (const d of ADMIN_DETAIL) {
+    const id = d.re.exec(path)?.[1];
+    if (id) return d.to(id);
+  }
   return ADMIN_NAV.find((i) => i.webPath === path)?.href ?? null;
 }

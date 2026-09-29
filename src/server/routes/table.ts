@@ -4,6 +4,19 @@
  * see src/app/api/mobile/v1/[...path]+api.ts.
  */
 import * as adminHome from "./mobile/v1/admin";
+import * as adminMembers from "./mobile/v1/admin/members";
+import * as adminMember from "./mobile/v1/admin/members/[id]";
+import * as adminMemberAdmin from "./mobile/v1/admin/members/[id]/admin";
+import * as adminMemberFamily from "./mobile/v1/admin/members/[id]/family";
+import * as adminMemberFamilyLink from "./mobile/v1/admin/members/[id]/family/[linkId]";
+import * as adminMemberFamilyConfirm from "./mobile/v1/admin/members/[id]/family/[linkId]/confirm";
+import * as adminMemberFamilyCandidates from "./mobile/v1/admin/members/[id]/family/candidates";
+import * as adminMemberMerge from "./mobile/v1/admin/members/[id]/merge";
+import * as adminMemberPositions from "./mobile/v1/admin/members/[id]/positions";
+import * as adminMemberProfile from "./mobile/v1/admin/members/[id]/profile";
+import * as adminMemberRoles from "./mobile/v1/admin/members/[id]/roles";
+import * as adminMemberRole from "./mobile/v1/admin/members/[id]/roles/[role]";
+import * as adminMemberState from "./mobile/v1/admin/members/[id]/state";
 import * as adminRoster from "./mobile/v1/admin/roster";
 import * as adminRosterImport from "./mobile/v1/admin/roster/import";
 import * as adminVerification from "./mobile/v1/admin/verification";
@@ -140,6 +153,34 @@ export const ROUTES: [string, RouteModule][] = [
     "admin/verification/[id]/vouchers",
     adminVerificationVouchers as unknown as RouteModule,
   ],
+  ["admin/members", adminMembers as unknown as RouteModule],
+  ["admin/members/[id]", adminMember as unknown as RouteModule],
+  ["admin/members/[id]/admin", adminMemberAdmin as unknown as RouteModule],
+  ["admin/members/[id]/family", adminMemberFamily as unknown as RouteModule],
+  [
+    "admin/members/[id]/family/candidates",
+    adminMemberFamilyCandidates as unknown as RouteModule,
+  ],
+  [
+    "admin/members/[id]/family/[linkId]",
+    adminMemberFamilyLink as unknown as RouteModule,
+  ],
+  [
+    "admin/members/[id]/family/[linkId]/confirm",
+    adminMemberFamilyConfirm as unknown as RouteModule,
+  ],
+  ["admin/members/[id]/merge", adminMemberMerge as unknown as RouteModule],
+  [
+    "admin/members/[id]/positions",
+    adminMemberPositions as unknown as RouteModule,
+  ],
+  ["admin/members/[id]/profile", adminMemberProfile as unknown as RouteModule],
+  ["admin/members/[id]/roles", adminMemberRoles as unknown as RouteModule],
+  [
+    "admin/members/[id]/roles/[role]",
+    adminMemberRole as unknown as RouteModule,
+  ],
+  ["admin/members/[id]/state", adminMemberState as unknown as RouteModule],
   ["auth/email/request", r0 as unknown as RouteModule],
   ["auth/email/verify", r1 as unknown as RouteModule],
   ["auth/oauth/callback/line", r2 as unknown as RouteModule],
