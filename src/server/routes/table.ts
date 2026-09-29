@@ -28,6 +28,9 @@ import * as adminMemberRole from "./mobile/v1/admin/members/[id]/roles/[role]";
 import * as adminMemberState from "./mobile/v1/admin/members/[id]/state";
 import * as adminNameRequests from "./mobile/v1/admin/name-requests";
 import * as adminNameRequestDecide from "./mobile/v1/admin/name-requests/[id]/decide";
+import * as adminNotify from "./mobile/v1/admin/notify";
+import * as adminNotifyId from "./mobile/v1/admin/notify/[id]";
+import * as adminNotifyIdArchive from "./mobile/v1/admin/notify/[id]/archive";
 import * as adminRecordRequests from "./mobile/v1/admin/record-requests";
 import * as adminRecordRequestDecide from "./mobile/v1/admin/record-requests/[id]/decide";
 import * as adminRoster from "./mobile/v1/admin/roster";
@@ -235,6 +238,9 @@ export const ROUTES: [string, RouteModule][] = [
   ["admin/events/[id]/rsvp-closed", ae4 as unknown as RouteModule],
   ["admin/events/[id]/staff", ae5 as unknown as RouteModule],
   ["admin/events/[id]/xlsx", ae6 as unknown as RouteModule],
+  ["admin/notify", adminNotify as unknown as RouteModule],
+  ["admin/notify/[id]", adminNotifyId as unknown as RouteModule],
+  ["admin/notify/[id]/archive", adminNotifyIdArchive as unknown as RouteModule],
   ["auth/email/request", r0 as unknown as RouteModule],
   ["auth/email/verify", r1 as unknown as RouteModule],
   ["auth/oauth/callback/line", r2 as unknown as RouteModule],
