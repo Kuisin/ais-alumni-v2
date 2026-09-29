@@ -22,7 +22,7 @@ replacing the Next.js site's pages.
    (react-native-web). Still needed:
    - a web sign-in (bearer token in storage, or a cookie session);
    - native versions of the website screens the app lacks, in this order:
-     onboarding / application, support, privacy; profile editing; settings
+     onboarding / application, support, privacy; settings
      (sign-in methods, email, LINE link, data export, deactivate/delete);
      family, invites, vouching; messages; admin mode. Until then they are left out (no web view, no
      links to the old site);

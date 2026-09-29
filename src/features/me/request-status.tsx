@@ -4,8 +4,8 @@ import { Badge, Button, colors, radius, space, Text } from "@/ui";
 
 /**
  * The latest request to change a locked field (name, birth date, gender),
- * as the website's RequestStatus: pending (with withdraw — done on the
- * website) or the committee's decision with its note.
+ * as the website's RequestStatus: pending (with withdraw) or the
+ * committee's decision with its note.
  */
 export function RequestStatus({
   request,
@@ -14,6 +14,7 @@ export function RequestStatus({
   reviewNoteLabel,
   withdrawLabel,
   onWithdraw,
+  withdrawing = false,
 }: {
   request: ChangeRequest | null;
   /** e.g. 「2026年9月20日（日） に申請しました。…」 */
@@ -21,8 +22,9 @@ export function RequestStatus({
   statusLabel: (status: ChangeRequest["status"]) => string;
   reviewNoteLabel: string;
   withdrawLabel: string;
-  /** Omitted: no withdraw button (the app can't withdraw this one yet). */
+  /** Omitted: no withdraw button. */
   onWithdraw?: () => void;
+  withdrawing?: boolean;
 }) {
   if (!request) return null;
   if (request.status === "PENDING")
@@ -40,6 +42,7 @@ export function RequestStatus({
             compact
             hitSlop={4}
             label={withdrawLabel}
+            loading={withdrawing}
             onPress={onWithdraw}
             style={styles.withdraw}
           />

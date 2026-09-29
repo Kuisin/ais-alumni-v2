@@ -1,19 +1,24 @@
 import type { ChangeRequest, MyProfile } from "@contract/account";
+import { useQueryClient } from "@tanstack/react-query";
 import { type Href, useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { Cake, Eye, Lock, UserRound } from "lucide-react-native";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { profileApi, refreshProfile } from "@/features/profile/api";
 import { useAuth } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
 import { Badge, Button, colors, space, Text } from "@/ui";
+import { confirmAction } from "./confirm";
 import { formatBirthDate, historyYears } from "./format";
 import { Field, Fields, Notice, ReachTag, SectionCard } from "./parts";
 import { RequestStatus } from "./request-status";
 
 /**
  * My profile below the header, section by section as on the website's
- * /app/profile, read-only until editing is built into the app.
+ * /app/profile, each with its 編集 / 変更を申請 button opening the native
+ * form (src/app/(member)/profile/…).
  */
 export function ProfileSections({ profile }: { profile: MyProfile }) {
   return (
@@ -39,6 +44,39 @@ export function ProfileSections({ profile }: { profile: MyProfile }) {
 const icon = (I: typeof Lock) => (
   <I size={18} color={colors.slate600} aria-hidden />
 );
+
+/** Opens a profile form screen. */
+function useOpen() {
+  const router = useRouter();
+  return (path: string) => () => router.push(path as Href);
+}
+
+/** Withdraw my pending request (asks first), then refresh the profile. */
+function useWithdraw(kind: "name" | "birth-date" | "gender") {
+  const tc = useTranslations("common");
+  const queryClient = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  return {
+    busy,
+    run: (id: string, label: string) => async () => {
+      const ok = await confirmAction({
+        title: label,
+        confirm: label,
+        cancel: tc("cancel"),
+      });
+      if (!ok) return;
+      setBusy(true);
+      try {
+        await profileApi.withdraw(kind, id);
+        await refreshProfile(queryClient);
+      } catch {
+        // The card stays as it was; pull to refresh shows the real state.
+      } finally {
+        setBusy(false);
+      }
+    },
+  };
+}
 
 function VisibilityCard({ id }: { id: string }) {
   const tv = useTranslations("profile.visibility");
@@ -73,9 +111,13 @@ function VisibilityCard({ id }: { id: string }) {
 function AboutCard({ profile }: { profile: MyProfile }) {
   const t = useTranslations("profile");
   const tc = useTranslations("common");
+  const open = useOpen();
   const { bio, phone, phoneReach, social, autoAcceptSameYear } = profile.about;
   return (
-    <SectionCard title={t("sections.about")}>
+    <SectionCard
+      title={t("sections.about")}
+      action={{ label: tc("edit"), onPress: open("/profile/about") }}
+    >
       <Fields>
         <Field label={t("fields.bio")} reach="members">
           {bio ? (
@@ -120,8 +162,13 @@ function AboutCard({ profile }: { profile: MyProfile }) {
 
 function DirectoryCard({ listed }: { listed: boolean }) {
   const t = useTranslations("profile.directory");
+  const tc = useTranslations("common");
+  const open = useOpen();
   return (
-    <SectionCard title={t("title")}>
+    <SectionCard
+      title={t("title")}
+      action={{ label: tc("edit"), onPress: open("/profile/directory") }}
+    >
       <Text>{listed ? t("shown") : t("hidden")}</Text>
     </SectionCard>
   );
@@ -129,8 +176,13 @@ function DirectoryCard({ listed }: { listed: boolean }) {
 
 function PhotoCard({ photo }: { photo: MyProfile["photo"] }) {
   const t = useTranslations("profile");
+  const tc = useTranslations("common");
+  const open = useOpen();
   return (
-    <SectionCard title={t("sections.photo")}>
+    <SectionCard
+      title={t("sections.photo")}
+      action={{ label: tc("edit"), onPress: open("/profile/photo") }}
+    >
       <Field label={t("photo.visibility")} reach={photo.reach}>
         {photo.public ? t("photo.everyone") : t("photo.onlyConnected")}
       </Field>
@@ -144,10 +196,13 @@ function FollowerFieldsCard({
   shared: MyProfile["sharedWithFollowers"];
 }) {
   const t = useTranslations("profile");
+  const tc = useTranslations("common");
+  const open = useOpen();
   return (
     <SectionCard
       title={t("followerFields.title")}
       description={t("hints.privateTier")}
+      action={{ label: tc("edit"), onPress: open("/profile/follower-fields") }}
     >
       {shared.length ? (
         <View style={styles.wrap}>
@@ -171,9 +226,14 @@ function FollowerFieldsCard({
 function HistoryCard({ history }: { history: MyProfile["history"] }) {
   const t = useTranslations("profile");
   const th = useTranslations("history");
+  const tc = useTranslations("common");
+  const open = useOpen();
   const { education, work } = history;
   return (
-    <SectionCard title={t("sections.history")}>
+    <SectionCard
+      title={t("sections.history")}
+      action={{ label: tc("edit"), onPress: open("/profile/history") }}
+    >
       {education.length || work.length ? (
         <View style={styles.history}>
           {education.length ? (
@@ -266,10 +326,15 @@ function StageCard({
 
 function RecordCard({ roles }: { roles: MyProfile["roles"] }) {
   const t = useTranslations("profile");
+  const open = useOpen();
   return (
     <SectionCard
       title={t("sections.aisRecord")}
       description={t("recordReadOnly")}
+      action={{
+        label: t("requestCorrection"),
+        onPress: open("/profile/record"),
+      }}
     >
       <View style={styles.gapMd}>
         {roles.map((r) => (
@@ -298,7 +363,10 @@ function useRequestLabels() {
 }
 
 function NameCard({ names }: { names: MyProfile["names"] }) {
+  const t = useTranslations("profile");
   const tn = useTranslations("profile.nameRequest");
+  const open = useOpen();
+  const withdraw = useWithdraw("name");
   const tnames = useTranslations("common.names");
   const { locale } = useAuth();
   const statusLabel = useRequestLabels();
@@ -314,6 +382,11 @@ function NameCard({ names }: { names: MyProfile["names"] }) {
       icon={icon(Lock)}
       title={tn("title")}
       description={tn("lockedNote")}
+      action={
+        req?.status === "PENDING"
+          ? null
+          : { label: t("requestChange"), onPress: open("/profile/name") }
+      }
     >
       <View style={styles.gapXs}>
         {rows.map(([label, value]) => (
@@ -338,13 +411,18 @@ function NameCard({ names }: { names: MyProfile["names"] }) {
         statusLabel={statusLabel}
         reviewNoteLabel={tn("reviewNote")}
         withdrawLabel={tn("cancel")}
+        withdrawing={withdraw.busy}
+        onWithdraw={req ? withdraw.run(req.id, tn("cancel")) : undefined}
       />
     </SectionCard>
   );
 }
 
 function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
+  const t = useTranslations("profile");
   const tb = useTranslations("profile.birthDate");
+  const open = useOpen();
+  const withdraw = useWithdraw("birth-date");
   const { locale } = useAuth();
   const statusLabel = useRequestLabels();
   const { value, request: req } = birthDate;
@@ -354,6 +432,14 @@ function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
       icon={icon(Cake)}
       title={tb("title")}
       description={tb("lockedNote")}
+      action={
+        pending
+          ? null
+          : {
+              label: value ? t("requestChange") : t("requestAdd"),
+              onPress: open("/profile/birth-date"),
+            }
+      }
     >
       <View>
         {value ? (
@@ -381,6 +467,8 @@ function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
         statusLabel={statusLabel}
         reviewNoteLabel={tb("reviewNote")}
         withdrawLabel={tb("cancel")}
+        withdrawing={withdraw.busy}
+        onWithdraw={req ? withdraw.run(req.id, tb("cancel")) : undefined}
       />
     </SectionCard>
   );
@@ -389,7 +477,10 @@ function BirthDateCard({ birthDate }: { birthDate: MyProfile["birthDate"] }) {
 const GENDERS = new Set(["MALE", "FEMALE", "OTHER"]);
 
 function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
+  const t = useTranslations("profile");
   const tg = useTranslations("profile.gender");
+  const open = useOpen();
+  const withdraw = useWithdraw("gender");
   const tgs = useTranslations("profile.photo.genders");
   const { locale } = useAuth();
   const statusLabel = useRequestLabels();
@@ -399,6 +490,14 @@ function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
       icon={icon(UserRound)}
       title={tg("title")}
       description={tg("lockedNote")}
+      action={
+        req?.status === "PENDING"
+          ? null
+          : {
+              label: value ? t("requestChange") : tg("openSetOnce"),
+              onPress: open("/profile/gender"),
+            }
+      }
     >
       <View>
         {value ? (
@@ -428,6 +527,8 @@ function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
         statusLabel={statusLabel}
         reviewNoteLabel={tg("reviewNote")}
         withdrawLabel={tg("cancel")}
+        withdrawing={withdraw.busy}
+        onWithdraw={req ? withdraw.run(req.id, tg("cancel")) : undefined}
       />
     </SectionCard>
   );
@@ -435,8 +536,12 @@ function GenderCard({ gender }: { gender: MyProfile["gender"] }) {
 
 function AccountCard({ account }: { account: MyProfile["account"] }) {
   const t = useTranslations("profile");
+  const open = useOpen();
   return (
-    <SectionCard title={t("sections.account")}>
+    <SectionCard
+      title={t("sections.account")}
+      action={{ label: t("changeInSettings"), onPress: open("/settings") }}
+    >
       <Fields>
         <Field label={t("fields.email")} reach={account.emailReach}>
           <Text selectable>{account.email || "—"}</Text>

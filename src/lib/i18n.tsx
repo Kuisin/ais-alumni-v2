@@ -23,6 +23,7 @@ import enRoles from "@messages/en/roles.json";
 import enSettings from "@messages/en/settings.json";
 import enSetup from "@messages/en/setup.json";
 import enSupport from "@messages/en/support.json";
+import enVerify from "@messages/en/verify.json";
 import enVouch from "@messages/en/vouch.json";
 import jaAdminContent from "@messages/ja/adminContent.json";
 import jaAuth from "@messages/ja/auth.json";
@@ -48,6 +49,7 @@ import jaRoles from "@messages/ja/roles.json";
 import jaSettings from "@messages/ja/settings.json";
 import jaSetup from "@messages/ja/setup.json";
 import jaSupport from "@messages/ja/support.json";
+import jaVerify from "@messages/ja/verify.json";
 import jaVouch from "@messages/ja/vouch.json";
 import type { ReactNode } from "react";
 import { type AbstractIntlMessages, IntlProvider } from "use-intl";
@@ -81,6 +83,7 @@ const JA = {
   settings: jaSettings,
   setup: jaSetup,
   support: jaSupport,
+  verify: jaVerify,
   line: jaLine,
   cohorts: jaCohorts,
   adminContent: jaAdminContent,
@@ -108,6 +111,7 @@ const EN = {
   settings: enSettings,
   setup: enSetup,
   support: enSupport,
+  verify: enVerify,
   line: enLine,
   cohorts: enCohorts,
   adminContent: enAdminContent,
