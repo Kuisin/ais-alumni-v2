@@ -3,6 +3,7 @@
  * add a handler there and a line here). One API bundle for all of them —
  * see src/app/api/mobile/v1/[...path]+api.ts.
  */
+import * as adminHome from "./mobile/v1/admin";
 import * as r0 from "./mobile/v1/auth/email/request";
 import * as r1 from "./mobile/v1/auth/email/verify";
 import * as r2 from "./mobile/v1/auth/oauth/callback/line";
@@ -64,6 +65,7 @@ export type RouteModule = Partial<Record<string, Handler>>;
 
 /** [path pattern, module]; static segments before [params]. */
 export const ROUTES: [string, RouteModule][] = [
+  ["admin", adminHome as unknown as RouteModule],
   ["auth/email/request", r0 as unknown as RouteModule],
   ["auth/email/verify", r1 as unknown as RouteModule],
   ["auth/oauth/callback/line", r2 as unknown as RouteModule],

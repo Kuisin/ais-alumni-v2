@@ -1,4 +1,5 @@
 import type { Href } from "expo-router";
+import { adminHrefFor } from "@/features/admin/nav";
 import { SITE_URL } from "./config";
 
 /**
@@ -78,6 +79,9 @@ export function nativeHref(
   path: string,
   query: URLSearchParams = new URLSearchParams(),
 ): Href | null {
+  // 管理モード: the sections built so far (src/features/admin/nav.ts).
+  if (path === "/app/admin" || path.startsWith("/app/admin/"))
+    return adminHrefFor(path);
   for (const rule of RULES) {
     const m = rule.re.exec(path);
     if (!m) continue;
