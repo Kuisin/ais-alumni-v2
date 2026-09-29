@@ -5,6 +5,7 @@ import type {
   SessionResult,
 } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
+import { isRunningInExpoGo } from "expo";
 import { Image } from "expo-image";
 import * as WebBrowser from "expo-web-browser";
 import { Mail, MessageCircle } from "lucide-react-native";
@@ -21,7 +22,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { signInDevice, useAuth } from "@/lib/auth";
-import { SITE_URL } from "@/lib/config";
+import { API_URL, SITE_URL } from "@/lib/config";
 import { Button, Card, colors, Screen, space, Text, TextField } from "@/ui";
 
 type Step = { step: "email" } | { step: "code"; email: string; notice: string };
@@ -65,7 +66,13 @@ export default function SignInScreen() {
     WebBrowser.openBrowserAsync(`${SITE_URL}/${locale}${path}`);
 
   const other: Locale = locale === "ja" ? "en" : "ja";
-  const sso = config.data?.sso;
+  // Expo Go can only receive exp:// links, which deployed servers never send
+  // a sign-in code to (src/server/lib/mobile/oauth.ts): hide LINE / Google
+  // there unless the server is a local development one.
+  const expoGo =
+    isRunningInExpoGo() &&
+    !/^http:\/\/(localhost|127\.|192\.168\.|10\.)/.test(API_URL);
+  const sso = expoGo ? { line: false, google: false } : config.data?.sso;
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
@@ -110,6 +117,12 @@ export default function SignInScreen() {
                 {t("subtitle")}
               </Text>
             </View>
+
+            {expoGo && config.data?.sso.line ? (
+              <Text variant="small" tone="muted">
+                {tm("signIn.expoGoLine")}
+              </Text>
+            ) : null}
 
             {sso?.line || sso?.google ? (
               <View style={styles.gapMd}>
