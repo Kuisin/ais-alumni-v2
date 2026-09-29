@@ -7,6 +7,7 @@ import type {
 import { useQuery } from "@tanstack/react-query";
 import { isRunningInExpoGo } from "expo";
 import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { Mail, MessageCircle } from "lucide-react-native";
 import { useRef, useState } from "react";
@@ -52,7 +53,9 @@ export default function SignInScreen() {
     staleTime: 5 * 60_000,
   });
   const [busy, setBusy] = useState<null | "line" | "google">(null);
-  const [providerError, setProviderError] = useState(false);
+  // Web: /auth sends us back here with ?failed=1 when LINE sign-in failed.
+  const { failed } = useLocalSearchParams<{ failed?: string }>();
+  const [providerError, setProviderError] = useState(failed === "1");
 
   const provider = async (p: "line" | "google") => {
     setBusy(p);
