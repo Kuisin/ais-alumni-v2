@@ -48,6 +48,7 @@ import * as inv2 from "./mobile/v1/invites/[id]/revoke";
 import * as lineLink from "./mobile/v1/line/link";
 import * as lineLinkStart from "./mobile/v1/line/link/start";
 import * as r29 from "./mobile/v1/me";
+import * as meExport from "./mobile/v1/me/export";
 import * as r30 from "./mobile/v1/members/[id]";
 import * as r31 from "./mobile/v1/members/[id]/block";
 import * as r32 from "./mobile/v1/members/[id]/follow";
@@ -83,10 +84,16 @@ import * as profileRecordId from "./mobile/v1/profile/record/[id]";
 import * as r45 from "./mobile/v1/push";
 import * as r46 from "./mobile/v1/push/test";
 import * as r47 from "./mobile/v1/settings";
+import * as settingsDeactivate from "./mobile/v1/settings/deactivate";
+import * as settingsDelete from "./mobile/v1/settings/delete";
 import * as r48 from "./mobile/v1/settings/devices";
 import * as r49 from "./mobile/v1/settings/devices/[id]";
+import * as settingsEmail from "./mobile/v1/settings/email";
 import * as r50 from "./mobile/v1/settings/language";
 import * as r51 from "./mobile/v1/settings/notifications";
+import * as settingsSchoolEmail from "./mobile/v1/settings/school-email";
+import * as settingsSchoolEmailVerify from "./mobile/v1/settings/school-email/verify";
+import * as settingsSignIn from "./mobile/v1/settings/sign-in/[provider]";
 import * as vch0 from "./mobile/v1/vouch/[id]";
 
 export type Handler = (
@@ -132,6 +139,7 @@ export const ROUTES: [string, RouteModule][] = [
   ["line/link", lineLink as unknown as RouteModule],
   ["line/link/start", lineLinkStart as unknown as RouteModule],
   ["me", r29 as unknown as RouteModule],
+  ["me/export", meExport as unknown as RouteModule],
   ["members/[id]", r30 as unknown as RouteModule],
   ["members/[id]/block", r31 as unknown as RouteModule],
   ["members/[id]/follow", r32 as unknown as RouteModule],
@@ -182,8 +190,11 @@ export const ROUTES: [string, RouteModule][] = [
   ["push", r45 as unknown as RouteModule],
   ["push/test", r46 as unknown as RouteModule],
   ["settings", r47 as unknown as RouteModule],
+  ["settings/deactivate", settingsDeactivate as unknown as RouteModule],
+  ["settings/delete", settingsDelete as unknown as RouteModule],
   ["settings/devices", r48 as unknown as RouteModule],
   ["settings/devices/[id]", r49 as unknown as RouteModule],
+  ["settings/email", settingsEmail as unknown as RouteModule],
   ["settings/language", r50 as unknown as RouteModule],
   ["settings/notifications", r51 as unknown as RouteModule],
   ["family", fam0 as unknown as RouteModule],
@@ -197,4 +208,10 @@ export const ROUTES: [string, RouteModule][] = [
   ["invites", inv1 as unknown as RouteModule],
   ["invites/[id]/revoke", inv2 as unknown as RouteModule],
   ["vouch/[id]", vch0 as unknown as RouteModule],
+  ["settings/school-email", settingsSchoolEmail as unknown as RouteModule],
+  [
+    "settings/school-email/verify",
+    settingsSchoolEmailVerify as unknown as RouteModule,
+  ],
+  ["settings/sign-in/[provider]", settingsSignIn as unknown as RouteModule],
 ];
