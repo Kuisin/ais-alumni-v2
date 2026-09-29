@@ -1,8 +1,8 @@
 # AIS Alumni — app
 
-The AIS Alumni (AIS同窓会) member app: one [Expo](https://expo.dev) Router codebase for iOS, Android and — as the website moves over (see [docs/MIGRATION.md](docs/MIGRATION.md)) — the web.
+The AIS Alumni (AIS同窓会) member app: one [Expo](https://expo.dev) Router codebase for iOS, Android and the web (every page of the old website has a screen here; see [docs/MIGRATION.md](docs/MIGRATION.md)).
 
-The app's API is this repo's own server (Expo API routes, `/api/mobile/v1`; ais-alumni.kai-lab.net, staging ais-alumni-dev.kai-lab.net). The Next.js site in [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) (ais.kai-lab.net) still owns the schema and migrations, and scheduled jobs; the app no longer opens any of its pages. The database schema is copied from it with `pnpm sync:server`; the API contract types (`src/contract`) and UI strings (`messages/`) live here.
+The app's API is this repo's own server (Expo API routes, `/api/mobile/v1`; ais-alumni.kai-lab.net, staging ais-alumni-dev.kai-lab.net). The Next.js site in [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) (ais.kai-lab.net) still owns the schema and migrations, scheduled jobs and the LINE webhook; the app no longer opens any of its pages. The database schema is copied from it with `pnpm sync:server`; the API contract types (`src/contract`) and UI strings (`messages/`) live here.
 
 ## Quick start
 

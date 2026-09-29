@@ -67,11 +67,6 @@
       "signOutOthersTitle": "Sign out of all other devices?",
       "signOutOthersBody": "Every device except this one will need to sign in again.",
       "noOthers": "You're not signed in on any other device."
-    },
-    "more": {
-      "title": "More settings",
-      "description": "These settings are changed on the website's screens.",
-      "all": "Open all settings"
     }
   },
   "push": {

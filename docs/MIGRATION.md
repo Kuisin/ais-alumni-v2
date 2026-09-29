@@ -1,42 +1,40 @@
 # Moving web and native to this repo
 
 Goal: one Expo codebase for the iOS / Android app **and** the website,
-replacing the Next.js site's pages.
+replacing the Next.js site (Kuisin/ais-alumni-app).
 
 ## Where things are today
 
 | | Lives in | Notes |
 |---|---|---|
-| Native app | **here** (moved from ais-alumni-app `mobile/`) | Expo SDK 57, Expo Router |
-| App API (`/api/mobile/v1`), LINE sign-in, notifications | **here** (Expo API routes, `src/server/`) | same database |
-| Schema + migrations, scheduled jobs, LINE webhook, files | ais-alumni-app (Next.js) | Prisma, Supabase, Vercel |
-| Website pages (public, member, admin) | ais-alumni-app (Next.js) | the app no longer opens them; missing screens are being rebuilt here |
-| Contract types, UI strings | **here** | the schema is still copied: `pnpm sync:server` |
+| Native app (iOS / Android) | **here** | Expo SDK 57, Expo Router |
+| Web app | **here** (ais-alumni.kai-lab.net, staging ais-alumni-dev) | same screens via react-native-web, `web.output: "server"` on Vercel |
+| Every page: public (landing, privacy, support, handover, invite), onboarding, member, admin mode | **here** | native screens; the app never opens the old website |
+| App API (`/api/mobile/v1`), sign-in (email code, LINE), uploads, files, notifications | **here** (Expo API routes, `src/server/`) | same database; the website's own server actions are reused in `src/server/app/actions` |
+| Contract types, UI strings | **here** | |
+| Schema + migrations | ais-alumni-app | copied with `pnpm sync:server` |
+| Scheduled jobs (`/api/cron`), LINE webhook, short links in emails / LINE (`/n/…`) | ais-alumni-app | email and LINE notification links still open the old site (by decision) |
 
-## Steps
+## Known differences from the website
 
-1. **Native from here** (now). App changes happen in this repo; EAS
-   project and builds from here. Remove `mobile/` from ais-alumni-app,
-   leaving a pointer to this repo.
-2. **Web build of the member area.** The screens already run on web
-   (react-native-web). Still needed:
-   - a web sign-in (bearer token in storage, or a cookie session);
-   - native versions of the website screens the app lacks, in this order:
-     onboarding / application, support, privacy; settings
-     (sign-in methods, email, LINE link, data export, deactivate/delete);
-     family, invites, vouching; messages; admin mode. Until then they are left out (no web view, no
-     links to the old site);
-   - static rendering for the public pages (landing, privacy) for search
-     and link previews (`web.output: "static"`);
-   - hosting (EAS Hosting or Vercel) and moving ais.kai-lab.net over.
-3. **Backend.** Either keep ais-alumni-app as an API-only service (drop
-   its pages), or move the API into this repo as Expo Router API routes
-   (Prisma, Auth.js replacement, cron, LINE webhook, email, uploads).
-   Recommended: keep the Next.js API first. It is proven and the database
-   rules live there. Move it later if one deployment matters.
+- Uploads go through the API, so one file is capped at Vercel's 4.5 MB
+  request limit (the website allowed 10 MB). Photos are compressed first.
+- Google sign-in isn't offered (the website has no Google credentials
+  configured either).
+- No desktop QR code for LINE linking; no universal / app links yet, so a
+  shared https link opens the web app (the app opens `aisalumni://…`).
+- The LINE rich-menu image is drawn with satori + resvg (wasm from
+  jsdelivr, fonts from Google Fonts) instead of `next/og`.
 
-## Open decisions
+## Remaining steps
 
-- Backend: API-only Next.js (recommended first) vs. Expo API routes.
-- Web hosting: EAS Hosting vs. Vercel.
-- Admin tools: rebuilt here, or kept on the old site during the move.
+1. **Move the domain.** Point ais.kai-lab.net at this project (or redirect
+   it to ais-alumni.kai-lab.net) once the web app has been checked with
+   real accounts. Update the LINE Login callback and Official Account
+   links, `APP_URL`, and the notification links then.
+2. **Move the backend jobs.** Scheduled jobs, the LINE webhook and `/n/…`
+   short links as Expo API routes; then the schema and migrations
+   (`prisma migrate deploy` in this project's build), and retire
+   ais-alumni-app.
+3. **Universal / app links** (apple-app-site-association, assetlinks) so
+   https links open the installed app.
