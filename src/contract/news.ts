@@ -153,3 +153,38 @@ export type NewsCommentRequest = { body: string };
 
 /** POST /news/[id]/comments/[commentId]/hide — admins */
 export type NewsHideCommentRequest = { hide: boolean };
+
+// ---- あなた宛ての連絡 (Broadcast messages; only while me.features.messages) ----
+//   GET /news/messages?page=N       → MessageList
+//   GET /news/messages/:id          → MessageDetail (records the read)
+// errors: not_found (404) — also while messages are switched off
+
+export type MessageSummary = {
+  id: string;
+  title: string;
+  /** 「名前（学年代表）」 or 「AIS同窓会委員会」, in the member's language */
+  sender: string;
+  sentAt: string;
+  edited: boolean;
+  unread: boolean;
+};
+
+export type MessageList = {
+  page: number;
+  hasNext: boolean;
+  messages: MessageSummary[];
+};
+
+export type MessageDetail = {
+  id: string;
+  title: string;
+  /** plain text (line breaks kept) */
+  body: string;
+  sender: string;
+  sentAt: string;
+  edited: boolean;
+  /** 学年 or audiences (「全員」 when none), in the member's language */
+  sentTo: string;
+  /** false: the sender or an admin looking at it (news.messages.senderView) */
+  isRecipient: boolean;
+};

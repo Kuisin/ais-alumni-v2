@@ -68,6 +68,8 @@ import * as r37 from "./mobile/v1/news/[id]/comments/[commentId]/hide";
 import * as r38 from "./mobile/v1/news/[id]/confirm";
 import * as r39 from "./mobile/v1/news/[id]/reactions";
 import * as r40 from "./mobile/v1/news/[id]/vote";
+import * as messages0 from "./mobile/v1/news/messages";
+import * as messages1 from "./mobile/v1/news/messages/[id]";
 import * as r41 from "./mobile/v1/notifications";
 import * as r42 from "./mobile/v1/notifications/open";
 import * as r43 from "./mobile/v1/notifications/read";
@@ -154,6 +156,8 @@ export const ROUTES: [string, RouteModule][] = [
   ["members/[id]/block", r31 as unknown as RouteModule],
   ["members/[id]/follow", r32 as unknown as RouteModule],
   ["news", r33 as unknown as RouteModule],
+  ["news/messages", messages0 as unknown as RouteModule],
+  ["news/messages/[id]", messages1 as unknown as RouteModule],
   ["news/[id]", r34 as unknown as RouteModule],
   ["news/[id]/comments", r35 as unknown as RouteModule],
   ["news/[id]/comments/[commentId]", r36 as unknown as RouteModule],

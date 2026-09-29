@@ -1,5 +1,7 @@
 import type { Home } from "@contract/home";
 import type {
+  MessageDetail,
+  MessageList,
   NewsDetail,
   NewsHubOk,
   NewsList,
@@ -210,4 +212,41 @@ export function useHubErrorMessage(): (error: unknown) => string {
     }
     return t("generic");
   };
+}
+
+// ---- あなた宛ての連絡 (only while me.features.messages) ----
+
+export const messageKeys = {
+  list: ["news", "messages"] as const,
+  detail: (id: string) => ["news", "messages", id] as const,
+};
+
+export function useMessageList(enabled: boolean) {
+  return useInfiniteQuery({
+    queryKey: messageKeys.list,
+    enabled,
+    initialPageParam: 1,
+    queryFn: ({ pageParam, signal }) =>
+      api<MessageList>(`/news/messages?page=${pageParam}`, { signal }),
+    getNextPageParam: (last) =>
+      last.hasNext && last.page < 1000 ? last.page + 1 : undefined,
+  });
+}
+
+/** One message. Loading it records the read, so the badges follow. */
+export function useMessage(id: string) {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryKey: messageKeys.detail(id),
+    queryFn: async ({ signal }) => {
+      const m = await api<MessageDetail>(
+        `/news/messages/${encodeURIComponent(id)}`,
+        { signal },
+      );
+      void queryClient.invalidateQueries({ queryKey: messageKeys.list });
+      void queryClient.invalidateQueries({ queryKey: ME_KEY });
+      void queryClient.invalidateQueries({ queryKey: HOME_KEY });
+      return m;
+    },
+  });
 }
