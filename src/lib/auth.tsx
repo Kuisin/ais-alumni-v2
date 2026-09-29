@@ -46,6 +46,8 @@ type Ctx = {
   signInWithProvider: (
     provider: "google" | "line",
   ) => Promise<"ok" | "cancelled" | "failed">;
+  /** Web: finish a LINE / Google sign-in on return to /auth?code=… */
+  completeWebSignIn: (code: string) => Promise<"ok" | "failed">;
   signOut: () => Promise<void>;
   refreshMe: () => Promise<void>;
 };
@@ -53,6 +55,9 @@ type Ctx = {
 const AuthContext = createContext<Ctx | null>(null);
 
 export const ME_KEY = ["me"] as const;
+
+/** Web sign-in: the PKCE verifier kept for the return to /auth. */
+const WEB_VERIFIER_KEY = "ais.oauth.verifier";
 
 function device(): DeviceInfo {
   return {
@@ -146,6 +151,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const url = `${API_URL}/api/mobile/v1/auth/oauth/start?${new URLSearchParams(
         { provider, challenge, redirect, locale: guestLocale },
       ).toString()}`;
+      // Web: a full-page redirect, not a popup — Safari blocks popups that
+      // aren't opened right in the tap handler (we await PKCE first). The
+      // verifier waits in this tab's sessionStorage for /auth (app/auth.tsx).
+      if (Platform.OS === "web") {
+        globalThis.sessionStorage?.setItem(WEB_VERIFIER_KEY, verifier);
+        globalThis.location?.assign(url);
+        return "cancelled" as const;
+      }
       const res = await WebBrowser.openAuthSessionAsync(url, redirect, {
         preferEphemeralSession: true,
       });
@@ -166,6 +179,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [finishSignIn, guestLocale],
   );
 
+  const completeWebSignIn = useCallback(
+    async (code: string) => {
+      const verifier = globalThis.sessionStorage?.getItem(WEB_VERIFIER_KEY);
+      globalThis.sessionStorage?.removeItem(WEB_VERIFIER_KEY);
+      if (!verifier) return "failed" as const;
+      try {
+        const result = await api<SessionResult>("/auth/oauth/exchange", {
+          body: { code, verifier, device: device() },
+        });
+        await finishSignIn(result);
+        return "ok" as const;
+      } catch {
+        return "failed" as const;
+      }
+    },
+    [finishSignIn],
+  );
+
   const signOut = useCallback(async () => {
     await api("/auth/signout", { method: "POST" }).catch(() => {});
     await forget();
@@ -184,6 +215,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setGuestLocale,
       finishSignIn,
       signInWithProvider,
+      completeWebSignIn,
       signOut,
       refreshMe,
     }),
@@ -194,6 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       locale,
       finishSignIn,
       signInWithProvider,
+      completeWebSignIn,
       signOut,
       refreshMe,
     ],
