@@ -11,6 +11,8 @@ import * as adminMemberFamily from "./mobile/v1/admin/members/[id]/family";
 import * as adminMemberFamilyLink from "./mobile/v1/admin/members/[id]/family/[linkId]";
 import * as adminMemberFamilyConfirm from "./mobile/v1/admin/members/[id]/family/[linkId]/confirm";
 import * as adminMemberFamilyCandidates from "./mobile/v1/admin/members/[id]/family/candidates";
+import * as adminMemberHistory from "./mobile/v1/admin/members/[id]/history";
+import * as adminMemberHistoryItem from "./mobile/v1/admin/members/[id]/history/[kind]/[itemId]";
 import * as adminMemberMerge from "./mobile/v1/admin/members/[id]/merge";
 import * as adminMemberPositions from "./mobile/v1/admin/members/[id]/positions";
 import * as adminMemberProfile from "./mobile/v1/admin/members/[id]/profile";
@@ -168,6 +170,11 @@ export const ROUTES: [string, RouteModule][] = [
   [
     "admin/members/[id]/family/[linkId]/confirm",
     adminMemberFamilyConfirm as unknown as RouteModule,
+  ],
+  ["admin/members/[id]/history", adminMemberHistory as unknown as RouteModule],
+  [
+    "admin/members/[id]/history/[kind]/[itemId]",
+    adminMemberHistoryItem as unknown as RouteModule,
   ],
   ["admin/members/[id]/merge", adminMemberMerge as unknown as RouteModule],
   [

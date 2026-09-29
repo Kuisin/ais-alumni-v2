@@ -9,6 +9,7 @@ import { useAdminMember } from "@/features/admin/members/api";
 import { AuditCard } from "@/features/admin/members/audit-card";
 import { StateBadge } from "@/features/admin/members/badges";
 import { FamilyCard } from "@/features/admin/members/family-card";
+import { HistoryCard } from "@/features/admin/members/history-card";
 import { MergeCard } from "@/features/admin/members/merge-card";
 import { PositionsCard } from "@/features/admin/members/positions-card";
 import { ProfileCard } from "@/features/admin/members/profile-card";
@@ -20,7 +21,7 @@ import { Badge, QueryState, Screen, space, Text } from "@/ui";
 
 /**
  * 会員詳細 (the website's /app/admin/members/[id]): overview, profile,
- * 区分, 家族, 役職, account state and admin rights, merging a duplicate and
+ * 区分, 学歴・職歴, 家族, 役職, account state and admin rights, merging a duplicate and
  * the latest audit entries — one scrolling page of cards on a phone.
  */
 export default function AdminMemberScreen() {
@@ -52,6 +53,7 @@ export default function AdminMemberScreen() {
             <Overview m={m} />
             <ProfileCard m={m} />
             <RolesCard m={m} />
+            <HistoryCard m={m} />
             <FamilyCard m={m} />
             <PositionsCard m={m} />
             <AccountCard m={m} />
