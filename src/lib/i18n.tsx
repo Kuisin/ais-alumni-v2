@@ -1,6 +1,7 @@
 import type { Locale } from "@contract/core";
 import enAdminContent from "@messages/en/adminContent.json";
 import enAuth from "@messages/en/auth.json";
+import enBroadcast from "@messages/en/broadcast.json";
 import enChat from "@messages/en/chat.json";
 import enCohorts from "@messages/en/cohorts.json";
 import enCommon from "@messages/en/common.json";
@@ -28,6 +29,7 @@ import enVerify from "@messages/en/verify.json";
 import enVouch from "@messages/en/vouch.json";
 import jaAdminContent from "@messages/ja/adminContent.json";
 import jaAuth from "@messages/ja/auth.json";
+import jaBroadcast from "@messages/ja/broadcast.json";
 import jaChat from "@messages/ja/chat.json";
 import jaCohorts from "@messages/ja/cohorts.json";
 import jaCommon from "@messages/ja/common.json";
@@ -90,6 +92,7 @@ const JA = {
   line: jaLine,
   cohorts: jaCohorts,
   adminContent: jaAdminContent,
+  broadcast: jaBroadcast,
   mobile: jaMobile,
 };
 const EN = {
@@ -119,6 +122,7 @@ const EN = {
   line: enLine,
   cohorts: enCohorts,
   adminContent: enAdminContent,
+  broadcast: enBroadcast,
   mobile: enMobile,
 };
 

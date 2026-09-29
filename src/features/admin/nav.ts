@@ -133,7 +133,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: Megaphone,
     webPath: "/app/admin/notify",
     allowed: (a) => a.broadcast,
-    href: null,
+    href: "/admin/notify",
   },
   {
     group: "outreach",
