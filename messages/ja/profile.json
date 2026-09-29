@@ -1,0 +1,296 @@
+{
+  "title": "プロフィール",
+  "editTitle": "プロフィールの編集",
+  "editProfile": "プロフィールを編集",
+  "viewMyProfile": "自分のプロフィールを見る",
+  "self": "あなた",
+  "nameAtAisValue": "在籍時: {name}",
+  "sections": {
+    "about": "自己紹介",
+    "aisRecord": "AIS在籍記録",
+    "currentStage": "現在の状況",
+    "contact": "連絡先・リンク",
+    "photo": "プロフィール写真",
+    "basic": "基本情報",
+    "follows": "フォローリクエスト",
+    "history": "学歴・職歴",
+    "account": "アカウント"
+  },
+  "fields": {
+    "nameRomaji": "氏名（ローマ字）",
+    "nameKanji": "氏名（漢字・かな）",
+    "nameAtAis": "在籍時の氏名",
+    "bio": "自己紹介",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "lineDisplayName": "LINEの名前",
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "facebook": "Facebook",
+    "x": "X（Twitter）",
+    "website": "ウェブサイト",
+    "avatar": "写真",
+    "stage": "現在の状況",
+    "stageDetail": "詳細（学校名・勤務先など）"
+  },
+  "hints": {
+    "nameAtAis": "旧姓など、現在と異なる場合のみ入力してください。",
+    "bio": "すべての会員に表示されます。",
+    "privateTier": "連絡先・リンクなどの個人情報は、あなた本人・家族・委員会（管理者）だけが見られます。フォロワーにも見せたい項目は、下の「フォロワーに公開」で選べます。",
+    "socialUrl": "https:// から始まるURLを入力してください。",
+    "avatar": "JPGまたはPNG、2MBまで。家族とつながりのある人に表示されます（下の設定で全員に公開もできます）。",
+    "stageDetail": "詳細は家族と承認したフォロワーだけが見られます。"
+  },
+  "record": {
+    "teacherYears": "在職 {from}〜{to}年",
+    "teacherYearsPresent": "在職 {from}年〜現在",
+    "graduated": "{year}年卒業",
+    "left": "{year}年に退学・転校",
+    "nowStage": "現在: {stage}",
+    "subjects": "担当科目: {subjects}",
+    "noDetails": "詳細なし"
+  },
+  "recordReadOnly": "在籍情報は委員会のみが変更できます。誤りがある場合は修正を依頼してください。",
+  "stageNotSet": "未設定",
+  "stageUpdated": "最終確認日: {date}",
+  "stageNeverConfirmed": "現在の状況がまだ設定されていません。",
+  "stageChoose": "選択してください",
+  "stageSave": "現在の状況を保存",
+  "stageConfirm": "現在の状況に変更はありません",
+  "stageSaved": "現在の状況を保存しました。",
+  "stageConfirmed": "ありがとうございます。現在の状況を確認しました。",
+  "noContact": "共有されている連絡先はまだありません。",
+  "locked": {
+    "title": "非公開の情報",
+    "familyOnly": "{name}さんの連絡先などの個人情報は、家族にだけ表示されます。",
+    "body": "{name}さんは一部の項目をフォロワーに公開しています。フォローが承認されると見られます。",
+    "requested": "フォローリクエストの承認待ちです。承認されると、フォロワーに公開されている項目が見られます。",
+    "unavailable": "連絡先などの個人情報は、家族と、本人が公開を選んだ項目だけフォロワーに表示されます。"
+  },
+  "autoAccept": {
+    "label": "卒業年が前後1年以内の人からのフォローリクエストを自動で承認する",
+    "hint": "AIS在籍記録の卒業・退学年をもとに判定します。"
+  },
+  "settingsLink": "通知と表示言語は「設定」で変更できます。",
+  "goSettings": "設定を開く",
+  "save": "保存",
+  "saving": "保存中…",
+  "saved": "プロフィールを保存しました。",
+  "uploading": "アップロード中…",
+  "photoUpload": "写真をアップロード",
+  "photoRemove": "写真を削除",
+  "photoUploaded": "写真を更新しました。",
+  "errors": {
+    "forbidden": "この操作を行う権限がありません。",
+    "validation": "入力内容をご確認ください。",
+    "invalid": "この項目をご確認ください。",
+    "fileMissing": "画像を選択してください。",
+    "fileSize": "画像は2MB以下にしてください。",
+    "fileType": "JPGまたはPNGの画像を選択してください。"
+  },
+  "requestRecordCorrection": "在籍情報の修正を依頼",
+  "historyIntro": "AIS以降の学校や勤務先を登録すると、同級生が見つけやすくなります。",
+  "editHistory": "学歴・職歴を編集",
+  "photoChoose": "写真を選択",
+  "photoSelected": "選択中: {name}",
+  "emptyPrompt": {
+    "bio": "自己紹介はまだありません。近況をひとこと書いてみましょう。",
+    "bioAction": "自己紹介を書く",
+    "history": "学歴・職歴はまだ登録されていません。",
+    "historyAction": "学歴・職歴を追加"
+  },
+  "nameRequest": {
+    "title": "氏名",
+    "lockedNote": "承認後の氏名は、なりすまし防止のためご自身では変更できません。変更が必要な場合は委員会に申請してください。",
+    "nameAtAis": "在籍時の氏名",
+    "status": {
+      "PENDING": "申請中",
+      "APPROVED": "承認されました",
+      "REJECTED": "承認されませんでした",
+      "CANCELLED": "取り下げ"
+    },
+    "pendingSince": "{date} に申請しました。委員会の確認をお待ちください。",
+    "cancel": "申請を取り下げる",
+    "reviewNote": "委員会からのメモ",
+    "open": "氏名の変更を申請",
+    "intro": "新しい氏名を入力し、変更の理由（結婚・表記の修正など）を書いてください。委員会が確認して反映します。",
+    "reason": "変更の理由",
+    "reasonHint": "例：結婚により姓が変わりました／ローマ字表記の誤り",
+    "submit": "申請する",
+    "close": "閉じる",
+    "submitted": "申請しました。委員会の確認後に反映され、結果をお知らせします。",
+    "errors": {
+      "unchanged": "現在の氏名から変更がありません。",
+      "pending": "確認中の申請があります。結果をお待ちください。"
+    },
+    "notify": {
+      "admin": {
+        "subject": "氏名の変更申請があります",
+        "text": "{name} さんから氏名の変更申請がありました。"
+      },
+      "approved": {
+        "subject": "氏名の変更が承認されました",
+        "text": "申請した氏名に変更しました。\n\n委員会からのメモ：{note}"
+      },
+      "rejected": {
+        "subject": "氏名の変更は承認されませんでした",
+        "text": "委員会からのメモ：{note}"
+      }
+    }
+  },
+  "stage": {
+    "none": "学歴・職歴が未登録のため、まだ表示できません。",
+    "fromHistory": "現在の状況は、学歴・職歴（在学中の学校、または現在の勤務先）から自動で表示されます。",
+    "editHistory": "学歴・職歴を編集"
+  },
+  "birthDate": {
+    "title": "生年月日",
+    "lockedNote": "承認後の生年月日はご自身では変更できません。登録・修正が必要な場合は委員会に申請してください。",
+    "notSet": "未登録",
+    "notSetHint": "生年月日が登録されていません。「成人」のグループなどに参加するには登録が必要です。",
+    "open": "生年月日の変更を申請",
+    "openAdd": "生年月日の登録を申請",
+    "intro": "正しい生年月日を入力してください。委員会が確認して反映します。",
+    "field": "生年月日",
+    "reason": "変更の理由",
+    "reasonOptional": "理由（任意）",
+    "reasonHint": "例：登録時の入力ミス",
+    "submit": "申請する",
+    "close": "閉じる",
+    "submitted": "申請しました。委員会の確認後に反映され、結果をお知らせします。",
+    "pendingSince": "{date} に {value} への変更を申請しました。委員会の確認をお待ちください。",
+    "cancel": "申請を取り下げる",
+    "reviewNote": "委員会からのメモ",
+    "fieldErrors": {
+      "invalidDate": "正しい日付を入力してください。",
+      "required": "理由を入力してください。",
+      "tooLong": "文字数が多すぎます。"
+    },
+    "errors": {
+      "unchanged": "現在の生年月日と同じです。",
+      "pending": "確認中の申請があります。結果をお待ちください。"
+    },
+    "notify": {
+      "admin": {
+        "subject": "生年月日の変更申請があります",
+        "text": "{name} さんから生年月日の登録・変更の申請がありました。"
+      },
+      "approved": {
+        "subject": "生年月日の変更が承認されました",
+        "text": "申請した生年月日に変更しました。\n\n委員会からのメモ：{note}"
+      },
+      "rejected": {
+        "subject": "生年月日の変更は承認されませんでした",
+        "text": "委員会からのメモ：{note}"
+      }
+    }
+  },
+  "noContactFollowers": "フォロワーに公開されている項目はありません。",
+  "sharedWithFollowers": "フォロワーに公開されている項目だけを表示しています。",
+  "followerFields": {
+    "title": "フォロワーに公開",
+    "hint": "オンにした項目だけ、承認したフォロワーにも表示されます（家族には常に表示されます）。初期設定はすべてオフです。",
+    "notSet": "未設定",
+    "fields": {
+      "email": "メールアドレス",
+      "phone": "電話番号",
+      "lineDisplayName": "LINEの表示名",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook",
+      "x": "X",
+      "website": "ウェブサイト",
+      "currentStageDetail": "現在の状況の詳細"
+    },
+    "noneShared": "フォロワーに公開している項目はありません（家族と委員会だけが見られます）。"
+  },
+  "photo": {
+    "gender": "性別",
+    "genderHint": "写真がないとき、または写真を見られない人に表示するアイコンに使います。ほかの会員には表示されません。",
+    "genders": {
+      "none": "回答しない",
+      "MALE": "男性",
+      "FEMALE": "女性",
+      "OTHER": "その他"
+    },
+    "public": "写真を会員全員に公開する",
+    "publicHint": "オフのときは、あなた本人・家族・フォローでつながっている人（どちらかが承認済み）と委員会だけが写真を見られます。ほかの会員には既定のアイコンが表示されます。",
+    "visibility": "写真の公開範囲",
+    "onlyConnected": "家族とつながりのある人だけ",
+    "everyone": "会員全員",
+    "genderLabel": "アイコン",
+    "change": "写真を変更"
+  },
+  "gender": {
+    "title": "性別",
+    "lockedNote": "性別はご自身では変更できません。変更が必要な場合は委員会に申請してください。性別は既定のアイコンにだけ使い、他の会員には表示されません。",
+    "notSet": "未登録",
+    "setOnceHint": "性別が登録されていません。既定のアイコンに使います（登録後の変更は申請が必要です）。",
+    "setOnce": "登録する",
+    "open": "性別の変更を申請",
+    "intro": "変更後の性別を選んでください。委員会が確認して反映します。",
+    "field": "性別",
+    "reason": "変更の理由",
+    "reasonHint": "例：登録時の選択ミス",
+    "submit": "申請する",
+    "close": "閉じる",
+    "submitted": "申請しました。委員会の確認後に反映され、結果をお知らせします。",
+    "saved": "性別を登録しました。",
+    "pendingSince": "{date} に「{value}」への変更を申請しました。委員会の確認をお待ちください。",
+    "cancel": "申請を取り下げる",
+    "reviewNote": "委員会からのメモ",
+    "fieldErrors": {
+      "invalid": "性別を選んでください。",
+      "required": "理由を入力してください。",
+      "tooLong": "文字数が多すぎます。"
+    },
+    "errors": {
+      "unchanged": "現在の性別と同じです。",
+      "pending": "確認中の申請があります。結果をお待ちください。",
+      "alreadySet": "性別はすでに登録されています。変更は申請してください。"
+    },
+    "openSetOnce": "登録する"
+  },
+  "requestChange": "変更を申請",
+  "requestAdd": "登録を申請",
+  "photoRemoveConfirm": "プロフィール写真を削除しますか？",
+  "requestCorrection": "修正を依頼",
+  "changeInSettings": "設定で変更",
+  "emailHint": "ログイン用コードと大切なお知らせの送り先です。",
+  "accountHint": "フォロー・家族・招待・通知などの設定",
+  "visibility": {
+    "title": "公開範囲",
+    "intro": "各項目の下に、だれに表示されるかを示しています（✓ 表示・✕ 非表示）。委員会（管理者）はすべての項目を見られます。",
+    "audiences": {
+      "members": "会員全員",
+      "followers": "フォロワー",
+      "family": "家族"
+    },
+    "shown": "表示される",
+    "hidden": "非公開",
+    "onlyYou": "自分と委員会のみ",
+    "viewAsTitle": "ほかの人からの見え方を確認",
+    "viewAs": {
+      "members": "会員として見る",
+      "followers": "フォロワーとして見る",
+      "family": "家族として見る"
+    },
+    "previewTitle": {
+      "members": "会員全員から見たあなたのプロフィール",
+      "followers": "フォロワーから見たあなたのプロフィール",
+      "family": "家族から見たあなたのプロフィール"
+    },
+    "previewHint": "プレビューです。フォローやメッセージなどのボタンは表示されません。",
+    "backToProfile": "プロフィールに戻る",
+    "hiddenTitle": "非公開の項目",
+    "photoHidden": "写真は非公開です",
+    "historyHidden": "ほかに {count, number} 件の学歴・職歴があります（フォロワーと家族だけに公開）。"
+  },
+  "directory": {
+    "title": "会員名簿への掲載",
+    "listed": "会員名簿に表示する",
+    "hint": "オフにすると、会員名簿の一覧や検索に表示されなくなります（委員会には表示されます）。家族やフォローでつながっている人は、これまでどおりプロフィールを開けます。",
+    "shown": "会員名簿に表示されています",
+    "hidden": "会員名簿に表示されていません"
+  }
+}

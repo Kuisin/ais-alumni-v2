@@ -1,0 +1,128 @@
+{
+  "title": "ニュース",
+  "description": "AIS同窓会委員会からのニュースです。",
+  "empty": "ニュースはまだありません。",
+  "pinned": "固定",
+  "untitled": "（タイトルなし）",
+  "create": "ニュースを作成",
+  "backToList": "ニュース一覧へ",
+  "pager": {
+    "label": "ページ",
+    "prev": "新しい記事",
+    "next": "古い記事",
+    "page": "{page}ページ目"
+  },
+  "notify": {
+    "subject": "【AIS同窓会】{title}",
+    "fallbackText": "新しいニュースが投稿されました。",
+    "contentlessSubject": "【AIS同窓会】新しいニュースがあります",
+    "contentlessText": "AIS同窓会委員会から新しいニュースが投稿されました。\n内容はアプリでご確認ください。",
+    "reminderSubject": "【AIS同窓会】回答期限が近づいています",
+    "reminderText": "まだ回答していないニュースがあります。\n内容はアプリでご確認ください。"
+  },
+  "emptyHint": "委員会からのニュースが投稿されると、ここに表示されます。",
+  "unread": "未読",
+  "tabs": {
+    "label": "ニュースの種類",
+    "news": "委員会のニュース",
+    "messages": "あなた宛ての連絡"
+  },
+  "messages": {
+    "title": "あなた宛ての連絡",
+    "empty": "あなた宛ての連絡はまだありません。",
+    "emptyHint": "委員会・先生・学年代表からあなたに送られた連絡がここに表示されます。新しい連絡が届くと、メールでお知らせします。",
+    "from": "差出人",
+    "sentAt": "送信日時",
+    "sentTo": "宛先",
+    "toAll": "全員",
+    "backToList": "あなた宛ての連絡へ",
+    "senderView": "あなたが送信した連絡です（あなたは受信者ではありません）。",
+    "newCount": "新しい連絡が{count}件あります",
+    "edited": "編集済み"
+  },
+  "hub": {
+    "deadline": "回答期限：{time}",
+    "closed": "回答期限を過ぎました",
+    "answered": "回答済み",
+    "needsAnswer": "要回答",
+    "confirm": {
+      "title": "確認",
+      "hint": "内容を確認したら押してください。",
+      "button": "確認しました",
+      "done": "確認済み（{time}）",
+      "undo": "取り消す",
+      "count": "{count}人が確認"
+    },
+    "poll": {
+      "title": "アンケート",
+      "multiple": "複数選択できます",
+      "single": "1つ選んでください",
+      "submit": "回答する",
+      "update": "回答を変更",
+      "voters": "{count}人が回答",
+      "yours": "あなたの回答",
+      "saved": "回答しました"
+    },
+    "schedule": {
+      "title": "日程調整",
+      "YES": "○",
+      "MAYBE": "△",
+      "NO": "×",
+      "YESLabel": "参加できる",
+      "MAYBELabel": "未定",
+      "NOLabel": "参加できない",
+      "answerFor": "{date} の回答",
+      "submit": "回答する",
+      "update": "回答を変更",
+      "best": "最有力",
+      "counts": "○{yes} △{maybe} ×{no}",
+      "answers": "みんなの回答",
+      "needAll": "すべての候補に回答してください。",
+      "saved": "回答しました",
+      "save": "この内容で回答する",
+      "cancel": "キャンセル"
+    },
+    "reactions": {
+      "label": "リアクション",
+      "toggle": "{emoji}（{count}）"
+    },
+    "comments": {
+      "title": "コメント",
+      "empty": "まだコメントはありません。",
+      "label": "コメントを書く",
+      "submit": "送信",
+      "delete": "削除",
+      "deleteConfirm": "このコメントを削除しますか？",
+      "hide": "非表示にする",
+      "show": "再表示する",
+      "hidden": "非表示（管理者にのみ表示）",
+      "off": "このニュースへのコメントは受け付けていません。"
+    },
+    "files": {
+      "title": "添付ファイル"
+    },
+    "errors": {
+      "closed": "回答期限を過ぎています。",
+      "invalid": "送信できませんでした。内容を確認してください。",
+      "commentsOff": "コメントは受け付けていません。",
+      "forbidden": "この操作はできません。",
+      "generic": "送信できませんでした。もう一度お試しください。"
+    },
+    "closedManual": "回答の受付は締め切られました"
+  },
+  "respondJump": "回答する",
+  "adminView": {
+    "badge": "管理者として表示",
+    "title": "管理者として表示しています",
+    "body": "このニュースの対象ではないため、既読や確認・投票・日程調整の回答は記録されません（閲覧のみ）。"
+  },
+  "sender": {
+    "from": "発信：{role}",
+    "postingAs": "{role}として投稿します。会員にはお名前ではなく、この立場が表示されます。",
+    "ADMIN": "AIS同窓会委員会",
+    "TEACHER": "教職員",
+    "ALUMNI_COMMITTEE": "同窓会委員",
+    "STUDENT_LEADER": "学年代表",
+    "STUDENT_LEADER_COHORT": "学年代表（{cohort}）"
+  }
+}

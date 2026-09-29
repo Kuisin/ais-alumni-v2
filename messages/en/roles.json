@@ -1,0 +1,58 @@
+{
+  "role": {
+    "TEACHER": "Teacher / Staff",
+    "CURRENT_STUDENT": "Current student",
+    "CURRENT_PARENT": "Parent of current student",
+    "FORMER_STUDENT": "Former student / Alumni",
+    "FORMER_PARENT": "Parent of former student"
+  },
+  "division": {
+    "KINDERGARTEN": "Kindergarten",
+    "ELEMENTARY": "Elementary",
+    "JUNIOR_HIGH": "Junior high (G7–9)",
+    "HIGH_SCHOOL": "High school (G10–12)"
+  },
+  "stage": {
+    "ELEMENTARY": "Elementary school",
+    "JUNIOR_HIGH": "Junior high (G7–9)",
+    "HIGH_SCHOOL": "High school (G10–12)",
+    "UNIVERSITY_COLLEGE": "University / College",
+    "WORKING": "Working"
+  },
+  "grade": "{grade, select, 0 {Kindergarten} other {Grade {grade}}}",
+  "state": {
+    "UNVERIFIED_EMAIL": "Email not verified",
+    "EMAIL_VERIFIED": "Email verified",
+    "PENDING_REVIEW": "Pending review",
+    "NEEDS_INFO": "Needs more info",
+    "ACTIVE": "Active",
+    "REJECTED": "Rejected",
+    "DEACTIVATED": "Deactivated"
+  },
+  "teacherStatus": {
+    "CURRENT": "Current teacher / staff",
+    "FORMER": "Former teacher / staff"
+  },
+  "teacherStatusShort": {
+    "CURRENT": "Current",
+    "FORMER": "Former"
+  },
+  "audience": {
+    "TEACHER": "Teacher / Staff",
+    "CURRENT_STUDENT": "Current student",
+    "CURRENT_PARENT": "Parent of current student",
+    "GRADUATE": "Graduate",
+    "LEFT_STUDENT": "Former student (didn't graduate)",
+    "FORMER_PARENT": "Parent of former student",
+    "FORMER_STUDENT": "Graduates + former students"
+  },
+  "audienceHint": {
+    "TEACHER": "Current and former",
+    "CURRENT_STUDENT": "Nursery to grade 6",
+    "CURRENT_PARENT": "Families of current students",
+    "GRADUATE": "Finished elementary school at AIS only",
+    "LEFT_STUDENT": "Moved or left before graduating",
+    "FORMER_PARENT": "Families of graduates and former students",
+    "FORMER_STUDENT": "Everyone who attended AIS (graduated or left before graduating)"
+  }
+}

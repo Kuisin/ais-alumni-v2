@@ -1,0 +1,94 @@
+{
+  "title": "Welcome back to AIS",
+  "lead": "The alumni network of Aichi International School — for former students, parents, teachers and staff.",
+  "features": {
+    "directory": {
+      "title": "Find classmates and teachers",
+      "body": "Search the member directory and follow people to share contact details."
+    },
+    "events": {
+      "title": "Reunions and events",
+      "body": "RSVP in one tap and get an email reminder before the day."
+    },
+    "news": {
+      "title": "News from the committee",
+      "body": "Updates from the AIS Alumni Committee, on LINE or by email."
+    }
+  },
+  "membersOnly": "Members only: new accounts are checked by the committee before they can see the directory.",
+  "signIn": {
+    "title": "Sign in or create an account",
+    "subtitle": "Use the same method every time. New here? Signing in creates your account.",
+    "line": "Continue with LINE",
+    "google": "Continue with Google",
+    "lineNote": "With LINE you'll also confirm an email address, so we can reach you if LINE is unavailable.",
+    "or": "or",
+    "emailTitle": "Sign in with an email code",
+    "privacy": "By continuing you agree to how we handle your information, as described in our <link>privacy notice</link>.",
+    "notReady": "Not ready yet",
+    "notReadyNote": "Methods marked “Not ready yet” can't be used yet — please sign in with email.",
+    "help": "Can't sign in? <link>Contact us</link>."
+  },
+  "privacy": {
+    "title": "Privacy notice",
+    "intro": "This site is run independently by the AIS Alumni Committee, a volunteer group of AIS graduates, to connect alumni, parents and teachers. It is not an official service of Aichi International School, and the school is not involved in running it or in handling your data. This policy explains, under Japan's Act on the Protection of Personal Information (APPI), what personal information the Committee collects and how it is used.",
+    "collected": {
+      "title": "What we collect",
+      "items": [
+        "Account details: your email address, and your LINE or Google account ID if you sign in with them.",
+        "Profile: your name (romaji and kanji/kana), name at AIS, date of birth, photo, short bio, your relationship to AIS (student, parent, teacher) and years/grade.",
+        "Optional contact details: phone number, LINE display name and social links.",
+        "Verification information: your answers and any documents you upload to prove your connection to AIS.",
+        "Activity: event RSVPs, follows and notification history."
+      ]
+    },
+    "purpose": {
+      "title": "Why we use it",
+      "items": [
+        "To confirm that members really belong to the AIS community.",
+        "To run the member directory, events and news.",
+        "To send you notifications on LINE or by email.",
+        "To keep the service safe (for example, preventing abuse and keeping an audit log of admin actions)."
+      ]
+    },
+    "visibility": {
+      "title": "Who can see your information",
+      "body": "Only verified members can see the directory. Other members see your public profile (name, photo, role and years). Your private details — email, phone, LINE name, social links and detailed current status — are only shown to members whose follow request you have accepted, and to your confirmed family members. Committee admins can see all information when needed to run the service. We never sell your data or share it with advertisers."
+    },
+    "line": {
+      "title": "LINE",
+      "body": "If you link LINE, we store your LINE user ID and display name so the AIS Alumni Committee Official Account can send you notifications. We do not use the email address registered with LINE. You can unlink LINE or block the Official Account at any time."
+    },
+    "analytics": {
+      "title": "Site analytics",
+      "body": "To improve the site, we count page views and loading speed with Vercel Web Analytics and Speed Insights. No cookies are used and nothing that identifies you is sent: search words, IDs and tokens are removed from web addresses first, so only the kind of page is recorded."
+    },
+    "evidence": {
+      "title": "Verification documents",
+      "body": "Documents you upload for verification are only visible to committee admins and are deleted automatically 30 days after your application is decided."
+    },
+    "retention": {
+      "title": "How long we keep it",
+      "body": "We keep your information while your account exists. When you delete your account, your personal information is removed, except for records we must keep for security (such as the admin audit log)."
+    },
+    "rights": {
+      "title": "Your choices",
+      "body": "You can update your profile at any time, export a copy of your data, and delete your account from Settings. Notification preferences (LINE or email) are also in Settings."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "For questions about this notice or your personal information, please contact the AIS Alumni Committee."
+    },
+    "updated": "Last updated: September 2026"
+  },
+  "operatedBy": "Run by the AIS Alumni Committee, a volunteer group of graduates (not an official school service).",
+  "invite": {
+    "from": "{name} invited you ({what}). Sign up below to get started.",
+    "invalid": "This invitation link isn't valid or has already been used. You can still sign up without it.",
+    "types": {
+      "STUDENT": "{cohort} student / graduate",
+      "PARENT": "{cohort} parent",
+      "TEACHER": "teacher / staff"
+    }
+  }
+}

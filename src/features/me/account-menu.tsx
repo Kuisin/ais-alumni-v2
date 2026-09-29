@@ -1,0 +1,116 @@
+import { useRouter } from "expo-router";
+import {
+  HeartHandshake,
+  LifeBuoy,
+  LogOut,
+  MailPlus,
+  Settings,
+  ShieldCheck,
+  UserPlus,
+} from "lucide-react-native";
+import { useState } from "react";
+import { ActivityIndicator } from "react-native";
+import { useTranslations } from "use-intl";
+import { useAuth, useMe } from "@/lib/auth";
+import { hrefFor, webHref } from "@/lib/links";
+import { CountDot, colors, ListGroup, ListRow, Separator } from "@/ui";
+import { confirmAction } from "./confirm";
+
+const icon = (I: typeof Settings) => (
+  <I color={colors.brand700} size={20} aria-hidden />
+);
+
+/**
+ * The website's account menu (src/components/layout/app-shell.tsx):
+ * 家族, フォローリクエスト (with the count waiting), 同窓生を招待, 設定,
+ * お問い合わせ, and 管理モード for members with a staff role.
+ */
+export function AccountMenu() {
+  const tc = useTranslations("common");
+  const router = useRouter();
+  const { access, badges } = useMe();
+  const staff = Object.values(access).some(Boolean);
+  const web = (path: string, title: string) => () =>
+    router.push(webHref(path, title));
+  return (
+    <ListGroup>
+      <ListRow
+        leading={icon(HeartHandshake)}
+        title={tc("nav.family")}
+        onPress={web("/app/family", tc("nav.family"))}
+      />
+      <Separator />
+      <ListRow
+        leading={icon(UserPlus)}
+        title={tc("nav.follows")}
+        trailing={<CountDot count={badges.follows} />}
+        accessibilityLabel={
+          badges.follows > 0
+            ? `${tc("nav.follows")}, ${tc("nav.pending", { count: badges.follows })}`
+            : undefined
+        }
+        onPress={() => router.push(hrefFor("/app/follows"))}
+      />
+      <Separator />
+      <ListRow
+        leading={icon(MailPlus)}
+        title={tc("nav.invite")}
+        onPress={web("/app/invite", tc("nav.invite"))}
+      />
+      <Separator />
+      <ListRow
+        leading={icon(Settings)}
+        title={tc("nav.settings")}
+        onPress={() => router.push(hrefFor("/app/settings"))}
+      />
+      <Separator />
+      <ListRow
+        leading={icon(LifeBuoy)}
+        title={tc("nav.support")}
+        onPress={web("/support", tc("nav.support"))}
+      />
+      {staff ? (
+        <>
+          <Separator />
+          <ListRow
+            leading={icon(ShieldCheck)}
+            title={tc("nav.adminMode")}
+            onPress={web("/app/admin", tc("nav.adminMode"))}
+          />
+        </>
+      ) : null}
+    </ListGroup>
+  );
+}
+
+/** ログアウト (this device), after a confirmation. */
+export function SignOutRow() {
+  const tc = useTranslations("common");
+  const tm = useTranslations("mobile.me.signOutConfirm");
+  const { signOut } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const onPress = async () => {
+    const ok = await confirmAction({
+      title: tm("title"),
+      message: tm("body"),
+      confirm: tc("signOut"),
+      cancel: tc("cancel"),
+      destructive: true,
+    });
+    if (!ok) return;
+    setBusy(true);
+    await signOut();
+  };
+  return (
+    <ListGroup>
+      <ListRow
+        leading={<LogOut color={colors.red700} size={20} aria-hidden />}
+        title={tc("signOut")}
+        destructive
+        chevron={false}
+        trailing={busy ? <ActivityIndicator color={colors.red700} /> : null}
+        onPress={busy ? undefined : onPress}
+      />
+    </ListGroup>
+  );
+}

@@ -1,0 +1,97 @@
+{
+  "title": "学歴・職歴",
+  "description": "AISの後に通った学校や、勤務先を登録できます。現在の学校・勤務先（終了年が空欄）から「現在の状況」が自動で更新されます。",
+  "backToProfile": "プロフィールに戻る",
+  "education": "学歴",
+  "work": "職歴",
+  "present": "現在",
+  "current": "現在",
+  "edit": "編集",
+  "delete": "削除",
+  "save": "保存",
+  "add": "追加",
+  "saving": "保存中…",
+  "choose": "選択してください",
+  "intro": {
+    "education": "中学校以降の学校を追加してください。",
+    "work": "これまでの勤務先を追加してください。"
+  },
+  "empty": {
+    "education": "まだ学歴がありません。",
+    "work": "まだ職歴がありません。"
+  },
+  "addTitle": {
+    "education": "学校を追加",
+    "work": "勤務先を追加"
+  },
+  "fields": {
+    "level": "種別",
+    "school": "学校名",
+    "field": "学部・学科・専攻（任意）",
+    "company": "会社・団体名",
+    "title": "部署・役職（任意）",
+    "startYear": "開始年",
+    "endYear": "終了年",
+    "visibility": "公開範囲",
+    "industry": "業種",
+    "industryDetail": "業種（詳細）",
+    "jobType": "職種",
+    "jobTypeDetail": "職種（詳細）"
+  },
+  "hints": {
+    "endYear": {
+      "education": "在学中の場合は空欄にしてください。",
+      "work": "現在の勤務先の場合は空欄にしてください。"
+    },
+    "visibility": "「会員全員」は確認済みの会員全員に、「フォロワーのみ」は承認した人と家族に表示されます。"
+  },
+  "levels": {
+    "JUNIOR_HIGH": "中学校",
+    "HIGH_SCHOOL": "高校",
+    "UNIVERSITY": "大学",
+    "GRADUATE_SCHOOL": "大学院",
+    "VOCATIONAL": "専門学校",
+    "OTHER": "その他"
+  },
+  "visibility": {
+    "MEMBERS": "会員全員",
+    "FOLLOWERS": "フォロワーのみ"
+  },
+  "added": "追加しました。",
+  "saved": "保存しました。",
+  "fieldErrors": {
+    "required": "この項目は必須です。",
+    "tooLong": "長すぎます。",
+    "invalidYear": "4桁の西暦で入力してください。",
+    "yearsOrder": "終了年は開始年と同じか、それ以降にしてください。",
+    "invalid": "入力内容が正しくありません。"
+  },
+  "errors": {
+    "forbidden": "もう一度ログインしてください。",
+    "validation": "入力内容を確認してください。",
+    "invalid": "入力内容が正しくありません。"
+  },
+  "orgMembers": "{count}人",
+  "orgAddNew": "＋「{name}」を新しく追加",
+  "orgPicked": "一覧から選択しました。",
+  "orgWillAdd": "一覧にない場合は、そのまま新しく追加されます。",
+  "orgHint": {
+    "school": "学校名を入力すると候補が表示されます。",
+    "company": "会社名を入力すると候補が表示されます。"
+  },
+  "yearPlaceholder": "例: 2020",
+  "close": "閉じる",
+  "industryNone": "選択しない",
+  "industryDetailAny": "詳細は選択しない",
+  "twoLevelHint": "大分類を選ぶと、詳細を選べます。",
+  "pickGroup": {
+    "industry": "先に業種を選んでください",
+    "jobType": "先に職種を選んでください"
+  },
+  "multipleCurrent": {
+    "title": "「現在」の学歴・職歴が{count}件あります",
+    "body": "現在の状況には、いちばん新しい「{name}」を使っています。終わったものは「編集」から終了年を入れてください。",
+    "bodyAdmin": "現在の状況には、いちばん新しい「{name}」を使っています。終わったものには終了年を入れてください。"
+  },
+  "deleteConfirm": "この学歴・職歴を削除しますか？"
+}

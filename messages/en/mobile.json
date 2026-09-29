@@ -1,0 +1,135 @@
+{
+  "errors": {
+    "network": "Can't reach the server. Check your connection.",
+    "generic": "Something went wrong. Please try again.",
+    "retry": "Try again",
+    "unreachable": {
+      "title": "Can't connect",
+      "body": "We couldn't reach the server. Check your connection and try again."
+    }
+  },
+  "signIn": {
+    "providerFailed": "We couldn't finish signing you in. Please try again, or sign in with an email code."
+  },
+  "onboarding": {
+    "signedInAs": "Signed in as {name}",
+    "continueTitle": "Finish your registration",
+    "continueBody": "Registration happens on website screens inside the app. When you're done, this screen updates by itself.",
+    "continue": "Continue registration",
+    "viewStatus": "View application details",
+    "refresh": "Check again",
+    "contact": "Contact us"
+  },
+  "web": {
+    "title": "AIS Alumni",
+    "close": "Close",
+    "openInBrowser": "Open in browser",
+    "loadFailed": "The page couldn't be loaded.",
+    "reload": "Reload"
+  },
+  "home": {},
+  "news": {},
+  "events": {},
+  "chat": {
+    "composerHint": "Tap Send to send. Type @ to mention someone.",
+    "actionsHint": "Long press for options",
+    "notifications": "Notifications",
+    "levels": {
+      "all": "Every message",
+      "allHint": "A notification in the app for every new message.",
+      "mentions": "Mentions only (default)",
+      "mentionsHint": "You are notified when someone mentions you, and get a summary at 8 pm on days with unread messages.",
+      "off": "Off",
+      "offHint": "Only when someone mentions you. No daily summary.",
+      "pushOff": "App notifications are off on this device.",
+      "openSettings": "Notification settings"
+    }
+  },
+  "people": {},
+  "me": {
+    "editHint": "You edit your profile on website screens inside the app.",
+    "signOutConfirm": {
+      "title": "Sign out?",
+      "body": "You'll be signed out of the app on this device."
+    },
+    "version": "Version {version}",
+    "devices": {
+      "title": "Signed-in devices",
+      "description": "Devices where the app is signed in to your account. Sign out any you don't recognize.",
+      "current": "This device",
+      "unknown": "Unknown device",
+      "platform": {
+        "ios": "iOS",
+        "android": "Android",
+        "web": "Web"
+      },
+      "used": "Last used {date}",
+      "since": "Signed in {date}",
+      "signOut": "Sign out",
+      "signOutTitle": "Sign out of “{device}”?",
+      "signOutBody": "The app on that device will ask you to sign in again.",
+      "signOutOthers": "Sign out of all other devices",
+      "signOutOthersTitle": "Sign out of all other devices?",
+      "signOutOthersBody": "Every device except this one will need to sign in again.",
+      "noOthers": "You're not signed in on any other device."
+    },
+    "more": {
+      "title": "More settings",
+      "description": "These settings are changed on the website's screens.",
+      "all": "Open all settings"
+    }
+  },
+  "push": {
+    "actions": {
+      "reply": "Reply",
+      "replyPlaceholder": "Write a message",
+      "replySend": "Send",
+      "markRead": "Mark as read",
+      "accept": "Accept",
+      "decline": "Decline"
+    },
+    "failed": {
+      "title": "Couldn't send",
+      "reply": "Your reply wasn't sent. Open the app and try again.",
+      "action": "That didn't go through. Open the app and try again."
+    },
+    "settings": {
+      "title": "App notifications",
+      "description": "Get news, chat, requests and other notifications on this device. While they are on, we send them to the app instead of LINE or email (security notices and application results are emailed too).",
+      "toggle": "Get notifications on this device",
+      "on": "Notifications come to this device.",
+      "others": "{count, plural, one {# other device gets them too.} other {# other devices get them too.}}",
+      "denied": "Notifications for this app are turned off in your phone’s settings.",
+      "openSettings": "Open phone settings",
+      "failed": "Notifications stopped reaching this device. Turn them on again.",
+      "expoGo": "Expo Go can’t receive notifications. Use the App Store or Google Play app (or a development build).",
+      "web": "The web version can’t receive notifications.",
+      "notConfigured": "This build isn’t set up to receive notifications.",
+      "enableFailed": "Couldn’t turn notifications on. Please try again.",
+      "test": "Send a test notification",
+      "testSent": "Test notification sent. It should arrive shortly.",
+      "testTooSoon": "Please wait a moment and try again.",
+      "testFailed": "Couldn’t send the test notification.",
+      "categories": "Choose which notifications you get under “Notifications” below."
+    },
+    "prompt": {
+      "title": "Get notifications in the app?",
+      "body": "Hear about news, chat messages, follow requests and more right away.",
+      "enable": "Turn on notifications",
+      "later": "Not now",
+      "denied": "Notifications are turned off in your phone’s settings. You can turn them on in the Settings app.",
+      "onboardingTitle": "Hear about your application in the app",
+      "onboardingBody": "Turn on notifications to hear on this device as soon as your application is approved."
+    }
+  },
+  "inbox": {
+    "title": "Notifications",
+    "description": "The notifications we have sent you (chat messages are in the Chat tab).",
+    "empty": "No notifications yet.",
+    "markAll": "Mark all as read",
+    "bell": "Notifications",
+    "bellUnread": "Notifications ({count} unread)",
+    "unread": "Unread",
+    "notFound": "This notification couldn’t be found."
+  }
+}

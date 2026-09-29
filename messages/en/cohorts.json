@@ -1,0 +1,47 @@
+{
+  "title": "学年 (classes)",
+  "description": "A 学年 is created automatically the first time someone is assigned to it. It's numbered by the year the class finishes 6th grade (2016 = 第5期), and its grade and graduation update on their own each April. You can adjust years or delete unused classes.",
+  "save": "Save",
+  "edit": "Edit",
+  "delete": "Delete class",
+  "cannotDelete": "Classes with members, representatives or sent notifications can't be deleted.",
+  "empty": "No classes yet.",
+  "numberValue": "第{number}期",
+  "elementary": "Elementary {start}–{end}",
+  "members": "{count, plural, =0 {No members} one {1 member} other {# members}}",
+  "status": {
+    "graduated": "Graduated",
+    "current": "At AIS"
+  },
+  "fields": {
+    "number": "Class number",
+    "elementaryStartYear": "Elementary start year",
+    "elementaryEndYear": "Year they finish 6th grade",
+    "note": "Note (optional)"
+  },
+  "hints": {
+    "start": "Suggested: six years earlier.",
+    "end": "Sets the number: 2016 → 第5期.",
+    "endChangesNumber": "Changing this changes the class number."
+  },
+  "saved": "Saved.",
+  "errors": {
+    "forbidden": "You don't have permission to do that.",
+    "years": "Enter 4-digit years.",
+    "yearsOrder": "The end year must be after the start year.",
+    "beforeFirst": "第1期 finished 6th grade in 2012; earlier years aren't valid.",
+    "exists": "That class already exists."
+  },
+  "emptyHint": "A class is created automatically the first time a member picks it when applying or in their profile.",
+  "reps": {
+    "title": "Class reps",
+    "none": "None yet.",
+    "hint": "Choose from this 学年's students and graduates. Class reps can send notices to their 学年 and join the 学年代表 chat.",
+    "search": "Search this 学年's students and graduates",
+    "add": "Make {name} a class rep",
+    "remove": "Remove {name} as class rep",
+    "noResults": "No matching members in this 学年.",
+    "removeConfirm": "Remove {name} as class representative?"
+  },
+  "deleteConfirm": "Delete this class year?"
+}

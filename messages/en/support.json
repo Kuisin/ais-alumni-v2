@@ -1,0 +1,130 @@
+{
+  "title": "Contact & support",
+  "intro": "Report a problem, ask a question, share feedback or request a feature. The AIS Alumni Committee will reply by email. You can use this even if you can't sign in.",
+  "types": {
+    "ISSUE": {
+      "label": "Problem",
+      "hint": "Tell us what isn't working.",
+      "topics": {
+        "SIGN_IN": "Can't sign in",
+        "REGISTRATION": "Registration or approval is stuck",
+        "NOTIFICATIONS": "Not getting notifications",
+        "CHAT": "Chat problem",
+        "DISPLAY": "Something looks or works wrong",
+        "OTHER": "Another problem"
+      }
+    },
+    "QUESTION": {
+      "label": "Question",
+      "hint": "Questions about how things work.",
+      "topics": {
+        "REGISTRATION": "Registration and approval",
+        "PROFILE": "Profile and AIS record",
+        "EVENTS": "Events",
+        "FAMILY": "Family links",
+        "PRIVACY": "Visibility and personal data",
+        "OTHER": "Another question"
+      }
+    },
+    "COMPLAINT": {
+      "label": "Complaint",
+      "hint": "Only the committee members handling it will see this.",
+      "topics": {
+        "MEMBER_CONDUCT": "A member's behavior",
+        "CONTENT": "A post or message",
+        "OPERATIONS": "How things are run",
+        "PRIVACY": "Handling of personal data",
+        "OTHER": "Other feedback"
+      }
+    },
+    "FEATURE": {
+      "label": "Feature request",
+      "hint": "Ideas for new features or improvements.",
+      "topics": {
+        "NEW_FEATURE": "A new feature",
+        "IMPROVEMENT": "Improving an existing feature",
+        "USABILITY": "Ease of use and readability",
+        "LANGUAGE": "Language and wording",
+        "OTHER": "Another idea"
+      }
+    }
+  },
+  "form": {
+    "type": "Type",
+    "topic": "About",
+    "choose": "Choose…",
+    "topicFirst": "Choose a type first.",
+    "subject": "Subject",
+    "subjectPlaceholder": "e.g. I can't sign in with LINE",
+    "message": "Details",
+    "messageHint": {
+      "default": "Please be as specific as you can.",
+      "ISSUE": "When, on which screen, what you did and what happened (and your device/browser if you know).",
+      "QUESTION": "What would you like to know?",
+      "COMPLAINT": "Include when and where (which chat or post) if you can.",
+      "FEATURE": "When would it help, and what should it let you do?"
+    },
+    "name": "Your name",
+    "email": "Email for our reply",
+    "emailHint": "We'll send our reply and a copy of your request here.",
+    "privacy": "The AIS Alumni Committee uses what you send only to handle your request.",
+    "send": "Send",
+    "sending": "Sending…"
+  },
+  "errors": {
+    "check": "Please check the form.",
+    "name": "Enter your name (up to 100 characters).",
+    "email": "Enter a valid email address.",
+    "type": "Choose a type.",
+    "topic": "Choose what it's about.",
+    "subject": "Enter a subject (up to 120 characters).",
+    "message": "Enter details (5–5000 characters).",
+    "rateLimited": "You've sent several requests just now. Please try again a little later."
+  },
+  "sent": {
+    "title": "Sent",
+    "body": "We've received your request and emailed you a copy. The committee will reply as soon as they can.",
+    "ref": "Reference",
+    "backApp": "Back to home",
+    "backHome": "Back to the top page",
+    "close": "Close"
+  },
+  "email": {
+    "ref": "Reference",
+    "admin": {
+      "subject": "[AIS Alumni] Support #{ref}: {type} “{subject}”",
+      "intro": "A new support request has arrived.",
+      "member": "member",
+      "visitor": "not signed in",
+      "reply": "Reply to this email to answer the sender directly. When it's handled, mark it done in the admin page."
+    },
+    "copy": {
+      "subject": "[AIS Alumni] We received your request (#{ref})",
+      "greeting": "Hello {name},",
+      "intro": "We've received your request below. The AIS Alumni Committee will reply as soon as they can."
+    }
+  },
+  "admin": {
+    "title": "Support requests",
+    "intro": "Requests from members and visitors. Reply by email, then mark them done.",
+    "open": "Open",
+    "closed": "Done",
+    "emptyOpen": "No open requests.",
+    "emptyClosed": "No handled requests yet.",
+    "visitor": "Not signed in",
+    "language": "Language",
+    "closedAt": "Done",
+    "reply": "Reply by email",
+    "close": "Mark as done",
+    "reopen": "Reopen",
+    "page": "Sent from"
+  },
+  "dialog": {
+    "open": "Ask a question or report an error",
+    "short": "Help",
+    "title": "Questions & errors",
+    "intro": "Stuck, or seeing an error while signing up? Send it here — the committee also gets which screen you were on.",
+    "close": "Close",
+    "help": "Have a question or seeing an error?"
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "kinds": {
+    "VERIFICATION_APPROVED": {
+      "title": "Your registration was approved",
+      "body": "Your AIS Alumni membership has been approved.",
+      "detail": "You can now use the directory, events, news and chat. Start by completing your profile.",
+      "cta": "Open the app"
+    },
+    "VERIFICATION_REJECTED": {
+      "title": "Your registration wasn't approved",
+      "body": "We checked your application but couldn't approve it this time.",
+      "detail": "Please read the committee's note. If you think this is a mistake, contact the committee.",
+      "cta": "See details"
+    },
+    "VERIFICATION_NEEDS_INFO": {
+      "title": "Please check your application",
+      "body": "The committee has a question about your application.",
+      "detail": "Read the note, update your application form and send it again.",
+      "cta": "Update application"
+    },
+    "SECURITY_METHOD_ADDED": {
+      "title": "A sign-in method was added",
+      "body": "{method} sign-in was added to your account.",
+      "detail": "If this wasn't you, check your settings right away and contact the committee.",
+      "cta": "Check settings"
+    },
+    "SECURITY_METHOD_REMOVED": {
+      "title": "A sign-in method was removed",
+      "body": "{method} sign-in was removed from your account.",
+      "detail": "If this wasn't you, check your settings right away and contact the committee.",
+      "cta": "Check settings"
+    },
+    "ACCOUNT_DEACTIVATED_SELF": {
+      "title": "Your account was deactivated",
+      "body": "You deactivated your account.",
+      "detail": "To come back, contact the committee. Thank you for being a member.",
+      "cta": ""
+    },
+    "ACCOUNT_DEACTIVATED": {
+      "title": "Your account was deactivated",
+      "body": "The committee deactivated your account.",
+      "detail": "If you have questions, contact the committee.",
+      "cta": ""
+    },
+    "ACCOUNT_REACTIVATED": {
+      "title": "Your account is active again",
+      "body": "Your account can be used again.",
+      "detail": "You can use the app as before.",
+      "cta": "Open the app"
+    },
+    "NAME_REQUEST_APPROVED": {
+      "title": "Your name change was approved",
+      "body": "Your name has been updated.",
+      "detail": "Check it on your profile.",
+      "cta": "View profile"
+    },
+    "NAME_REQUEST_REJECTED": {
+      "title": "Your name change wasn't approved",
+      "body": "Your name change request wasn't approved.",
+      "detail": "Please read the committee's note.",
+      "cta": "See details"
+    },
+    "BIRTH_DATE_REQUEST_APPROVED": {
+      "title": "Your date of birth was updated",
+      "body": "Your date of birth change was approved.",
+      "detail": "Check it on your profile.",
+      "cta": "View profile"
+    },
+    "BIRTH_DATE_REQUEST_REJECTED": {
+      "title": "Your date of birth change wasn't approved",
+      "body": "Your date of birth request wasn't approved.",
+      "detail": "Please read the committee's note.",
+      "cta": "See details"
+    },
+    "RECORD_REQUEST_APPROVED": {
+      "title": "Your record correction was approved",
+      "body": "Your AIS record has been corrected.",
+      "detail": "Check it on your profile.",
+      "cta": "View record"
+    },
+    "RECORD_REQUEST_REJECTED": {
+      "title": "Your record correction wasn't approved",
+      "body": "Your record correction request wasn't approved.",
+      "detail": "Please read the committee's note.",
+      "cta": "See details"
+    },
+    "NEWS": {
+      "title": "New news from the committee",
+      "body": "The AIS Alumni Committee posted news.",
+      "detail": "Please open the app to read it.",
+      "cta": "Read the news"
+    },
+    "NEWS_REMINDER": {
+      "title": "A response deadline is near",
+      "body": "There's a news post you haven't responded to yet.",
+      "detail": "Please check it and respond in the app before the deadline.",
+      "cta": "Respond"
+    },
+    "BROADCAST": {
+      "title": "A message from {from}",
+      "body": "{from} sent you a message.",
+      "detail": "Please open the app to read it.",
+      "cta": "Read the message"
+    },
+    "EVENT_REMINDER_7D": {
+      "title": "Event next week",
+      "body": "“{title}” starts {when}.",
+      "detail": "{place}You can change your RSVP in the app.",
+      "cta": "View the event"
+    },
+    "EVENT_REMINDER_1D": {
+      "title": "Event tomorrow",
+      "body": "“{title}” is tomorrow, {when}.",
+      "detail": "{place}Show your QR ticket at the reception.",
+      "cta": "View ticket"
+    },
+    "CHAT_MENTION": {
+      "title": "You were mentioned",
+      "body": "{name} mentioned you in a chat (unread).",
+      "detail": "Please open the app to read it.",
+      "cta": "Open chat"
+    },
+    "CHAT_DIGEST": {
+      "title": "You have unread chat messages",
+      "body": "You have {count, plural, one {# unread message} other {# unread messages}} in your group chats.",
+      "detail": "We send this at 8 pm only when there are unread messages. You can turn it off per group in the chat menu.",
+      "cta": "Open chat"
+    },
+    "CHAT_GROUP": {
+      "title": "New message in a group",
+      "body": "{name} posted in {group}.",
+      "detail": "Open the app to read it.",
+      "cta": "Open the chat"
+    },
+    "FOLLOW_REQUEST": {
+      "title": "New follow request",
+      "body": "{name} wants to follow you.",
+      "detail": "If you accept, they'll see what you share with followers.",
+      "cta": "See request"
+    },
+    "FOLLOW_AUTO_ACCEPTED": {
+      "title": "You have a new follower",
+      "body": "{name} followed you.",
+      "detail": "Accepted automatically because you graduated around the same year. You can change this in settings.",
+      "cta": "See followers"
+    },
+    "FOLLOW_ACCEPTED": {
+      "title": "Your follow request was accepted",
+      "body": "{name} accepted your follow request.",
+      "detail": "Take a look at their profile.",
+      "cta": "View profile"
+    },
+    "VOUCH_REQUEST": {
+      "title": "Do you know this person?",
+      "body": "{name} applied to join and named you as someone who knows them.",
+      "detail": "{years}Tell us with one tap whether you know them from AIS. Only the committee sees your answer.",
+      "cta": "Answer"
+    },
+    "FAMILY_LINK_REQUEST_AS_CHILD": {
+      "title": "Please confirm your family",
+      "body": "{name} says they're your parent.",
+      "detail": "Accept or decline on the Family page.",
+      "cta": "Go to Family"
+    },
+    "FAMILY_LINK_REQUEST_AS_PARENT": {
+      "title": "Please confirm your family",
+      "body": "{name} says you're their parent.",
+      "detail": "Accept or decline on the Family page.",
+      "cta": "Go to Family"
+    },
+    "FAMILY_HANDOVER_DONE": {
+      "title": "The account handover is complete",
+      "body": "{child} has taken over their account.",
+      "detail": "From now on your child signs in on their own. Your family link stays as it is.",
+      "cta": "Go to Family"
+    },
+    "STAGE_PROMPT": {
+      "title": "Update your education & work?",
+      "body": "A new school year has started. Your current status is “{stage}”.",
+      "detail": "If you've changed school or job, update your history so classmates can find you.",
+      "cta": "Update history"
+    },
+    "NAME_REQUEST_ADMIN": {
+      "title": "New name change request",
+      "body": "{name} asked to change their name.",
+      "detail": "Review it in admin mode.",
+      "cta": "Review"
+    },
+    "BIRTH_DATE_REQUEST_ADMIN": {
+      "title": "New date of birth request",
+      "body": "{name} asked to add or correct their date of birth.",
+      "detail": "Review it in admin mode.",
+      "cta": "Review"
+    },
+    "RECORD_REQUEST_ADMIN": {
+      "title": "New record correction request",
+      "body": "{name} asked to correct their AIS record.",
+      "detail": "Review it in admin mode.",
+      "cta": "Review"
+    },
+    "GENDER_REQUEST_APPROVED": {
+      "title": "Your gender was updated",
+      "body": "Your gender change was approved.",
+      "detail": "Check it on your profile.",
+      "cta": "View profile"
+    },
+    "GENDER_REQUEST_REJECTED": {
+      "title": "Your gender change wasn't approved",
+      "body": "Your gender change request wasn't approved.",
+      "detail": "Please read the committee's note.",
+      "cta": "See details"
+    },
+    "GENDER_REQUEST_ADMIN": {
+      "title": "New gender change request",
+      "body": "{name} asked to change their gender.",
+      "detail": "Review it in admin mode.",
+      "cta": "Review"
+    },
+    "CHAT_DIRECT": {
+      "title": "You have a new message",
+      "body": "{name} sent you a direct message.",
+      "detail": "Open the app to read it.",
+      "cta": "Open the chat"
+    }
+  },
+  "categories": {
+    "account": "Account & your requests",
+    "news": "News",
+    "events": "Events",
+    "chat": "Chat",
+    "social": "Follows & vouching",
+    "family": "Family",
+    "profile": "Profile reminders",
+    "admin": "Admin work"
+  },
+  "categoryHints": {
+    "account": "Approval, security and the results of your requests. Can't be turned off.",
+    "news": "New posts and response-deadline reminders",
+    "events": "A week and a day before events you're attending (by email)",
+    "chat": "1:1 messages and mentions (once, by LINE or email, if unread for 5 minutes) and group unread summaries (daily at 8 pm, by email)",
+    "social": "Follow requests, acceptances and requests to vouch",
+    "family": "Family confirmations and account handovers",
+    "profile": "Yearly reminder to update your history",
+    "admin": "Member requests to review (admins only)"
+  },
+  "email": {
+    "subjectPrefix": "[AIS Alumni] ",
+    "greeting": "Hi {name},",
+    "greetingNoName": "Hello,",
+    "note": "Note from the committee",
+    "why": "You got this email because of your “{category}” notifications.",
+    "settings": "Change notification settings",
+    "footer": "AIS Alumni Committee (volunteer graduates) · Not an official service of Aichi International School",
+    "linkNote": "If the button doesn't work, open this link:",
+    "place": "Venue: {location}. "
+  },
+  "preview": {
+    "brand": "AIS Alumni",
+    "site": "ais.kai-lab.net",
+    "open": "Open in the app"
+  },
+  "vouchYears": "(At AIS {years}) ",
+  "receipts": {
+    "title": "Notification opens",
+    "openedOf": "Opened {opened} / {total}",
+    "percent": "{percent}%",
+    "hint": "Members notified by LINE or email who opened the notification's link (members who read it in the app count under “Read”).",
+    "opened": "Opened",
+    "unopened": "Not opened yet",
+    "noneOpened": "No one has opened it yet.",
+    "allOpened": "Everyone has opened it.",
+    "showAll": "Show all ({count} more)",
+    "channel": {
+      "LINE": "LINE",
+      "EMAIL": "Email",
+      "PUSH": "App"
+    }
+  },
+  "push": {
+    "testTitle": "Test notification",
+    "testBody": "Notifications reach this device.",
+    "channelDefault": "Notifications"
+  }
+}

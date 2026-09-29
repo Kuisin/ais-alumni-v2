@@ -1,0 +1,182 @@
+{
+  "title": "チャット",
+  "description": "区分や学年ごとのグループで話せます。メンバーは自動で参加します。",
+  "empty": "参加しているグループはまだありません。",
+  "emptyHint": "会員区分や学年が登録されると、該当するグループに自動で参加します。",
+  "allGroups": "その他のグループ（管理者）",
+  "members": "メンバー {count}人",
+  "noMessages": "まだメッセージはありません。最初のメッセージを送ってみましょう。",
+  "unread": "未読 {count}件",
+  "you": "あなた",
+  "groups": {
+    "TEACHERS": "教職員",
+    "CURRENT_STUDENTS": "在校生",
+    "FORMER_STUDENTS": "元在校生",
+    "CURRENT_PARENTS": "在校生保護者",
+    "FORMER_PARENTS": "卒業生保護者",
+    "COHORT": "{cohort}",
+    "COHORT_PARENTS": "{cohort} 保護者",
+    "ADULTS": "元在校生（成人）",
+    "CLASS_REPS": "学年代表",
+    "GRADUATES": "卒業生",
+    "GRADUATES_ADULTS": "卒業生（成人）",
+    "ALUMNI_COMMITTEE": "同窓会委員"
+  },
+  "groupHints": {
+    "TEACHERS": "教職員の皆さん",
+    "CURRENT_STUDENTS": "在校生の皆さん",
+    "FORMER_STUDENTS": "AISに在籍したことのある人（卒業生を含む）",
+    "CURRENT_PARENTS": "在校生の保護者の皆さん",
+    "FORMER_PARENTS": "卒業生の保護者の皆さん",
+    "COHORT": "同じ学年の生徒・卒業生",
+    "COHORT_PARENTS": "同じ学年のお子さまの保護者",
+    "ADULTS": "元在校生（卒業生を含む）のうち、18歳を迎えた後の4月1日から参加",
+    "CLASS_REPS": "各学年の学年代表",
+    "GRADUATES": "AISを卒業した人",
+    "GRADUATES_ADULTS": "卒業生のうち、18歳を迎えた後の4月1日から参加",
+    "ALUMNI_COMMITTEE": "同窓会委員（役職）と管理者"
+  },
+  "room": {
+    "back": "チャット一覧へ",
+    "membersList": "メンバー一覧",
+    "messageLabel": "メッセージ",
+    "placeholder": "メッセージを入力",
+    "send": "送信",
+    "sending": "送信中…",
+    "enterHint": "Enterで改行、「送信」ボタンで送信します（キーボードではCtrl/⌘+Enterでも送信）。@で相手をメンションできます。",
+    "older": "以前のメッセージを表示",
+    "unreadDivider": "ここから未読",
+    "deleted": "メッセージは削除されました",
+    "delete": "削除",
+    "deleteConfirm": "このメッセージを削除しますか？",
+    "deleteLabel": "{name}さんのメッセージを削除",
+    "digest": "未読があるとき、毎日20時にメールでまとめて通知を受け取る",
+    "adminView": "管理者として閲覧しています（投稿はできません）",
+    "live": "リアルタイム接続中",
+    "polling": "数秒ごとに更新しています",
+    "today": "今日",
+    "yesterday": "昨日",
+    "errors": {
+      "forbidden": "このグループには投稿できません。",
+      "invalid": "メッセージを入力してください（2000文字まで）。",
+      "tooFast": "送信が多すぎます。少し待ってからお試しください。",
+      "generic": "送信できませんでした。もう一度お試しください。"
+    },
+    "read": "既読",
+    "readCount": "既読 {count}",
+    "menu": "メニュー",
+    "direct": "1対1のトーク",
+    "blockedNotice": "この相手とはメッセージをやり取りできません。",
+    "copy": "コピー",
+    "close": "閉じる",
+    "mentionList": "メンションする相手",
+    "mentionAll": "全員",
+    "mentionAllHint": "このグループの全員",
+    "infoOpen": "トークの詳細・メンバー",
+    "restrictedNotice": "この会員区分どうしでは1対1のトークを利用できません。"
+  },
+  "digest": {
+    "subject": "【AIS同窓会】未読のチャットがあります",
+    "text": "グループチャットに未読のメッセージが{count}件あります。\nアプリでご確認ください。"
+  },
+  "newTalk": "新しいトーク",
+  "search": "トーク・グループを検索",
+  "filter": "表示",
+  "filters": {
+    "all": "すべて",
+    "direct": "友だち",
+    "groups": "グループ"
+  },
+  "noMatch": "見つかりませんでした。",
+  "message": "メッセージ",
+  "new": {
+    "title": "新しいトーク",
+    "hint": "相互フォローのメンバーと1対1でトークできます。",
+    "empty": "トークできる相手がいません。",
+    "emptyHint": "お互いにフォローすると、1対1でトークできるようになります。",
+    "findMembers": "名簿でメンバーを探す",
+    "errors": {
+      "disabled": "1対1のトークはまだ利用できません。",
+      "self": "自分とはトークできません。",
+      "notFound": "この会員とはトークできません。",
+      "notFriends": "お互いにフォローしている相手とだけトークできます。",
+      "blocked": "この会員とはトークできません。",
+      "forbidden": "トークを開けませんでした。",
+      "restricted": "この会員区分どうしでは1対1のトークを利用できません。"
+    },
+    "restricted": "あなたの会員区分では1対1のトークを利用できません。"
+  },
+  "mentionedYou": "[あなた宛]",
+  "mention": {
+    "subject": "【AIS同窓会】{name}さんがチャットであなたをメンションしました",
+    "text": "{name}さんがチャットであなたをメンションしました。\n内容はアプリでご確認ください。"
+  },
+  "rep": "学年代表",
+  "info": {
+    "title": "トークの詳細",
+    "back": "トークに戻る",
+    "search": "メンバーを名前で検索",
+    "noMatch": "見つかりませんでした。",
+    "open": "トークの詳細"
+  },
+  "report": {
+    "open": "問題を報告する",
+    "intro": "嫌がらせ・スパムなど、このトークでの問題を委員会に報告できます。報告したことは相手に知らされません。確認のため、相手のこのトークでの最近のメッセージが添付されます。",
+    "who": "対象",
+    "wholeChat": "トーク全体",
+    "reason": "理由",
+    "choose": "理由を選んでください",
+    "detail": "内容",
+    "detailHint": "2000文字まで。",
+    "send": "報告を送る",
+    "sending": "送信中…",
+    "sent": "ご報告ありがとうございます。委員会に送りました（#{ref}）。",
+    "reasons": {
+      "HARASSMENT": "嫌がらせ・いじめ",
+      "SPAM": "スパム・宣伝",
+      "INAPPROPRIATE": "不適切な内容",
+      "IMPERSONATION": "なりすまし",
+      "PRIVACY": "個人情報の公開",
+      "OTHER": "その他"
+    },
+    "errors": {
+      "forbidden": "このトークは報告できません。",
+      "reason": "理由を選んでください。",
+      "detail": "内容を入力してください（5〜2000文字）。",
+      "rateLimited": "短時間に多くの報告が送られました。しばらくしてからお試しください。"
+    },
+    "email": {
+      "subject": "【AIS同窓会】トークの報告 #{ref}：{reason}",
+      "text": "会員からトークの報告がありました。管理画面で確認してください。"
+    }
+  },
+  "admin": {
+    "title": "チャット",
+    "intro": "1対1のトークを使える相手の設定と、トークからの報告です。",
+    "rulesTitle": "会員区分ごとの1対1のトーク",
+    "rulesIntro": "お互いのフォローも必要です。複数の区分を持つ会員には最も厳しい設定が適用されます。変更は既存のトークにも適用されます。",
+    "rules": {
+      "ANYONE": "許可",
+      "SAME_ROLE": "同じ会員区分どうしのみ",
+      "NOBODY": "許可しない"
+    },
+    "save": "保存",
+    "saving": "保存中…",
+    "saved": "保存しました。",
+    "saveError": "保存できませんでした。もう一度お試しください。",
+    "reportsTitle": "報告",
+    "open": "未対応",
+    "closed": "対応済み",
+    "emptyOpen": "未対応の報告はありません。",
+    "emptyClosed": "対応済みの報告はありません。",
+    "chat": "トーク",
+    "chatGone": "削除されたトーク",
+    "reporter": "報告者",
+    "reported": "対象の会員",
+    "wholeChat": "トーク全体",
+    "closedAt": "対応日時",
+    "messages": "添付メッセージ（{count}件）",
+    "close": "対応済みにする",
+    "reopen": "未対応に戻す"
+  }
+}

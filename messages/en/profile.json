@@ -1,0 +1,296 @@
+{
+  "title": "Profile",
+  "editTitle": "Edit my profile",
+  "editProfile": "Edit profile",
+  "viewMyProfile": "View my profile",
+  "self": "This is you",
+  "nameAtAisValue": "At AIS: {name}",
+  "sections": {
+    "about": "About",
+    "aisRecord": "AIS record",
+    "currentStage": "Current stage",
+    "contact": "Contact & links",
+    "photo": "Profile photo",
+    "basic": "Basic information",
+    "follows": "Follow requests",
+    "history": "Education & work",
+    "account": "Account"
+  },
+  "fields": {
+    "nameRomaji": "Name (romaji)",
+    "nameKanji": "Name (kanji / kana)",
+    "nameAtAis": "Name while at AIS",
+    "bio": "About me",
+    "email": "Email",
+    "phone": "Phone",
+    "lineDisplayName": "LINE name",
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "facebook": "Facebook",
+    "x": "X (Twitter)",
+    "website": "Website",
+    "avatar": "Photo",
+    "stage": "What are you doing now?",
+    "stageDetail": "Details (school, company, etc.)"
+  },
+  "hints": {
+    "nameAtAis": "Only if it was different, e.g. a previous family name.",
+    "bio": "Visible to all members.",
+    "privateTier": "Your contact details and links are visible only to you, your family and the committee (admins). Choose below what followers can see too.",
+    "socialUrl": "Enter full addresses starting with https://",
+    "avatar": "JPG or PNG, up to 2 MB. Shown to your family and connections (you can show it to everyone below).",
+    "stageDetail": "Only your family and approved followers can see the details."
+  },
+  "record": {
+    "teacherYears": "At AIS {from}–{to}",
+    "teacherYearsPresent": "At AIS {from}–present",
+    "graduated": "Class of {year}",
+    "left": "Left AIS in {year}",
+    "nowStage": "Now: {stage}",
+    "subjects": "Subjects: {subjects}",
+    "noDetails": "No details"
+  },
+  "recordReadOnly": "Your AIS record can only be changed by the committee. If something is wrong, send a correction request.",
+  "stageNotSet": "Not set yet",
+  "stageUpdated": "Last confirmed: {date}",
+  "stageNeverConfirmed": "You haven't set your current stage yet.",
+  "stageChoose": "Choose one",
+  "stageSave": "Save current stage",
+  "stageConfirm": "My status is still current",
+  "stageSaved": "Current stage saved.",
+  "stageConfirmed": "Thanks! Your status is confirmed.",
+  "noContact": "No contact details shared yet.",
+  "locked": {
+    "title": "Private details",
+    "familyOnly": "{name}'s contact details and other personal information are visible to their family only.",
+    "body": "{name} shares some details with followers. Follow them to see those once they accept.",
+    "requested": "Your follow request is waiting for approval. Once accepted, you'll see what they share with followers.",
+    "unavailable": "Personal details are visible to family, and to followers only for the items the member chooses."
+  },
+  "autoAccept": {
+    "label": "Automatically accept follow requests from my graduation year ±1",
+    "hint": "Based on the graduation / leave year in your AIS record."
+  },
+  "settingsLink": "Notifications and language are managed in Settings.",
+  "goSettings": "Open Settings",
+  "save": "Save",
+  "saving": "Saving…",
+  "saved": "Profile saved.",
+  "uploading": "Uploading…",
+  "photoUpload": "Upload photo",
+  "photoRemove": "Remove photo",
+  "photoUploaded": "Photo updated.",
+  "errors": {
+    "forbidden": "You don't have permission to do that.",
+    "validation": "Please check the highlighted fields.",
+    "invalid": "Please check this field.",
+    "fileMissing": "Please choose an image.",
+    "fileSize": "The image must be 2 MB or smaller.",
+    "fileType": "Please choose a JPG or PNG image."
+  },
+  "requestRecordCorrection": "Request a correction",
+  "historyIntro": "Adding your schools and jobs after AIS helps classmates find you.",
+  "editHistory": "Edit education & work",
+  "photoChoose": "Choose a photo",
+  "photoSelected": "Selected: {name}",
+  "emptyPrompt": {
+    "bio": "No bio yet. Add a line about what you are up to.",
+    "bioAction": "Write a bio",
+    "history": "No schools or jobs added yet.",
+    "historyAction": "Add education & work"
+  },
+  "nameRequest": {
+    "title": "Name",
+    "lockedNote": "To prevent impersonation, your name can't be changed by you after approval. If it needs to change, ask the committee.",
+    "nameAtAis": "Name at AIS",
+    "status": {
+      "PENDING": "Requested",
+      "APPROVED": "Approved",
+      "REJECTED": "Not approved",
+      "CANCELLED": "Withdrawn"
+    },
+    "pendingSince": "Requested on {date}. The committee will check it.",
+    "cancel": "Withdraw request",
+    "reviewNote": "Committee note",
+    "open": "Request a name change",
+    "intro": "Enter your new name and why it changes (marriage, a spelling fix, …). The committee checks and applies it.",
+    "reason": "Reason for the change",
+    "reasonHint": "e.g. My family name changed after marriage / the romaji spelling was wrong",
+    "submit": "Send request",
+    "close": "Close",
+    "submitted": "Request sent. It will be applied once the committee approves it; we'll let you know.",
+    "errors": {
+      "unchanged": "That's the same as your current name.",
+      "pending": "You already have a request being checked."
+    },
+    "notify": {
+      "admin": {
+        "subject": "New name change request",
+        "text": "{name} asked to change their name."
+      },
+      "approved": {
+        "subject": "Your name change was approved",
+        "text": "Your name has been updated.\n\nCommittee note: {note}"
+      },
+      "rejected": {
+        "subject": "Your name change wasn't approved",
+        "text": "Committee note: {note}"
+      }
+    }
+  },
+  "stage": {
+    "none": "Not shown yet: add your schools and work.",
+    "fromHistory": "Your current status is worked out from your schools and work (your current school, or else your current job).",
+    "editHistory": "Edit schools & work"
+  },
+  "birthDate": {
+    "title": "Date of birth",
+    "lockedNote": "Your date of birth can't be changed by you after approval. To add or correct it, ask the committee.",
+    "notSet": "Not registered",
+    "notSetHint": "Your date of birth isn't registered. It's needed for the 18+ groups.",
+    "open": "Request a correction",
+    "openAdd": "Request to add it",
+    "intro": "Enter your correct date of birth. The committee checks and applies it.",
+    "field": "Date of birth",
+    "reason": "Reason for the change",
+    "reasonOptional": "Reason (optional)",
+    "reasonHint": "e.g. I entered it wrongly when signing up",
+    "submit": "Send request",
+    "close": "Close",
+    "submitted": "Request sent. It will be applied once the committee approves it; we'll let you know.",
+    "pendingSince": "On {date} you asked to change it to {value}. The committee will check it.",
+    "cancel": "Withdraw request",
+    "reviewNote": "Committee note",
+    "fieldErrors": {
+      "invalidDate": "Please enter a valid date.",
+      "required": "Please give a reason.",
+      "tooLong": "That's too long."
+    },
+    "errors": {
+      "unchanged": "That's the same as your current date of birth.",
+      "pending": "You already have a request being checked."
+    },
+    "notify": {
+      "admin": {
+        "subject": "New date of birth request",
+        "text": "{name} asked to add or correct their date of birth."
+      },
+      "approved": {
+        "subject": "Your date of birth change was approved",
+        "text": "Your date of birth has been updated.\n\nCommittee note: {note}"
+      },
+      "rejected": {
+        "subject": "Your date of birth change wasn't approved",
+        "text": "Committee note: {note}"
+      }
+    }
+  },
+  "noContactFollowers": "Nothing is shared with followers.",
+  "sharedWithFollowers": "Showing only what they share with followers.",
+  "followerFields": {
+    "title": "Show to followers",
+    "hint": "Items you turn on are also visible to followers you've approved (family always sees them). All are off by default.",
+    "notSet": "Not set",
+    "fields": {
+      "email": "Email",
+      "phone": "Phone",
+      "lineDisplayName": "LINE display name",
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn",
+      "facebook": "Facebook",
+      "x": "X",
+      "website": "Website",
+      "currentStageDetail": "Current stage details"
+    },
+    "noneShared": "Nothing is shared with followers (only your family and the committee can see it)."
+  },
+  "photo": {
+    "gender": "Gender",
+    "genderHint": "Used for the icon shown when you have no photo, or to people who can't see it. Not shown to other members.",
+    "genders": {
+      "none": "Prefer not to say",
+      "MALE": "Male",
+      "FEMALE": "Female",
+      "OTHER": "Other"
+    },
+    "public": "Show my photo to every member",
+    "publicHint": "When off, only you, your family, people you're connected with by an accepted follow (either way) and the committee see your photo. Other members see the default icon.",
+    "visibility": "Who sees your photo",
+    "onlyConnected": "Family and connections only",
+    "everyone": "Every member",
+    "genderLabel": "Icon",
+    "change": "Change photo"
+  },
+  "gender": {
+    "title": "Gender",
+    "lockedNote": "You can't change your gender yourself; ask the committee if it needs changing. It's only used for your default icon and isn't shown to other members.",
+    "notSet": "Not registered",
+    "setOnceHint": "Your gender isn't registered. It's used for your default icon (changes after that need a request).",
+    "setOnce": "Save",
+    "open": "Request a change",
+    "intro": "Choose the new value. The committee checks and applies it.",
+    "field": "Gender",
+    "reason": "Reason for the change",
+    "reasonHint": "e.g. I chose the wrong option when signing up",
+    "submit": "Send request",
+    "close": "Close",
+    "submitted": "Request sent. It will be applied once the committee approves it; we'll let you know.",
+    "saved": "Your gender has been saved.",
+    "pendingSince": "On {date} you asked to change it to “{value}”. The committee will check it.",
+    "cancel": "Withdraw request",
+    "reviewNote": "Committee note",
+    "fieldErrors": {
+      "invalid": "Choose a gender.",
+      "required": "Please give a reason.",
+      "tooLong": "That's too long."
+    },
+    "errors": {
+      "unchanged": "That's the same as your current gender.",
+      "pending": "You already have a request being checked.",
+      "alreadySet": "Your gender is already registered. Please send a request to change it."
+    },
+    "openSetOnce": "Add"
+  },
+  "requestChange": "Request a change",
+  "requestAdd": "Request to add",
+  "photoRemoveConfirm": "Remove your profile photo?",
+  "requestCorrection": "Request a correction",
+  "changeInSettings": "Change in settings",
+  "emailHint": "Where sign-in codes and important notices are sent.",
+  "accountHint": "Follows, family, invitations and notification settings",
+  "visibility": {
+    "title": "Who can see what",
+    "intro": "Under each item you can see who it is shown to (✓ shown, ✕ hidden). The committee (admins) can see everything.",
+    "audiences": {
+      "members": "All members",
+      "followers": "Followers",
+      "family": "Family"
+    },
+    "shown": "shown",
+    "hidden": "hidden",
+    "onlyYou": "Only you and the committee",
+    "viewAsTitle": "Check how others see your profile",
+    "viewAs": {
+      "members": "View as a member",
+      "followers": "View as a follower",
+      "family": "View as family"
+    },
+    "previewTitle": {
+      "members": "Your profile as all members see it",
+      "followers": "Your profile as your followers see it",
+      "family": "Your profile as your family see it"
+    },
+    "previewHint": "This is a preview. Buttons such as follow and message are not shown.",
+    "backToProfile": "Back to my profile",
+    "hiddenTitle": "Hidden items",
+    "photoHidden": "Photo is hidden",
+    "historyHidden": "{count, plural, one {# more education / work entry is} other {# more education / work entries are}} visible only to followers and family."
+  },
+  "directory": {
+    "title": "Member directory",
+    "listed": "Show me in the member directory",
+    "hint": "When off, you do not appear in the directory list or search (the committee can still see you). Family and people you are connected with can still open your profile.",
+    "shown": "You are listed in the member directory",
+    "hidden": "You are not listed in the member directory"
+  }
+}

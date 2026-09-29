@@ -1,0 +1,76 @@
+{
+  "title": "Follows",
+  "description": "Follow requests, followers, and blocked members.",
+  "tabsLabel": "Follow lists",
+  "tabs": {
+    "incoming": "Requests",
+    "outgoing": "Sent",
+    "followers": "Followers",
+    "following": "Following",
+    "blocked": "Blocked"
+  },
+  "empty": {
+    "incoming": "No follow requests right now.",
+    "outgoing": "You have no pending requests.",
+    "followers": "No followers yet.",
+    "following": "You're not following anyone yet. Find people in the Directory.",
+    "blocked": "You haven't blocked anyone."
+  },
+  "requestedAt": "Requested {date}",
+  "familyMember": "Family",
+  "actions": {
+    "follow": "Follow",
+    "requested": "Requested",
+    "following": "Following",
+    "unfollow": "Unfollow",
+    "cancelRequest": "Cancel request",
+    "accept": "Accept",
+    "decline": "Decline",
+    "remove": "Remove",
+    "block": "Block…",
+    "unblock": "Unblock",
+    "blockConfirm": "Block {name}? You won't see each other anywhere on the site, and any follows between you will be removed.",
+    "blockYes": "Yes, block",
+    "working": "Working…",
+    "followBack": "Follow back",
+    "requestedHint": " (cancel request)",
+    "unfollowConfirm": "Unfollow {name}? To see their contact details again, you'll need to send a new request.",
+    "cancel": "Cancel"
+  },
+  "status": {
+    "requestSent": "Follow request sent.",
+    "autoAccepted": "You're now following this member."
+  },
+  "errors": {
+    "self": "You can't follow yourself.",
+    "inactive": "This member can't be followed right now.",
+    "blocked": "You can't follow this member.",
+    "minor": "Current students can only be followed by teachers and family.",
+    "already": "You already follow or have requested this member.",
+    "family": "You're in the same family, so you already see each other's details.",
+    "rateLimited": "You've sent a lot of follow requests today. Please try again tomorrow.",
+    "notFound": "Member not found."
+  },
+  "notify": {
+    "requestSubject": "{name} wants to follow you",
+    "requestText": "{name} sent you a follow request on AIS Alumni. If you accept, they'll be able to see your contact details.",
+    "autoSubject": "{name} is now following you",
+    "autoText": "{name} is now following you on AIS Alumni. The request was accepted automatically because your graduation years are within one year. You can remove followers at any time.",
+    "acceptedSubject": "{name} accepted your follow request",
+    "acceptedText": "You can now see {name}'s contact details on AIS Alumni."
+  },
+  "menu": {
+    "label": "More actions"
+  },
+  "followHint": "Once your follow is accepted, you can see their contact details.",
+  "findInDirectory": "Find people in the directory",
+  "followsYou": "Follows you",
+  "counts": {
+    "followers": "<b>{count, number}</b> {count, plural, one {follower} other {followers}}",
+    "following": "<b>{count, number}</b> following"
+  },
+  "accepted": {
+    "title": "You accepted {name}'s request.",
+    "followBackHint": "Follow them back?"
+  }
+}

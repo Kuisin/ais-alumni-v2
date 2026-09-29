@@ -1,0 +1,76 @@
+{
+  "title": "フォロー",
+  "description": "フォローリクエスト、フォロワー、ブロックした会員の管理",
+  "tabsLabel": "フォロー一覧",
+  "tabs": {
+    "incoming": "リクエスト",
+    "outgoing": "送信済み",
+    "followers": "フォロワー",
+    "following": "フォロー中",
+    "blocked": "ブロック"
+  },
+  "empty": {
+    "incoming": "フォローリクエストはありません。",
+    "outgoing": "承認待ちのリクエストはありません。",
+    "followers": "フォロワーはまだいません。",
+    "following": "まだ誰もフォローしていません。名簿から探してみましょう。",
+    "blocked": "ブロックしている会員はいません。"
+  },
+  "requestedAt": "{date}にリクエスト",
+  "familyMember": "家族",
+  "actions": {
+    "follow": "フォローする",
+    "requested": "リクエスト済み",
+    "following": "フォロー中",
+    "unfollow": "フォローを外す",
+    "cancelRequest": "リクエストを取り消す",
+    "accept": "承認",
+    "decline": "拒否",
+    "remove": "削除",
+    "block": "ブロック…",
+    "unblock": "ブロック解除",
+    "blockConfirm": "{name}さんをブロックしますか？お互いにサイト上で表示されなくなり、フォロー関係も解除されます。",
+    "blockYes": "ブロックする",
+    "working": "処理中…",
+    "followBack": "フォローバック",
+    "requestedHint": "（リクエストを取り消す）",
+    "unfollowConfirm": "{name}さんのフォローを外しますか？連絡先をもう一度見るには、改めてリクエストが必要です。",
+    "cancel": "キャンセル"
+  },
+  "status": {
+    "requestSent": "フォローリクエストを送りました。",
+    "autoAccepted": "フォローしました。"
+  },
+  "errors": {
+    "self": "自分をフォローすることはできません。",
+    "inactive": "この会員は現在フォローできません。",
+    "blocked": "この会員はフォローできません。",
+    "minor": "在校生をフォローできるのは教職員と家族のみです。",
+    "already": "すでにフォロー中、またはリクエスト済みです。",
+    "family": "同じ家族のため、フォローしなくても情報を見られます。",
+    "rateLimited": "本日のフォローリクエストの上限に達しました。明日もう一度お試しください。",
+    "notFound": "会員が見つかりません。"
+  },
+  "notify": {
+    "requestSubject": "{name}さんからフォローリクエストが届きました",
+    "requestText": "AIS同窓会で{name}さんからフォローリクエストが届きました。承認すると、{name}さんがあなたの連絡先を見られるようになります。",
+    "autoSubject": "{name}さんがあなたをフォローしました",
+    "autoText": "AIS同窓会で{name}さんがあなたをフォローしました。卒業年が前後1年以内のため自動で承認されました。フォロワーはいつでも削除できます。",
+    "acceptedSubject": "{name}さんがフォローリクエストを承認しました",
+    "acceptedText": "AIS同窓会で{name}さんの連絡先を見られるようになりました。"
+  },
+  "menu": {
+    "label": "その他の操作"
+  },
+  "followHint": "フォローが承認されると連絡先が表示されます。",
+  "findInDirectory": "名簿で探す",
+  "followsYou": "フォローされています",
+  "counts": {
+    "followers": "フォロワー <b>{count, number}</b>",
+    "following": "フォロー中 <b>{count, number}</b>"
+  },
+  "accepted": {
+    "title": "{name}さんのリクエストを承認しました。",
+    "followBackHint": "フォローバックしますか？"
+  }
+}

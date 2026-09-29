@@ -1,0 +1,100 @@
+{
+  "title": "AIS record corrections",
+  "description": "Your AIS record (years at AIS, division, graduation) can only be changed by the committee. If something is wrong, send a correction request with the right values.",
+  "backToProfile": "Back to profile",
+  "noRecord": "You have no AIS record to correct.",
+  "requestCorrection": "Request a correction",
+  "reason": "Reason",
+  "reviewNote": "Committee note",
+  "submit": "Send request",
+  "submitted": "Your request was sent. The committee will review it.",
+  "pending": "Correction requested on {date}. Waiting for the committee.",
+  "cancel": "Withdraw request",
+  "history": "Past requests",
+  "hints": {
+    "reason": "Tell the committee what is wrong, e.g. \"I left in 2015, not 2014.\"",
+    "teacherYearsTo": "Leave empty if you still work at AIS.",
+    "studentYearsTo": "Only if you left before graduating; leave empty if you graduated or are still at AIS."
+  },
+  "fields": {
+    "yearsFrom": "Joined (year)",
+    "yearsTo": "Left (year)",
+    "subjects": "Subjects / grades taught",
+    "studentIdNo": "Student ID",
+    "cohort": "学年 (class)",
+    "employment": "Status"
+  },
+  "diff": {
+    "field": "Item",
+    "current": "Current",
+    "proposed": "Requested"
+  },
+  "status": {
+    "PENDING": "Pending",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "CANCELLED": "Withdrawn"
+  },
+  "fieldErrors": {
+    "required": "This field is required.",
+    "tooLong": "This is too long.",
+    "invalidYear": "Enter a 4-digit year.",
+    "invalidGrade": "Choose a grade.",
+    "yearsOrder": "The end year must be the same as or after the start year.",
+    "invalid": "This value is not valid."
+  },
+  "errors": {
+    "forbidden": "Please sign in again.",
+    "invalidRole": "This record can't be corrected.",
+    "validation": "Please check the highlighted fields.",
+    "noChanges": "Change at least one value before sending.",
+    "pendingExists": "You already have a pending request for this record.",
+    "alreadyDecided": "This request has already been decided."
+  },
+  "decided": {
+    "approved": "Approved and applied to the member's record.",
+    "rejected": "Rejected. The member has been notified."
+  },
+  "notify": {
+    "admin": {
+      "subject": "New AIS record correction request",
+      "text": "{name} requested a correction to their AIS record."
+    },
+    "approved": {
+      "subject": "Your AIS record was updated",
+      "text": "The committee approved your correction request and updated your AIS record.\nNote: {note}"
+    },
+    "rejected": {
+      "subject": "About your AIS record correction request",
+      "text": "The committee could not approve your correction request.\nNote: {note}"
+    }
+  },
+  "admin": {
+    "title": "Record correction requests",
+    "description": "Members' requests to correct their AIS record. Approving applies the change immediately.",
+    "tabsLabel": "Requests",
+    "tabs": {
+      "pending": "Pending",
+      "decided": "Decided"
+    },
+    "empty": "No requests here.",
+    "decision": "Decision",
+    "decisions": {
+      "APPROVE": "Approve",
+      "REJECT": "Reject"
+    },
+    "noteOptional": "Note to the member (optional)",
+    "noteRequired": "Reason for rejecting (sent to the member)",
+    "submit": {
+      "APPROVE": "Approve and apply",
+      "REJECT": "Reject"
+    },
+    "emptyPending": "No requests waiting for review.",
+    "emptyPendingHint": "When a member asks to correct their school record (years, class and so on) from their profile, the request arrives here.",
+    "emptyDecidedHint": "Approved and rejected requests appear here, newest first (up to 50)."
+  },
+  "cohortCurrent": "at AIS",
+  "stillTeaching": "Still at AIS",
+  "close": "Close",
+  "yearPlaceholder": "e.g. 2015"
+}

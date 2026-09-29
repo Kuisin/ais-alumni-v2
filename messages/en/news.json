@@ -1,0 +1,128 @@
+{
+  "title": "News",
+  "description": "Announcements from the AIS Alumni committee.",
+  "empty": "No news yet.",
+  "pinned": "Pinned",
+  "untitled": "(Untitled)",
+  "create": "New post",
+  "backToList": "All news",
+  "pager": {
+    "label": "Pages",
+    "prev": "Newer",
+    "next": "Older",
+    "page": "Page {page}"
+  },
+  "notify": {
+    "subject": "[AIS Alumni] {title}",
+    "fallbackText": "A new announcement has been posted.",
+    "contentlessSubject": "[AIS Alumni] New announcement",
+    "contentlessText": "The AIS Alumni Committee posted a new announcement.\nOpen the app to read it.",
+    "reminderSubject": "[AIS Alumni] A response deadline is coming up",
+    "reminderText": "There's a news post you haven't responded to yet.\nPlease open the app to see it."
+  },
+  "emptyHint": "Announcements from the committee will appear here when they are posted.",
+  "unread": "Unread",
+  "tabs": {
+    "label": "Announcement types",
+    "news": "Committee news",
+    "messages": "Messages for you"
+  },
+  "messages": {
+    "title": "Messages for you",
+    "empty": "No messages for you yet.",
+    "emptyHint": "Messages sent to you by the committee, teachers and class representatives appear here. We email you when a new one arrives.",
+    "from": "From",
+    "sentAt": "Sent",
+    "sentTo": "To",
+    "toAll": "All members",
+    "backToList": "Messages for you",
+    "senderView": "You sent this message (you are not a recipient).",
+    "newCount": "{count, plural, one {You have # new message} other {You have # new messages}}",
+    "edited": "Edited"
+  },
+  "hub": {
+    "deadline": "Respond by {time}",
+    "closed": "The response deadline has passed",
+    "answered": "Responded",
+    "needsAnswer": "Response needed",
+    "confirm": {
+      "title": "Confirmation",
+      "hint": "Press this once you've read the post.",
+      "button": "Got it",
+      "done": "Confirmed ({time})",
+      "undo": "Undo",
+      "count": "{count, plural, one {# confirmed} other {# confirmed}}"
+    },
+    "poll": {
+      "title": "Poll",
+      "multiple": "You can choose several",
+      "single": "Choose one",
+      "submit": "Vote",
+      "update": "Change my answer",
+      "voters": "{count, plural, one {# vote} other {# votes}}",
+      "yours": "Your answer",
+      "saved": "Your answer has been saved."
+    },
+    "schedule": {
+      "title": "Scheduling",
+      "YES": "○",
+      "MAYBE": "△",
+      "NO": "×",
+      "YESLabel": "Can attend",
+      "MAYBELabel": "Maybe",
+      "NOLabel": "Can't attend",
+      "answerFor": "Answer for {date}",
+      "submit": "Send",
+      "update": "Change my answers",
+      "best": "Best so far",
+      "counts": "○{yes} △{maybe} ×{no}",
+      "answers": "Everyone's answers",
+      "needAll": "Please answer every date.",
+      "saved": "Your answers have been saved.",
+      "save": "Save my answers",
+      "cancel": "Cancel"
+    },
+    "reactions": {
+      "label": "Reactions",
+      "toggle": "{emoji} ({count})"
+    },
+    "comments": {
+      "title": "Comments",
+      "empty": "No comments yet.",
+      "label": "Write a comment",
+      "submit": "Post",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this comment?",
+      "hide": "Hide",
+      "show": "Show again",
+      "hidden": "Hidden (visible to admins only)",
+      "off": "Comments are turned off for this post."
+    },
+    "files": {
+      "title": "Attachments"
+    },
+    "errors": {
+      "closed": "The response deadline has passed.",
+      "invalid": "That couldn't be sent. Please check and try again.",
+      "commentsOff": "Comments are turned off.",
+      "forbidden": "You can't do this.",
+      "generic": "That couldn't be sent. Please try again."
+    },
+    "closedManual": "Answers are closed"
+  },
+  "respondJump": "Respond",
+  "adminView": {
+    "badge": "Admin view",
+    "title": "You're viewing this as an admin",
+    "body": "You're not in this post's audience, so no read receipt is recorded and you can't confirm, vote or answer the schedule (view only)."
+  },
+  "sender": {
+    "from": "From: {role}",
+    "postingAs": "You're posting as {role}. Members see this role, not your name.",
+    "ADMIN": "AIS Alumni Committee",
+    "TEACHER": "Teachers & staff",
+    "ALUMNI_COMMITTEE": "Alumni committee member",
+    "STUDENT_LEADER": "Class rep",
+    "STUDENT_LEADER_COHORT": "Class rep ({cohort})"
+  }
+}

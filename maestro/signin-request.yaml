@@ -1,0 +1,22 @@
+# Email sign-in, step 1: ask for a code (run maestro/signin.sh, which reads
+# the code from the local dev mailbox and runs step 2).
+# APP_ID: host.exp.Exponent (Expo Go) or net.kailab.aisalumni (a build)
+appId: ${APP_ID}
+---
+- launchApp
+- openLink: ${APP_URL}
+# iOS asks before a link opens a development build for the first time.
+- tapOn:
+    text: "Open"
+    optional: true
+- extendedWaitUntil:
+    visible: "(Email me a sign-in code|ログイン用コードをメールで受け取る)"
+    timeout: 60000
+- tapOn:
+    text: "(Email address|メールアドレス)"
+    index: 1
+- inputText: ${EMAIL}
+- tapOn: "(Email me a sign-in code|ログイン用コードをメールで受け取る)"
+- extendedWaitUntil:
+    visible: "(Send a new code|コードを再送信)"
+    timeout: 20000

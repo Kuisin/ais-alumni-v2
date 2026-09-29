@@ -1,0 +1,126 @@
+{
+  "title": "Family",
+  "description": "Link parents and children. Family members can see each other's private details.",
+  "working": "Working…",
+  "search": "Search",
+  "noResults": "No matching members found.",
+  "confirm": "Confirm",
+  "decline": "Decline",
+  "cancel": "Cancel request",
+  "sent": "Request sent. It will be linked once they confirm.",
+  "sentAdmin": "Added. An administrator will confirm this link.",
+  "status": {
+    "confirmed": "Confirmed",
+    "pendingAdmin": "Waiting for administrator confirmation",
+    "pendingOther": "Waiting for {name} to confirm"
+  },
+  "pendingForMe": {
+    "title": "Waiting for your confirmation",
+    "asChild": "{name} says they are your parent.",
+    "asParent": "{name} says you are their parent."
+  },
+  "members": {
+    "title": "My family",
+    "empty": "No family members linked yet.",
+    "steps": {
+      "one": "Search for your family member by name below.",
+      "two": "Choose “This is my child” (or parent) to send a request.",
+      "three": "Once they accept, you are linked and can see each other’s contact details."
+    },
+    "findChild": "Search for your child",
+    "findParent": "Search for your parent"
+  },
+  "links": {
+    "title": "Family links",
+    "row": "{parent} (parent) → {child} (child)"
+  },
+  "claimChild": {
+    "title": "Add my child",
+    "description": "Search for your child's account. They will be asked to confirm.",
+    "searchLabel": "Child's name",
+    "minorHint": "Current students only appear when you enter their full registered name.",
+    "select": "This is my child",
+    "manualTitle": "My child doesn't have an account",
+    "manualLabel": "Child's full name",
+    "manualHint": "An administrator will check and confirm this.",
+    "manualSubmit": "Add child",
+    "cohort": "Child's 学年 (class)",
+    "cohortHint": "Numbered by the year they finish (finished) 6th grade.",
+    "chooseCohort": "Choose a class",
+    "leftYear": "Year they left AIS (optional)",
+    "leftYearHint": "Only if they left before graduating."
+  },
+  "claimParent": {
+    "title": "Add my parent",
+    "description": "Search for your parent's account. They will be asked to confirm.",
+    "searchLabel": "Parent's name",
+    "select": "This is my parent"
+  },
+  "errors": {
+    "notAllowed": "Your account type can't add this kind of family link.",
+    "notFound": "Member not found.",
+    "wrongRole": "That member isn't registered as a parent or student.",
+    "already": "This family link already exists or is waiting for confirmation.",
+    "tooMany": "You have too many unconfirmed requests. Please wait for them to be confirmed.",
+    "invalid": "Please check your input.",
+    "cohort": "Choose a class."
+  },
+  "notify": {
+    "asChildSubject": "{name} added you as their child",
+    "asChildText": "{name} says they are your parent on AIS Alumni. Please confirm or decline on the Family page.",
+    "asParentSubject": "{name} added you as their parent",
+    "asParentText": "{name} says you are their parent on AIS Alumni. Please confirm or decline on the Family page."
+  },
+  "managed": {
+    "title": "Children you manage",
+    "description": "Accounts you registered for your children when you applied. Your children don't sign in; you manage them. The committee checks their AIS details and approves them.",
+    "state": {
+      "active": "Approved",
+      "pending": "Being checked by the committee",
+      "other": "Not approved"
+    }
+  },
+  "handover": {
+    "open": "Hand over to my child",
+    "intro": "Let your child sign in themselves. We'll email a handover link to your child (valid for 7 days). Once they accept, the account is theirs and no longer managed by you. Your family link stays.",
+    "email": "Your child's email",
+    "emailHint": "Use an address your child can read.",
+    "send": "Send handover link",
+    "close": "Close",
+    "sent": "Handover link sent. Ask your child to check their email.",
+    "pending": "Handover link sent to {email} (valid until {date}).",
+    "resend": "Send to another address",
+    "cancel": "Cancel",
+    "errors": {
+      "forbidden": "You can't do that.",
+      "notFound": "We couldn't find this child's account.",
+      "invalidEmail": "Enter a valid email address.",
+      "notActive": "You can hand it over once the committee has approved it."
+    },
+    "claim": {
+      "title": "Take over your account",
+      "body": "{parent} is handing {child}'s account over to you. Once you confirm, you'll sign in with {email}.",
+      "point1": "Your class, AIS record and family links come with it.",
+      "point2": "If you've already registered with this email, the two accounts are combined into one.",
+      "point3": "Afterwards you can set your photo, LINE and more yourself.",
+      "signedIn": "You're signed in to another account. After confirming, sign out and sign in with the handed-over email.",
+      "confirm": "Take over my account",
+      "working": "Working…",
+      "invalid": "This link is invalid or has expired. Ask your parent to send it again.",
+      "done": "Handover complete.",
+      "signInWith": "Sign in with the code we'll email to {email}.",
+      "goSignIn": "Go to sign-in",
+      "signOutAndIn": "Sign out and sign in again"
+    },
+    "done": {
+      "subject": "Your child's account has been handed over",
+      "text": "{child} has taken over their account and can now sign in themselves. Your family link stays."
+    },
+    "emailMessage": {
+      "subject": "AIS Alumni: take over your account",
+      "text": "{parent} is handing over the AIS Alumni account they registered for {child} to you.\nOpen the link below and press “Take over my account” to sign in with this email (valid for 7 days).\nIf this wasn't expected, ignore this email."
+    }
+  },
+  "declineConfirm": "Decline this request?",
+  "cancelConfirm": "Cancel this request?"
+}

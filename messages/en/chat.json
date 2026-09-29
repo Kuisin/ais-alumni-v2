@@ -1,0 +1,182 @@
+{
+  "title": "Chat",
+  "description": "Talk in groups for your member type and class. You're added automatically.",
+  "empty": "You're not in any groups yet.",
+  "emptyHint": "Once your member type and class are set, you'll join the matching groups automatically.",
+  "allGroups": "Other groups (admin)",
+  "members": "{count, plural, one {# member} other {# members}}",
+  "noMessages": "No messages yet. Say hello!",
+  "unread": "{count} unread",
+  "you": "You",
+  "groups": {
+    "TEACHERS": "Teachers & staff",
+    "CURRENT_STUDENTS": "Current students",
+    "FORMER_STUDENTS": "Former students",
+    "CURRENT_PARENTS": "Parents of current students",
+    "FORMER_PARENTS": "Parents of graduates",
+    "COHORT": "{cohort}",
+    "COHORT_PARENTS": "{cohort} parents",
+    "ADULTS": "Former students (18+)",
+    "CLASS_REPS": "Class reps",
+    "GRADUATES": "Graduates",
+    "GRADUATES_ADULTS": "Graduates (18+)",
+    "ALUMNI_COMMITTEE": "Alumni committee"
+  },
+  "groupHints": {
+    "TEACHERS": "Everyone who teaches or taught at AIS",
+    "CURRENT_STUDENTS": "Current students",
+    "FORMER_STUDENTS": "Everyone who attended AIS (graduates included)",
+    "CURRENT_PARENTS": "Parents of current students",
+    "FORMER_PARENTS": "Parents of graduates",
+    "COHORT": "Students and graduates of this class",
+    "COHORT_PARENTS": "Parents of children in this class",
+    "ADULTS": "Former students (graduates included), from the April 1 after they turn 18",
+    "CLASS_REPS": "Class representatives of every year",
+    "GRADUATES": "Everyone who graduated from AIS",
+    "GRADUATES_ADULTS": "Graduates, from the April 1 after they turn 18",
+    "ALUMNI_COMMITTEE": "Alumni committee members (position) and admins"
+  },
+  "room": {
+    "back": "All chats",
+    "membersList": "Members",
+    "messageLabel": "Message",
+    "placeholder": "Write a message",
+    "send": "Send",
+    "sending": "Sending…",
+    "enterHint": "Enter adds a new line; press Send to send (or Ctrl/⌘+Enter on a keyboard). Type @ to mention someone.",
+    "older": "Show earlier messages",
+    "unreadDivider": "Unread",
+    "deleted": "This message was deleted",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this message?",
+    "deleteLabel": "Delete {name}'s message",
+    "digest": "Get a daily email summary at 8 pm when there are unread messages",
+    "adminView": "You're viewing as an admin (you can't post here)",
+    "live": "Live",
+    "polling": "Updating every few seconds",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "errors": {
+      "forbidden": "You can't post in this group.",
+      "invalid": "Please write a message (up to 2000 characters).",
+      "tooFast": "You're sending too fast. Please wait a moment.",
+      "generic": "The message couldn't be sent. Please try again."
+    },
+    "read": "Read",
+    "readCount": "Read by {count}",
+    "menu": "Menu",
+    "direct": "One-to-one chat",
+    "blockedNotice": "You can't exchange messages with this member.",
+    "copy": "Copy",
+    "close": "Close",
+    "mentionList": "Mention someone",
+    "mentionAll": "all",
+    "mentionAllHint": "Everyone in this group",
+    "infoOpen": "Chat details & members",
+    "restrictedNotice": "One-to-one chats between your member types aren't available."
+  },
+  "digest": {
+    "subject": "[AIS Alumni] You have unread chat messages",
+    "text": "You have {count, plural, one {# unread message} other {# unread messages}} in your group chats.\nPlease open the app to read them."
+  },
+  "newTalk": "New chat",
+  "search": "Search chats",
+  "filter": "Show",
+  "filters": {
+    "all": "All",
+    "direct": "Friends",
+    "groups": "Groups"
+  },
+  "noMatch": "No matches.",
+  "message": "Message",
+  "new": {
+    "title": "New chat",
+    "hint": "Chat one-to-one with members you follow and who follow you back.",
+    "empty": "No one to chat with yet.",
+    "emptyHint": "Once you follow each other, you can chat one-to-one.",
+    "findMembers": "Find members in the directory",
+    "errors": {
+      "disabled": "One-to-one chats aren't available yet.",
+      "self": "You can't chat with yourself.",
+      "notFound": "You can't chat with this member.",
+      "notFriends": "You can only chat with members who follow you back.",
+      "blocked": "You can't chat with this member.",
+      "forbidden": "The chat couldn't be opened.",
+      "restricted": "One-to-one chats between your member types aren't available."
+    },
+    "restricted": "One-to-one chats aren't available for your member type."
+  },
+  "mentionedYou": "[Mentioned you]",
+  "mention": {
+    "subject": "[AIS Alumni] {name} mentioned you in a chat",
+    "text": "{name} mentioned you in a chat.\nPlease open the app to read it."
+  },
+  "rep": "Class rep",
+  "info": {
+    "title": "Chat details",
+    "back": "Back to the chat",
+    "search": "Search members by name",
+    "noMatch": "No one found.",
+    "open": "Chat details"
+  },
+  "report": {
+    "open": "Report a problem",
+    "intro": "Tell the committee about harassment, spam or other problems in this chat. The member you report isn't told who reported them. Their recent messages here are attached so the committee can check.",
+    "who": "Who",
+    "wholeChat": "The chat as a whole",
+    "reason": "Reason",
+    "choose": "Choose a reason",
+    "detail": "What happened",
+    "detailHint": "Up to 2000 characters.",
+    "send": "Send report",
+    "sending": "Sending…",
+    "sent": "Thank you. Your report (#{ref}) was sent to the committee.",
+    "reasons": {
+      "HARASSMENT": "Harassment or bullying",
+      "SPAM": "Spam or advertising",
+      "INAPPROPRIATE": "Inappropriate content",
+      "IMPERSONATION": "Pretending to be someone else",
+      "PRIVACY": "Sharing personal information",
+      "OTHER": "Other"
+    },
+    "errors": {
+      "forbidden": "You can't report this chat.",
+      "reason": "Please choose a reason.",
+      "detail": "Please describe what happened (5–2000 characters).",
+      "rateLimited": "You've sent several reports recently. Please try again later."
+    },
+    "email": {
+      "subject": "[AIS Alumni] Chat report #{ref}: {reason}",
+      "text": "A member reported a chat. Please review it in the admin pages."
+    }
+  },
+  "admin": {
+    "title": "Chat",
+    "intro": "Who can chat one-to-one, and reports sent from chats.",
+    "rulesTitle": "One-to-one chats by member type",
+    "rulesIntro": "Members also need to follow each other. A member with several types gets the strictest setting. Changes apply to existing chats too.",
+    "rules": {
+      "ANYONE": "Allowed",
+      "SAME_ROLE": "Only with the same member type",
+      "NOBODY": "Not allowed"
+    },
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved.",
+    "saveError": "Couldn't save. Please try again.",
+    "reportsTitle": "Reports",
+    "open": "Open",
+    "closed": "Done",
+    "emptyOpen": "No open reports.",
+    "emptyClosed": "No finished reports.",
+    "chat": "Chat",
+    "chatGone": "Deleted chat",
+    "reporter": "Reported by",
+    "reported": "Reported member",
+    "wholeChat": "The chat as a whole",
+    "closedAt": "Done at",
+    "messages": "{count, plural, one {# attached message} other {# attached messages}}",
+    "close": "Mark done",
+    "reopen": "Reopen"
+  }
+}

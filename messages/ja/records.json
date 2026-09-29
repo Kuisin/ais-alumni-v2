@@ -1,0 +1,100 @@
+{
+  "title": "在籍情報の修正依頼",
+  "description": "在籍情報（在籍期間・課程・卒業など）は委員会のみが変更できます。誤りがある場合は、正しい内容で修正を依頼してください。",
+  "backToProfile": "プロフィールに戻る",
+  "noRecord": "修正できる在籍情報はありません。",
+  "requestCorrection": "修正を依頼する",
+  "reason": "理由",
+  "reviewNote": "委員会からのコメント",
+  "submit": "依頼を送信",
+  "submitted": "修正依頼を送信しました。委員会が確認します。",
+  "pending": "{date} に修正を依頼しました。委員会の確認をお待ちください。",
+  "cancel": "依頼を取り下げる",
+  "history": "これまでの依頼",
+  "hints": {
+    "reason": "どこが誤っているかを入力してください。例：「2014年ではなく2015年に退学しました」",
+    "teacherYearsTo": "現在もAISに勤務している場合は空欄にしてください。",
+    "studentYearsTo": "卒業前にAISを離れた場合のみ。卒業した・在校中の場合は空欄にしてください。"
+  },
+  "fields": {
+    "yearsFrom": "入った年",
+    "yearsTo": "離れた年",
+    "subjects": "担当教科・学年",
+    "studentIdNo": "学籍番号",
+    "cohort": "学年",
+    "employment": "在職状況"
+  },
+  "diff": {
+    "field": "項目",
+    "current": "現在",
+    "proposed": "修正後"
+  },
+  "status": {
+    "PENDING": "確認待ち",
+    "APPROVED": "承認済み",
+    "REJECTED": "却下",
+    "CANCELLED": "取り下げ"
+  },
+  "fieldErrors": {
+    "required": "この項目は必須です。",
+    "tooLong": "長すぎます。",
+    "invalidYear": "4桁の西暦で入力してください。",
+    "invalidGrade": "学年を選択してください。",
+    "yearsOrder": "終了年は開始年と同じか、それ以降にしてください。",
+    "invalid": "入力内容が正しくありません。"
+  },
+  "errors": {
+    "forbidden": "もう一度ログインしてください。",
+    "invalidRole": "この情報は修正できません。",
+    "validation": "入力内容を確認してください。",
+    "noChanges": "少なくとも1つの項目を変更してから送信してください。",
+    "pendingExists": "この在籍情報にはすでに確認待ちの依頼があります。",
+    "alreadyDecided": "この依頼はすでに処理されています。"
+  },
+  "decided": {
+    "approved": "承認し、会員の在籍情報に反映しました。",
+    "rejected": "却下しました。会員に通知しました。"
+  },
+  "notify": {
+    "admin": {
+      "subject": "在籍情報の修正依頼が届きました",
+      "text": "{name} さんから在籍情報の修正依頼が届きました。"
+    },
+    "approved": {
+      "subject": "在籍情報を更新しました",
+      "text": "委員会が在籍情報の修正依頼を承認し、内容を更新しました。\nコメント：{note}"
+    },
+    "rejected": {
+      "subject": "在籍情報の修正依頼について",
+      "text": "委員会は今回の修正依頼を承認できませんでした。\nコメント：{note}"
+    }
+  },
+  "admin": {
+    "title": "在籍情報の修正依頼",
+    "description": "会員からの在籍情報の修正依頼です。承認すると、すぐに在籍情報へ反映されます。",
+    "tabsLabel": "依頼",
+    "tabs": {
+      "pending": "確認待ち",
+      "decided": "処理済み"
+    },
+    "empty": "依頼はありません。",
+    "decision": "判断",
+    "decisions": {
+      "APPROVE": "承認",
+      "REJECT": "却下"
+    },
+    "noteOptional": "会員へのコメント（任意）",
+    "noteRequired": "却下の理由（会員に送信されます）",
+    "submit": {
+      "APPROVE": "承認して反映",
+      "REJECT": "却下"
+    },
+    "emptyPending": "確認待ちの依頼はありません。",
+    "emptyPendingHint": "会員がプロフィールの在籍情報（入学年・卒業年・学年など）の修正を依頼すると、ここに届きます。",
+    "emptyDecidedHint": "承認・却下した依頼は、新しい順に最大50件ここに表示されます。"
+  },
+  "cohortCurrent": "在校中",
+  "stillTeaching": "在職中",
+  "close": "閉じる",
+  "yearPlaceholder": "例: 2015"
+}

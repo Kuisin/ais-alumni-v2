@@ -1,0 +1,70 @@
+{
+  "title": "Getting set up",
+  "intro": "Almost there. Work down the list to get the most out of the alumni network.",
+  "complete": "All done. Welcome!",
+  "progress": "{done} of {total} done",
+  "progressLabel": "Setup progress",
+  "done": "done",
+  "todo": "to do",
+  "items": {
+    "email": {
+      "title": "Confirm your email",
+      "body": "Used to sign in and for notices.",
+      "action": "Confirm"
+    },
+    "apply": {
+      "title": "Send the verification form",
+      "body": "Tell us about your time at AIS. The committee will check it.",
+      "action": "Open form"
+    },
+    "approval": {
+      "title": "Committee approval",
+      "body": "Alumni volunteers on the committee are reviewing your details. We'll email you once approved (usually within a few days).",
+      "action": "Check"
+    },
+    "line": {
+      "title": "Link LINE and add us as a friend",
+      "body": "Get news and chat mentions on LINE. Just tap the button and sign in with LINE.",
+      "action": "Link LINE"
+    },
+    "photo": {
+      "title": "Add a profile photo",
+      "body": "A face makes it easier for old friends to find you.",
+      "action": "Add photo"
+    },
+    "bio": {
+      "title": "Write a short bio",
+      "body": "What you're up to, where you live — a line is enough.",
+      "action": "Write"
+    },
+    "history": {
+      "title": "Add schools and work",
+      "body": "Add the schools and workplaces after AIS to connect with people from the same places.",
+      "action": "Add"
+    },
+    "follow": {
+      "title": "Follow classmates and teachers",
+      "body": "Find people you know in the directory and follow them.",
+      "action": "Open directory"
+    },
+    "family": {
+      "title": "Link your family",
+      "body": "Connect parents, children, siblings and other family members. Children's status updates automatically, and you see each other on the family page.",
+      "action": "Link family"
+    },
+    "names": {
+      "title": "Add your name in kanji and kana",
+      "body": "Japanese classmates and teachers can then find you by name. Skip it if you don't have a kanji name.",
+      "action": "Add name"
+    },
+    "schoolEmail": {
+      "title": "Confirm your school email",
+      "body": "Current staff need to confirm their @aisnagoya.net address. Send yourself a code from Settings.",
+      "action": "Confirm"
+    }
+  },
+  "doneSummary": "Completed ({count})",
+  "optional": "Optional",
+  "afterApproval": "Available after approval",
+  "recommended": "Recommended"
+}

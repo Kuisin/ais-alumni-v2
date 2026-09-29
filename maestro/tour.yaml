@@ -1,0 +1,29 @@
+# Every tab, a detail screen and a website screen in the web view.
+# APP_ID: host.exp.Exponent (Expo Go) or net.kailab.aisalumni (a build)
+appId: ${APP_ID}
+---
+- openLink: ${APP_URL}/--/home
+- extendedWaitUntil:
+    visible: "(Home|ホーム), tab.*"
+    timeout: 30000
+- takeScreenshot: 01-home
+- tapOn: "(Directory|名簿), tab.*"
+- takeScreenshot: 02-directory
+- tapOn: "(Events|イベント), tab.*"
+- takeScreenshot: 03-events
+- tapOn: "(News|ニュース), tab.*"
+- takeScreenshot: 04-news
+- tapOn: "(Chat|チャット), tab.*"
+- takeScreenshot: 05-chat
+- tapOn: "(Me|マイページ), tab.*"
+- takeScreenshot: 06-me
+- tapOn: "(Settings|設定)"
+- takeScreenshot: 07-settings
+- tapOn:
+    id: "BackButton"
+- openLink: ${APP_URL}/--/web?path=%2Fapp%2Ffamily
+# the website's own page text (the Me tab underneath has a "Family" row too)
+- extendedWaitUntil:
+    visible: "(Link parents and children.*|保護者とお子さまをリンクします.*)"
+    timeout: 30000
+- takeScreenshot: 08-web-view

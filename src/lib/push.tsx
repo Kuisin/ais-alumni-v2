@@ -1,0 +1,444 @@
+import type { PushState } from "@contract/notifications";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import * as Notifications from "expo-notifications";
+import { usePathname, useRootNavigationState, useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { AppState, Linking, Platform } from "react-native";
+import { useTranslations } from "use-intl";
+import { api, isApiError } from "./api";
+import { ME_KEY, useAuth } from "./auth";
+import { hrefFor, nativeHref, siteUrl } from "./links";
+import {
+  ACTION,
+  CATEGORY,
+  easProjectId,
+  onActionDone,
+  onNotificationOpen,
+  type PushUnavailable,
+  pushUnavailable,
+  rememberLocale,
+  setCurrentScreen,
+  setScreenResolver,
+} from "./push-core";
+
+/**
+ * App notifications, the React side (the rest is push-core.ts):
+ * - asks for permission when the member turns them on, registers this
+ *   device's Expo push token with the server (PUT /push), and keeps it
+ *   registered (token changes, next launches) unless they turned it off;
+ * - Android channels (one per notification category) and the quick actions
+ *   (chat reply / mark read, follow request accept / decline), named in the
+ *   member's language;
+ * - opens what a tapped notification is about (natively where possible)
+ *   and records the read receipt (POST /notifications/open);
+ * - keeps the app icon's number in step with the tab bar, and refreshes
+ *   lists when a notification arrives.
+ * Screens use usePush() (settings, the prompt on Home, onboarding).
+ */
+
+export const PUSH_KEY = ["push"] as const;
+export const INBOX_KEY = ["notifications"] as const;
+
+/** What stops notifications on this device (null = nothing). */
+export type PushBlocker =
+  | PushUnavailable
+  /** no EAS project id in this build, and the server has no dev outbox */
+  | "not-configured";
+
+export type PushPermission = "granted" | "denied" | "undetermined";
+
+type Ctx = {
+  /** null when this device can get notifications */
+  blocker: PushBlocker;
+  /** null until known */
+  permission: PushPermission | null;
+  /** the OS won't ask again: only the system settings can turn it on */
+  canAskAgain: boolean;
+  /** registered with the server, switched on, and allowed by the OS */
+  enabled: boolean;
+  /** the member turned them off here (settings): don't suggest them */
+  optedOut: boolean;
+  state: PushState | null;
+  busy: boolean;
+  /** ask the OS (first time) and register; "denied" = open settings */
+  enable: () => Promise<"ok" | "denied" | "unavailable" | "failed">;
+  disable: () => Promise<void>;
+  sendTest: () => Promise<"ok" | "too_soon" | "failed">;
+  openSettings: () => void;
+};
+
+const PushContext = createContext<Ctx | null>(null);
+
+const OPT_OUT_KEY = "ais.pushOptOut";
+const INSTALL_KEY = "ais.installId";
+
+async function installId(): Promise<string> {
+  const known = await SecureStore.getItemAsync(INSTALL_KEY).catch(() => null);
+  if (known) return known;
+  const id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  await SecureStore.setItemAsync(INSTALL_KEY, id).catch(() => {});
+  return id;
+}
+
+/**
+ * This install's Expo push token. Builds without an EAS project (local
+ * development) use a made-up "dev" token when the server writes pushes to
+ * its outbox (EXPO_PUSH_OUTBOX=1); otherwise there is none.
+ */
+async function currentToken(devTokens: boolean): Promise<string | null> {
+  const projectId = easProjectId();
+  if (projectId)
+    return (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+  if (__DEV__ && devTokens)
+    return `ExponentPushToken[dev-${await installId()}]`;
+  return null;
+}
+
+function permissionOf(
+  p: Notifications.NotificationPermissionsStatus,
+): PushPermission {
+  if (p.granted) return "granted";
+  if (Platform.OS === "ios") {
+    const s = p.ios?.status;
+    if (
+      s === Notifications.IosAuthorizationStatus.PROVISIONAL ||
+      s === Notifications.IosAuthorizationStatus.EPHEMERAL ||
+      s === Notifications.IosAuthorizationStatus.AUTHORIZED
+    )
+      return "granted";
+  }
+  return p.status === "denied" ? "denied" : "undetermined";
+}
+
+const CATEGORIES = [
+  "account",
+  "news",
+  "events",
+  "chat",
+  "social",
+  "family",
+  "profile",
+  "admin",
+] as const;
+
+export function PushProvider({ children }: { children: ReactNode }) {
+  const { status, me, locale } = useAuth();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const pathname = usePathname();
+  const navReady = Boolean(useRootNavigationState()?.key);
+  const tn = useTranslations("notifications.categories");
+  const ta = useTranslations("mobile.push.actions");
+  const signedIn = status === "signedIn";
+  const active = signedIn && me?.user.state === "ACTIVE";
+  const unavailable = pushUnavailable();
+
+  const [permission, setPermission] = useState<PushPermission | null>(null);
+  const [canAskAgain, setCanAskAgain] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [optOut, setOptOut] = useState<boolean | null>(null);
+
+  const query = useQuery({
+    queryKey: PUSH_KEY,
+    enabled: signedIn && unavailable === null,
+    queryFn: () => api<PushState>("/push"),
+    staleTime: 60_000,
+  });
+  const state = signedIn ? (query.data ?? null) : null;
+  const blocker: PushBlocker =
+    unavailable ??
+    (state && !easProjectId() && !(__DEV__ && state.devTokens)
+      ? "not-configured"
+      : null);
+
+  // Keep a chat's banner quiet while that chat is open (push-core).
+  useEffect(() => {
+    setScreenResolver((path) => {
+      const site = siteUrl(path);
+      const href = site ? nativeHref(site.path, site.query) : null;
+      return typeof href === "string" ? href : null;
+    });
+  }, []);
+  const here = useRef(pathname);
+  useEffect(() => {
+    here.current = pathname;
+    setCurrentScreen(pathname);
+  }, [pathname]);
+
+  useEffect(() => {
+    void SecureStore.getItemAsync(OPT_OUT_KEY)
+      .then((v) => setOptOut(v === "1"))
+      .catch(() => setOptOut(false));
+  }, []);
+
+  const readPermission = useCallback(async () => {
+    if (unavailable === "web") return;
+    const p = await Notifications.getPermissionsAsync().catch(() => null);
+    if (!p) return;
+    setPermission(permissionOf(p));
+    setCanAskAgain(p.canAskAgain);
+  }, [unavailable]);
+  useEffect(() => {
+    void readPermission();
+    const sub = AppState.addEventListener("change", (s) => {
+      if (s === "active") void readPermission();
+    });
+    return () => sub.remove();
+  }, [readPermission]);
+
+  // Android channels and the quick actions, in the member's language.
+  useEffect(() => {
+    if (unavailable === "web") return;
+    void rememberLocale(locale);
+    if (Platform.OS === "android")
+      for (const c of CATEGORIES)
+        void Notifications.setNotificationChannelAsync(c, {
+          name: tn(c),
+          importance:
+            c === "chat" || c === "account"
+              ? Notifications.AndroidImportance.HIGH
+              : Notifications.AndroidImportance.DEFAULT,
+          lightColor: "#1e3a8a",
+        }).catch(() => {});
+    void Notifications.setNotificationCategoryAsync(CATEGORY.chat, [
+      {
+        identifier: ACTION.reply,
+        buttonTitle: ta("reply"),
+        textInput: {
+          placeholder: ta("replyPlaceholder"),
+          submitButtonTitle: ta("replySend"),
+        },
+        options: { opensAppToForeground: false },
+      },
+      {
+        identifier: ACTION.read,
+        buttonTitle: ta("markRead"),
+        options: { opensAppToForeground: false },
+      },
+    ]).catch(() => {});
+    void Notifications.setNotificationCategoryAsync(CATEGORY.followRequest, [
+      {
+        identifier: ACTION.accept,
+        buttonTitle: ta("accept"),
+        options: { opensAppToForeground: false },
+      },
+      {
+        identifier: ACTION.decline,
+        buttonTitle: ta("decline"),
+        options: { opensAppToForeground: false, isDestructive: true },
+      },
+    ]).catch(() => {});
+  }, [locale, tn, ta, unavailable]);
+
+  const register = useCallback(async (): Promise<boolean> => {
+    const s = queryClient.getQueryData<PushState>(PUSH_KEY) ?? state;
+    const token = await currentToken(Boolean(s?.devTokens)).catch((e) => {
+      console.warn("[push] no token", e);
+      return null;
+    });
+    if (!token) return false;
+    try {
+      const next = await api<PushState>("/push", {
+        method: "PUT",
+        body: {
+          token,
+          platform: Platform.OS === "android" ? "android" : "ios",
+          enabled: true,
+        },
+      });
+      queryClient.setQueryData(PUSH_KEY, next);
+      return true;
+    } catch (e) {
+      console.warn("[push] register failed", e);
+      return false;
+    }
+  }, [queryClient, state]);
+
+  // Keep the server in step with this device: register on every launch
+  // (tokens can change) while the OS allows notifications and the member
+  // hasn't turned them off here; unregister when the OS setting was turned
+  // off, so LINE / email take over again.
+  const syncedFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (
+      !signedIn ||
+      !me ||
+      blocker !== null ||
+      permission === null ||
+      optOut === null ||
+      !state
+    )
+      return;
+    const want = permission === "granted" && !optOut;
+    const key = `${me.user.id}:${want}`;
+    if (syncedFor.current === key) return;
+    syncedFor.current = key;
+    // A failed request is tried again when the state is next refetched.
+    if (want)
+      void register().then((ok) => {
+        if (!ok) syncedFor.current = null;
+      });
+    else if (permission === "denied" && state.device)
+      void api<PushState>("/push", { method: "DELETE" })
+        .then((next) => queryClient.setQueryData(PUSH_KEY, next))
+        .catch(() => {
+          syncedFor.current = null;
+        });
+  }, [signedIn, me, blocker, permission, optOut, state, register, queryClient]);
+  useEffect(() => {
+    if (!signedIn) syncedFor.current = null;
+  }, [signedIn]);
+
+  useEffect(() => {
+    if (unavailable !== null) return;
+    const sub = Notifications.addPushTokenListener(() => {
+      if (signedIn && optOut === false && permission === "granted")
+        void register();
+    });
+    return () => sub.remove();
+  }, [unavailable, signedIn, optOut, permission, register]);
+
+  // Open what a tapped notification is about, once the app can navigate.
+  // Accounts not yet approved stay on onboarding, which shows their state.
+  useEffect(() => {
+    if (!signedIn || !navReady) return;
+    return onNotificationOpen((data) => {
+      if (data.receipt)
+        void api("/notifications/open", { body: { token: data.receipt } })
+          .then(() => {
+            void queryClient.invalidateQueries({ queryKey: INBOX_KEY });
+            void queryClient.invalidateQueries({ queryKey: ME_KEY });
+          })
+          .catch(() => {});
+      if (!active) {
+        void queryClient.invalidateQueries({ queryKey: ME_KEY });
+        return;
+      }
+      if (!data.path) return;
+      const href = hrefFor(data.path);
+      if (href !== here.current) router.push(href);
+    });
+  }, [signedIn, active, navReady, router, queryClient]);
+
+  // A notification arrived, or a quick action ran: refresh what it touches.
+  useEffect(() => {
+    if (unavailable !== null) return;
+    const refresh = () => {
+      void queryClient.invalidateQueries({ queryKey: ME_KEY });
+      void queryClient.invalidateQueries({ queryKey: INBOX_KEY });
+      void queryClient.invalidateQueries({ queryKey: ["home"] });
+      void queryClient.invalidateQueries({ queryKey: ["news", "list"] });
+      void queryClient.invalidateQueries({ queryKey: ["chat", "list"] });
+      void queryClient.invalidateQueries({ queryKey: ["follows"] });
+    };
+    const sub = Notifications.addNotificationReceivedListener(refresh);
+    const off = onActionDone(refresh);
+    return () => {
+      sub.remove();
+      off();
+    };
+  }, [unavailable, queryClient]);
+
+  // The app icon's number = the tab bar's.
+  const badge = me
+    ? me.badges.news + me.badges.messages + me.badges.chat + me.badges.follows
+    : 0;
+  useEffect(() => {
+    if (unavailable === "web") return;
+    void Notifications.setBadgeCountAsync(signedIn ? badge : 0).catch(() => {});
+  }, [unavailable, signedIn, badge]);
+
+  const enable = useCallback(async () => {
+    if (blocker) return "unavailable" as const;
+    setBusy(true);
+    try {
+      await SecureStore.deleteItemAsync(OPT_OUT_KEY).catch(() => {});
+      setOptOut(false);
+      let p = await Notifications.getPermissionsAsync();
+      if (permissionOf(p) !== "granted" && p.canAskAgain)
+        p = await Notifications.requestPermissionsAsync({
+          ios: { allowAlert: true, allowBadge: true, allowSound: true },
+        });
+      setPermission(permissionOf(p));
+      setCanAskAgain(p.canAskAgain);
+      if (permissionOf(p) !== "granted") return "denied" as const;
+      if (me) syncedFor.current = `${me.user.id}:true`;
+      return (await register()) ? ("ok" as const) : ("failed" as const);
+    } finally {
+      setBusy(false);
+    }
+  }, [blocker, register, me]);
+
+  const disable = useCallback(async () => {
+    setBusy(true);
+    try {
+      await SecureStore.setItemAsync(OPT_OUT_KEY, "1").catch(() => {});
+      setOptOut(true);
+      const next = await api<PushState>("/push", { method: "DELETE" });
+      queryClient.setQueryData(PUSH_KEY, next);
+    } catch (e) {
+      console.warn("[push] unregister failed", e);
+    } finally {
+      setBusy(false);
+    }
+  }, [queryClient]);
+
+  const sendTest = useCallback(async () => {
+    try {
+      await api("/push/test", { method: "POST" });
+      return "ok" as const;
+    } catch (e) {
+      return isApiError(e, "too_soon")
+        ? ("too_soon" as const)
+        : ("failed" as const);
+    }
+  }, []);
+
+  const value = useMemo<Ctx>(
+    () => ({
+      blocker,
+      permission,
+      canAskAgain,
+      enabled: Boolean(
+        state?.device?.enabled &&
+          !state.device.failed &&
+          permission === "granted",
+      ),
+      optedOut: optOut === true,
+      state,
+      busy,
+      enable,
+      disable,
+      sendTest,
+      openSettings: () => void Linking.openSettings(),
+    }),
+    [
+      blocker,
+      permission,
+      canAskAgain,
+      optOut,
+      state,
+      busy,
+      enable,
+      disable,
+      sendTest,
+    ],
+  );
+  return <PushContext.Provider value={value}>{children}</PushContext.Provider>;
+}
+
+export function usePush(): Ctx {
+  const ctx = useContext(PushContext);
+  if (!ctx) throw new Error("usePush outside PushProvider");
+  return ctx;
+}

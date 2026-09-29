@@ -1,0 +1,52 @@
+{
+  "email": {
+    "title": "Confirm your email",
+    "description": "We need a working email address so we can reach you even if LINE is unavailable. We don't use the email registered with LINE.",
+    "verify": "Confirm email",
+    "existingAccountNote": "Already have an account with this email? Confirming it here connects your LINE sign-in to that account."
+  },
+  "line": {
+    "title": "Get updates on LINE",
+    "description": "Link LINE and add the AIS Alumni Committee Official Account to get news and chat mentions there.",
+    "benefits": {
+      "mentions": "Mentions of you in chats",
+      "news": "News from the committee"
+    },
+    "emailFallback": "You can change this anytime in Settings. If you skip, we'll email you instead.",
+    "skip": "Skip for now",
+    "continue": "Continue"
+  },
+  "status": {
+    "metaTitle": "Account status",
+    "submittedAt": "Submitted",
+    "decidedAt": "Decided",
+    "deactivatedAt": "Deactivated on",
+    "reviewNote": "Message from the committee",
+    "contact": "If you think this is a mistake, please contact the AIS Alumni Committee.",
+    "lineTitle": "Link LINE",
+    "lineBody": "Once approved, get news and chat mentions on LINE. We'll email you the result of your application.",
+    "PENDING_REVIEW": {
+      "title": "Thanks — we're checking your application",
+      "body": "The AIS Alumni Committee is reviewing your details. This usually takes a few days. We'll let you know as soon as it's done."
+    },
+    "REJECTED": {
+      "title": "We couldn't verify your account",
+      "body": "Unfortunately the committee couldn't confirm your connection to AIS, so your account was not activated."
+    },
+    "DEACTIVATED": {
+      "title": "Your account is deactivated",
+      "body": "This account is currently deactivated, so you can't use the member site."
+    },
+    "parentWaiting": {
+      "title": "Waiting for your child's approval",
+      "body": "Your parent account opens as soon as one of your children is approved and your relationship is confirmed.",
+      "children": "Your children",
+      "state": {
+        "review": "Being reviewed by the committee",
+        "needsConfirm": "Waiting for your child to confirm",
+        "approved": "Approved",
+        "rejected": "Not approved"
+      }
+    }
+  }
+}

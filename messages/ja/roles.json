@@ -1,0 +1,58 @@
+{
+  "role": {
+    "TEACHER": "教職員",
+    "CURRENT_STUDENT": "在校生",
+    "CURRENT_PARENT": "在校生保護者",
+    "FORMER_STUDENT": "卒業生・元生徒",
+    "FORMER_PARENT": "卒業生保護者"
+  },
+  "division": {
+    "KINDERGARTEN": "幼稚部",
+    "ELEMENTARY": "小学校",
+    "JUNIOR_HIGH": "中学校（7〜9年）",
+    "HIGH_SCHOOL": "高校（10〜12年）"
+  },
+  "stage": {
+    "ELEMENTARY": "小学校",
+    "JUNIOR_HIGH": "中学校（7〜9年）",
+    "HIGH_SCHOOL": "高校（10〜12年）",
+    "UNIVERSITY_COLLEGE": "大学・専門学校",
+    "WORKING": "社会人"
+  },
+  "grade": "{grade, select, 0 {幼稚部} other {{grade}年生}}",
+  "state": {
+    "UNVERIFIED_EMAIL": "メール未確認",
+    "EMAIL_VERIFIED": "メール確認済み",
+    "PENDING_REVIEW": "審査中",
+    "NEEDS_INFO": "追加情報が必要",
+    "ACTIVE": "有効",
+    "REJECTED": "却下",
+    "DEACTIVATED": "無効"
+  },
+  "teacherStatus": {
+    "CURRENT": "現職の教職員",
+    "FORMER": "元教職員"
+  },
+  "teacherStatusShort": {
+    "CURRENT": "現職",
+    "FORMER": "元教職員"
+  },
+  "audience": {
+    "TEACHER": "教職員",
+    "CURRENT_STUDENT": "在校生",
+    "CURRENT_PARENT": "在校生保護者",
+    "GRADUATE": "卒業生",
+    "LEFT_STUDENT": "元在校生（未卒業）",
+    "FORMER_PARENT": "卒業生保護者",
+    "FORMER_STUDENT": "卒業生＋元在校生"
+  },
+  "audienceHint": {
+    "TEACHER": "現職・元教職員",
+    "CURRENT_STUDENT": "年少〜小学6年生",
+    "CURRENT_PARENT": "在校生のご家族",
+    "GRADUATE": "小学校を卒業した人のみ",
+    "LEFT_STUDENT": "卒業前に転校・退学した人",
+    "FORMER_PARENT": "卒業生・元在校生のご家族",
+    "FORMER_STUDENT": "AISに通っていた人全員（卒業した人と、卒業前に離れた人）"
+  }
+}

@@ -1,0 +1,11 @@
+# Email sign-in, step 2: a complete code signs in by itself.
+# APP_ID: host.exp.Exponent (Expo Go) or net.kailab.aisalumni (a build)
+appId: ${APP_ID}
+---
+- tapOn:
+    text: "(6-digit code|6桁のコード)"
+    index: 1
+- inputText: ${CODE}
+- extendedWaitUntil:
+    visible: "(Home|ホーム), tab.*"
+    timeout: 30000

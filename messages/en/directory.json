@@ -1,0 +1,30 @@
+{
+  "title": "Directory",
+  "description": "Find fellow members of the AIS community.",
+  "results": "Results",
+  "empty": "No members match these filters.",
+  "emptyAll": "No members to show yet.",
+  "pagination": "Pages",
+  "firstPage": "Back to the start",
+  "loadMore": "Load more",
+  "filters": {
+    "legend": "Search members",
+    "q": "Name",
+    "qPlaceholder": "Romaji, kanji, or name at AIS",
+    "role": "Role",
+    "anyRole": "All roles",
+    "yearRange": "Graduation / leave year",
+    "yearFrom": "From",
+    "yearTo": "To",
+    "division": "Last division at AIS",
+    "stage": "Current stage",
+    "any": "Any",
+    "apply": "Search",
+    "clear": "Clear",
+    "cohort": "学年 (class)",
+    "more": "Filters",
+    "activeCount": "{count} on",
+    "applyFilters": "Apply filters"
+  },
+  "count": "{count, plural, one {# member} other {# members}}"
+}

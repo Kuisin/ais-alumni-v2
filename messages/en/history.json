@@ -1,0 +1,97 @@
+{
+  "title": "Education & work",
+  "description": "Add the schools you attended after AIS and the places you've worked. Your current school or job (no end year) keeps your \"current stage\" up to date automatically.",
+  "backToProfile": "Back to profile",
+  "education": "Education",
+  "work": "Work",
+  "present": "present",
+  "current": "Current",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "add": "Add",
+  "saving": "Saving…",
+  "choose": "Choose…",
+  "intro": {
+    "education": "Add schools from junior high onwards.",
+    "work": "Add the places you've worked."
+  },
+  "empty": {
+    "education": "No schools yet.",
+    "work": "No jobs yet."
+  },
+  "addTitle": {
+    "education": "Add a school",
+    "work": "Add a job"
+  },
+  "fields": {
+    "level": "Type",
+    "school": "School",
+    "field": "Faculty / major (optional)",
+    "company": "Company / organization",
+    "title": "Department / position (optional)",
+    "startYear": "Start year",
+    "endYear": "End year",
+    "visibility": "Visible to",
+    "industry": "Industry",
+    "industryDetail": "Industry (detail)",
+    "jobType": "Job type",
+    "jobTypeDetail": "Job type (detail)"
+  },
+  "hints": {
+    "endYear": {
+      "education": "Leave empty if you're still studying there.",
+      "work": "Leave empty if you still work there."
+    },
+    "visibility": "\"All members\" shows it to every approved member; \"Followers only\" to people you've accepted and family."
+  },
+  "levels": {
+    "JUNIOR_HIGH": "Junior high",
+    "HIGH_SCHOOL": "High school",
+    "UNIVERSITY": "University",
+    "GRADUATE_SCHOOL": "Graduate school",
+    "VOCATIONAL": "Vocational school",
+    "OTHER": "Other"
+  },
+  "visibility": {
+    "MEMBERS": "All members",
+    "FOLLOWERS": "Followers only"
+  },
+  "added": "Added.",
+  "saved": "Saved.",
+  "fieldErrors": {
+    "required": "This field is required.",
+    "tooLong": "This is too long.",
+    "invalidYear": "Enter a 4-digit year.",
+    "yearsOrder": "The end year must be the same as or after the start year.",
+    "invalid": "This value is not valid."
+  },
+  "errors": {
+    "forbidden": "Please sign in again.",
+    "validation": "Please check the highlighted fields.",
+    "invalid": "This value is not valid."
+  },
+  "orgMembers": "{count, plural, one {# member} other {# members}}",
+  "orgAddNew": "＋ Add “{name}”",
+  "orgPicked": "Picked from the list.",
+  "orgWillAdd": "Not in the list? It will be added as new.",
+  "orgHint": {
+    "school": "Start typing to see existing schools.",
+    "company": "Start typing to see existing companies."
+  },
+  "yearPlaceholder": "e.g. 2020",
+  "close": "Close",
+  "industryNone": "Not specified",
+  "industryDetailAny": "No detail",
+  "twoLevelHint": "Pick a category, then optionally the detail.",
+  "pickGroup": {
+    "industry": "Choose an industry first",
+    "jobType": "Choose a job type first"
+  },
+  "multipleCurrent": {
+    "title": "{count} entries are marked current",
+    "body": "Your current status uses the newest one, “{name}”. For entries that have ended, add the end year with Edit.",
+    "bodyAdmin": "The current status uses the newest one, “{name}”. Add the end year to entries that have ended."
+  },
+  "deleteConfirm": "Delete this entry?"
+}

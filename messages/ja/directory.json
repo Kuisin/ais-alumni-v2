@@ -1,0 +1,30 @@
+{
+  "title": "会員名簿",
+  "description": "AISの仲間を探しましょう。",
+  "results": "検索結果",
+  "empty": "条件に一致する会員はいません。",
+  "emptyAll": "表示できる会員はまだいません。",
+  "pagination": "ページ",
+  "firstPage": "最初に戻る",
+  "loadMore": "さらに表示",
+  "filters": {
+    "legend": "会員を検索",
+    "q": "名前",
+    "qPlaceholder": "ローマ字・漢字・在籍時の氏名",
+    "role": "区分",
+    "anyRole": "すべての区分",
+    "yearRange": "卒業・退学年",
+    "yearFrom": "開始年",
+    "yearTo": "終了年",
+    "division": "最終在籍部",
+    "stage": "現在の状況",
+    "any": "指定なし",
+    "apply": "検索",
+    "clear": "クリア",
+    "cohort": "学年",
+    "more": "絞り込み",
+    "activeCount": "{count}件",
+    "applyFilters": "この条件で検索"
+  },
+  "count": "{count}名"
+}

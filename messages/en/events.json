@@ -1,0 +1,124 @@
+{
+  "title": "Events",
+  "description": "Reunions and gatherings for the AIS community.",
+  "untitled": "(Untitled event)",
+  "myAnswer": "Your RSVP: {answer}",
+  "answer": {
+    "GOING": "Going",
+    "MAYBE": "Maybe",
+    "NOT_GOING": "Not going"
+  },
+  "tabs": {
+    "label": "Event lists",
+    "upcoming": "Upcoming",
+    "past": "Past"
+  },
+  "emptyUpcoming": "No upcoming events right now.",
+  "emptyPast": "No past events yet.",
+  "backToList": "All events",
+  "when": "When",
+  "jst": "(Japan time)",
+  "where": "Where",
+  "openMap": "Open map",
+  "capacity": "Capacity",
+  "capacityUnlimited": "No limit · {going, plural, =0 {nobody going yet} one {# person going} other {# people going}}",
+  "capacityLimited": "{capacity} people · {going} going · {remaining, plural, =0 {full} one {# spot left} other {# spots left}}",
+  "deadline": "RSVP by",
+  "details": "Details",
+  "rsvp": {
+    "title": "RSVP",
+    "question": "Will you attend?",
+    "current": "Your answer: {answer}{guests, plural, =0 {} one { (+# guest)} other { (+# guests)}}",
+    "guests": "Guests you are bringing",
+    "guestsHint": "Not counting yourself. Up to {max}.",
+    "submit": "Send RSVP",
+    "update": "Update RSVP",
+    "saving": "Sending…",
+    "saved": "Your RSVP has been saved.",
+    "closed": "RSVPs for this event are closed.",
+    "full": "This event is full. You can still answer Maybe or Not going.",
+    "errors": {
+      "closed": "RSVPs for this event are closed.",
+      "capacity": "Sorry, there aren't enough spots left for you and your guests.",
+      "guests": "Please choose between 0 and 5 guests.",
+      "notFound": "This event is no longer available.",
+      "validation": "Please choose an answer.",
+      "forbidden": "Please sign in again.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "closedByOrganizer": "The organiser has closed RSVPs for this event.",
+    "change": "Change my answer",
+    "none": "You haven't answered yet."
+  },
+  "reminder": {
+    "week": {
+      "subject": "One week to go: {title}",
+      "text": "{title} is one week away: {when} (Japan time). See you there!",
+      "textWithLocation": "{title} is one week away: {when} (Japan time) at {location}. See you there!"
+    },
+    "day": {
+      "subject": "Tomorrow: {title}",
+      "text": "Reminder: {title} is tomorrow, {when} (Japan time).",
+      "textWithLocation": "Reminder: {title} is tomorrow, {when} (Japan time) at {location}."
+    }
+  },
+  "deadlineLeft": {
+    "days": "{count, plural, one {# day} other {# days}} left",
+    "hours": "{count, plural, one {# hour} other {# hours}} left"
+  },
+  "ticket": {
+    "title": "Your ticket",
+    "hint": "Show this QR code at the reception. A screenshot works too.",
+    "checkedIn": "Checked in ({time})",
+    "qrAlt": "Check-in QR code for {name}"
+  },
+  "checkIn": {
+    "open": "Check-in (staff)",
+    "title": "Check-in",
+    "staffOnly": "Only the event's staff can use this page.",
+    "stats": {
+      "checkedIn": "Checked in",
+      "expected": "Going",
+      "maybe": "Maybe"
+    },
+    "scan": {
+      "title": "Scan a QR code",
+      "start": "Start camera",
+      "stop": "Stop camera",
+      "hint": "Point the camera at the attendee's ticket QR code.",
+      "noCamera": "The camera isn't available. Check the browser's camera permission, or check people in by name below.",
+      "manual": "Enter code",
+      "manualSubmit": "Check in"
+    },
+    "result": {
+      "ok": "Checked in",
+      "already": "Already checked in ({time})",
+      "invalid": "This QR code isn't valid",
+      "notInvited": "This member isn't invited to this event",
+      "forbidden": "You can't check people in",
+      "notFound": "Event not found",
+      "walkIn": "No RSVP",
+      "guests": "+{count} guests"
+    },
+    "list": {
+      "title": "Attendees",
+      "filter": "Filter by name",
+      "all": "All",
+      "waiting": "Not yet",
+      "done": "Checked in",
+      "empty": "No attendees match",
+      "checkIn": "Check in",
+      "undo": "Undo",
+      "undoConfirm": "Undo the check-in of {name}?",
+      "at": "Checked in {time}"
+    },
+    "search": {
+      "title": "Walk-ins (no RSVP)",
+      "label": "Search by name",
+      "hint": "Find invited members who didn't RSVP and check them in.",
+      "noResults": "No one found"
+    }
+  },
+  "create": "New event",
+  "organizer": "Organized by"
+}

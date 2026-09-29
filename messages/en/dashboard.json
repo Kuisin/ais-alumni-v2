@@ -1,0 +1,21 @@
+{
+  "title": "Home",
+  "greeting": "Welcome, {name}",
+  "todo": {
+    "title": "Waiting for you",
+    "followRequests": "{count, plural, one {# follow request} other {# follow requests}} to review",
+    "vouch": "{name} asked you to vouch for them",
+    "familyFromParent": "{name} added you as their child — please confirm",
+    "familyFromChild": "{name} added you as their parent — please confirm"
+  },
+  "events": {
+    "title": "Upcoming events",
+    "more": "All events",
+    "empty": "No upcoming events."
+  },
+  "news": {
+    "title": "Latest news",
+    "more": "All news",
+    "empty": "No news yet."
+  }
+}

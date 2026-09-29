@@ -1,0 +1,143 @@
+{
+  "linkButton": "Link LINE",
+  "addFriend": "Add the Official Account as a friend",
+  "opensInNewTab": "(opens in a new tab)",
+  "outcome": {
+    "linked": "LINE is linked.",
+    "taken": "That LINE account is already linked to another member. Sign in with LINE to use that account, or link a different LINE account.",
+    "cancelled": "Linking was cancelled. You can try again anytime.",
+    "error": "We couldn't link LINE. Please try again.",
+    "expired": "The link expired. Please start again."
+  },
+  "panel": {
+    "linkedFollowing": "LINE is linked. News and mentions come on LINE.",
+    "linkedFollowingAs": "Linked to LINE as {name}. News and mentions come on LINE.",
+    "linkedNotFollowing": "LINE is linked, but you haven't added the Official Account as a friend yet, so we can't send news or mentions there.",
+    "linkedNotFollowingAs": "Linked to LINE as {name}, but you haven't added the Official Account as a friend yet, so we can't send news or mentions there.",
+    "refresh": "Done? Refresh this page",
+    "qrTitle": "Or use your phone",
+    "qrStep1": "Scan this code with your phone's camera.",
+    "qrStep2": "Log in to LINE and allow access. Tick \"Add friend\" for the AIS Alumni Committee.",
+    "qrStep3": "Come back here and refresh the page.",
+    "qrAlt": "QR code to link LINE on your phone",
+    "expiryNote": "For your security, this link and QR code work for 10 minutes.",
+    "notReady": "LINE linking isn't ready yet. We'll let you know when it is."
+  },
+  "banner": {
+    "title": "Get updates on LINE",
+    "body": "Link LINE to get committee news and chat mentions there.",
+    "bodyNotFollowing": "Add the AIS Alumni Committee Official Account as a friend to get news and mentions on LINE.",
+    "dismiss": "Not now"
+  },
+  "done": {
+    "metaTitle": "LINE linking",
+    "openApp": "Open AIS Alumni",
+    "linked": {
+      "title": "LINE is linked",
+      "body": "All set. You can close this page and go back to your other device — refresh the page there to see the change."
+    },
+    "taken": {
+      "title": "Already linked to another member",
+      "body": "That LINE account is already linked to a different AIS Alumni account. Try again with another LINE account, or sign in with LINE to use that account."
+    },
+    "cancelled": {
+      "title": "Linking cancelled",
+      "body": "LINE wasn't linked. You can start again from your other device."
+    },
+    "error": {
+      "title": "Couldn't link LINE",
+      "body": "Something went wrong. Please start again from your other device."
+    },
+    "expired": {
+      "title": "This link has expired",
+      "body": "Linking links and QR codes work for 10 minutes. Please refresh the page on your other device and scan the new code."
+    }
+  },
+  "welcome": {
+    "greetingNamed": "Hi {name}, thanks for adding us as a friend!",
+    "greeting": "Thanks for adding us as a friend!",
+    "greetingBackNamed": "Welcome back, {name}!",
+    "greetingBack": "Welcome back!",
+    "title": "[Welcome to AIS Alumni]",
+    "about": "This account is run by the AIS Alumni Committee, a volunteer group of AIS graduates. It is not an official account of Aichi International School.",
+    "receiveTitle": "■ What you'll get on LINE",
+    "receiveItems": "・News from the committee\n・Mentions in chats\n(Other notifications come by email. Use “Unread chats” and “News list” in the menu below to check chats and news any time.)",
+    "linkedTitle": "■ Your account",
+    "linked": "✅ Linked to your AIS Alumni account. News and mentions will arrive here on LINE.",
+    "notLinkedTitle": "■ Not linked to the app yet",
+    "notLinked": "To get notifications here, link LINE in the app:\n1. Tap “Open app” below and sign in (new here? you can sign up right away)\n2. Go to Settings → LINE → “Link LINE”\n3. Sign in with LINE and allow access — that's it",
+    "settingsTitle": "■ Notification settings",
+    "settings": "Choose LINE or email for news and mentions in the app under Settings → Notifications. If you block this account, we'll email you instead.",
+    "privacyTitle": "■ Your privacy",
+    "privacy": "We only store your LINE user ID and display name, and never read your chats. See the privacy policy for details:\n{url}",
+    "buttonsAlt": "Open the AIS Alumni app: {url}",
+    "buttonsTitle": "AIS Alumni",
+    "buttonsText": "See the directory, events and news in the app.",
+    "openApp": "Open app",
+    "linkLine": "Link LINE",
+    "notifySettings": "Notification settings",
+    "privacyButton": "Privacy policy"
+  },
+  "richMenu": {
+    "chatBar": "Menu",
+    "admin": {
+      "title": "LINE menu",
+      "intro": "Shows buttons (a rich menu) under the Official Account's chat instead of the keyboard. The top two, “Unread chats” and “News list”, get a reply in the chat (not counted toward LINE's message allowance); the rest open pages of the app.",
+      "status": "Status",
+      "installed": "Installed",
+      "notDefault": "Installed (not the default)",
+      "notInstalled": "Not installed",
+      "how": "Creates a Japanese and an English menu; Japanese is the default and members who use English get the English one. Members with unread chats or news see a red dot on those buttons (updated every minute). Press “Update” after changing labels or pages (old menus are deleted).",
+      "install": "Install the menu",
+      "update": "Update the menu",
+      "installing": "Installing…",
+      "done": "Menu installed ({linked} members got the menu for their language and unread items; {removed} old menus deleted).",
+      "previewJa": "Japanese menu",
+      "previewEn": "English menu",
+      "previewAlt": "Rich menu image",
+      "previewDots": "With unread items",
+      "errors": {
+        "notConfigured": "LINE Messaging API credentials are not set.",
+        "failed": "Couldn't install the menu on LINE."
+      },
+      "installConfirm": "This changes the menu for every LINE friend. Continue?",
+      "replyNote": "(reply in the chat, free)"
+    },
+    "replies": {
+      "chats": "Unread chats",
+      "newsList": "News list"
+    }
+  },
+  "usage": {
+    "title": "LINE messages this month",
+    "ofLimit": "of {limit} (this month's limit)",
+    "noLimit": "(no limit set)",
+    "remaining": "{count} left",
+    "nearLimit": "This month's limit is close. Anything over it can't go by LINE and is sent by email instead.",
+    "unavailable": "Couldn't get the count from LINE (the Messaging API isn't set up, or a temporary error).",
+    "byCategory": "Sent by this app, by kind ({count})",
+    "other": "Other",
+    "none": "Nothing sent by LINE yet this month.",
+    "hint": "LINE counts each message once per person who receives it. Replies aren't counted. The count resets on the 1st of each month (Japan time)."
+  },
+  "reply": {
+    "notLinked": "This LINE account isn't linked to a member account. Link LINE from Settings in the app.",
+    "notActive": "You can see chats and news once your membership is approved.",
+    "untitled": "(Untitled)",
+    "more": "{count} more in the app",
+    "chats": {
+      "head": "💬 Unread chats ({talks, plural, one {# talk} other {# talks}}, {count} messages)",
+      "none": "No unread chats.",
+      "count": "{count} unread",
+      "mentioned": "@ mentioned",
+      "all": "All chats"
+    },
+    "news": {
+      "head": "📰 News ({count} posts)",
+      "none": "No news yet.",
+      "unread": "Unread ({count})",
+      "read": "Read ({count})",
+      "all": "All news"
+    }
+  }
+}
