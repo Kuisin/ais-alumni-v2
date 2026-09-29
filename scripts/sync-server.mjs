@@ -54,6 +54,8 @@ for (const file of sources(path.join(root, "src"))) {
   ))
     namespaces.add(m[1]);
 }
+// The app's own strings live here now.
+namespaces.delete("mobile");
 
 const pairs = [];
 const contract = path.join(server, "src/lib/mobile/contract");

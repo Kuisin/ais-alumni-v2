@@ -9,7 +9,8 @@
     }
   },
   "signIn": {
-    "providerFailed": "We couldn't finish signing you in. Please try again, or sign in with an email code."
+    "providerFailed": "We couldn't finish signing you in. Please try again, or sign in with an email code.",
+    "expoGoLine": "LINE sign-in doesn't work in Expo Go (it does in the app and on the web). Sign in with an email code."
   },
   "onboarding": {
     "signedInAs": "Signed in as {name}",
