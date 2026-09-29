@@ -1,0 +1,41 @@
+{
+  "title": "学校・会社の管理",
+  "description": "学歴・職歴で使われている学校と会社の一覧です。表記ゆれは統合、名前の誤りは修正できます。",
+  "tabsLabel": "種類",
+  "tabs": {
+    "school": "学校",
+    "company": "会社"
+  },
+  "search": "検索",
+  "searchPlaceholder": "名前で検索",
+  "empty": "該当するものはありません。",
+  "members": "{count}人が登録",
+  "manage": "編集・統合",
+  "rename": "名前",
+  "save": "名前を保存",
+  "mergeInto": "統合先（正しい方）",
+  "merge": "この項目を統合する",
+  "mergeHelp": "重複している場合は、正しい方を選んで統合してください。登録している会員は統合先に移ります。",
+  "delete": "削除（未使用）",
+  "renamed": "名前を変更しました。",
+  "merged": "統合しました。",
+  "errors": {
+    "forbidden": "この操作を行う権限がありません。",
+    "invalid": "入力内容を確認してください。",
+    "exists": "同じ名前がすでにあります。統合してください。",
+    "pickTarget": "一覧から統合先を選んでください。",
+    "sameTarget": "同じ項目には統合できません。"
+  },
+  "filterLabel": "学校・会社の検索",
+  "sort": {
+    "label": "並び順",
+    "name": "名前順",
+    "count": "人数の多い順"
+  },
+  "count": "全{total}件",
+  "countLimited": "全{total}件中 {shown}件を表示（検索で絞り込めます）",
+  "emptyHint": "会員が学歴・職歴を登録すると、ここに学校や会社が追加されます。",
+  "emptySearchHint": "表記ゆれ（略称・英語名など）でも検索してみてください。",
+  "mergeConfirm": "この項目を選んだ項目に統合し、削除します。元に戻せません。よろしいですか？",
+  "deleteConfirm": "この項目を削除しますか？"
+}

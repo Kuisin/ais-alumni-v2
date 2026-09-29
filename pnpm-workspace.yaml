@@ -1,3 +1,6 @@
 # A single-package pnpm workspace (the lockfile and pnpm settings live here).
 packages:
   - "."
+allowBuilds:
+  '@prisma/engines': true
+  prisma: true

@@ -1,0 +1,25 @@
+{
+  "title": "統計",
+  "description": "会員の状況をひと目で確認できます。",
+  "summary": "概要",
+  "activeMembers": "有効な会員",
+  "allAccounts": "全アカウント数：{count}（すべての状態）",
+  "byRole": "区分別の会員数",
+  "byState": "状態別のアカウント数",
+  "byStage": "現在の所属別の卒業生数",
+  "byYear": "卒業・退学年別の卒業生数",
+  "activeOnlyMultiRole": "有効な会員のみ。1人が複数の区分を持つことがあるため、割合の合計が100%を超える場合があります。",
+  "allAccountsNote": "登録手続き中のアカウントを含むすべてのアカウント",
+  "formerActiveOnly": "卒業生・元在校生の区分を持つ有効な会員",
+  "notSet": "未設定",
+  "noData": "まだデータがありません。",
+  "label": "区分",
+  "count": "人数",
+  "share": "割合",
+  "bar": "グラフ",
+  "line": {
+    "linked": "LINE連携率",
+    "following": "LINE友だち追加率",
+    "ofActive": "有効な会員{total}人中{count}人"
+  }
+}

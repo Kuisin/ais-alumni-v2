@@ -1,0 +1,137 @@
+{
+  "allActions": "All actions",
+  "category": "Type",
+  "timeJst": "Time (JST)",
+  "showing": "Showing {count}",
+  "range": "{from} – {to}",
+  "older": "Older entries",
+  "newest": "Back to newest",
+  "customFilter": "Actions containing “{value}”",
+  "categories": {
+    "member": "Member management",
+    "verification": "Verification",
+    "teacher": "Teacher registration",
+    "record_request": "Record corrections",
+    "event": "Events",
+    "news": "News",
+    "broadcast": "Notifications sent",
+    "cohort": "Classes",
+    "roster": "Roster",
+    "school": "Schools",
+    "company": "Companies",
+    "self": "Member’s own actions",
+    "user": "Automatic account merges"
+  },
+  "targetTypes": {
+    "User": "Member",
+    "VerificationRequest": "Application",
+    "Event": "Event",
+    "NewsPost": "News post",
+    "Broadcast": "Notification",
+    "Cohort": "Class",
+    "school": "School",
+    "company": "Company",
+    "ChatReport": "Chat report"
+  },
+  "actions": {
+    "member": {
+      "admin_granted": "Granted admin rights",
+      "admin_revoked": "Removed admin rights",
+      "deactivated": "Deactivated account",
+      "reactivated": "Reactivated account",
+      "merged": "Merged accounts",
+      "position_granted": "Assigned position",
+      "position_removed": "Removed position",
+      "profile_updated": "Edited profile",
+      "role_added": "Added role",
+      "role_removed": "Removed role",
+      "role_updated": "Edited role",
+      "history_added": "Added an education / work entry",
+      "history_updated": "Edited an education / work entry",
+      "history_deleted": "Deleted an education / work entry"
+    },
+    "verification": {
+      "approve": "Approved application",
+      "reject": "Rejected application",
+      "needs_info": "Asked for more information",
+      "voucher": {
+        "add": "Added a voucher"
+      }
+    },
+    "teacher": {
+      "assigned": "Registered as current teacher",
+      "unassigned": "Moved to former teacher"
+    },
+    "record_request": {
+      "approved": "Approved record correction",
+      "rejected": "Rejected record correction"
+    },
+    "event": {
+      "create": "Created event",
+      "update": "Edited event",
+      "delete": "Deleted event",
+      "csv_export": "Exported attendee CSV"
+    },
+    "news": {
+      "create": "Created news post",
+      "update": "Edited news post",
+      "delete": "Deleted news post",
+      "notify": "Sent news notification"
+    },
+    "broadcast": {
+      "sent": "Sent notification"
+    },
+    "cohort": {
+      "updated": "Edited class",
+      "deleted": "Deleted class"
+    },
+    "roster": {
+      "import": "Imported roster",
+      "deleteAll": "Deleted entire roster"
+    },
+    "school": {
+      "renamed": "Renamed school",
+      "merged": "Merged schools",
+      "deleted": "Deleted school"
+    },
+    "company": {
+      "renamed": "Renamed company",
+      "merged": "Merged companies",
+      "deleted": "Deleted company"
+    },
+    "self": {
+      "deactivated": "Member deactivated own account",
+      "account_deleted": "Member deleted own account",
+      "email_changed": "Member changed email",
+      "signin_method_removed": "Member removed a sign-in method"
+    },
+    "user": {
+      "merge": {
+        "line_email": "Auto-merged LINE and email accounts"
+      }
+    },
+    "family": {
+      "linked": "Linked family",
+      "confirmed": "Confirmed a family link",
+      "unlinked": "Unlinked family"
+    },
+    "gender_request": {
+      "approved": "Approved a gender change",
+      "rejected": "Rejected a gender change"
+    },
+    "birth_date_request": {
+      "approved": "Approved a date of birth change",
+      "rejected": "Rejected a date of birth change"
+    },
+    "support": {
+      "close": "Marked a support request done",
+      "reopen": "Reopened a support request"
+    },
+    "chat": {
+      "message_delete": "Deleted a chat message",
+      "report_close": "Marked a chat report done",
+      "report_reopen": "Reopened a chat report",
+      "direct_rules": "Changed one-to-one chat rules"
+    }
+  }
+}

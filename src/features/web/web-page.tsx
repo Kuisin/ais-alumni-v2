@@ -6,7 +6,7 @@ import { BackHandler, StyleSheet, View } from "react-native";
 import WebView, { type WebViewNavigation } from "react-native-webview";
 import { useTranslations } from "use-intl";
 import { useAuth } from "@/lib/auth";
-import { API_URL } from "@/lib/config";
+import { SITE_URL } from "@/lib/config";
 import { nativeHref, siteUrl } from "@/lib/links";
 import { Button, colors, Loading, space, Text } from "@/ui";
 
@@ -56,7 +56,7 @@ export function WebPage({ path, onTitle }: Props) {
       void Linking.openURL(url).catch(() => {});
       return false;
     }
-    const site = siteUrl(url, API_URL);
+    const site = siteUrl(url, SITE_URL);
     if (site === null) {
       // Embeds, and LINE Login (linking LINE in the website's settings),
       // whose callback needs this web view's session. Other sites: browser.
@@ -102,7 +102,7 @@ export function WebPage({ path, onTitle }: Props) {
       ref={ref}
       style={styles.web}
       source={{
-        uri: `${API_URL}/api/mobile/v1/web?next=${encodeURIComponent(path)}`,
+        uri: `${SITE_URL}/api/mobile/v1/web?next=${encodeURIComponent(path)}`,
         headers: { Authorization: `Bearer ${token}` },
       }}
       incognito

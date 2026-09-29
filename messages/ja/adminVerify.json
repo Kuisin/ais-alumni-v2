@@ -1,0 +1,261 @@
+{
+  "saving": "保存中…",
+  "queue": {
+    "title": "審査キュー",
+    "description": "古い申請から順に表示しています。",
+    "tabsLabel": "キュー",
+    "tabs": {
+      "pending": "審査待ち",
+      "needsInfo": "申請者の対応待ち"
+    },
+    "empty": "該当する申請はありません。",
+    "submitted": "{date} 申請",
+    "emptyHint": "新しい入会申請が届くと、ここに古い順に表示されます。",
+    "emptyNeedsInfoHint": "「追加情報を依頼」した申請は、申請者が回答するまでここに表示されます。",
+    "pagination": "ページ",
+    "prev": "前へ",
+    "next": "次へ",
+    "pageOf": "{page} / {pages} ページ",
+    "search": "検索",
+    "searchPlaceholder": "名前で検索（ローマ字・漢字）",
+    "children": "お子さま：{names}",
+    "registeredBy": "保護者が登録：{name}"
+  },
+  "badges": {
+    "noRoster": "名簿データなし",
+    "roster": "名簿 {score}",
+    "vouches": "推薦 ✓{yes} ✗{no} ?{unsure} …{pending}",
+    "evidence": "{count, plural, =0 {書類なし} other {書類 #件}}",
+    "schoolEmail": "学校メール確認済み",
+    "minor": "未成年",
+    "parentConfirmed": "保護者確認済み",
+    "parentUnconfirmed": "保護者未確認",
+    "rosterMatch": "名簿一致 {score}",
+    "vouchCounts": "推薦 承認{yes}・否認{no}・不明{unsure}・未回答{pending}",
+    "noVouches": "推薦なし",
+    "diploma": "卒業証書あり",
+    "invited": "招待あり"
+  },
+  "status": {
+    "PENDING": "審査待ち",
+    "NEEDS_INFO": "追加情報待ち",
+    "APPROVED": "承認",
+    "REJECTED": "却下"
+  },
+  "detail": {
+    "title": "申請内容",
+    "back": "キューに戻る",
+    "submitted": "{date} 申請",
+    "basics": "基本情報",
+    "years": "在籍期間",
+    "minorNote": "この申請者は未成年です。承認すると、保護者の確認がなくても委員会による確認とみなされます。",
+    "lastDecision": "前回の判断",
+    "decidedAt": "判断日時",
+    "note": "メモ",
+    "account": "アカウント",
+    "email": "メールアドレス",
+    "state": "アカウント状態",
+    "dob": "生年月日",
+    "schoolEmail": "学校のメールアドレス",
+    "verified": "（確認済み）",
+    "unverified": "（未確認）",
+    "parents": "保護者",
+    "children": "登録されたお子さま",
+    "confirmed": "確認済み",
+    "unconfirmed": "未確認",
+    "linked": "連携済み",
+    "answers": "回答内容",
+    "roster": "名簿との照合",
+    "noRoster": "照合できる名簿データがありません。",
+    "rosterMatch": "同一人物の可能性が高いです。",
+    "rosterWeak": "一致度が低いため、慎重に確認してください。",
+    "rosterRowGone": "照合された名簿データはその後削除されました。",
+    "vouches": "推薦",
+    "evidence": "確認書類",
+    "noEvidence": "書類はアップロードされていません。",
+    "linkExpiry": "リンクの有効期限は15分です。期限切れの場合はページを再読み込みしてください。",
+    "deleteAfter": "{date} 以降に削除",
+    "status": "判定",
+    "oldFormat": "この申請は以前の形式で送信されています。内容は申請者のプロフィールでご確認ください。"
+  },
+  "roster": {
+    "title": "名簿",
+    "description": "過去の生徒・教職員の名簿（任意）です。申請内容と照合してスコアを表示し、承認時に一致した行を紐付けます。",
+    "current": "現在の名簿",
+    "empty": "名簿は空です。名簿がなくても審査はできます。",
+    "kind": "区分",
+    "count": "件数",
+    "total": "合計",
+    "claimedCount": "{count} 件が承認済みの会員に紐付いています。",
+    "importTitle": "CSVの取り込み",
+    "file": "CSVファイル",
+    "fileTooLarge": "ファイルが大きすぎます（最大5MB）。",
+    "paste": "またはCSVを貼り付け",
+    "preview": "プレビュー",
+    "import": "取り込む",
+    "lineError": "{line} 行目：{error}",
+    "rowErrors": {
+      "missingName": "氏名（ローマ字）がありません",
+      "badDate": "生年月日は YYYY-MM-DD 形式で入力してください",
+      "badYear": "年は西暦4桁で入力してください",
+      "yearsOrder": "yearsTo が yearsFrom より前です",
+      "badKind": "区分が不明です",
+      "tooManyColumns": "列が多すぎます"
+    },
+    "messages": {
+      "preview": "{total} 件を取り込めます。",
+      "imported": "{imported} 件を取り込みました。",
+      "empty": "データが見つかりません。",
+      "tooMany": "件数が多すぎます（1回あたり最大20,000件）。",
+      "hasErrors": "{errors} 件の行にエラーがあります。修正してからもう一度お試しください（取り込みは行われていません）。",
+      "generic": "取り込みに失敗しました。もう一度お試しください。",
+      "forbidden": "この操作を行う権限がありません。",
+      "confirm": "確認のチェックボックスにチェックを入れてください。",
+      "deleted": "{deleted} 件を削除しました。"
+    },
+    "nameRomaji": "氏名（ローマ字）",
+    "nameKanji": "氏名（漢字）",
+    "dob": "生年月日",
+    "years": "在籍期間",
+    "claimed": "紐付け",
+    "claimedByApplicant": "この申請者",
+    "claimedByOther": "別の会員",
+    "deleteTitle": "名簿の削除",
+    "deleteDescription": "名簿のすべての行を削除します。既存の会員には影響しません。",
+    "deleteConfirm": "名簿のすべての行が削除されることを理解しました。",
+    "deleteAll": "すべて削除",
+    "chooseFile": "ファイルを選択",
+    "noFile": "ファイルが選択されていません",
+    "columnsHint": "列の順番は上の表のとおりです。",
+    "emptyHint": "名簿を取り込むと、入会申請と照合して一致度を表示できます。下の「CSVの取り込み」から追加してください。",
+    "goToImport": "CSVを取り込む",
+    "spec": {
+      "title": "CSVの列（この順番）",
+      "column": "列名",
+      "meaning": "内容",
+      "required": "必須",
+      "note": "見出し行は任意です。文字コードはUTF-8を使ってください。",
+      "cols": {
+        "nameRomaji": "氏名（ローマ字）",
+        "nameKanji": "氏名（漢字・かな）",
+        "dateOfBirth": "生年月日（YYYY-MM-DD）",
+        "yearsFrom": "在籍開始年（西暦4桁）",
+        "yearsTo": "在籍終了年（西暦4桁）",
+        "kind": "区分：TEACHER, CURRENT_STUDENT, CURRENT_PARENT, FORMER_STUDENT, FORMER_PARENT（空欄 = FORMER_STUDENT）"
+      }
+    }
+  },
+  "vouches": {
+    "pending": "未回答",
+    "none": "まだ誰にも問い合わせていません。",
+    "searchLabel": "他の会員に問い合わせる（氏名で検索）",
+    "search": "検索",
+    "noResults": "該当する有効な会員はいません。",
+    "add": "問い合わせる",
+    "addNamed": "{name} さんに問い合わせる"
+  },
+  "aisRecord": {
+    "title": "在籍情報",
+    "description": "学年と在籍した年から、在校生・卒業生や学年は自動で判定されます。修正は会員の編集画面で行えます。",
+    "edit": "会員の区分を編集する"
+  },
+  "decision": {
+    "title": "判断",
+    "label": "判断",
+    "APPROVE": "承認する",
+    "NEEDS_INFO": "追加情報を依頼する",
+    "REJECT": "却下する",
+    "reason": "理由（申請者に送信されます）",
+    "message": "申請者へのメッセージ",
+    "noteOptional": "メモ（任意・申請者に送信されます）",
+    "noteHint": "申請者にメールで送信されます。",
+    "submit": {
+      "APPROVE": "承認",
+      "NEEDS_INFO": "依頼を送信",
+      "REJECT": "却下"
+    },
+    "closed": "この申請は判断済みです。",
+    "jump": "判定へ",
+    "next": "次の申請へ",
+    "backToQueue": "申請一覧へ"
+  },
+  "errors": {
+    "reasonRequired": "理由を入力してください。",
+    "messageRequired": "申請者へのメッセージを入力してください。",
+    "required": "この項目は必須です。",
+    "invalidYear": "西暦4桁で入力してください。"
+  },
+  "messages": {
+    "saved": "保存しました。",
+    "forbidden": "この操作を行う権限がありません。",
+    "validation": "入力内容を確認してください。",
+    "notFound": "見つかりません。",
+    "conflict": "他の管理者によって既に変更されています。ページを再読み込みしてください。",
+    "generic": "エラーが発生しました。もう一度お試しください。"
+  },
+  "notify": {
+    "approved": {
+      "subject": "AIS Alumniへようこそ",
+      "body": "申請が承認されました。すべての会員機能をご利用いただけます。",
+      "bodyWithNote": "申請が承認されました。すべての会員機能をご利用いただけます。\n\n委員会からのメッセージ：\n{note}"
+    },
+    "rejected": {
+      "subject": "AIS Alumniへの申請について",
+      "body": "申し訳ありませんが、今回の申請は承認できませんでした。",
+      "bodyWithNote": "申し訳ありませんが、今回の申請は承認できませんでした。\n\n理由：\n{note}"
+    },
+    "needsInfo": {
+      "subject": "AIS Alumni：追加情報のお願い",
+      "body": "本人確認のため、委員会から追加情報のお願いがあります。下のリンクから申請内容を更新してください。",
+      "bodyWithNote": "本人確認のため、委員会から追加情報のお願いがあります：\n\n{note}\n\n下のリンクから申請内容を更新してください。"
+    }
+  },
+  "children": {
+    "title": "お子さまの在籍情報",
+    "description": "保護者の方は審査の対象ではありません。お子さまの申請が承認され、親子関係が確定すると、保護者のアカウントも自動で有効になります。",
+    "none": "お子さまが登録されていません。",
+    "dob": "生年月日",
+    "cohort": "学年",
+    "status": "判定",
+    "years": "在籍",
+    "studentId": "生徒番号",
+    "roster": "名簿との照合",
+    "rosterNone": "照合できる名簿データがありません",
+    "rosterMatch": "名簿と一致（{score}点）",
+    "rosterWeak": "一致度が低い（{score}点）",
+    "source": {
+      "created": "保護者が新規登録",
+      "registered": "登録済みの会員",
+      "nameOnly": "名前のみ（旧形式）",
+      "title": "登録方法"
+    },
+    "link": {
+      "confirmed": "親子関係 確認済み",
+      "onApproval": "お子さまの承認で確定",
+      "childToConfirm": "お子さま本人の確認待ち"
+    },
+    "nameOnlyHint": "以前の形式で名前だけが登録されています。保護者に再申請を依頼するか、家族ページで連携してください。"
+  },
+  "managedDuplicate": {
+    "title": "保護者が登録した同一人物のアカウントがあります",
+    "body": "この申請者と氏名・生年月日が一致する、保護者が登録したお子さまのアカウントがあります。統合すると、そのアカウントの在籍情報・家族の連携などが申請者のアカウントに移ります（申請者のアカウントを残します）。統合後に、申請を通常どおり判断してください。",
+    "registeredBy": "登録した保護者：{parent}",
+    "merge": "申請者のアカウントに統合",
+    "mergeConfirm": "「{name}」をこの申請者のアカウントに統合します。元に戻せません。よろしいですか？"
+  },
+  "invite": {
+    "title": "招待",
+    "by": "<name></name> さんの招待で登録しました（{date} 作成）。",
+    "said": "招待者の申告：{what}",
+    "name": "名前メモ：{name}",
+    "match": {
+      "match": "申請内容と一致しています",
+      "mismatch": "申請内容と異なります。確認してください",
+      "unknown": "学年を比較できません"
+    },
+    "kindIndividual": "個別招待（強い推薦）",
+    "kindGrade": "学年招待（{count}/{max}人が使用）",
+    "badgeIndividual": "推薦",
+    "badgeGrade": "学年招待"
+  }
+}

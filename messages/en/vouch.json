@@ -1,0 +1,28 @@
+{
+  "title": "Do you know this person?",
+  "intro": "Someone applying to join AIS Alumni named you as a person who knows them. Your answer helps the committee verify them.",
+  "present": "present",
+  "nameAtAis": "Name at AIS: {name}",
+  "years": "At AIS: {years}",
+  "question": "Do you know this person from AIS?",
+  "answers": {
+    "YES": "Yes, I know them",
+    "NO": "No",
+    "NOT_SURE": "Not sure"
+  },
+  "currentAnswer": "Your answer: {answer}. You can change it until the application is decided.",
+  "closed": "This application has already been decided. Thank you!",
+  "privacy": "Only the committee sees your answer. The applicant is not told who was asked or how they answered.",
+  "messages": {
+    "saved": "Thank you — your answer has been saved.",
+    "forbidden": "You can’t answer this request.",
+    "validation": "Please choose an answer.",
+    "closed": "This application has already been decided."
+  },
+  "notify": {
+    "subject": "Do you know {name}?",
+    "body": "{name} has applied to join AIS Alumni and mentioned you. Do you know them from AIS? Please answer with one tap from the link below.",
+    "bodyYears": "{name} (AIS {years}) has applied to join AIS Alumni and mentioned you. Do you know them from AIS? Please answer with one tap from the link below."
+  },
+  "change": "Change my answer"
+}

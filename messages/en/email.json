@@ -1,0 +1,6 @@
+{
+  "otp": {
+    "subject": "Your AIS Alumni code: {code}",
+    "body": "Your one-time code is {code}.\nIt expires in {minutes} minutes. If you didn't request this, you can ignore this email."
+  }
+}

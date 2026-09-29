@@ -1,0 +1,25 @@
+{
+  "title": "Stats",
+  "description": "Membership at a glance.",
+  "summary": "Summary",
+  "activeMembers": "Active members",
+  "allAccounts": "{count, plural, one {# account} other {# accounts}} in total (all states)",
+  "byRole": "Members by role",
+  "byState": "Accounts by state",
+  "byStage": "Alumni by current stage",
+  "byYear": "Alumni by graduation / leaving year",
+  "activeOnlyMultiRole": "Active members only. A member can have more than one role, so shares can add up to more than 100%.",
+  "allAccountsNote": "All accounts, including those still signing up.",
+  "formerActiveOnly": "Active members with the former student role.",
+  "notSet": "Not set",
+  "noData": "No data yet.",
+  "label": "Group",
+  "count": "Count",
+  "share": "Share",
+  "bar": "Bar",
+  "line": {
+    "linked": "LINE linked",
+    "following": "Following on LINE",
+    "ofActive": "{count} of {total} active members"
+  }
+}

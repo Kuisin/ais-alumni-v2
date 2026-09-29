@@ -1,0 +1,32 @@
+{
+  "title": "Destinations",
+  "description": "Where members who graduated or left went after AIS, from their schools and work history.",
+  "cohort": "Class",
+  "allCohorts": "All classes",
+  "apply": "Show",
+  "summary": "Summary",
+  "formerStudents": "Members who graduated or left",
+  "withHistory": "Added schools or work",
+  "topSchools": "Top destinations ({level})",
+  "topWork": "Top current employers",
+  "chartNote": "Among members who added their history; each person counted once.",
+  "graduated": "Graduated {year}",
+  "left": "Left {year}",
+  "table": {
+    "title": "Each member's path",
+    "hint": "The first school at each level, and where they are now (current job, else current school). Open a member from their name.",
+    "name": "Name",
+    "now": "Now",
+    "noHistory": "Not added",
+    "empty": "No members match.",
+    "count": "Showing {shown} of {total}",
+    "showAll": "Show all ({count})"
+  },
+  "filterLabel": "Filter destinations",
+  "onlyHistory": "Only members with history",
+  "rate": "{percent}% registered",
+  "chartsLabel": "Top schools and employers",
+  "noHistory": "No member has added education or work history yet.",
+  "noHistoryHint": "Once members add their education and work history, where they went will show here. Try asking them in a notification.",
+  "askMembers": "Ask members to add it"
+}

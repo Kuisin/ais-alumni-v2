@@ -7,7 +7,13 @@
       "@/*": ["./src/*"],
       "@/assets/*": ["./assets/*"],
       "@contract/*": ["./src/contract/*"],
-      "@messages/*": ["./messages/*"]
+      "@messages/*": ["./messages/*"],
+      "next/headers": ["./src/server/shims/next-headers.ts"],
+      "next/cache": ["./src/server/shims/next-cache.ts"],
+      "next/server": ["./src/server/shims/next-server.ts"],
+      "next-intl/server": ["./src/server/shims/next-intl-server.ts"],
+      "next-intl/routing": ["./src/server/shims/next-intl-routing.ts"],
+      "next-intl": ["./src/server/shims/next-intl.ts"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]

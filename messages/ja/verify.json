@@ -1,0 +1,270 @@
+{
+  "title": "はじめに",
+  "description": "いくつかの質問に答えるだけで登録が完了します。所要時間はおよそ3分です。",
+  "resubmitDescription": "内容を更新して、もう一度送信してください。",
+  "needsInfo": {
+    "title": "委員会から追加情報のお願いがあります："
+  },
+  "progressLabel": "進行状況",
+  "stepOf": "ステップ {n} / {total}",
+  "steps": {
+    "basics": "基本情報",
+    "type": "あなたについて",
+    "details": "AISでのこと",
+    "review": "確認・送信"
+  },
+  "fixErrors": "{count} 件の項目を確認してください。",
+  "serverErrors": {
+    "validation": "入力内容を確認してください。",
+    "evidence": "アップロードしたファイルの一部を確認できませんでした。削除して、もう一度アップロードしてください。",
+    "forbidden": "セッションの有効期限が切れたか、このフォームは現在ご利用いただけません。ページを再読み込みしてください。",
+    "generic": "申請の送信中にエラーが発生しました。もう一度お試しください。"
+  },
+  "optional": "任意",
+  "select": "選択してください",
+  "fields": {
+    "nameRomaji": "氏名（ローマ字）",
+    "nameKanji": "氏名（漢字・かな）",
+    "nameAtAis": "在籍時の氏名",
+    "dateOfBirth": "生年月日",
+    "roles": "AISとのご関係",
+    "locale": "希望する言語",
+    "yearsFrom": "開始（年）",
+    "yearsTo": "終了（年）",
+    "present": "現在もAISに勤務している",
+    "subjects": "担当教科・学年",
+    "schoolEmail": "学校のメールアドレス",
+    "grade": "学年",
+    "homeroomTeacher": "担任の先生",
+    "homeroomTeacherThen": "担任の先生（最終学年時）",
+    "studentIdNo": "生徒番号",
+    "childName": "お子さまの氏名",
+    "lastDivision": "最後に在籍した部",
+    "graduationOrLeaveYear": "卒業・退学した年",
+    "didGraduate": "AISを卒業しましたか？",
+    "classmates": "あなたを知っている同級生",
+    "classmateN": "同級生 {n}",
+    "currentStage": "現在の状況",
+    "lastNameRomaji": "姓（Last name）",
+    "firstNameRomaji": "名（First name）",
+    "middleNameRomaji": "ミドルネーム",
+    "lastNameKanji": "姓",
+    "firstNameKanji": "名",
+    "cohort": "学年",
+    "teacherStatus": "ステータス",
+    "joinedYear": "AISに入った年",
+    "leftYearStudent": "AISを離れた年",
+    "joinedYearTeacher": "勤務を始めた年",
+    "leftYearTeacher": "退職した年",
+    "lastNameKana": "セイ（フリガナ）",
+    "firstNameKana": "メイ（フリガナ）",
+    "gender": "性別"
+  },
+  "hints": {
+    "nameRomaji": "ローマ字で入力してください。例：Yamada / Taro",
+    "nameKanji": "漢字の氏名がある方は、フリガナ（カタカナ）と一緒に入力をおすすめします。日本の同級生や先生が名前で探せるようになります。承認後の変更は申請が必要です。漢字の氏名がない方（海外出身の方など）は空欄で構いません。",
+    "nameAtAis": "現在の氏名と異なる場合（旧姓やニックネームなど）。",
+    "dateOfBirth": "本人確認と年齢に応じたプライバシー保護のためにのみ使用し、他の会員には表示されません。",
+    "roles": "当てはまるものをすべて選んでください。",
+    "locale": "メールやLINEのお知らせに使用します。",
+    "subjects": "例：数学、9〜12年生",
+    "schoolEmail": "現在AISで勤務している方は必須です。@aisnagoya.net のアドレスに確認コードを送って確認してください（ログインやお知らせには使いません）。退職された方は任意です。",
+    "parentConfirmation": "在校生のアカウントは、AIS Alumniに登録済みの保護者、または委員会による確認も必要です。",
+    "classmates": "入力いただくと、同級生や先生に確認をお願いでき、承認が早くなることがあります。",
+    "cohort": "学年は小学6年生を修了する年で決まります（2016年修了＝第5期）。途中で入学・転校した場合も、所属していた学年を選んでください。",
+    "types": "あとから変更したい場合は、委員会に修正を依頼できます。",
+    "leftYearStudent": "卒業前にAISを離れた場合のみ入力してください。在校中・卒業した場合は空欄のままで大丈夫です。",
+    "leftYearTeacher": "現在もAISで勤務している場合は空欄のままにしてください。",
+    "gender": "既定のプロフィールアイコンに使います。他の会員には表示されません。送信後は変更の申請が必要です。"
+  },
+  "didGraduate": {
+    "yes": "はい、卒業しました",
+    "no": "いいえ、卒業前に退学しました"
+  },
+  "childN": "お子さま {n}",
+  "removeChild": "削除",
+  "removeChildN": "お子さま {n} を削除",
+  "addChild": "お子さまを追加",
+  "errors": {
+    "required": "この項目は必須です。",
+    "tooLong": "文字数が多すぎます。",
+    "invalidYear": "西暦4桁で入力してください。",
+    "invalidGrade": "学年を選んでください。",
+    "invalidDate": "正しい日付を入力してください。",
+    "invalidEmail": "正しいメールアドレスを入力してください。",
+    "yearsOrder": "離れた年は、入った年と同じかそれ以降にしてください。",
+    "rolesRequired": "1つ以上選んでください。",
+    "childrenRequired": "お子さまを1人以上追加してください。",
+    "classmateRequired": "同級生のお名前を1名以上入力してください。",
+    "tooManyFiles": "アップロードできるファイルは3つまでです。",
+    "evidenceInvalid": "ファイルの一部を確認できませんでした。削除して、もう一度アップロードしてください。",
+    "invalid": "入力内容が正しくありません。",
+    "typesRequired": "1つ以上選んでください。",
+    "cohortRequired": "学年を選んでください。",
+    "childNotSelected": "「探す」でお子さまを見つけて選んでください。",
+    "kanaOnly": "カタカナで入力してください（ひらがなは自動でカタカナに変わります）。",
+    "kanaRequired": "漢字の氏名を入力した場合は、フリガナも入力してください。",
+    "diplomaRequired": "卒業証書をアップロードするか、「卒業証書が手元にない」を選んでください。",
+    "genderRequired": "性別を選んでください。",
+    "schoolEmailDomain": "学校のメールアドレス（@aisnagoya.net）を入力してください。",
+    "schoolEmailRequired": "現在AISで勤務している方は、学校のメールアドレス（@aisnagoya.net）が必要です。",
+    "schoolEmailUnverified": "学校のメールアドレスを確認してください（「コードを送信」→6桁のコードを入力）。",
+    "schoolEmailTaken": "この学校のメールアドレスはすでに別の会員が登録しています。"
+  },
+  "evidence": {
+    "label": "確認書類（任意）",
+    "hint": "AISの学生証、成績表、卒業証書、卒業アルバムのページなど。JPG・PNG・PDF形式、1ファイル10MBまで、最大{max}ファイル。書類は委員会のみが閲覧でき、審査結果の30日後に削除されます。",
+    "remove": "{name} を削除",
+    "removeShort": "削除",
+    "full": "ファイルは上限までアップロード済みです。",
+    "uploading": "{name} をアップロード中…",
+    "uploaded": "{name} をアップロードしました。",
+    "errors": {
+      "type": "{name}：JPG・PNG・PDF形式のみアップロードできます。",
+      "size": "{name}：ファイルサイズは10MB以下にしてください。",
+      "count": "アップロードできるファイルは合計3つまでです。",
+      "forbidden": "セッションの有効期限が切れました。ページを再読み込みしてください。",
+      "generic": "アップロードに失敗しました。もう一度お試しください。"
+    }
+  },
+  "schoolEmail": {
+    "send": "コードを送信",
+    "resend": "コードを再送信",
+    "sent": "{email} に6桁のコードを送信しました。",
+    "codeLabel": "6桁のコード",
+    "confirm": "確認",
+    "verified": "学校のメールアドレスを確認しました。",
+    "verifiedBadge": "確認済み",
+    "errors": {
+      "forbidden": "セッションの有効期限が切れました。ページを再読み込みしてください。",
+      "invalidEmail": "正しいメールアドレスを入力してください。",
+      "rateLimited": "コードのリクエストが多すぎます。しばらく待ってからお試しください。",
+      "invalid": "コードが正しくありません。",
+      "expired": "コードの有効期限が切れました。新しいコードをリクエストしてください。",
+      "tooManyAttempts": "試行回数の上限に達しました。新しいコードをリクエストしてください。",
+      "sendFailed": "現在メールを送信できません。数分後にもう一度お試しください。",
+      "wrongDomain": "@aisnagoya.net のアドレスだけ確認できます。",
+      "taken": "この学校のメールアドレスはすでに別の会員が登録しています。"
+    }
+  },
+  "review": {
+    "title": "入力内容の確認",
+    "files": "書類",
+    "note": "送信後、委員会のメンバーが確認します。結果はメールでお知らせします。",
+    "types": "区分",
+    "children": "お子さま",
+    "edit": "最初から見直す",
+    "addDocuments": "本人確認の書類を追加する（任意）"
+  },
+  "back": "戻る",
+  "next": "次へ",
+  "submit": "申請を送信",
+  "submitting": "送信中…",
+  "cohortNotListed": "一覧にない・わからない",
+  "stepTitles": {
+    "type": "あなたはどなたですか？",
+    "basics": "お名前と生年月日",
+    "details": "AISでのことを教えてください",
+    "review": "内容を確認して送信"
+  },
+  "stepIntros": {
+    "type": "当てはまるものをすべて選んでください。卒業生で、今はお子さまが在校している方などは両方選べます。",
+    "basics": "委員会があなたを確認するために使います。生年月日は他の会員には表示されません。",
+    "details": "学年と在籍した年を入力するだけで、在校生・卒業生や現在の学年は自動で判定されます。",
+    "review": "内容に問題がなければ送信してください。委員会が確認し、結果をお知らせします。"
+  },
+  "types": {
+    "STUDENT": {
+      "title": "在校生・卒業生",
+      "description": "AISに通っている、または通っていた方"
+    },
+    "PARENT": {
+      "title": "保護者",
+      "description": "AISに通っている、または通っていたお子さまの保護者"
+    },
+    "TEACHER": {
+      "title": "教職員",
+      "description": "AISで働いている、または働いていた方"
+    }
+  },
+  "sections": {
+    "student": "学年と、AISに入った年を教えてください。",
+    "studentMore": "確認を早めるための情報（任意）",
+    "parent": "AISに通っている、または通っていたお子さまを追加してください。すでにAIS Alumniに登録されているお子さまは検索して選び、まだの場合は新しく登録できます。",
+    "teacher": "AISで勤務した期間と担当を教えてください。"
+  },
+  "preview": {
+    "current": "現在 {grade}（在校生）として登録されます",
+    "upcoming": "入学予定の在校生として登録されます",
+    "graduated": "{year}年に卒業（卒業生）として登録されます",
+    "left": "{year}年にAISを離れた元生徒として登録されます",
+    "teacherCurrent": "現職の教職員として登録されます",
+    "teacherFormer": "{year}年に退職した元教職員として登録されます"
+  },
+  "child": {
+    "reviewNote": "委員会が確認するのはお子さまの情報です。お子さまが承認される（登録済みのお子さまの場合は本人が確認する）と、あなたのアカウントも有効になります。",
+    "modeLegend": "このお子さまの登録方法",
+    "modes": {
+      "existing": {
+        "title": "すでに登録されているお子さま",
+        "description": "例：自分のアカウントを持っている卒業生や、もう一方の保護者がすでに登録したお子さま。"
+      },
+      "new": {
+        "title": "新しく登録する",
+        "description": "お子さまの記録を作成し、あなたが管理します。入力内容は委員会が確認します。"
+      }
+    },
+    "searchIntro": "お子さまのフルネーム（ローマ字または漢字）と生年月日が、登録内容と完全に一致した場合のみ表示されます。",
+    "searchName": "お子さまの氏名（フルネーム）",
+    "searchNameHint": "ローマ字または漢字で、登録されている表記どおりに入力してください。例：Yamada Hanako、山田花子",
+    "dateOfBirth": "お子さまの生年月日",
+    "find": "探す",
+    "searching": "検索中…",
+    "found": "{count}件見つかりました。お子さまを選んでください。",
+    "notFound": "この氏名と生年月日に一致する登録者は見つかりませんでした。表記を確認するか、「新しく登録する」を選んでください。",
+    "switchToNew": "「新しく登録する」に切り替える",
+    "searchIncomplete": "お子さまのフルネームと生年月日を入力してください。",
+    "searchFailed": "検索できませんでした。もう一度お試しください。",
+    "select": "選択",
+    "selected": "選択済み",
+    "change": "変更",
+    "changeNamed": "選んだお子さま（{name}）を変更",
+    "confirmNote": "お子さま本人（またはそのアカウントを管理する保護者）に、あなたが保護者であることの確認をお願いします。",
+    "newIntro": "お子さまの記録を作成し、あなたが管理します。入力内容は委員会が確認します。",
+    "nameRomaji": "お子さまの氏名（ローマ字）",
+    "nameKanji": "お子さまの氏名（漢字・かな）",
+    "joinedYear": "お子さまがAISに入った年",
+    "leftYear": "お子さまがAISを離れた年",
+    "leftYearHint": "卒業前にAISを離れた場合のみ入力してください。在校中・卒業した場合は空欄のままで大丈夫です。"
+  },
+  "placeholders": {
+    "lastNameKana": "例: ヤマダ",
+    "firstNameKana": "例: タロウ"
+  },
+  "diploma": {
+    "title": "卒業証書",
+    "intro": "AISを卒業した方は、卒業証書の写真またはスキャンをアップロードしてください。委員会が在籍を確認するために使い、確認後30日で削除します。",
+    "label": "卒業証書のファイル",
+    "hint": "JPG・PNG・PDF（10MBまで）。お名前と卒業年が読めるように撮影してください。",
+    "unavailable": "卒業証書が手元にない",
+    "unavailableHint": "その場合は、在籍が分かる他の書類（通知表・卒業アルバムの写真など）があれば下から追加してください。"
+  },
+  "parentRegistered": {
+    "title": "保護者の方がすでにあなたを登録しているようです。",
+    "body": "保護者の方に「家族」ページの「本人に引き継ぐ」からリンクを送ってもらうと、承認済みの記録をそのまま使えます（新たな審査は不要）。このまま申請を続けることもでき、その場合は委員会が2つのアカウントを1つにまとめます。"
+  },
+  "classYears": {
+    "title": "第{number}期のクラス（確認用）",
+    "hint": "各年度（4月〜翌3月）に在籍していたクラスです。覚えているクラス名と合っているか確認してください。",
+    "year": "年度",
+    "class": "クラス",
+    "now": "（今年度）"
+  },
+  "choose": "選択してください",
+  "recommended": "おすすめ",
+  "kanjiReminder": {
+    "title": "漢字・フリガナの氏名が未入力です",
+    "body": "入力しなくても送信できますが、日本の同級生や先生が名前で探せるよう登録をおすすめします（承認後の追加は申請が必要です）。漢字の氏名がない方はこのまま送信してください。",
+    "action": "戻って入力する"
+  }
+}

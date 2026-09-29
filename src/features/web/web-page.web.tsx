@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { API_URL } from "@/lib/config";
+import { SITE_URL } from "@/lib/config";
 import { colors, space, Text } from "@/ui";
 
 /**
@@ -15,7 +15,7 @@ export function WebPage({
   return (
     <View style={styles.center}>
       <Text tone="muted" center>
-        {`Web view (native only): ${API_URL}${path}`}
+        {`Web view (native only): ${SITE_URL}${path}`}
       </Text>
     </View>
   );

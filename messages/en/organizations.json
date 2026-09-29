@@ -1,0 +1,41 @@
+{
+  "title": "Schools & companies",
+  "description": "Schools and companies used in members' education and work history. Merge duplicates and fix names here.",
+  "tabsLabel": "Type",
+  "tabs": {
+    "school": "Schools",
+    "company": "Companies"
+  },
+  "search": "Search",
+  "searchPlaceholder": "Search by name",
+  "empty": "Nothing found.",
+  "members": "{count, plural, one {# member} other {# members}}",
+  "manage": "Edit / merge",
+  "rename": "Name",
+  "save": "Save name",
+  "mergeInto": "Merge into (the correct one)",
+  "merge": "Merge this entry",
+  "mergeHelp": "If this is a duplicate, pick the correct entry. Its members move there and this one is removed.",
+  "delete": "Delete (unused)",
+  "renamed": "Renamed.",
+  "merged": "Merged.",
+  "errors": {
+    "forbidden": "You don't have permission to do that.",
+    "invalid": "Please check the input.",
+    "exists": "That name already exists — merge instead.",
+    "pickTarget": "Pick the entry to merge into from the list.",
+    "sameTarget": "Can't merge an entry into itself."
+  },
+  "filterLabel": "Search schools and companies",
+  "sort": {
+    "label": "Sort",
+    "name": "Name",
+    "count": "Most members"
+  },
+  "count": "{total, plural, one {# entry} other {# entries}}",
+  "countLimited": "Showing {shown} of {total} (search to narrow down)",
+  "emptyHint": "Schools and companies are added here as members fill in their education and work history.",
+  "emptySearchHint": "Try other spellings, abbreviations or the English name.",
+  "mergeConfirm": "Merge this entry into the chosen one and delete it? This can't be undone.",
+  "deleteConfirm": "Delete this entry?"
+}

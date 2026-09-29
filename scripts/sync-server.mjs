@@ -3,8 +3,10 @@
  * Copy what the app shares with the API server (github.com/Kuisin/
  * ais-alumni-app) from a checkout of it:
  *  - the API contract types: src/lib/mobile/contract/*.ts → src/contract/
- *  - the UI strings the app uses: messages/<locale>/<namespace>.json, for
- *    every namespace imported from "@messages/…" under src/
+ *  - the UI strings the app and its API use: messages/<locale>/<namespace>.json,
+ *    for every namespace imported from "@messages/…" under src/
+ *  - the database schema: prisma/schema.prisma (client generated into
+ *    src/server/generated; migrations stay with the server)
  *
  *   pnpm sync:server            # SERVER_DIR defaults to ../ais-alumni-app
  *   pnpm sync:server --check    # exit 1 if anything differs; copies nothing
@@ -18,6 +20,7 @@ import {
   readdirSync,
   readFileSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -65,6 +68,24 @@ for (const locale of ["ja", "en"])
       path.join(server, "messages", locale, `${ns}.json`),
       path.join(root, "messages", locale, `${ns}.json`),
     ]);
+
+// The schema, with the client generated into this repo's src/server.
+const schemaFrom = readFileSync(
+  path.join(server, "prisma/schema.prisma"),
+  "utf8",
+).replace(
+  'output   = "../src/generated/prisma"',
+  'output   = "../src/server/generated/prisma"',
+);
+const schemaTo = path.join(root, "prisma/schema.prisma");
+if (!existsSync(schemaTo) || readFileSync(schemaTo, "utf8") !== schemaFrom) {
+  if (check) console.log("differs: prisma/schema.prisma");
+  else {
+    writeFileSync(schemaTo, schemaFrom);
+    console.log("updated prisma/schema.prisma (run npx prisma generate)");
+  }
+  if (check) process.exitCode = 1;
+}
 
 const differ = pairs.filter(
   ([from, to]) =>
