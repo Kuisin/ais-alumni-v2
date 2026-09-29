@@ -1,11 +1,15 @@
 import type { Locale } from "@contract/core";
 import enAdminContent from "@messages/en/adminContent.json";
+import enAdminMembers from "@messages/en/adminMembers.json";
+import enAdminStats from "@messages/en/adminStats.json";
+import enAudit from "@messages/en/audit.json";
 import enAuth from "@messages/en/auth.json";
 import enBroadcast from "@messages/en/broadcast.json";
 import enChat from "@messages/en/chat.json";
 import enCohorts from "@messages/en/cohorts.json";
 import enCommon from "@messages/en/common.json";
 import enDashboard from "@messages/en/dashboard.json";
+import enDestinations from "@messages/en/destinations.json";
 import enDirectory from "@messages/en/directory.json";
 import enEvents from "@messages/en/events.json";
 import enFamily from "@messages/en/family.json";
@@ -19,6 +23,7 @@ import enMobile from "@messages/en/mobile.json";
 import enNews from "@messages/en/news.json";
 import enNotifications from "@messages/en/notifications.json";
 import enOnboarding from "@messages/en/onboarding.json";
+import enOrganizations from "@messages/en/organizations.json";
 import enProfile from "@messages/en/profile.json";
 import enRecords from "@messages/en/records.json";
 import enRoles from "@messages/en/roles.json";
@@ -28,12 +33,16 @@ import enSupport from "@messages/en/support.json";
 import enVerify from "@messages/en/verify.json";
 import enVouch from "@messages/en/vouch.json";
 import jaAdminContent from "@messages/ja/adminContent.json";
+import jaAdminMembers from "@messages/ja/adminMembers.json";
+import jaAdminStats from "@messages/ja/adminStats.json";
+import jaAudit from "@messages/ja/audit.json";
 import jaAuth from "@messages/ja/auth.json";
 import jaBroadcast from "@messages/ja/broadcast.json";
 import jaChat from "@messages/ja/chat.json";
 import jaCohorts from "@messages/ja/cohorts.json";
 import jaCommon from "@messages/ja/common.json";
 import jaDashboard from "@messages/ja/dashboard.json";
+import jaDestinations from "@messages/ja/destinations.json";
 import jaDirectory from "@messages/ja/directory.json";
 import jaEvents from "@messages/ja/events.json";
 import jaFamily from "@messages/ja/family.json";
@@ -47,6 +56,7 @@ import jaMobile from "@messages/ja/mobile.json";
 import jaNews from "@messages/ja/news.json";
 import jaNotifications from "@messages/ja/notifications.json";
 import jaOnboarding from "@messages/ja/onboarding.json";
+import jaOrganizations from "@messages/ja/organizations.json";
 import jaProfile from "@messages/ja/profile.json";
 import jaRecords from "@messages/ja/records.json";
 import jaRoles from "@messages/ja/roles.json";
@@ -93,6 +103,11 @@ const JA = {
   cohorts: jaCohorts,
   adminContent: jaAdminContent,
   broadcast: jaBroadcast,
+  organizations: jaOrganizations,
+  destinations: jaDestinations,
+  audit: jaAudit,
+  adminStats: jaAdminStats,
+  adminMembers: jaAdminMembers,
   mobile: jaMobile,
 };
 const EN = {
@@ -123,6 +138,11 @@ const EN = {
   cohorts: enCohorts,
   adminContent: enAdminContent,
   broadcast: enBroadcast,
+  organizations: enOrganizations,
+  destinations: enDestinations,
+  audit: enAudit,
+  adminStats: enAdminStats,
+  adminMembers: enAdminMembers,
   mobile: enMobile,
 };
 
