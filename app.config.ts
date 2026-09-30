@@ -135,6 +135,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     "@react-native-community/datetimepicker",
+    // LINE sign-in through the LINE app (src/lib/line-sdk.ts).
+    "@xmartlabs/react-native-line",
     // Native project fixes for building with Xcode 27 / from paths with
     // spaces (see each file).
     "./plugins/ios-scene-lifecycle",

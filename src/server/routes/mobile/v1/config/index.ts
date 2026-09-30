@@ -9,6 +9,10 @@ export const GET = publicRoute(
     // with provider=line is), so never offer it.
     sso: { google: false, line: ssoReady("line") },
     lineOaId: process.env.NEXT_PUBLIC_LINE_OA_ID?.trim() || null,
+    // Public: LINE puts it in every authorization URL anyway.
+    lineChannelId: ssoReady("line")
+      ? process.env.AUTH_LINE_ID?.trim() || null
+      : null,
     // e.g. "1.1.0": older installed apps show "update the app" (src/app/
     // _layout.tsx) and stop there, for when the API changes incompatibly.
     minAppVersion: process.env.MIN_APP_VERSION?.trim() || null,

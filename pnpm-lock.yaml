@@ -35,6 +35,9 @@ importers:
       '@vercel/functions':
         specifier: ^3.9.9
         version: 3.9.9(ws@8.22.0)
+      '@xmartlabs/react-native-line':
+        specifier: ^6.0.1
+        version: 6.0.1(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       exceljs:
         specifier: ^4.4.0
         version: 4.4.0
@@ -1536,6 +1539,12 @@ packages:
 
   '@visx/vendor@4.0.0-alpha.0':
     resolution: {integrity: sha512-6I+MuqXBcv9jnlcVowHoHKSdk9gXTWkHLKyqBwRWg7LY6A3Ei8SHfubpqGV5rBUSppxMq2RszPJUS6w+H0YgmQ==}
+
+  '@xmartlabs/react-native-line@6.0.1':
+    resolution: {integrity: sha512-aimt1m7VGM8j/S+biM9NSq3Pa9RyzYJGS9++GK2f6L/PlNXwRBG8q4dBzo9AXPFCOYVUIQGFaVCpVppaaGVNOw==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   '@xmldom/xmldom@0.8.15':
     resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
@@ -6088,6 +6097,11 @@ snapshots:
       d3-time: 3.1.0
       d3-time-format: 4.1.0
       internmap: 2.0.3
+
+  '@xmartlabs/react-native-line@6.0.1(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
+    dependencies:
+      react: 19.2.3
+      react-native: 0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
   '@xmldom/xmldom@0.8.15': {}
 

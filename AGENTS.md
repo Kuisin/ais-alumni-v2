@@ -19,7 +19,13 @@ is implemented directly (`src/server/lib/mobile/oauth.ts`); the LINE Login
 channel needs the callback
 `https://<domain>/api/mobile/v1/auth/oauth/callback/line` — also used to
 link LINE to a signed-in member (`src/server/lib/mobile/line-link.ts`,
-`src/features/line`).
+`src/features/line`). In development and store builds, sign-in goes through
+the LINE app instead (LINE SDK, `src/lib/line-sdk.ts` →
+`POST /auth/line/native`, which checks the token was issued to our
+channel); the browser flow stays for the web, Expo Go and as the fallback.
+For that, the same LINE Login channel needs **App types → Mobile app**
+turned on with the iOS bundle ID `net.kailab.aisalumni` and the Android
+package `net.kailab.aisalumni` + its package signature.
 
 This repo owns the API contract types (`src/contract`, used by both the app
 and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);

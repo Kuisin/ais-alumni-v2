@@ -61,7 +61,9 @@ export default function SignInScreen() {
   const provider = async (p: "line" | "google") => {
     setBusy(p);
     setProviderError(false);
-    const result = await signInWithProvider(p).catch(() => "failed" as const);
+    const result = await signInWithProvider(p, {
+      lineChannelId: config.data?.lineChannelId,
+    }).catch(() => "failed" as const);
     setBusy(null);
     if (result === "failed") setProviderError(true);
   };

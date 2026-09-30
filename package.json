@@ -27,6 +27,7 @@
     "@tanstack/react-query": "^5.104.0",
     "@vercel/blob": "^2.8.0",
     "@vercel/functions": "^3.9.9",
+    "@xmartlabs/react-native-line": "^6.0.1",
     "exceljs": "^4.4.0",
     "expo": "~57.0.26",
     "expo-camera": "~57.0.6",
