@@ -1,14 +1,8 @@
 import type { EventTab } from "@contract/events";
 import { Tabs, useRouter } from "expo-router";
-import { CalendarDays, Plus } from "lucide-react-native";
+import { CalendarDays } from "lucide-react-native";
 import { useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useEventList } from "@/features/events/api";
 import { EventCard } from "@/features/events/event-card";
@@ -18,11 +12,11 @@ import {
   colors,
   EmptyState,
   ErrorState,
+  HeaderButton,
   Loading,
   ScreenView,
   space,
   Text,
-  TOUCH,
 } from "@/ui";
 
 /**
@@ -52,21 +46,10 @@ export default function EventsTab() {
         options={{
           headerRight: canCreate
             ? () => (
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={t("create")}
+                <HeaderButton
+                  label={t("create")}
                   onPress={() => router.push("/events/new")}
-                  hitSlop={4}
-                  style={({ pressed }) => [
-                    styles.create,
-                    pressed ? styles.pressed : null,
-                  ]}
-                >
-                  <Plus size={20} color={colors.brand700} aria-hidden />
-                  <Text variant="small" weight="semibold" tone="brand">
-                    {t("create")}
-                  </Text>
-                </Pressable>
+                />
               )
             : undefined,
         }}
@@ -156,12 +139,4 @@ const styles = StyleSheet.create({
   header: { gap: space.md, marginBottom: space.lg },
   gap: { height: space.md },
   footer: { alignItems: "center", gap: space.sm, paddingVertical: space.lg },
-  create: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    minHeight: TOUCH,
-    paddingHorizontal: space.lg,
-  },
-  pressed: { opacity: 0.6 },
 });

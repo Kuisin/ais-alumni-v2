@@ -17,6 +17,7 @@ import {
   Avatar,
   colors,
   EmptyState,
+  HeaderButton,
   QueryState,
   ScreenView,
   space,
@@ -37,6 +38,7 @@ const POLL_MS = 20_000;
  */
 export function ChatListScreen() {
   const t = useTranslations("chat");
+  const router = useRouter();
   const live = useRealtimeLive();
   const list = useChatList();
   const { refetch } = list;
@@ -58,7 +60,13 @@ export function ChatListScreen() {
       <Tabs.Screen
         options={{
           headerRight: list.data?.canStartDirect
-            ? () => <NewTalkButton label={t("newTalk")} />
+            ? () => (
+                <HeaderButton
+                  label={t("newTalk")}
+                  icon={MessageCirclePlus}
+                  onPress={() => router.push("/chat/new")}
+                />
+              )
             : undefined,
         }}
       />
@@ -66,27 +74,6 @@ export function ChatListScreen() {
         {(data) => <ChatListBody data={data} refetch={refetch} />}
       </QueryState>
     </ScreenView>
-  );
-}
-
-function NewTalkButton({ label }: { label: string }) {
-  const router = useRouter();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={() => router.push("/chat/new")}
-      hitSlop={8}
-      style={({ pressed }) => [
-        styles.headerButton,
-        pressed ? styles.headerButtonPressed : null,
-      ]}
-    >
-      <MessageCirclePlus size={20} color={colors.brand700} />
-      <Text variant="small" weight="semibold" tone="brand">
-        {label}
-      </Text>
-    </Pressable>
   );
 }
 
@@ -294,16 +281,6 @@ function ChatRowItem({ row: r }: { row: ChatListRow }) {
 
 const styles = StyleSheet.create({
   content: { flexGrow: 1, paddingBottom: space.xl },
-  headerButton: {
-    minHeight: TOUCH,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingHorizontal: space.md,
-    marginRight: space.xs,
-    borderRadius: 999,
-  },
-  headerButtonPressed: { backgroundColor: colors.brand50 },
   toolbar: {
     gap: space.md,
     paddingHorizontal: space.lg,
