@@ -3,6 +3,11 @@
     "network": "Can't reach the server. Check your connection.",
     "generic": "Something went wrong. Please try again.",
     "retry": "Try again",
+    "crash": {
+      "title": "Something went wrong",
+      "body": "This screen couldn't be shown. Please try again. If it keeps happening, contact us with the details below.",
+      "retry": "Try again"
+    },
     "unreachable": {
       "title": "Can't connect",
       "body": "We couldn't reach the server. Check your connection and try again."

@@ -90,15 +90,43 @@ async function installId(): Promise<string> {
   return id;
 }
 
+/** How long to wait for the push token before giving up. */
+const TOKEN_TIMEOUT_MS = 20_000;
+
+/** `promise`, or a rejection after `ms` (the OS or Expo never answered). */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("timeout")), ms);
+    promise.then(
+      (v) => {
+        clearTimeout(timer);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(timer);
+        reject(e);
+      },
+    );
+  });
+}
+
 /**
- * This install's Expo push token. Builds without an EAS project (local
+ * This install's Expo push token. Gives up after TOKEN_TIMEOUT_MS: iOS
+ * asks APNs for the device token and Expo's servers for the push token, and
+ * either can stay silent (no network, APNs unavailable) — the button that
+ * turned notifications on must not spin forever. Builds without an EAS project (local
  * development) use a made-up "dev" token when the server writes pushes to
  * its outbox (EXPO_PUSH_OUTBOX=1); otherwise there is none.
  */
 async function currentToken(devTokens: boolean): Promise<string | null> {
   const projectId = easProjectId();
   if (projectId)
-    return (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+    return (
+      await withTimeout(
+        Notifications.getExpoPushTokenAsync({ projectId }),
+        TOKEN_TIMEOUT_MS,
+      )
+    ).data;
   if (__DEV__ && devTokens)
     return `ExponentPushToken[dev-${await installId()}]`;
   return null;

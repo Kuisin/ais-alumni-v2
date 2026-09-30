@@ -21,6 +21,9 @@ import { RealtimeProvider } from "@/lib/realtime";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
+// A screen that fails to render shows what went wrong, not a closed app.
+export { CrashScreen as ErrorBoundary } from "@/features/errors/crash-screen";
+
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
