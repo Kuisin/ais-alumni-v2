@@ -2,6 +2,7 @@ import type {
   ChatInfo,
   ChatList,
   ChatMessagesPage,
+  ChatReactionsResult,
   ChatReads,
   ChatRoom,
   DirectCandidates,
@@ -80,6 +81,16 @@ export const chatApi = {
     api<OkResult>(path(id, `/messages/${encodeURIComponent(messageId)}`), {
       method: "DELETE",
     }),
+  /** The member's reaction with `emoji` on or off. */
+  react: (id: string, messageId: string, emoji: string) =>
+    api<ChatReactionsResult>(
+      path(id, `/messages/${encodeURIComponent(messageId)}/reactions`),
+      { body: { emoji } },
+    ),
+  reactions: (id: string, messageId: string) =>
+    api<ChatReactionsResult>(
+      path(id, `/messages/${encodeURIComponent(messageId)}/reactions`),
+    ),
   reads: (id: string) => api<ChatReads>(path(id, "/read")),
   markRead: (id: string) =>
     api<OkResult>(path(id, "/read"), { method: "POST" }),

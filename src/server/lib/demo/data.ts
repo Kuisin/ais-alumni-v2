@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isReactionEmoji } from "@/server/lib/chat-emoji";
 import chatsJson from "./data/chats.json";
 import eventsJson from "./data/events.json";
 import familyJson from "./data/family.json";
@@ -349,6 +350,15 @@ const ChatsSchema = z.array(
         body: z.string().min(1),
         sent: Ago,
         mentionAll: z.boolean().default(false),
+        /** emoji reactions: who reacted ("me" = the demo user), in order */
+        reactions: z
+          .array(
+            z.strictObject({
+              emoji: z.string().min(1).max(32),
+              by: z.array(PersonId).min(1),
+            }),
+          )
+          .default([]),
       }),
     ),
   }),
@@ -540,6 +550,20 @@ function check(d: DemoData): void {
         errors.push(
           `${where("chats.json", [i, "messages", j, "from"])}: "${m.from}" is not in this chat's memberIds`,
         );
+      m.reactions.forEach((r, k) => {
+        const at = [i, "messages", j, "reactions", k];
+        if (!isReactionEmoji(r.emoji))
+          errors.push(
+            `${where("chats.json", [...at, "emoji"])}: "${r.emoji}" is not a single emoji`,
+          );
+        r.by.forEach((id, l) => {
+          ref("chats.json", [...at, "by", l], id, true);
+          if (id !== "me" && !c.memberIds.includes(id))
+            errors.push(
+              `${where("chats.json", [...at, "by", l])}: "${id}" is not in this chat's memberIds`,
+            );
+        });
+      });
     });
   });
   d.invites.forEach((inv, i) => {

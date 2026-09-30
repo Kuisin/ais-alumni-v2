@@ -18,7 +18,8 @@
         "id": "demo-cm-2",
         "from": "me",
         "body": "Emily! It's been years. How is Tokyo?",
-        "sent": { "daysAgo": 1, "hoursAgo": 23, "minutesAgo": 40 }
+        "sent": { "daysAgo": 1, "hoursAgo": 23, "minutesAgo": 40 },
+        "reactions": [{ "emoji": "😊", "by": ["demo-m-emily"] }]
       },
       {
         "id": "demo-cm-3",
@@ -30,13 +31,15 @@
         "id": "demo-cm-4",
         "from": "me",
         "body": "Yes, I already replied — bringing a friend too.",
-        "sent": { "daysAgo": 1, "hoursAgo": 2 }
+        "sent": { "daysAgo": 1, "hoursAgo": 2 },
+        "reactions": [{ "emoji": "🎉", "by": ["demo-m-emily"] }]
       },
       {
         "id": "demo-cm-5",
         "from": "demo-m-emily",
         "body": "Perfect, let's sit together at dinner!",
-        "sent": { "minutesAgo": 40 }
+        "sent": { "minutesAgo": 40 },
+        "reactions": [{ "emoji": "👍", "by": ["me"] }]
       }
     ]
   },
@@ -54,7 +57,11 @@
         "from": "demo-m-kenji",
         "body": "@all Reminder: please share your old AIS photos here for the reunion slideshow!",
         "sent": { "daysAgo": 8 },
-        "mentionAll": true
+        "mentionAll": true,
+        "reactions": [
+          { "emoji": "👍", "by": ["demo-m-emily", "demo-m-marco", "me"] },
+          { "emoji": "🙏", "by": ["demo-m-marco"] }
+        ]
       },
       {
         "id": "demo-cm-11",
@@ -66,7 +73,8 @@
         "id": "demo-cm-12",
         "from": "me",
         "body": "I have some from sports day. Sending them this weekend.",
-        "sent": { "daysAgo": 6 }
+        "sent": { "daysAgo": 6 },
+        "reactions": [{ "emoji": "😂", "by": ["demo-m-kenji", "demo-m-emily"] }]
       },
       {
         "id": "demo-cm-13",
@@ -101,7 +109,11 @@
         "id": "demo-cm-20",
         "from": "demo-m-yui",
         "body": "Anyone else studying in Okinawa? Would love to meet up.",
-        "sent": { "daysAgo": 12 }
+        "sent": { "daysAgo": 12 },
+        "reactions": [
+          { "emoji": "❤️", "by": ["demo-m-yui", "demo-m-daniel"] },
+          { "emoji": "👏", "by": ["demo-m-emily"] }
+        ]
       },
       {
         "id": "demo-cm-21",

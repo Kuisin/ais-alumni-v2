@@ -79,6 +79,7 @@ import * as r8 from "./mobile/v1/chat/[id]";
 import * as r9 from "./mobile/v1/chat/[id]/info";
 import * as r10 from "./mobile/v1/chat/[id]/messages";
 import * as r11 from "./mobile/v1/chat/[id]/messages/[messageId]";
+import * as chatReactions from "./mobile/v1/chat/[id]/messages/[messageId]/reactions";
 import * as r12 from "./mobile/v1/chat/[id]/mute";
 import * as r13 from "./mobile/v1/chat/[id]/notifications";
 import * as r14 from "./mobile/v1/chat/[id]/read";
@@ -310,6 +311,10 @@ export const ROUTES: [string, RouteModule][] = [
   ["chat/[id]/info", r9 as unknown as RouteModule],
   ["chat/[id]/messages", r10 as unknown as RouteModule],
   ["chat/[id]/messages/[messageId]", r11 as unknown as RouteModule],
+  [
+    "chat/[id]/messages/[messageId]/reactions",
+    chatReactions as unknown as RouteModule,
+  ],
   ["chat/[id]/mute", r12 as unknown as RouteModule],
   ["chat/[id]/notifications", r13 as unknown as RouteModule],
   ["chat/[id]/read", r14 as unknown as RouteModule],

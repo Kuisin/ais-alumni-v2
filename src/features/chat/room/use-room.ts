@@ -1,8 +1,13 @@
-import type { ChatMessage, ChatRoom } from "@contract/chat";
+import type {
+  ChatMessage,
+  ChatReactionSummary,
+  ChatRoom,
+} from "@contract/chat";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
 import { useRealtime, useRealtimeLive } from "@/lib/realtime";
-import { chatApi, useRefreshChatBadges } from "../api";
+import { chatApi, roomKey, useRefreshChatBadges } from "../api";
 
 /** Polling interval without Realtime (the website room's POLL_MS). */
 const POLL_MS = 5000;
@@ -25,7 +30,42 @@ const asDeleted = (m: ChatMessage): ChatMessage => ({
   deleted: true,
   mentionUserIds: [],
   mentionAll: false,
+  reactions: [],
 });
+
+/** Names the server lists per emoji (chat-reactions.ts MAX_NAMES). */
+const MAX_NAMES = 10;
+
+/** The member's reaction with `emoji` switched (the optimistic update). */
+export function toggled(
+  list: readonly ChatReactionSummary[] | undefined,
+  emoji: string,
+  myName: string,
+): ChatReactionSummary[] {
+  const current = list ?? [];
+  const r = current.find((x) => x.emoji === emoji);
+  if (!r) return [...current, { emoji, count: 1, mine: true, names: [myName] }];
+  if (r.mine) {
+    if (r.count <= 1) return current.filter((x) => x !== r);
+    const at = r.names.indexOf(myName);
+    const names = r.names.filter((_, i) => i !== at);
+    return current.map((x) =>
+      x === r ? { ...r, count: r.count - 1, mine: false, names } : x,
+    );
+  }
+  return current.map((x) =>
+    x === r
+      ? {
+          ...r,
+          count: r.count + 1,
+          mine: true,
+          names: r.names.length < MAX_NAMES ? [...r.names, myName] : r.names,
+        }
+      : x,
+  );
+}
+
+type ReactVars = { messageId: string; emoji: string };
 
 /**
  * A talk's messages and 既読, kept current like the website room
@@ -39,15 +79,19 @@ const asDeleted = (m: ChatMessage): ChatMessage => ({
 export function useRoom({
   room,
   meId,
+  meName,
   focused,
   fresh,
 }: {
   room: ChatRoom;
   meId: string;
+  /** the member's name, for their own reactions until the server answers */
+  meName: string;
   focused: boolean;
   fresh: boolean;
 }) {
   const live = useRealtimeLive();
+  const queryClient = useQueryClient();
   const refreshBadges = useRefreshChatBadges();
   const [messages, setMessages] = useState<ChatMessage[]>(room.messages);
   const [reads, setReads] = useState<string[]>(room.reads);
@@ -63,8 +107,10 @@ export function useRoom({
   useEffect(() => {
     focusedRef.current = focused;
   }, [focused]);
+  const messagesRef = useRef(messages);
   useEffect(() => {
     latest.current = messages.at(-1)?.createdAt;
+    messagesRef.current = messages;
   }, [messages]);
 
   // Mark read (throttled) while the talk is in front.
@@ -134,7 +180,64 @@ export function useRoom({
     if (r) setReads(r.reads);
   }, [id]);
 
+  // Reactions: on screen, and in the cached room (shown when reopened).
+  // The cache copy is ours, not fresh server data (see the effect below).
+  const patchedRoom = useRef<ChatRoom | undefined>(undefined);
+  const setReactions = useCallback(
+    (
+      messageId: string,
+      next: (prev: ChatReactionSummary[] | undefined) => ChatReactionSummary[],
+    ) => {
+      const patch = (m: ChatMessage) =>
+        m.id === messageId ? { ...m, reactions: next(m.reactions) } : m;
+      setMessages((list) => list.map(patch));
+      const cached = queryClient.setQueryData<ChatRoom>(roomKey(id), (old) =>
+        old?.messages.some((m) => m.id === messageId)
+          ? { ...old, messages: old.messages.map(patch) }
+          : old,
+      );
+      patchedRoom.current = cached;
+    },
+    [id, queryClient],
+  );
+
+  const reactMutation = useMutation({
+    mutationKey: ["chat", "reaction", id],
+    mutationFn: ({ messageId, emoji }: ReactVars) =>
+      chatApi.react(id, messageId, emoji),
+    onMutate: ({ messageId, emoji }: ReactVars) => {
+      const before = messagesRef.current.find(
+        (m) => m.id === messageId,
+      )?.reactions;
+      setReactions(messageId, (prev) => toggled(prev, emoji, meName));
+      return { before };
+    },
+    onError: (_e, { messageId }, ctx) =>
+      setReactions(messageId, () => ctx?.before ?? []),
+    onSuccess: (r, { messageId }) => setReactions(messageId, () => r.reactions),
+  });
+  const reactAsync = reactMutation.mutateAsync;
+  /** The member's reaction on or off (rejects with the API error). */
+  const react = useCallback(
+    async (messageId: string, emoji: string) => {
+      await reactAsync({ messageId, emoji });
+    },
+    [reactAsync],
+  );
+
   useRealtime(room.topic, "message", () => void fetchNew());
+  useRealtime(room.topic, "reaction", (p) => {
+    const messageId = typeof p.id === "string" ? p.id : null;
+    if (!messageId || !messagesRef.current.some((m) => m.id === messageId))
+      return;
+    // The member's own toggles are reconciled by their response.
+    if (queryClient.isMutating({ mutationKey: ["chat", "reaction", id] }))
+      return;
+    chatApi.reactions(id, messageId).then(
+      (r) => setReactions(messageId, () => r.reactions),
+      () => {},
+    );
+  });
   useRealtime(room.topic, "read", () => void fetchReads());
   useRealtime(room.topic, "delete", (p) => {
     const gone = typeof p.id === "string" ? p.id : null;
@@ -169,7 +272,7 @@ export function useRoom({
   // fetchNew, so a long absence leaves no gap.
   const firstRoom = useRef(room);
   useEffect(() => {
-    if (room === firstRoom.current) return;
+    if (room === firstRoom.current || room === patchedRoom.current) return;
     setMessages((list) => {
       const last = list.at(-1)?.createdAt ?? "";
       return merge(
@@ -239,5 +342,6 @@ export function useRoom({
     loadOlder,
     send,
     remove,
+    react,
   };
 }

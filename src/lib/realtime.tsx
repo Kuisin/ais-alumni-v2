@@ -28,7 +28,7 @@ import { ME_KEY } from "./auth";
 type Payload = Record<string, unknown>;
 type Handler = (payload: Payload) => void;
 
-const EVENTS = ["message", "delete", "read", "refresh"] as const;
+const EVENTS = ["message", "delete", "read", "reaction", "refresh"] as const;
 
 type Ctx = {
   live: boolean;

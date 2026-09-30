@@ -11,6 +11,7 @@ import type {
   ChatInfo,
   ChatList,
   ChatMessagesPage,
+  ChatReactionsResult,
   ChatReads,
   ChatRoom,
   DirectCandidates,
@@ -75,6 +76,7 @@ import {
   chatList,
   chatReads,
   chatRoom,
+  demoMessageReactions,
   directChatId,
   eventDetail,
   eventList,
@@ -86,6 +88,7 @@ import {
   newsDetail,
   newsSummaries,
   sentMessage,
+  toggleDemoReaction,
 } from "./content";
 import { demoData, derive, isoAgo } from "./data";
 import {
@@ -794,6 +797,18 @@ const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
     },
   },
   "chat/[id]/messages/[messageId]": { DELETE: () => OK satisfies OkResult },
+  "chat/[id]/messages/[messageId]/reactions": {
+    GET: ({ params }) =>
+      demoMessageReactions(params.id, params.messageId) satisfies
+        | ChatReactionsResult
+        | undefined,
+    POST: async ({ params, request }) =>
+      toggleDemoReaction(
+        params.id,
+        params.messageId,
+        str((await readBody(request)).emoji),
+      ) satisfies ChatReactionsResult | undefined,
+  },
   "chat/[id]/read": {
     GET: ({ params }) => ({ reads: chatReads(params.id) }) satisfies ChatReads,
     POST: () => OK satisfies OkResult,

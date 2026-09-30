@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, radius, space, Text, TOUCH } from "@/ui";
 
@@ -13,7 +20,9 @@ export type SheetAction = {
 
 /**
  * The actions for a long-pressed message (コピー / 削除), as a bottom sheet
- * over the talk — the website shows the same two under the bubble.
+ * over the talk — the website shows the same two under the bubble. `top`:
+ * above them (the quick reactions); `content`: in place of the heading and
+ * actions (the emoji picker), in the same sheet.
  */
 export function MessageSheet({
   visible,
@@ -22,6 +31,8 @@ export function MessageSheet({
   actions,
   cancelLabel,
   onClose,
+  top,
+  content,
 }: {
   visible: boolean;
   title: string;
@@ -29,6 +40,8 @@ export function MessageSheet({
   actions: SheetAction[];
   cancelLabel: string;
   onClose: () => void;
+  top?: ReactNode;
+  content?: ReactNode;
 }) {
   const insets = useSafeAreaInsets();
   return (
@@ -40,7 +53,10 @@ export function MessageSheet({
       statusBarTranslucent
       navigationBarTranslucent
     >
-      <View style={styles.backdrop}>
+      <KeyboardAvoidingView
+        style={styles.backdrop}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
         <Pressable
           style={StyleSheet.absoluteFill}
           onPress={onClose}
@@ -51,36 +67,41 @@ export function MessageSheet({
           style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 12) }]}
           accessibilityViewIsModal
         >
-          <View style={styles.head}>
-            <Text variant="small" weight="semibold" numberOfLines={1}>
-              {title}
-            </Text>
-            {preview ? (
-              <Text variant="small" tone="subtle" numberOfLines={2}>
-                {preview}
-              </Text>
-            ) : null}
-          </View>
-          {actions.map((a) => {
-            const color = a.destructive ? colors.red700 : colors.slate900;
-            return (
-              <Pressable
-                key={a.key}
-                accessibilityRole="button"
-                accessibilityLabel={a.label}
-                onPress={a.onPress}
-                style={({ pressed }) => [
-                  styles.action,
-                  pressed ? styles.pressed : null,
-                ]}
-              >
-                {a.icon(color)}
-                <Text weight="medium" style={{ color }}>
-                  {a.label}
+          {content ?? (
+            <>
+              <View style={styles.head}>
+                <Text variant="small" weight="semibold" numberOfLines={1}>
+                  {title}
                 </Text>
-              </Pressable>
-            );
-          })}
+                {preview ? (
+                  <Text variant="small" tone="subtle" numberOfLines={2}>
+                    {preview}
+                  </Text>
+                ) : null}
+              </View>
+              {top}
+              {actions.map((a) => {
+                const color = a.destructive ? colors.red700 : colors.slate900;
+                return (
+                  <Pressable
+                    key={a.key}
+                    accessibilityRole="button"
+                    accessibilityLabel={a.label}
+                    onPress={a.onPress}
+                    style={({ pressed }) => [
+                      styles.action,
+                      pressed ? styles.pressed : null,
+                    ]}
+                  >
+                    {a.icon(color)}
+                    <Text weight="medium" style={{ color }}>
+                      {a.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </>
+          )}
           <Pressable
             accessibilityRole="button"
             onPress={onClose}
@@ -95,7 +116,7 @@ export function MessageSheet({
             </Text>
           </Pressable>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

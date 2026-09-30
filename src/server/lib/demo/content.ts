@@ -4,6 +4,8 @@ import type {
   ChatList,
   ChatListRow,
   ChatMessage,
+  ChatReactionSummary,
+  ChatReactionsResult,
   ChatRoom,
   ChatRoomMember,
 } from "@contract/chat";
@@ -17,6 +19,7 @@ import type {
 } from "@contract/news";
 import type { InboxItem } from "@contract/notifications";
 import { toString as qrToString } from "qrcode";
+import { isReactionEmoji, MAX_EMOJI_LENGTH } from "@/server/lib/chat-emoji";
 import { agoMs, type DemoData, demoData, isoAgo, isoOnDay } from "./data";
 import {
   DEMO_USER_ID,
@@ -321,7 +324,65 @@ function chatMessage(msg: DemoChat["messages"][number]): ChatMessage {
     deleted: false,
     mentionUserIds: [],
     mentionAll: msg.mentionAll,
+    reactions: reactionSummaries(msg.id),
   };
+}
+
+type DemoReaction = { emoji: string; by: string[] };
+
+/**
+ * Reactions the demo user changed, by message id (per server instance, like
+ * the other demo state); the rest come from chats.json.
+ */
+const reactionState = new Map<string, DemoReaction[]>();
+
+function reactionsOf(messageId: string): DemoReaction[] {
+  const changed = reactionState.get(messageId);
+  if (changed) return changed;
+  for (const c of demoData().chats)
+    for (const m of c.messages) if (m.id === messageId) return m.reactions;
+  return [];
+}
+
+function reactionSummaries(messageId: string): ChatReactionSummary[] {
+  return reactionsOf(messageId).map((r) => ({
+    emoji: r.emoji,
+    count: r.by.length,
+    mine: r.by.includes("me"),
+    names: r.by.slice(0, 10).map(personName),
+  }));
+}
+
+/** The demo user's reaction toggled (POST …/reactions); invalid ones ignored. */
+export function toggleDemoReaction(
+  chatId: string,
+  messageId: string,
+  raw: string,
+): ChatReactionsResult | undefined {
+  if (!findChat(chatId)) return undefined;
+  const emoji = raw.trim().slice(0, MAX_EMOJI_LENGTH);
+  if (isReactionEmoji(emoji)) {
+    const list = reactionsOf(messageId).map((r) => ({ ...r, by: [...r.by] }));
+    const r = list.find((x) => x.emoji === emoji);
+    if (r)
+      r.by = r.by.includes("me")
+        ? r.by.filter((x) => x !== "me")
+        : [...r.by, "me"];
+    else if (list.length < 20) list.push({ emoji, by: ["me"] });
+    reactionState.set(
+      messageId,
+      list.filter((x) => x.by.length > 0),
+    );
+  }
+  return { reactions: reactionSummaries(messageId) };
+}
+
+export function demoMessageReactions(
+  chatId: string,
+  messageId: string,
+): ChatReactionsResult | undefined {
+  if (!findChat(chatId)) return undefined;
+  return { reactions: reactionSummaries(messageId) };
 }
 
 function roomMember(x: DemoMember): ChatRoomMember {
@@ -460,6 +521,7 @@ export function sentMessage(body: string): ChatMessage {
     deleted: false,
     mentionUserIds: [],
     mentionAll: /@(all|全員)\b/i.test(body),
+    reactions: [],
   };
 }
 
