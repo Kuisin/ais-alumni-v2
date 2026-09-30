@@ -64,8 +64,16 @@ calculation for messaging).
 ## App Review Information
 
 - **Sign-in required**: yes. Reviewers can't receive the emailed code, so
-  they need a demo account that doesn't depend on email — see "Demo
-  account" below; until one exists, review will fail at sign-in.
+  the server has a demo account with a fixed code
+  (`src/server/lib/auth/review-account.ts`): set `REVIEW_EMAIL` (any
+  address, e.g. `review@ais-alumni.kai-lab.net` — nothing is ever sent to
+  it) and `REVIEW_CODE` (6 digits) on Vercel for production. Then, once:
+  sign in with that email and code in the app (this creates the account),
+  fill in the application (卒業生, any class), and approve it in 管理モード
+  → 本人確認. Put the same email and code in App Store Connect's demo
+  account fields (`store.config.json` `apple.review.demoUsername` /
+  `demoPassword`, pushed with `eas metadata:push`). Unset both variables
+  to turn the demo account off.
 - **Notes** (paste, adjust):
 
   > AIS Alumni is the members-only alumni network of Aichi International
@@ -93,7 +101,7 @@ calculation for messaging).
   may not be accepted as that option. Adding Sign in with Apple needs the
   capability on the App ID, a Services ID + key for the server, and
   `expo-apple-authentication`.
-- **Demo account**: see above.
+- **Demo account**: see above (REVIEW_EMAIL / REVIEW_CODE).
 - **Guideline 1.2 (UGC)**: report, block and moderation exist; mention
   them in the notes (done above).
 

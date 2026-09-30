@@ -1,6 +1,7 @@
 import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 import type { Locale, OtpPurpose } from "@/server/generated/prisma/enums";
 import { getTranslatorFor } from "@/server/i18n/translator";
+import { reviewSignInCode } from "@/server/lib/auth/review-account";
 import { db } from "@/server/lib/db";
 import { sendEmail } from "@/server/lib/email";
 
@@ -49,7 +50,10 @@ export async function issueOtp(params: {
     return { ok: false, error: "rate_limited" };
   }
 
-  const code = generateCode();
+  // The App Review demo account gets a fixed code, never emailed.
+  const reviewCode =
+    params.purpose === "SIGN_IN" ? reviewSignInCode(email) : null;
+  const code = reviewCode ?? generateCode();
   const row = await db.otpCode.create({
     data: {
       email,
@@ -63,6 +67,8 @@ export async function issueOtp(params: {
     where: { id: row.id },
     data: { codeHash: hashCode(row.id, code) },
   });
+
+  if (reviewCode) return { ok: true };
 
   const t = await getTranslatorFor(params.locale, "email");
   try {

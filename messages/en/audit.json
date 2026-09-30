@@ -20,7 +20,8 @@
     "school": "Schools",
     "company": "Companies",
     "self": "Member’s own actions",
-    "user": "Automatic account merges"
+    "user": "Automatic account merges",
+    "donation": "Donations"
   },
   "targetTypes": {
     "User": "Member",
@@ -31,7 +32,10 @@
     "Cohort": "Class",
     "school": "School",
     "company": "Company",
-    "ChatReport": "Chat report"
+    "ChatReport": "Chat report",
+    "CheckoutSession": "Donation payment",
+    "Invoice": "Invoice",
+    "Subscription": "Monthly donation"
   },
   "actions": {
     "member": {
@@ -132,6 +136,12 @@
       "report_close": "Marked a chat report done",
       "report_reopen": "Reopened a chat report",
       "direct_rules": "Changed one-to-one chat rules"
+    },
+    "donation": {
+      "received": "Donation received",
+      "monthly_started": "Monthly donation started",
+      "monthly_paid": "Monthly donation received",
+      "monthly_stopped": "Monthly donation stopped"
     }
   }
 }

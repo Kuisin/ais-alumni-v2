@@ -1,4 +1,5 @@
 import type { AppConfig } from "@contract/core";
+import { donationsReady, portalLoginUrl } from "@/server/lib/donations";
 import { publicRoute } from "@/server/lib/mobile/http";
 import { ssoReady } from "@/server/lib/sso";
 
@@ -15,6 +16,7 @@ export const GET = publicRoute(
       : null,
     // e.g. "1.1.0": older installed apps show "update the app" (src/app/
     // _layout.tsx) and stop there, for when the API changes incompatibly.
+    donations: donationsReady() ? { portalUrl: portalLoginUrl() } : null,
     minAppVersion: process.env.MIN_APP_VERSION?.trim() || null,
     storeUrl: {
       ios: process.env.APP_STORE_URL?.trim() || null,

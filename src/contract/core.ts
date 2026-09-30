@@ -65,6 +65,8 @@ export type AppConfig = {
   minAppVersion: string | null;
   /** the LINE Login channel, for the LINE SDK in the app (null: not set up) */
   lineChannelId?: string | null;
+  /** 寄付 through Stripe (/donate); null: not set up on this server */
+  donations?: { portalUrl: string | null } | null;
   /** where to update the app (App Store / Google Play), when known */
   storeUrl?: { ios: string | null; android: string | null };
 };

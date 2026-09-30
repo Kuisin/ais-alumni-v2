@@ -93,6 +93,7 @@ import * as compose5 from "./mobile/v1/compose/news";
 import * as r16 from "./mobile/v1/config";
 import * as r17 from "./mobile/v1/directory";
 import * as r18 from "./mobile/v1/directory/options";
+import * as donateCheckout from "./mobile/v1/donate/checkout";
 import * as r19 from "./mobile/v1/events";
 import * as r20 from "./mobile/v1/events/[id]";
 import * as checkIn0 from "./mobile/v1/events/[id]/check-in";
@@ -302,6 +303,7 @@ export const ROUTES: [string, RouteModule][] = [
   ["auth/oauth/exchange", r3 as unknown as RouteModule],
   ["auth/oauth/start", r4 as unknown as RouteModule],
   ["auth/signout", r5 as unknown as RouteModule],
+  ["donate/checkout", donateCheckout as unknown as RouteModule],
   ["chat", r6 as unknown as RouteModule],
   ["chat/direct", r7 as unknown as RouteModule],
   ["chat/[id]", r8 as unknown as RouteModule],

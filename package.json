@@ -70,6 +70,7 @@
     "react-native-worklets": "0.10.1",
     "resend": "^6.30.0",
     "satori": "0.33.5",
+    "stripe": "22.6.0",
     "use-intl": "^4.14.7",
     "zod": "^4.6.5"
   },
