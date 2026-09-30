@@ -1,0 +1,161 @@
+[
+  {
+    "id": "demo-news-welcome",
+    "pinned": true,
+    "posted": { "daysAgo": 20 },
+    "sender": "AIS Alumni Committee",
+    "title": "Welcome to the new AIS Alumni app",
+    "excerpt": "The AIS Alumni app is here: news, events, the member directory and chats with your classmates — all in one place.",
+    "body": [
+      "The **AIS Alumni app** is here! Everything from the website is now in your pocket:",
+      "",
+      "- **News** from the committee, teachers and class reps",
+      "- **Events** — reply, and show your ticket at the door",
+      "- The **member directory** to find classmates and teachers",
+      "- **Chats** with your class and with friends who follow you back",
+      "",
+      "Turn on notifications in **Settings → App notifications** so you never miss an update.",
+      "",
+      "Questions or ideas? Use **Contact us** in the menu. — The AIS Alumni Committee"
+    ],
+    "unread": false,
+    "needsAnswer": false,
+    "allowComments": true,
+    "reactions": [
+      { "emoji": "👏", "count": 24, "mine": true },
+      { "emoji": "🎉", "count": 11, "mine": false },
+      { "emoji": "❤️", "count": 7, "mine": false }
+    ],
+    "comments": [
+      {
+        "id": "demo-c-1",
+        "authorId": "demo-m-kenji",
+        "body": "Great work, committee! Already found half of Class 3 in the directory.",
+        "posted": { "daysAgo": 19 }
+      },
+      {
+        "id": "demo-c-2",
+        "authorId": "demo-m-sophie",
+        "body": "Lovely to see so many familiar names again. Bravo !",
+        "posted": { "daysAgo": 18 }
+      }
+    ]
+  },
+  {
+    "id": "demo-news-reunion",
+    "posted": { "hoursAgo": 5 },
+    "sender": "AIS Alumni Committee",
+    "title": "Alumni Reunion: registration is open",
+    "excerpt": "Our autumn reunion is coming up! Reply on the event page and tell us what you'd like to do on the day.",
+    "body": [
+      "Our **Alumni Reunion** is coming up, and registration is now open.",
+      "",
+      "Graduates, former students, teachers and families are all welcome. Reply on the event page (Events tab) — you can bring one guest.",
+      "",
+      "Help us plan the day: pick everything you'd enjoy in the poll below."
+    ],
+    "deadline": { "inDays": 30, "time": "23:59" },
+    "unread": true,
+    "needsAnswer": true,
+    "allowComments": true,
+    "reactions": [{ "emoji": "🎉", "count": 9, "mine": false }],
+    "polls": [
+      {
+        "id": "demo-poll-1",
+        "kind": "POLL",
+        "question": "What would you like at the reunion?",
+        "multiple": true,
+        "voters": 37,
+        "options": [
+          { "id": "demo-opt-1", "label": "School tour", "yes": 25 },
+          { "id": "demo-opt-2", "label": "Class photos slideshow", "yes": 30 },
+          { "id": "demo-opt-3", "label": "Sports day rematch", "yes": 14 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "demo-news-mentoring",
+    "posted": { "daysAgo": 4 },
+    "sender": "Alumni committee member",
+    "title": "Mentoring program: pick a kickoff date",
+    "excerpt": "We're starting a mentoring program where alumni share their university and career experience. Which date works for you?",
+    "body": [
+      "We're starting a **mentoring program**: alumni share their experience of university, work and life abroad with younger graduates.",
+      "",
+      "The kickoff is an online session of about an hour. Mark every date that works for you."
+    ],
+    "deadline": { "inDays": 10, "time": "23:59" },
+    "unread": false,
+    "needsAnswer": false,
+    "allowComments": true,
+    "reactions": [{ "emoji": "👍", "count": 6, "mine": false }],
+    "comments": [
+      {
+        "id": "demo-c-3",
+        "authorId": "demo-m-yui",
+        "body": "Count me in! Happy to talk about studying marine biology.",
+        "posted": { "daysAgo": 3 }
+      }
+    ],
+    "polls": [
+      {
+        "id": "demo-poll-2",
+        "kind": "SCHEDULE",
+        "question": "Kickoff session",
+        "voters": 3,
+        "options": [
+          {
+            "id": "demo-slot-1",
+            "starts": { "inDays": 14, "time": "19:00" },
+            "yes": 3,
+            "no": 1,
+            "best": true,
+            "answers": [
+              { "memberId": "me", "answer": "YES" },
+              { "memberId": "demo-m-emily", "answer": "YES" },
+              { "memberId": "demo-m-yui", "answer": "YES" },
+              { "memberId": "demo-m-liam", "answer": "NO" }
+            ]
+          },
+          {
+            "id": "demo-slot-2",
+            "starts": { "inDays": 16, "time": "20:00" },
+            "yes": 2,
+            "maybe": 1,
+            "no": 1,
+            "answers": [
+              { "memberId": "me", "answer": "MAYBE" },
+              { "memberId": "demo-m-emily", "answer": "NO" },
+              { "memberId": "demo-m-yui", "answer": "YES" },
+              { "memberId": "demo-m-liam", "answer": "YES" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "demo-news-photos",
+    "posted": { "daysAgo": 9 },
+    "sender": "Class rep (Class 3)",
+    "title": "Class 3: help us collect old photos",
+    "excerpt": "We're putting together a slideshow of our AIS years for the reunion. Please confirm you've read this and share your photos in the class chat.",
+    "body": [
+      "Hi Class 3!",
+      "",
+      "We're putting together a slideshow of our AIS years for the reunion — school trips, sports days, the winter concert…",
+      "",
+      "Please share any photos you have in the **Class 3** chat by the deadline, and tap **Confirm** below so we know you've seen this.",
+      "",
+      "— Kenji"
+    ],
+    "deadline": { "inDays": 21, "time": "23:59" },
+    "unread": false,
+    "needsAnswer": false,
+    "allowComments": false,
+    "requireConfirm": true,
+    "confirmedByMe": { "daysAgo": 8 },
+    "confirmCount": 14
+  }
+]

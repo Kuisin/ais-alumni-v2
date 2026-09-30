@@ -1,4 +1,9 @@
-import type { ChatMessage, ChatRoom } from "@contract/chat";
+import type {
+  ChatMessage,
+  ChatReactionSummary,
+  ChatRoom,
+  ToggleReactionError,
+} from "@contract/chat";
 import type { Locale } from "@contract/core";
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
@@ -17,7 +22,7 @@ import {
   RefreshCw,
   Trash2,
 } from "lucide-react-native";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -30,18 +35,28 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocale, useTranslations } from "use-intl";
+import { isApiError } from "@/lib/api";
 import { useMe } from "@/lib/auth";
 import { useRealtimeLive } from "@/lib/realtime";
 import { colors, QueryState, space, Text, TOUCH } from "@/ui";
 import { useChatRoom } from "../api";
-import { confirmDestructive, showError } from "../dialogs";
+import { confirmDestructive, showError, showInfo } from "../dialogs";
 import { MemberTags } from "../member-tags";
 import { ALL_LABELS } from "../mentions";
 import { dayLabel, jstDay, timeOfDay } from "../time";
 import { Composer } from "./composer";
+import { EmojiPicker } from "./emoji-picker";
 import { type RoomItem, RoomRow } from "./message-row";
 import { MessageSheet } from "./message-sheet";
+import { QuickReactions, type ReactionLabels } from "./reactions";
 import { useRoom } from "./use-room";
+
+/** Reaction errors with their own text (the rest: chat.reactions.errors.generic). */
+const REACTION_ERRORS: ToggleReactionError[] = [
+  "too_many",
+  "invalid",
+  "unavailable",
+];
 
 /** Count of `sorted` (ascending ISO) at or after `at`. */
 function countFrom(sorted: readonly string[], at: string): number {
@@ -164,15 +179,25 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
   const tc = useTranslations("chat");
   const tCommon = useTranslations("common");
   const tm = useTranslations("mobile");
+  const tr = useTranslations("chat.reactions");
   const locale = useLocale() as Locale;
-  const me = useMe().user.id;
+  const meUser = useMe().user;
+  const me = meUser.id;
   const focused = useIsFocused();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
-  const state = useRoom({ room, meId: me, focused, fresh });
+  const state = useRoom({
+    room,
+    meId: me,
+    meName: meUser.name,
+    focused,
+    fresh,
+  });
   const { messages, reads, divider } = state;
   const list = useRef<FlatList<RoomItem>>(null);
   const [selected, setSelected] = useState<ChatMessage | null>(null);
+  /** the sheet shows the full emoji picker */
+  const [picking, setPicking] = useState(false);
   const keyboard = useKeyboardShown();
 
   const canPost = room.member && !room.stopped;
@@ -239,12 +264,59 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
     return () => clearTimeout(timer);
   }, [dividerIndex]);
 
-  const onLongPress = (m: ChatMessage) => {
+  const onLongPress = useCallback((m: ChatMessage) => {
     if (Platform.OS !== "web")
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
         () => {},
       );
+    setPicking(false);
     setSelected(m);
+  }, []);
+
+  // Reactions: anyone who can read the talk, except in a stopped 1:1 talk.
+  const canReact = !room.stopped;
+  const react = state.react;
+  const onReact = useCallback(
+    (messageId: string, emoji: string) => {
+      react(messageId, emoji).catch((e: unknown) => {
+        const code = isApiError(e) ? e.code : "";
+        showError(
+          REACTION_ERRORS.includes(code as ToggleReactionError)
+            ? tr(`errors.${code as "too_many" | "invalid" | "unavailable"}`)
+            : tr("errors.generic"),
+        );
+      });
+    },
+    [react, tr],
+  );
+  const onShowReactors = useCallback(
+    (r: ChatReactionSummary) => {
+      const more = r.count - r.names.length;
+      const lines = [
+        ...r.names,
+        ...(more > 0 ? [tr("others", { count: more })] : []),
+      ];
+      showInfo(`${tr("who")}  ${r.emoji}`, lines.join("\n"));
+    },
+    [tr],
+  );
+  const reactionLabels = useMemo<ReactionLabels>(
+    () => ({
+      chip: (r) =>
+        tr(r.mine ? "chipMine" : "chip", { emoji: r.emoji, count: r.count }),
+      hint: tr("chipHint"),
+      who: tr("who"),
+    }),
+    [tr],
+  );
+  const closeSheet = useCallback(() => {
+    setSelected(null);
+    setPicking(false);
+  }, []);
+  const reactToSelected = (emoji: string) => {
+    const m = selected;
+    closeSheet();
+    if (m) onReact(m.id, emoji);
   };
 
   const remove = async (m: ChatMessage) => {
@@ -292,6 +364,9 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
               deletedLabel={t("deleted")}
               actionsHint={tm("chat.actionsHint")}
               onLongPress={onLongPress}
+              reactionLabels={reactionLabels}
+              onReact={canReact ? onReact : undefined}
+              onShowReactors={onShowReactors}
             />
           )}
           onEndReached={() => void state.loadOlder()}
@@ -361,7 +436,28 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
         title={selected?.name ?? ""}
         preview={selected?.body ?? ""}
         cancelLabel={tCommon("cancel")}
-        onClose={() => setSelected(null)}
+        onClose={closeSheet}
+        top={
+          selected && canReact ? (
+            <QuickReactions
+              mineEmoji={(selected.reactions ?? [])
+                .filter((r) => r.mine)
+                .map((r) => r.emoji)}
+              label={(emoji) => tr("react", { emoji })}
+              addLabel={tr("more")}
+              onPick={reactToSelected}
+              onMore={() => setPicking(true)}
+            />
+          ) : undefined
+        }
+        content={
+          selected && picking ? (
+            <EmojiPicker
+              onPick={reactToSelected}
+              onBack={() => setPicking(false)}
+            />
+          ) : undefined
+        }
         actions={
           selected
             ? [
@@ -371,7 +467,7 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
                   icon: (c) => <Copy size={18} color={c} />,
                   onPress: () => {
                     void Clipboard.setStringAsync(selected.body);
-                    setSelected(null);
+                    closeSheet();
                   },
                 },
                 ...(canDelete(selected)

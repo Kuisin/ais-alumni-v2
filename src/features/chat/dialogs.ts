@@ -40,3 +40,9 @@ export function showError(message: string): void {
   if (Platform.OS === "web") web.alert?.(message);
   else Alert.alert(message);
 }
+
+/** A short message with a title (e.g. who reacted). */
+export function showInfo(title: string, message: string): void {
+  if (Platform.OS === "web") web.alert?.(`${title}\n\n${message}`);
+  else Alert.alert(title, message);
+}

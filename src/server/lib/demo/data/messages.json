@@ -1,0 +1,30 @@
+[
+  {
+    "id": "demo-msg-1",
+    "title": "Thank you for joining AIS Alumni",
+    "sender": "AIS Alumni Committee",
+    "sent": { "daysAgo": 20 },
+    "sentTo": "Everyone",
+    "body": [
+      "Thank you for joining the AIS Alumni network!",
+      "",
+      "Please take a moment to complete your profile — a photo and a short bio help your classmates recognise you.",
+      "",
+      "The AIS Alumni Committee"
+    ]
+  },
+  {
+    "id": "demo-msg-2",
+    "title": "Class 3 get-together planning",
+    "sender": "Kenji Morimoto (Class rep)",
+    "sent": { "daysAgo": 6 },
+    "sentTo": "Class 3",
+    "body": [
+      "Hi everyone,",
+      "",
+      "We're planning a small Class 3 dinner in Nagoya the evening after the reunion. Details will follow in the class chat.",
+      "",
+      "Kenji"
+    ]
+  }
+]

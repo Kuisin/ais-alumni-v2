@@ -12,7 +12,7 @@ replacing the Next.js site (Kuisin/ais-alumni-app).
 | Every page: public (landing, privacy, support, handover, invite), onboarding, member, admin mode | **here** | native screens; the app never opens the old website |
 | App API (`/api/mobile/v1`), sign-in (email code, LINE), uploads, files, notifications | **here** (Expo API routes, `src/server/`) | same database; the website's own server actions are reused in `src/server/app/actions` |
 | Contract types, UI strings | **here** | |
-| Schema + migrations | ais-alumni-app | copied with `pnpm sync:server` |
+| Schema + migrations | **here** (`prisma/migrations`, applied by the Vercel build) | baselined as `0_init`; the old website must no longer run migrations |
 | Scheduled jobs (`/api/cron`), LINE webhook, short links in emails / LINE (`/n/…`) | ais-alumni-app | email and LINE notification links still open the old site (by decision) |
 
 ## Known differences from the website
@@ -33,8 +33,7 @@ replacing the Next.js site (Kuisin/ais-alumni-app).
    real accounts. Update the LINE Login callback and Official Account
    links, `APP_URL`, and the notification links then.
 2. **Move the backend jobs.** Scheduled jobs, the LINE webhook and `/n/…`
-   short links as Expo API routes; then the schema and migrations
-   (`prisma migrate deploy` in this project's build), and retire
-   ais-alumni-app.
+   short links as Expo API routes, and retire ais-alumni-app. (The schema
+   and migrations moved here already.)
 3. **Universal / app links** (apple-app-site-association, assetlinks) so
    https links open the installed app.

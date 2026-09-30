@@ -178,5 +178,37 @@
     "messages": "添付メッセージ（{count}件）",
     "close": "対応済みにする",
     "reopen": "未対応に戻す"
+  },
+  "reactions": {
+    "label": "リアクション",
+    "add": "リアクションを追加",
+    "react": "{emoji} でリアクション",
+    "more": "ほかの絵文字を選ぶ",
+    "chip": "{emoji} {count}件",
+    "chipMine": "{emoji} {count}件、リアクション済み",
+    "chipHint": "タップでリアクションを付ける・外す。長押しでリアクションした人を表示します",
+    "who": "リアクションした人",
+    "others": "ほか{count}人",
+    "picker": "絵文字を選ぶ",
+    "back": "戻る",
+    "search": "絵文字を検索",
+    "noResults": "見つかりませんでした",
+    "groups": {
+      "smileys": "顔・感情",
+      "people": "人・体",
+      "animals": "動物・自然",
+      "food": "食べ物・飲み物",
+      "travel": "旅行・場所",
+      "activities": "アクティビティ",
+      "objects": "物",
+      "symbols": "記号",
+      "flags": "旗"
+    },
+    "errors": {
+      "too_many": "このメッセージには、これ以上の種類のリアクションを付けられません。",
+      "invalid": "この絵文字はリアクションに使えません。",
+      "unavailable": "リアクションは現在ご利用いただけません。",
+      "generic": "リアクションできませんでした。もう一度お試しください。"
+    }
   }
 }

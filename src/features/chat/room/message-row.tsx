@@ -1,9 +1,10 @@
-import type { ChatMessage } from "@contract/chat";
+import type { ChatMessage, ChatReactionSummary } from "@contract/chat";
 import { memo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Avatar, colors, space, Text } from "@/ui";
 import { MemberTags } from "../member-tags";
 import { splitMentions } from "../mentions";
+import { ReactionChips, type ReactionLabels } from "./reactions";
 
 export type RoomItem =
   | { kind: "day"; key: string; label: string }
@@ -29,12 +30,19 @@ export const RoomRow = memo(function RoomRow({
   deletedLabel,
   actionsHint,
   onLongPress,
+  reactionLabels,
+  onReact,
+  onShowReactors,
 }: {
   item: RoomItem;
   direct: boolean;
   deletedLabel: string;
   actionsHint: string;
   onLongPress: (m: ChatMessage) => void;
+  reactionLabels: ReactionLabels;
+  /** toggle the member's reaction; undefined = can't react here */
+  onReact?: (messageId: string, emoji: string) => void;
+  onShowReactors: (r: ChatReactionSummary) => void;
 }) {
   if (item.kind === "day")
     return (
@@ -143,6 +151,16 @@ export const RoomRow = memo(function RoomRow({
             <Text style={[styles.metaText, styles.nums]}>{time}</Text>
           </View>
         </View>
+        {!m.deleted && m.reactions?.length ? (
+          <ReactionChips
+            messageId={m.id}
+            reactions={m.reactions}
+            mine={mine}
+            labels={reactionLabels}
+            onToggle={onReact}
+            onShowNames={onShowReactors}
+          />
+        ) : null}
       </View>
     </View>
   );

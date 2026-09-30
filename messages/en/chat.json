@@ -178,5 +178,37 @@
     "messages": "{count, plural, one {# attached message} other {# attached messages}}",
     "close": "Mark done",
     "reopen": "Reopen"
+  },
+  "reactions": {
+    "label": "Reactions",
+    "add": "Add a reaction",
+    "react": "React with {emoji}",
+    "more": "More emoji",
+    "chip": "{emoji} {count}",
+    "chipMine": "{emoji} {count}, you reacted",
+    "chipHint": "Tap to add or remove your reaction. Long-press to see who reacted",
+    "who": "Who reacted",
+    "others": "and {count} more",
+    "picker": "Choose an emoji",
+    "back": "Back",
+    "search": "Search emoji",
+    "noResults": "No emoji found",
+    "groups": {
+      "smileys": "Smileys & emotion",
+      "people": "People & body",
+      "animals": "Animals & nature",
+      "food": "Food & drink",
+      "travel": "Travel & places",
+      "activities": "Activities",
+      "objects": "Objects",
+      "symbols": "Symbols",
+      "flags": "Flags"
+    },
+    "errors": {
+      "too_many": "This message can't take any more kinds of reactions.",
+      "invalid": "This emoji can't be used as a reaction.",
+      "unavailable": "Reactions aren't available right now.",
+      "generic": "Couldn't add the reaction. Please try again."
+    }
   }
 }

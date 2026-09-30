@@ -167,6 +167,7 @@ model User {
   chatReportsSent      ChatReport[]          @relation("chatReporter")
   chatReportsAbout     ChatReport[]          @relation("chatReported")
   chatDeleted          ChatMessage[]         @relation("chatDeleted")
+  chatReactions        ChatReaction[]
   eventCheckIns        EventCheckIn[]        @relation("CheckedIn")
   checkInsDone         EventCheckIn[]        @relation("CheckedInBy")
   parentLinks          FamilyLink[]          @relation("parent")
@@ -939,22 +940,37 @@ model ChatMember {
 }
 
 model ChatMessage {
-  id             String    @id @default(cuid())
+  id             String         @id @default(cuid())
   groupId        String
-  group          ChatGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group          ChatGroup      @relation(fields: [groupId], references: [id], onDelete: Cascade)
   userId         String
-  user           User      @relation("chatMessages", fields: [userId], references: [id], onDelete: Cascade)
+  user           User           @relation("chatMessages", fields: [userId], references: [id], onDelete: Cascade)
   body           String
   /// Added: members mentioned with @name, and @全員 (group chats)
-  mentionUserIds String[]  @default([])
-  mentionAll     Boolean   @default(false)
-  createdAt      DateTime  @default(now())
+  mentionUserIds String[]       @default([])
+  mentionAll     Boolean        @default(false)
+  createdAt      DateTime       @default(now())
   /// deleted by the author or an admin (the text is removed)
   deletedAt      DateTime?
   deletedById    String?
-  deletedBy      User?     @relation("chatDeleted", fields: [deletedById], references: [id], onDelete: SetNull)
+  deletedBy      User?          @relation("chatDeleted", fields: [deletedById], references: [id], onDelete: SetNull)
+  reactions      ChatReaction[]
 
   @@index([groupId, createdAt])
+}
+
+/// Emoji reactions to a chat message (any emoji; one row per member and
+/// emoji — tapping it again removes it).
+model ChatReaction {
+  messageId String
+  message   ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emoji     String
+  createdAt DateTime    @default(now())
+
+  @@id([messageId, userId, emoji])
+  @@index([messageId])
 }
 
 /// Who a member type may have 1:1 talks with (admin → チャット設定).

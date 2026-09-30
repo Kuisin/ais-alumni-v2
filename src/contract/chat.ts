@@ -10,6 +10,9 @@
  *   GET    /chat/:id/messages?before=… | after=… → ChatMessagesPage
  *   POST   /chat/:id/messages   SendMessageRequest → SendMessageResult
  *   DELETE /chat/:id/messages/:messageId        → OkResult
+ *   GET    /chat/:id/messages/:messageId/reactions → ChatReactionsResult
+ *   POST   /chat/:id/messages/:messageId/reactions ToggleReactionRequest
+ *                                               → ChatReactionsResult
  *   GET    /chat/:id/read                       → ChatReads
  *   POST   /chat/:id/read                       → OkResult (marks read)
  *   PUT    /chat/:id/mute       MuteRequest     → MuteResult
@@ -23,7 +26,8 @@
  * Live updates: subscribe to ChatRoom.topic (signal-only Supabase
  * Broadcast, as on the website): "message" { id } → load
  * /messages?after=<latest>; "delete" { id } → show it as deleted; "read" {}
- * → reload /read. Without Realtime, poll both every 5 s.
+ * → reload /read; "reaction" { id } → reload that message's reactions
+ * (GET …/reactions). Without Realtime, poll both every 5 s.
  */
 
 /** ISO 8601 timestamp. */
@@ -137,6 +141,21 @@ export type ChatMessage = {
   mentionUserIds: string[];
   /** "@全員" / "@all" */
   mentionAll: boolean;
+  /**
+   * Emoji reactions, by when each emoji was first used. Missing (older
+   * servers) or empty = none; always empty for deleted messages.
+   */
+  reactions?: ChatReactionSummary[];
+};
+
+export type ChatReactionSummary = {
+  /** one emoji (a single grapheme cluster) */
+  emoji: string;
+  count: number;
+  /** the member reacted with it (tap again to remove) */
+  mine: boolean;
+  /** who reacted (up to 10, earliest first) — the 「リアクションした人」 sheet */
+  names: string[];
 };
 
 export type ChatRoomMember = {
@@ -214,6 +233,26 @@ export type SendMessageError =
 // ---- DELETE /chat/:id/messages/:messageId ----
 // Authors delete their own messages, admins (moderator) anyone's.
 // errors: not_found (404), forbidden (403)
+
+// ---- GET / POST /chat/:id/messages/:messageId/reactions ----
+// Anyone who can open the talk may react (not in a stopped 1:1 talk).
+// POST toggles the member's reaction with that emoji.
+
+export type ToggleReactionRequest = { emoji: string };
+export type ChatReactionsResult = { reactions: ChatReactionSummary[] };
+/**
+ * Error codes: invalid (400: not a single emoji), too_many (400: already 20
+ * different emoji on the message), deleted (400: the message was deleted),
+ * forbidden (403), not_found (404), unavailable (503: reactions aren't
+ * available on this server yet).
+ */
+export type ToggleReactionError =
+  | "invalid"
+  | "too_many"
+  | "deleted"
+  | "forbidden"
+  | "not_found"
+  | "unavailable";
 
 // ---- GET /chat/:id/read ----
 

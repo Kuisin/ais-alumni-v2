@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "prisma generate && expo export -p web",
+  "buildCommand": "prisma generate && node scripts/migrate.mjs && expo export -p web",
   "outputDirectory": "dist/client",
   "functions": {
     "api/index.ts": {

@@ -1,0 +1,49 @@
+{
+  "firstName": "Reviewer",
+  "lastName": "App",
+  "fallbackEmail": "reviewer@example.com",
+  "classNumber": 3,
+  "atAisFrom": 2008,
+  "graduationYear": 2014,
+  "bio": "Class 3 graduate. Glad to reconnect with everyone from AIS!",
+  "currentStage": "WORKING",
+  "currentStageDetail": "Working in software",
+  "education": [
+    {
+      "id": "demo-me-edu-0",
+      "schoolOrgId": "demo-org-lakeside",
+      "level": "UNIVERSITY",
+      "field": "Computer Science",
+      "startYear": 2020,
+      "endYear": 2024
+    }
+  ],
+  "work": [
+    {
+      "id": "demo-me-work-0",
+      "companyOrgId": "demo-org-example-apps",
+      "title": "Software Engineer",
+      "industry": "ICT-01",
+      "jobType": "IT-02",
+      "startYear": 2024,
+      "endYear": null
+    }
+  ],
+  "badges": { "news": 1, "messages": 0, "chat": 2, "follows": 1, "inbox": 2 },
+  "device": {
+    "platform": "ios",
+    "name": "iPhone",
+    "signedIn": { "hoursAgo": 1 }
+  },
+  "setupChecklist": [
+    { "key": "email", "done": true },
+    { "key": "apply", "done": true },
+    { "key": "approval", "done": true },
+    { "key": "names", "done": false },
+    { "key": "photo", "done": true },
+    { "key": "bio", "done": true },
+    { "key": "history", "done": true },
+    { "key": "follow", "done": true },
+    { "key": "family", "done": false }
+  ]
+}

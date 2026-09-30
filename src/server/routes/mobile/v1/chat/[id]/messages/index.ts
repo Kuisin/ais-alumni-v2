@@ -12,8 +12,14 @@ import {
 } from "@/server/lib/mobile/http";
 
 /** ?before=<ISO> older messages, ?after=<ISO> new ones. */
-export const GET = mobileRoute<{ id: string }>(({ request, params }) =>
-  chatMessages(IdParam.parse(params.id), MessagesQuery.parse(query(request))),
+export const GET = mobileRoute<{ id: string }>(
+  ({ request, user, locale, params }) =>
+    chatMessages(
+      user,
+      locale,
+      IdParam.parse(params.id),
+      MessagesQuery.parse(query(request)),
+    ),
 );
 
 /** Post a message: { body } → { message }. */

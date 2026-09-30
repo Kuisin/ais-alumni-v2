@@ -1,0 +1,22 @@
+[
+  {
+    "id": "demo-invite-1",
+    "kind": "INDIVIDUAL",
+    "type": "STUDENT",
+    "inviteeName": "Hana Sato",
+    "classNumber": 3,
+    "created": { "daysAgo": 2 },
+    "usedById": null,
+    "status": "open"
+  },
+  {
+    "id": "demo-invite-2",
+    "kind": "INDIVIDUAL",
+    "type": "STUDENT",
+    "inviteeName": "Yui Hasegawa",
+    "classNumber": 4,
+    "created": { "daysAgo": 15 },
+    "usedById": "demo-m-yui",
+    "status": "used"
+  }
+]

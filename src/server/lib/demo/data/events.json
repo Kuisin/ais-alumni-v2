@@ -1,0 +1,59 @@
+[
+  {
+    "id": "demo-event-talk",
+    "title": "Online career talk: working abroad",
+    "body": [
+      "Three alumni talk about studying and working in Europe, North America and Southeast Asia, followed by Q&A.",
+      "",
+      "The meeting link is sent to everyone who answers **Going**."
+    ],
+    "starts": { "inDays": 3, "time": "20:00" },
+    "ends": { "inDays": 3, "time": "21:30" },
+    "rsvpCloses": { "inDays": 3, "time": "12:00" },
+    "location": "Online",
+    "mapUrl": null,
+    "sender": "Alumni committee member",
+    "capacity": null,
+    "going": 23,
+    "maxGuests": 0,
+    "myAnswer": null
+  },
+  {
+    "id": "demo-event-reunion",
+    "title": "AIS Alumni Reunion",
+    "body": [
+      "Our big get-together for graduates, former students, teachers and families.",
+      "",
+      "- **Afternoon:** school tour and class photos slideshow",
+      "- **Evening:** buffet dinner and games",
+      "",
+      "Bring your ticket (shown on this page once you reply) — staff will scan it at the entrance."
+    ],
+    "starts": { "inDays": 45, "time": "14:00" },
+    "ends": { "inDays": 45, "time": "19:00" },
+    "rsvpCloses": { "inDays": 38, "time": "23:59" },
+    "location": "Community Hall, Nagoya",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Nagoya",
+    "sender": "AIS Alumni Committee",
+    "capacity": 120,
+    "going": 58,
+    "maxGuests": 1,
+    "myAnswer": { "answer": "GOING", "guests": 1 }
+  },
+  {
+    "id": "demo-event-bbq",
+    "title": "Summer BBQ in the park",
+    "body": "An easygoing summer barbecue for alumni and families. Thanks to everyone who came!",
+    "starts": { "inDays": -60, "time": "11:00" },
+    "ends": { "inDays": -60, "time": "15:00" },
+    "rsvpCloses": { "inDays": -63, "time": "23:59" },
+    "checkedIn": { "inDays": -60, "time": "11:05" },
+    "location": "Riverside Park, Nagoya",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Nagoya",
+    "sender": "Class rep (Class 3)",
+    "capacity": 40,
+    "going": 36,
+    "maxGuests": 2,
+    "myAnswer": { "answer": "GOING", "guests": 0 }
+  }
+]

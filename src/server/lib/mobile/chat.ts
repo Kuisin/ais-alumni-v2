@@ -44,6 +44,7 @@ import { loadChatGroup } from "@/server/lib/chat-room";
 import { db } from "@/server/lib/db";
 import { DIRECT_CHAT_ENABLED } from "@/server/lib/features";
 import { displayName, otherNames } from "@/server/lib/format";
+import { withReactions } from "@/server/lib/mobile/chat-reactions";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import { chatNotifyLevel } from "@/server/lib/mobile/notifications";
 import { channelTopic } from "@/server/lib/realtime";
@@ -198,7 +199,7 @@ export async function chatRoom(
       ? await directStopReason(user.id, other.id)
       : "blocked"
     : null;
-  const page = messages ?? [];
+  const page = await withReactions(messages ?? [], user.id, locale);
   return {
     id: group.id,
     kind: group.kind,
@@ -229,13 +230,15 @@ export const MessagesQuery = z
 
 /** Older messages (before) or new ones (after), as the website room loads them. */
 export async function chatMessages(
+  user: CurrentUser,
+  locale: Locale,
   id: string,
   q: z.infer<typeof MessagesQuery>,
 ): Promise<ChatMessagesPage> {
   const rows = await chatMessagesAction(id, q);
   if (!rows) throw notFound();
   return {
-    messages: rows,
+    messages: await withReactions(rows, user.id, locale),
     hasMore: rows.length >= (q.after ? AFTER_LIMIT : CHAT_PAGE_SIZE),
   };
 }

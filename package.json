@@ -14,7 +14,7 @@
     "icons": "node scripts/make-icons.mjs",
     "doctor": "npx --yes expo-doctor@latest",
     "format": "biome check --write .",
-    "sync:server": "node scripts/sync-server.mjs",
+    "demo:check": "tsx --tsconfig tsconfig.json scripts/check-demo-data.ts",
     "eas-build-post-install": "prisma generate"
   },
   "dependencies": {
@@ -82,6 +82,7 @@
     "@types/react": "~19.2.2",
     "playwright-core": "^1.63.0",
     "prisma": "7.10.0",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.3"
   },
   "packageManager": "pnpm@11.21.0"
