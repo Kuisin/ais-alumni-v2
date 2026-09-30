@@ -114,6 +114,18 @@ project id in the config Expo Go needs no sign-in (with one, run
   `src/app/(member)/notifications.tsx`; settings, the Home prompt and chat
   levels are in `src/features/notifications`. Push needs a development or
   store build — Expo Go can't receive it.
+- **Donations (寄付)** (`src/server/lib/donations.ts`, `src/app/donate.tsx`):
+  Stripe Checkout, once or monthly, from anyone (a signed-in member's
+  donation is linked through their Stripe Customer's metadata.userId).
+  Web only: in the iOS / Android app, マイページ's 寄付 row and /donate
+  open the website's page in the browser — App Store guideline 3.2.2 lets
+  an organization that isn't an Apple-approved nonprofit collect donations
+  only outside the app. Stripe is the ledger; the webhook
+  (`src/app/api/stripe/webhook+api.ts`, signed with STRIPE_WEBHOOK_SECRET)
+  only writes 操作ログ entries (`donation.*`). Keys come from the Vercel
+  Marketplace Stripe integration; production offers donations only with a
+  live key. STRIPE_PORTAL_LOGIN_URL (optional) links monthly donors to
+  Stripe's Customer Portal.
 - **Strings** (`src/lib/i18n.tsx`): the website's `messages/<locale>/*.json`
   (synced) through use-intl (next-intl's core), so both say the same thing.
   App-only strings: `messages/<locale>/mobile.json` (also kept in the

@@ -164,6 +164,9 @@ importers:
       satori:
         specifier: 0.33.5
         version: 0.33.5
+      stripe:
+        specifier: 22.6.0
+        version: 22.6.0(@types/node@26.6.3)
       use-intl:
         specifier: ^4.14.7
         version: 4.14.7(@types/react@19.2.18)(react@19.2.3)
@@ -4003,6 +4006,15 @@ packages:
   strip-final-newline@2.0.0:
     resolution: {integrity: sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==}
     engines: {node: '>=6'}
+
+  stripe@22.6.0:
+    resolution: {integrity: sha512-Ezk+WYEEwX2DLxFrKfb6coznlCMZvCaCYMNPXNHFSZkBIEzF5Hgm7RLb38q/0h9Ol5jsUJGJRorvhzAvckgfhw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
 
   structured-headers@0.4.1:
     resolution: {integrity: sha512-0MP/Cxx5SzeeZ10p/bZI0S6MpgD+yxAhi1BOQ34jgnMXsCq3j1t6tQnZu+KdlL7dvJTLT3g9xN8tl10TqgFMcg==}
@@ -8795,6 +8807,10 @@ snapshots:
       ansi-regex: 5.0.1
 
   strip-final-newline@2.0.0: {}
+
+  stripe@22.6.0(@types/node@26.6.3):
+    optionalDependencies:
+      '@types/node': 26.6.3
 
   structured-headers@0.4.1: {}
 

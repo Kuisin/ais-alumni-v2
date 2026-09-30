@@ -20,7 +20,8 @@
     "school": "学校",
     "company": "会社",
     "self": "本人による操作",
-    "user": "アカウントの自動統合"
+    "user": "アカウントの自動統合",
+    "donation": "寄付"
   },
   "targetTypes": {
     "User": "会員",
@@ -31,7 +32,10 @@
     "Cohort": "学年",
     "school": "学校",
     "company": "会社",
-    "ChatReport": "トークの報告"
+    "ChatReport": "トークの報告",
+    "CheckoutSession": "寄付の決済",
+    "Invoice": "請求",
+    "Subscription": "毎月の寄付"
   },
   "actions": {
     "member": {
@@ -132,6 +136,12 @@
       "report_close": "トークの報告を対応済みに",
       "report_reopen": "トークの報告を未対応に戻す",
       "direct_rules": "1対1のトークの設定を変更"
+    },
+    "donation": {
+      "received": "寄付を受領",
+      "monthly_started": "毎月の寄付を開始",
+      "monthly_paid": "毎月の寄付を受領",
+      "monthly_stopped": "毎月の寄付を停止"
     }
   }
 }

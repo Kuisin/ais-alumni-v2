@@ -154,5 +154,36 @@
   "verify": {
     "pickPhoto": "Choose a photo",
     "pickFile": "Choose a file"
+  },
+  "donate": {
+    "title": "Donate",
+    "menu": "Support us with a donation",
+    "intro": "AIS Alumni is run by a volunteer committee of graduates. Donations pay for running the association — the app and its servers, reunions and events.",
+    "note": "The AIS Alumni Committee is a voluntary association, so donations aren't tax-deductible. Payments are handled securely by Stripe; your card details never reach the committee.",
+    "interval": {
+      "label": "How often",
+      "once": "Once",
+      "month": "Monthly"
+    },
+    "amount": {
+      "label": "Amount",
+      "custom": "Other amount (yen)",
+      "range": "Enter an amount from ¥{min} to ¥{max}.",
+      "other": "Other"
+    },
+    "submit": "Donate {amount}",
+    "submitMonthly": "Donate {amount} a month",
+    "working": "Opening Stripe…",
+    "failed": "The donation couldn't be started. Please try again later.",
+    "unavailable": "Donations aren't open yet.",
+    "member": "You're donating as a signed-in member (the donation is linked to your account).",
+    "thanks": {
+      "title": "Thank you for your donation",
+      "body": "You'll get a confirmation email. We'll put your support to good use."
+    },
+    "manage": "Change or stop a monthly donation",
+    "openInSafari": "Open the donation page in Safari",
+    "appNote": "Donations are made on the website.",
+    "submitAny": "Donate"
   }
 }
