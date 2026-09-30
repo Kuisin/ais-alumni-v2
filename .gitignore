@@ -46,3 +46,6 @@ src/server/generated/
 
 # local server data (dev mailbox, uploads, push outbox)
 .data/
+
+# Local agent tooling
+.claude-flow/

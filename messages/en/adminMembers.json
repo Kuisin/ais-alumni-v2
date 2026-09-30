@@ -99,11 +99,11 @@
     "currentStage": "Current stage",
     "currentStageDetail": "Details (school, company…)",
     "stageUpdatedAt": "Current stage last updated {date}",
-    "cohort": "学年 (class)",
+    "cohort": "Class",
     "yearsToAny": "To (year)",
     "yearsFromAny": "From (year)",
     "teacherStatus": "Status",
-    "teacherStatusHint": "Former teachers lose teacher access (e.g. seeing students, 教職員・管理者).",
+    "teacherStatusHint": "Former teachers lose teacher access (e.g. seeing students, staff & admins).",
     "derivedLabel": "Worked out",
     "joinedYear": "Joined (year)",
     "leftYear": "Left (year)",
@@ -214,13 +214,13 @@
       "TEACHER_MANAGER": "Teacher manager",
       "STUDENT_LEADER": "Class representative",
       "TEACHER_REGISTRAR": "Teacher registrar",
-      "ALUMNI_COMMITTEE": "Alumni committee member (同窓会委員)"
+      "ALUMNI_COMMITTEE": "Alumni committee member"
     },
     "descriptions": {
       "TEACHER_MANAGER": "Can send notifications to all members, selected roles or any class (up to 20 per day).",
-      "STUDENT_LEADER": "Represents their own 学年: joins the 学年代表 chat and is the contact for their class. You can also manage class reps per 学年 on the 学年 page.",
+      "STUDENT_LEADER": "Represents their own class: joins the class reps chat and is the contact for their class. You can also manage class reps per class on the Classes page.",
       "TEACHER_REGISTRAR": "Can mark members as current teachers or move them to former (Admin mode → Teachers). Current teachers can see children's profiles, so grant this only to someone you trust.",
-      "ALUMNI_COMMITTEE": "Can post news to any members. Each post goes out after another 同窓会委員 (or an admin) approves it."
+      "ALUMNI_COMMITTEE": "Can post news to any members. Each post goes out after another alumni committee member (or an admin) approves it."
     },
     "requires": {
       "TEACHER_MANAGER": "Requires the Teacher / Staff role.",
@@ -234,10 +234,10 @@
       "forbidden": "You don't have permission to do that.",
       "invalid": "Please check the input.",
       "notEligible": "This member doesn't have the role this position requires.",
-      "cohort": "Choose the 学年 they represent.",
-      "ownCohort": "A 学年代表 must be a student or graduate of that 学年 (their own class)."
+      "cohort": "Choose the class they represent.",
+      "ownCohort": "A class rep must be a student or graduate of that class (their own class)."
     },
-    "cohort": "学年 (class)",
+    "cohort": "Class",
     "removeConfirm": "Remove this position?"
   },
   "nameRequests": {

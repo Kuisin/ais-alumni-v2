@@ -119,7 +119,7 @@ function EventRows({ events }: { events: AdminEventRow[] }) {
           <Card
             key={e.id}
             padded={false}
-            accessibilityLabel={`${title}、${when}`}
+            accessibilityLabel={`${title}${locale === "ja" ? "、" : ", "}${when}`}
             onPress={() =>
               router.push({
                 pathname: "/admin/events/[id]",

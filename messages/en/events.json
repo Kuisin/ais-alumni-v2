@@ -86,7 +86,7 @@
       "start": "Start camera",
       "stop": "Stop camera",
       "hint": "Point the camera at the attendee's ticket QR code.",
-      "noCamera": "The camera isn't available. Check the browser's camera permission, or check people in by name below.",
+      "noCamera": "The camera isn't available. Allow camera access, or check people in by name below.",
       "manual": "Enter code",
       "manualSubmit": "Check in"
     },

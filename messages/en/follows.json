@@ -28,6 +28,7 @@
     "decline": "Decline",
     "remove": "Remove",
     "block": "Block…",
+    "report": "Report a problem",
     "unblock": "Unblock",
     "blockConfirm": "Block {name}? You won't see each other anywhere on the site, and any follows between you will be removed.",
     "blockYes": "Yes, block",

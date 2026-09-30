@@ -14,6 +14,8 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { confirmAction } from "@/features/me/confirm";
+import { useAuth } from "@/lib/auth";
+import { joinList } from "@/lib/format";
 import {
   Avatar,
   Badge,
@@ -176,6 +178,7 @@ function CandidateRow({
 }) {
   const t = useTranslations("teachers");
   const tr = useTranslations("roles");
+  const { locale } = useAuth();
   const set = useSetTeacher();
   return (
     <View style={styles.row}>
@@ -186,7 +189,10 @@ function CandidateRow({
         </Text>
         {u.roles.length ? (
           <Text variant="caption" tone="subtle">
-            {u.roles.map((r) => tr(`role.${r}`)).join("・")}
+            {joinList(
+              u.roles.map((r) => tr(`role.${r}`)),
+              locale,
+            )}
           </Text>
         ) : null}
       </View>

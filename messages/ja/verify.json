@@ -238,8 +238,8 @@
     "leftYearHint": "卒業前にAISを離れた場合のみ入力してください。在校中・卒業した場合は空欄のままで大丈夫です。"
   },
   "placeholders": {
-    "lastNameKana": "例: ヤマダ",
-    "firstNameKana": "例: タロウ"
+    "lastNameKana": "例：ヤマダ",
+    "firstNameKana": "例：タロウ"
   },
   "diploma": {
     "title": "卒業証書",

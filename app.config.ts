@@ -73,6 +73,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     predictiveBackGestureEnabled: false,
     // Ticket scanning at check-in, and "take photo" on uploads.
     permissions: ["android.permission.CAMERA"],
+    // Added by libraries but not used: photos come through the system
+    // photo picker, and nothing records audio or draws over other apps.
+    blockedPermissions: [
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.READ_MEDIA_IMAGES",
+      "android.permission.READ_MEDIA_VIDEO",
+      "android.permission.RECORD_AUDIO",
+      "android.permission.SYSTEM_ALERT_WINDOW",
+    ],
   },
   locales: {
     ja: "./locales/ja.json",

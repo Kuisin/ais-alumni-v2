@@ -1,14 +1,14 @@
 {
   "title": "Invite alumni",
-  "description": "Invite alumni and students, parents or teachers you know. An individual invitation is for one person (a strong recommendation); a year-group invitation is a link for up to 10 people, e.g. for a class LINE group. Both last 30 days. The 学年 you give helps the committee check and approve faster.",
+  "description": "Invite alumni and students, parents or teachers you know. An individual invitation is for one person (a strong recommendation); a year-group invitation is a link for up to 10 people, e.g. for a class LINE group. Both last 30 days. The class you give helps the committee check and approve faster.",
   "type": "Who are you inviting?",
   "types": {
     "STUDENT": "Student / graduate",
     "PARENT": "Parent",
     "TEACHER": "Teacher / staff"
   },
-  "cohort": "Their 学年 (class)",
-  "cohortChild": "Their child's 学年",
+  "cohort": "Their class",
+  "cohortChild": "Their child's class",
   "cohortHint": "As far as you know. The committee uses it when checking.",
   "name": "Their name (optional)",
   "nameHint": "A note for you, and a help for the committee.",
@@ -33,10 +33,10 @@
   },
   "errors": {
     "forbidden": "You can't create invitations.",
-    "cohort": "Please choose the 学年.",
+    "cohort": "Please choose the class.",
     "tooMany": "Too many unused individual invitations (100 max). Cancel unused ones first.",
     "invalid": "Please check your input.",
-    "gradeOpen": "You already have a year-group link for this 学年 (one at a time). Use it up or cancel it first."
+    "gradeOpen": "You already have a year-group link for this class (one at a time). Use it up or cancel it first."
   },
   "kind": "Kind of invitation",
   "kinds": {
@@ -47,7 +47,7 @@
     },
     "GRADE": {
       "title": "Year group (up to 10)",
-      "hint": "A link to share with a 学年, e.g. in its LINE group. Up to 10 people can use it. One open link per 学年 at a time.",
+      "hint": "A link to share with a class, e.g. in its LINE group. Up to 10 people can use it. One open link per class at a time.",
       "badge": "Year group"
     }
   },

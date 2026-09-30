@@ -1,6 +1,6 @@
 {
   "otp": {
-    "subject": "AIS 同窓会 確認コード: {code}",
+    "subject": "AIS同窓会 確認コード: {code}",
     "body": "確認コードは {code} です。\n有効期限は{minutes}分です。心当たりがない場合はこのメールを破棄してください。"
   }
 }

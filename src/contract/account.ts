@@ -210,8 +210,8 @@ export type SignInMethodRow = {
   /** set up on this server (else 準備中) */
   ready: boolean;
   /**
-   * can be added in the app (LINE: 設定 → LINE). Google can only be added
-   * on the website for now (settings.methods.googleInApp).
+   * can be added in the app (LINE: 設定 → LINE). Google can't be added; its
+   * row is only sent to members who linked it earlier (to remove it).
    */
   addable: boolean;
 };

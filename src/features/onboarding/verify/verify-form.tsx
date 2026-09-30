@@ -5,6 +5,7 @@ import { type ScrollView, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { joinList } from "@/lib/format";
 import { Button, colors, radius, space, Text } from "@/ui";
 import {
   Checkbox,
@@ -480,7 +481,10 @@ export function VerifyForm({
             />
             <Fact
               label={t("review.types")}
-              value={state.types.map((x) => t(`types.${x}.title`)).join("・")}
+              value={joinList(
+                state.types.map((x) => t(`types.${x}.title`)),
+                uiLocale,
+              )}
             />
             {isStudent ? (
               <Fact
@@ -495,7 +499,10 @@ export function VerifyForm({
             {state.types.includes("PARENT") ? (
               <Fact
                 label={t("review.children")}
-                value={state.parent.children.map((c) => c.name).join("、")}
+                value={joinList(
+                  state.parent.children.map((c) => c.name),
+                  uiLocale,
+                )}
               />
             ) : null}
             <Button

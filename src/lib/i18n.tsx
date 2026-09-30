@@ -2,6 +2,7 @@ import type { Locale } from "@contract/core";
 import enAdminContent from "@messages/en/adminContent.json";
 import enAdminMembers from "@messages/en/adminMembers.json";
 import enAdminStats from "@messages/en/adminStats.json";
+import enAdminVerify from "@messages/en/adminVerify.json";
 import enAudit from "@messages/en/audit.json";
 import enAuth from "@messages/en/auth.json";
 import enBroadcast from "@messages/en/broadcast.json";
@@ -30,11 +31,13 @@ import enRoles from "@messages/en/roles.json";
 import enSettings from "@messages/en/settings.json";
 import enSetup from "@messages/en/setup.json";
 import enSupport from "@messages/en/support.json";
+import enTeachers from "@messages/en/teachers.json";
 import enVerify from "@messages/en/verify.json";
 import enVouch from "@messages/en/vouch.json";
 import jaAdminContent from "@messages/ja/adminContent.json";
 import jaAdminMembers from "@messages/ja/adminMembers.json";
 import jaAdminStats from "@messages/ja/adminStats.json";
+import jaAdminVerify from "@messages/ja/adminVerify.json";
 import jaAudit from "@messages/ja/audit.json";
 import jaAuth from "@messages/ja/auth.json";
 import jaBroadcast from "@messages/ja/broadcast.json";
@@ -63,6 +66,7 @@ import jaRoles from "@messages/ja/roles.json";
 import jaSettings from "@messages/ja/settings.json";
 import jaSetup from "@messages/ja/setup.json";
 import jaSupport from "@messages/ja/support.json";
+import jaTeachers from "@messages/ja/teachers.json";
 import jaVerify from "@messages/ja/verify.json";
 import jaVouch from "@messages/ja/vouch.json";
 import type { ReactNode } from "react";
@@ -108,6 +112,8 @@ const JA = {
   audit: jaAudit,
   adminStats: jaAdminStats,
   adminMembers: jaAdminMembers,
+  adminVerify: jaAdminVerify,
+  teachers: jaTeachers,
   mobile: jaMobile,
 };
 const EN = {
@@ -143,6 +149,8 @@ const EN = {
   audit: enAudit,
   adminStats: enAdminStats,
   adminMembers: enAdminMembers,
+  adminVerify: enAdminVerify,
+  teachers: enTeachers,
   mobile: enMobile,
 };
 

@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { LifeBuoy } from "lucide-react-native";
-import type { ReactNode, RefObject } from "react";
+import { type ReactNode, type RefObject, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,14 +11,15 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
+import { DeleteAccount } from "@/features/me/account-sections";
 import { useAuth } from "@/lib/auth";
-import { Button, colors, Screen, space, Text } from "@/ui";
+import { Button, Card, colors, Screen, space, Text } from "@/ui";
 
 /**
  * The frame of every onboarding screen (the website's onboarding layout):
  * the logo and who is signed in, the page, and at the bottom 「わからない
- * ことやエラーがありますか？」 with お問い合わせ (registration questions)
- * and ログアウト.
+ * ことやエラーがありますか？」 with お問い合わせ (registration questions),
+ * ログアウト and アカウントの削除 (an applicant can delete theirs too).
  */
 export function OnboardingShell({
   title,
@@ -42,8 +43,10 @@ export function OnboardingShell({
   const tm = useTranslations("mobile.onboarding");
   const ts = useTranslations("support.dialog");
   const tc = useTranslations("common");
+  const tset = useTranslations("settings");
   const router = useRouter();
   const { me, signOut } = useAuth();
+  const [deleting, setDeleting] = useState(false);
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
       <KeyboardAvoidingView
@@ -96,6 +99,18 @@ export function OnboardingShell({
               label={tc("signOut")}
               onPress={() => void signOut()}
             />
+            {deleting ? (
+              <Card style={styles.delete}>
+                <DeleteAccount onCancel={() => setDeleting(false)} />
+              </Card>
+            ) : (
+              <Button
+                variant="ghost"
+                compact
+                label={tset("delete.button")}
+                onPress={() => setDeleting(true)}
+              />
+            )}
           </View>
         </Screen>
         {footer ? <View style={styles.footer}>{footer}</View> : null}
@@ -125,6 +140,7 @@ const styles = StyleSheet.create({
     paddingTop: space.xl,
     marginTop: space.lg,
   },
+  delete: { alignSelf: "stretch", borderColor: colors.red100 },
   footer: {
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.border,

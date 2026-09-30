@@ -58,14 +58,17 @@ export async function signInMethodRows(
       ready: true,
       addable: false,
     },
-    ...OAUTH_PROVIDERS.map((p) => ({
-      method: p,
-      ready: ssoReady(p),
-      linked: methods.includes(p),
-      removable: canRemoveSignInMethod(methods, p),
-      // Linking Google needs the website's Auth.js for now.
-      addable: p === "line" && ssoReady(p),
-    })),
+    // The app signs in and links with LINE only; Google shows just for
+    // members who linked it on the old website (so they can remove it).
+    ...OAUTH_PROVIDERS.filter((p) => p === "line" || methods.includes(p)).map(
+      (p) => ({
+        method: p,
+        ready: ssoReady(p),
+        linked: methods.includes(p),
+        removable: canRemoveSignInMethod(methods, p),
+        addable: p === "line" && ssoReady(p),
+      }),
+    ),
   ];
 }
 

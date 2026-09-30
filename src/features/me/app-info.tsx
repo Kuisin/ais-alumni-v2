@@ -6,7 +6,7 @@ import { API_URL, PRODUCTION_URL } from "@/lib/config";
 import { space, Text, TOUCH } from "@/ui";
 
 /**
- * Bottom of マイページ: the privacy notice, app version (and the server, when
+ * Bottom of マイページ: the privacy policy, app version (and the server, when
  * it isn't production), the site's footer line.
  */
 export function AppInfo() {

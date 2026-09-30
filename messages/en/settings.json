@@ -67,8 +67,7 @@
     "removed": "Sign-in method removed.",
     "addGoogle": "Add Google sign-in",
     "addLineHint": "Link LINE in the LINE section above.",
-    "notReadyHint": "This method isn't ready yet. We'll let you know when it is.",
-    "googleInApp": "Google can't be added inside the app (a Google restriction). Open the website in your browser to add it."
+    "notReadyHint": "This method isn't ready yet. We'll let you know when it is."
   },
   "email": {
     "title": "Email address",

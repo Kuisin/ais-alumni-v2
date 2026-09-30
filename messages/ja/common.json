@@ -1,7 +1,7 @@
 {
-  "appName": "AIS 同窓会",
-  "appNameShort": "AIS 同窓会",
-  "adminTitle": "AIS 同窓会 管理",
+  "appName": "AIS同窓会",
+  "appNameShort": "AIS同窓会",
+  "adminTitle": "AIS同窓会 管理",
   "tagline": "愛知インターナショナルスクール同窓会",
   "skipToContent": "本文へスキップ",
   "switchLanguage": "言語を切り替える",
@@ -78,7 +78,7 @@
     "organizations": "学校・会社",
     "teachers": "教職員",
     "destinations": "進路",
-    "nameRequests": "氏名・生年月日",
+    "nameRequests": "氏名・生年月日・性別",
     "support": "お問い合わせ",
     "line": "LINEメニュー",
     "chat": "チャット"
@@ -94,13 +94,13 @@
     "lastNameKanji": "姓",
     "firstNameKanji": "名",
     "placeholders": {
-      "lastNameRomaji": "例: Yamada",
-      "firstNameRomaji": "例: Taro",
-      "middleNameRomaji": "例: James",
-      "lastNameKanji": "例: 山田",
-      "firstNameKanji": "例: 太郎",
-      "lastNameKana": "例: ヤマダ",
-      "firstNameKana": "例: タロウ"
+      "lastNameRomaji": "例：Yamada",
+      "firstNameRomaji": "例：Taro",
+      "middleNameRomaji": "例：James",
+      "lastNameKanji": "例：山田",
+      "firstNameKanji": "例：太郎",
+      "lastNameKana": "例：ヤマダ",
+      "firstNameKana": "例：タロウ"
     },
     "lastNameKana": "セイ（フリガナ）",
     "firstNameKana": "メイ（フリガナ）",

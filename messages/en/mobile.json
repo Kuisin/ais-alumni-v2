@@ -8,6 +8,12 @@
       "body": "We couldn't reach the server. Check your connection and try again."
     }
   },
+  "update": {
+    "title": "Please update the app",
+    "body": "This version of the app no longer works. Update to the latest version from the App Store or Google Play.",
+    "open": "Update in the store",
+    "retry": "Check again"
+  },
   "signIn": {
     "providerFailed": "We couldn't finish signing you in. Please try again, or sign in with an email code.",
     "expoGoLine": "LINE sign-in doesn't work in Expo Go (it does in the app and on the web). Sign in with an email code."

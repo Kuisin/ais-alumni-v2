@@ -13,7 +13,7 @@ pnpm start          # Expo Go: scan the QR code, or open exp://<your Mac's LAN I
 
 Without `EXPO_PUBLIC_API_URL` the app uses ais-alumni-dev.kai-lab.net (production data) in development and ais-alumni.kai-lab.net in release builds. Point it at a local server with `EXPO_PUBLIC_API_URL=http://<LAN IP>:3000 pnpm start`.
 
-Push notifications and LINE / Google sign-in need a development build (`npx expo run:ios`) or an EAS build — not Expo Go.
+Push notifications and LINE sign-in need a development build (`npx expo run:ios`) or an EAS build — not Expo Go.
 
 See [AGENTS.md](AGENTS.md) for how the app is put together, conventions, testing (Simulator, Maestro, local push) and releases.
 

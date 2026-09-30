@@ -73,7 +73,7 @@
     "vouches": "Vouches",
     "evidence": "Documents",
     "noEvidence": "No documents uploaded.",
-    "linkExpiry": "Links are valid for 15 minutes. Reload the page for new links.",
+    "linkExpiry": "Links are valid for 15 minutes. Pull down to refresh for new links.",
     "deleteAfter": "deleted after {date}",
     "status": "Status",
     "oldFormat": "This application was sent with the earlier form; see the applicant's profile for details."
@@ -156,7 +156,7 @@
   },
   "aisRecord": {
     "title": "AIS record",
-    "description": "Current / former status and grade are worked out from the 学年 and years. Edit them in the member editor.",
+    "description": "Current / former status and grade are worked out from the class and years. Edit them in the member editor.",
     "edit": "Edit the member's roles"
   },
   "decision": {
@@ -251,7 +251,7 @@
     "match": {
       "match": "Matches the application",
       "mismatch": "Differs from the application. Please check",
-      "unknown": "The 学年 can't be compared"
+      "unknown": "The class can't be compared"
     },
     "kindIndividual": "Individual invitation (strong recommendation)",
     "kindGrade": "Year-group invitation ({count}/{max} used)",

@@ -50,7 +50,7 @@
     "middleNameRomaji": "Middle name",
     "lastNameKanji": "Last name (姓)",
     "firstNameKanji": "First name (名)",
-    "cohort": "学年 (class)",
+    "cohort": "Class",
     "teacherStatus": "Status",
     "joinedYear": "Year you joined AIS",
     "leftYearStudent": "Year you left AIS",
@@ -71,7 +71,7 @@
     "schoolEmail": "Required if you currently work at AIS: confirm your @aisnagoya.net address with a code (it's not used for sign-in or notices). Optional for former staff.",
     "parentConfirmation": "Student accounts must also be confirmed by a parent or guardian with an AIS Alumni account, or by the committee.",
     "classmates": "If you add them, we can ask classmates or teachers to confirm you, which can speed up approval.",
-    "cohort": "Classes are numbered by the year they finish 6th grade (2016 = 第5期). If you joined or left partway, choose the class you were in.",
+    "cohort": "Classes are numbered by the year they finish 6th grade (2016 = Class 5). If you joined or left partway, choose the class you were in.",
     "types": "You can ask the committee to change this later.",
     "leftYearStudent": "Only if you left AIS before graduating. Leave empty if you're still at AIS or graduated.",
     "leftYearTeacher": "Leave empty if you still work at AIS.",
@@ -170,7 +170,7 @@
   "stepIntros": {
     "type": "Choose everything that applies — for example an alumnus whose child now attends AIS can pick both.",
     "basics": "The committee uses this to confirm who you are. Your birthday is never shown to other members.",
-    "details": "Just give your class (学年) and years — whether you're a current student or an alumnus, and your grade, are worked out automatically.",
+    "details": "Just give your class and years — whether you're a current student or an alumnus, and your grade, are worked out automatically.",
     "review": "If everything looks right, send it. The committee will review it and let you know."
   },
   "types": {
@@ -242,7 +242,7 @@
     "firstNameKana": "e.g. タロウ"
   },
   "diploma": {
-    "title": "Diploma (卒業証書)",
+    "title": "Diploma",
     "intro": "If you graduated from AIS, upload a photo or scan of your diploma. The committee uses it to confirm you attended, and deletes it 30 days after deciding.",
     "label": "Diploma file",
     "hint": "JPG, PNG or PDF (up to 10 MB). Make sure your name and graduation year are readable.",

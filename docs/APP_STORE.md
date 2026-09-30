@@ -64,8 +64,11 @@ calculation for messaging).
   > Sign in: under "Sign in with an email code", enter the demo email,
   > then the code given here.
   > Account deletion: Me (photo at the top left) → Settings → Danger zone
-  > → Delete account. Blocking: a member's profile → menu → "Block…".
-  > Reporting: in a chat, Chat info → "Report a problem".
+  > → Delete account (while registration is under review: "Delete
+  > account…" at the bottom of the registration screens).
+  > Blocking: a member's profile → menu → "Block…".
+  > Reporting: in a chat, Chat info → "Report a problem"; on a member's
+  > profile → menu → "Report a problem".
   > Camera: used only by event staff to scan QR tickets at check-in, and to
   > take a photo to upload.
 

@@ -44,7 +44,7 @@
     "manualLabel": "Child's full name",
     "manualHint": "An administrator will check and confirm this.",
     "manualSubmit": "Add child",
-    "cohort": "Child's 学年 (class)",
+    "cohort": "Child's class",
     "cohortHint": "Numbered by the year they finish (finished) 6th grade.",
     "chooseCohort": "Choose a class",
     "leftYear": "Year they left AIS (optional)",
