@@ -18,3 +18,5 @@ Push notifications and LINE / Google sign-in need a development build (`npx expo
 See [AGENTS.md](AGENTS.md) for how the app is put together, conventions, testing (Simulator, Maestro, local push) and releases.
 
 App Store submission (build, upload, listing, privacy answers): [docs/APP_STORE.md](docs/APP_STORE.md).
+
+Store assets (listing text, screenshots, icon): [store/](store/README.md).
