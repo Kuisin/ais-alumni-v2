@@ -52,6 +52,7 @@
     "expo-system-ui": "~57.0.4",
     "expo-task-manager": "~57.0.21",
     "expo-web-browser": "~57.0.3",
+    "harfbuzzjs": "0.10.0",
     "lucide-react-native": "^1.48.0",
     "pg": "^8.23.0",
     "qrcode": "^1.5.4",
