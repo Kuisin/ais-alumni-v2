@@ -71,7 +71,6 @@ import type {
 import { INDUSTRIES } from "@/server/lib/industries";
 import { JOB_TYPES } from "@/server/lib/job-types";
 import {
-  ago,
   chatInfo,
   chatList,
   chatReads,
@@ -88,15 +87,18 @@ import {
   newsSummaries,
   sentMessage,
 } from "./content";
+import { demoData, derive, isoAgo } from "./data";
 import {
   DEMO_USER_ID,
-  ME,
-  MEMBERS,
+  type DemoMember,
+  me,
   member,
   memberCard,
   memberProfile,
+  members,
   myEmail,
   myProfileAs,
+  personName,
 } from "./people";
 
 /**
@@ -104,7 +106,7 @@ import {
  * session.ts): what each API route answers it. `undefined` = no fixture:
  * a GET then answers 404, a write a plain { ok: true } — never real data.
  *
- * Everything here is static and made up (people.ts, content.ts); nothing
+ * The content is in data/*.json (see data/README.md), all made up; nothing
  * reads the database or calls the real handlers, and writes change
  * nothing (a few answer with the change applied, so the screens react).
  */
@@ -124,15 +126,15 @@ export function demoMe(): Me {
       state: "ACTIVE",
       locale: state.locale,
       isAdmin: false,
-      name: ME.name,
+      name: me().name,
       otherName: null,
       email: myEmail(),
-      avatar: ME.avatar,
+      avatar: me().avatar,
       lineLinked: false,
     },
     onboardingPath: null,
     access: { admin: false, broadcast: false, teachers: false, news: false },
-    badges: { news: 1, messages: 0, chat: 2, follows: 1, inbox: 2 },
+    badges: demoData().me.badges,
     realtime: null,
     features: { messages: true },
   } satisfies Me;
@@ -153,75 +155,41 @@ const str = (v: unknown): string => (typeof v === "string" ? v : "");
 
 // ---- Home ----
 
+/** Where each checklist task is done, and how it counts (src/server/lib/setup.ts). */
+const SETUP_ITEMS: Record<
+  Home["setup"]["items"][number]["key"],
+  { href: string | null; optional?: boolean; recommended?: boolean }
+> = {
+  email: { href: null },
+  apply: { href: "/app/onboarding/verify" },
+  approval: { href: null },
+  line: { href: "/app/settings#line" },
+  names: { href: "/app/profile#edit-name", optional: true, recommended: true },
+  schoolEmail: { href: "/app/settings#school-email" },
+  photo: { href: "/app/profile#edit-photo" },
+  bio: { href: "/app/profile#edit-about" },
+  history: { href: "/app/profile/history" },
+  follow: { href: "/app/directory" },
+  family: { href: "/app/family", optional: true },
+};
+
 function home(): Home {
-  const setup: Home["setup"]["items"] = [
-    {
-      key: "email",
-      done: true,
-      href: null,
-      optional: false,
-      recommended: false,
-    },
-    {
-      key: "apply",
-      done: true,
-      href: "/app/onboarding/verify",
-      optional: false,
-      recommended: false,
-    },
-    {
-      key: "approval",
-      done: true,
-      href: null,
-      optional: false,
-      recommended: false,
-    },
-    {
-      key: "names",
-      done: false,
-      href: "/app/profile#edit-name",
-      optional: true,
-      recommended: true,
-    },
-    {
-      key: "photo",
-      done: true,
-      href: "/app/profile#edit-photo",
-      optional: false,
-      recommended: false,
-    },
-    {
-      key: "bio",
-      done: true,
-      href: "/app/profile#edit-about",
-      optional: false,
-      recommended: false,
-    },
-    {
-      key: "history",
-      done: true,
-      href: "/app/profile/history",
-      optional: false,
-      recommended: false,
-    },
-    {
-      key: "follow",
-      done: true,
-      href: "/app/directory",
-      optional: false,
-      recommended: false,
-    },
-    {
-      key: "family",
-      done: false,
-      href: "/app/family",
-      optional: true,
-      recommended: false,
-    },
-  ];
+  const setup: Home["setup"]["items"] = demoData().me.setupChecklist.map(
+    (i) => ({
+      key: i.key,
+      done: i.done,
+      href: SETUP_ITEMS[i.key].href,
+      optional: SETUP_ITEMS[i.key].optional ?? false,
+      recommended: SETUP_ITEMS[i.key].recommended ?? false,
+    }),
+  );
   const required = setup.filter((i) => !i.optional);
   return {
-    todo: { followRequests: 1, vouches: [], family: [] },
+    todo: {
+      followRequests: demoData().follows.requestsToMe.length,
+      vouches: [],
+      family: [],
+    },
     setup: {
       items: setup,
       done: required.filter((i) => i.done).length,
@@ -237,10 +205,17 @@ function home(): Home {
 
 // ---- People ----
 
-const COHORTS = Array.from({ length: 12 }, (_, i) => {
-  const n = 12 - i;
-  return { n, label: `Class ${n} (graduated ${2011 + n})` };
-});
+/** 学年 (data/school.json), newest first. */
+const cohorts = derive((d) =>
+  Array.from({ length: d.school.latestClass }, (_, i) => {
+    const n = d.school.latestClass - i;
+    return {
+      n,
+      label: `Class ${n} (graduated ${d.school.class1GraduationYear - 1 + n})`,
+    };
+  }),
+);
+const classLabel = (n: number | null) => (n ? `Class ${n}` : null);
 
 function directoryOptions(): DirectoryOptions {
   return {
@@ -262,7 +237,7 @@ function directoryOptions(): DirectoryOptions {
       "UNIVERSITY_COLLEGE",
       "WORKING",
     ],
-    cohorts: [...COHORTS]
+    cohorts: [...cohorts()]
       .reverse()
       .map((c) => ({ id: `demo-cohort-${c.n}`, label: c.label })),
     minYear: 1950,
@@ -282,28 +257,33 @@ function directory(q: URLSearchParams): DirectoryPage {
   const division = q.get("division") || null;
   const stage = q.get("stage") || null;
   const cohort = q.get("cohort") || null;
-  const items = MEMBERS.filter((x) => {
-    if (role === "FORMER_STUDENT" && x.role !== "FORMER_STUDENT") return false;
-    if (role === "GRADUATE" && !(x.role === "FORMER_STUDENT" && x.graduated))
-      return false;
-    if (role === "TEACHER" && x.role !== "TEACHER") return false;
-    if (role === "FORMER_PARENT" && x.role !== "FORMER_PARENT") return false;
-    if (role === "CURRENT_STUDENT" || role === "CURRENT_PARENT") return false;
-    if (text) {
-      const hay = `${x.name} ${x.kanji ?? ""} ${x.kana ?? ""}`.toLowerCase();
-      if (!hay.includes(text.toLowerCase())) return false;
-    }
-    if (
-      (from || to) &&
-      (x.year === null || (from && x.year < from) || (to && x.year > to))
-    )
-      return false;
-    if (division && !(division === "ELEMENTARY" && x.role === "FORMER_STUDENT"))
-      return false;
-    if (stage && x.stage !== stage) return false;
-    if (cohort && `demo-cohort-${x.cohort}` !== cohort) return false;
-    return true;
-  })
+  const items = members()
+    .filter((x) => {
+      if (role === "FORMER_STUDENT" && x.role !== "FORMER_STUDENT")
+        return false;
+      if (role === "GRADUATE" && !(x.role === "FORMER_STUDENT" && x.graduated))
+        return false;
+      if (role === "TEACHER" && x.role !== "TEACHER") return false;
+      if (role === "FORMER_PARENT" && x.role !== "FORMER_PARENT") return false;
+      if (role === "CURRENT_STUDENT" || role === "CURRENT_PARENT") return false;
+      if (text) {
+        const hay = `${x.name} ${x.kanji ?? ""} ${x.kana ?? ""}`.toLowerCase();
+        if (!hay.includes(text.toLowerCase())) return false;
+      }
+      if (
+        (from || to) &&
+        (x.year === null || (from && x.year < from) || (to && x.year > to))
+      )
+        return false;
+      if (
+        division &&
+        !(division === "ELEMENTARY" && x.role === "FORMER_STUDENT")
+      )
+        return false;
+      if (stage && x.stage !== stage) return false;
+      if (cohort && `demo-cohort-${x.classNumber}` !== cohort) return false;
+      return true;
+    })
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(memberCard);
   return {
@@ -323,51 +303,42 @@ function directory(q: URLSearchParams): DirectoryPage {
   } satisfies DirectoryPage;
 }
 
+/** Follow ids: "demo-follow-<name>" for member "demo-m-<name>". */
+const shortId = (memberId: string) => memberId.replace(/^demo-m-/, "");
+
 function follows(q: URLSearchParams): FollowLists {
-  const card = (id: string) => memberCard(member(id) ?? MEMBERS[0]);
+  const known = (id: string) => member(id) as DemoMember;
   const acceptedId = q.get("accepted");
+  const accepted = demoData().follows.requestsToMe.find(
+    (r) => `demo-follow-${shortId(r.memberId)}` === acceptedId,
+  );
   return {
-    incoming: [
-      {
-        followId: "demo-follow-daniel",
-        requestedAt: ago(2 * 3_600_000),
-        member: card("demo-m-daniel"),
-      },
-    ],
-    outgoing: [
-      {
-        followId: "demo-follow-marco",
-        requestedAt: ago(3 * 86_400_000),
-        member: card("demo-m-marco"),
-      },
-    ],
-    followers: [
-      {
-        followId: "demo-follower-emily",
-        member: card("demo-m-emily"),
-        followState: "following",
-      },
-      {
-        followId: "demo-follower-kenji",
-        member: card("demo-m-kenji"),
-        followState: "following",
-      },
-      {
-        followId: "demo-follower-sophie",
-        member: card("demo-m-sophie"),
-        followState: "followBack",
-      },
-    ],
-    following: [
-      { followId: "demo-following-emily", member: card("demo-m-emily") },
-      { followId: "demo-following-kenji", member: card("demo-m-kenji") },
-      { followId: "demo-following-yui", member: card("demo-m-yui") },
-    ],
+    incoming: demoData().follows.requestsToMe.map((r) => ({
+      followId: `demo-follow-${shortId(r.memberId)}`,
+      requestedAt: isoAgo(r.requested),
+      member: memberCard(known(r.memberId)),
+    })),
+    outgoing: demoData().follows.myRequests.map((r) => ({
+      followId: `demo-follow-${shortId(r.memberId)}`,
+      requestedAt: isoAgo(r.requested),
+      member: memberCard(known(r.memberId)),
+    })),
+    followers: demoData().follows.followMe.map((id) => ({
+      followId: `demo-follower-${shortId(id)}`,
+      member: memberCard(known(id)),
+      followState: known(id).follow,
+    })),
+    following: demoData().follows.iFollow.map((id) => ({
+      followId: `demo-following-${shortId(id)}`,
+      member: memberCard(known(id)),
+    })),
     blocked: [],
-    accepted:
-      acceptedId === "demo-follow-daniel"
-        ? { member: card("demo-m-daniel"), followState: "followBack" }
-        : null,
+    accepted: accepted
+      ? {
+          member: memberCard(known(accepted.memberId)),
+          followState: "followBack",
+        }
+      : null,
   } satisfies FollowLists;
 }
 
@@ -376,21 +347,25 @@ function follows(q: URLSearchParams): FollowLists {
 function myProfile(): MyProfile {
   return {
     id: DEMO_USER_ID,
-    name: ME.name,
+    name: me().name,
     otherName: null,
     nameAtAis: null,
-    avatar: ME.avatar,
+    avatar: me().avatar,
     roles: [
       {
         role: "FORMER_STUDENT",
-        label: "Former student / Alumni",
-        facts: ["Class 3", "Class of 2014", "Elementary"],
+        label: me().roleLabel,
+        facts: me().facts,
         subjects: null,
       },
     ],
-    follows: { followers: 3, following: 3, requests: 1 },
+    follows: {
+      followers: demoData().follows.followMe.length,
+      following: demoData().follows.iFollow.length,
+      requests: demoData().follows.requestsToMe.length,
+    },
     about: {
-      bio: ME.bio,
+      bio: me().bio,
       phone: null,
       phoneReach: "self",
       social: [],
@@ -400,46 +375,42 @@ function myProfile(): MyProfile {
     photo: { public: true, reach: "members", uploaded: false },
     sharedWithFollowers: ["currentStageDetail"],
     history: {
-      education: [
-        {
-          id: "demo-me-edu-0",
-          school: "Lakeside University",
-          level: "UNIVERSITY",
-          field: "Computer Science",
-          startYear: 2020,
-          endYear: 2024,
-          ongoing: false,
-          reach: "members",
-        },
-      ],
-      work: [
-        {
-          id: "demo-me-work-0",
-          company: "Example Apps Inc.",
-          title: "Software Engineer",
-          industry: "Software & telecommunications › Software",
-          jobType: "IT & web › Programmer & software development",
-          startYear: 2024,
-          endYear: null,
-          ongoing: true,
-          reach: "members",
-        },
-      ],
+      education: me().education.map((e) => ({
+        id: e.id,
+        school: e.school,
+        level: e.level,
+        field: e.field,
+        startYear: e.startYear,
+        endYear: e.endYear,
+        ongoing: e.endYear === null,
+        reach: "members",
+      })),
+      work: me().work.map((w) => ({
+        id: w.id,
+        company: w.company,
+        title: w.title,
+        industry: w.industryLabel,
+        jobType: w.jobTypeLabel,
+        startYear: w.startYear,
+        endYear: w.endYear,
+        ongoing: w.endYear === null,
+        reach: "members",
+      })),
     },
     currentStage: {
-      stage: "WORKING",
-      detail: ME.stageDetail,
+      stage: me().stage,
+      detail: me().stageDetail,
       detailReach: "followers",
     },
     names: {
-      romaji: ME.name,
+      romaji: me().name,
       kanji: null,
       kana: null,
       nameAtAis: null,
       request: null,
       parts: {
-        lastNameRomaji: "App",
-        firstNameRomaji: "Reviewer",
+        lastNameRomaji: demoData().me.lastName,
+        firstNameRomaji: demoData().me.firstName,
         middleNameRomaji: "",
         lastNameKanji: "",
         firstNameKanji: "",
@@ -517,9 +488,9 @@ function devices(): DeviceList {
     devices: [
       {
         id: "demo-device-current",
-        platform: "ios",
-        deviceName: "iPhone",
-        createdAt: ago(3_600_000),
+        platform: demoData().me.device.platform,
+        deviceName: demoData().me.device.name,
+        createdAt: isoAgo(demoData().me.device.signedIn),
         lastUsedAt: new Date().toISOString(),
         current: true,
       },
@@ -545,33 +516,29 @@ function historyEditor(): HistoryEditor {
       children: g.children.map((c) => ({ code: c.code, label: label(c) })),
     }));
   return {
-    education: [
-      {
-        id: "demo-me-edu-0",
-        level: "UNIVERSITY",
-        school: { id: "demo-org-lakeside", name: "Lakeside University" },
-        field: "Computer Science",
-        startYear: 2020,
-        endYear: 2024,
-        visibility: "MEMBERS",
-        current: false,
-      },
-    ],
-    work: [
-      {
-        id: "demo-me-work-0",
-        company: { id: "demo-org-example-apps", name: "Example Apps Inc." },
-        title: "Software Engineer",
-        industry: "ICT-01",
-        jobType: "IT-02",
-        industryLabel: "Software & telecommunications › Software",
-        jobTypeLabel: "IT & web › Programmer & software development",
-        startYear: 2024,
-        endYear: null,
-        visibility: "MEMBERS",
-        current: true,
-      },
-    ],
+    education: me().education.map((e) => ({
+      id: e.id,
+      level: e.level,
+      school: { id: e.schoolOrgId, name: e.school },
+      field: e.field,
+      startYear: e.startYear,
+      endYear: e.endYear,
+      visibility: "MEMBERS",
+      current: e.endYear === null,
+    })),
+    work: me().work.map((w) => ({
+      id: w.id,
+      company: { id: w.companyOrgId, name: w.company },
+      title: w.title,
+      industry: w.industry,
+      jobType: w.jobType,
+      industryLabel: w.industryLabel,
+      jobTypeLabel: w.jobTypeLabel,
+      startYear: w.startYear,
+      endYear: w.endYear,
+      visibility: "MEMBERS",
+      current: w.endYear === null,
+    })),
     multipleCurrent: null,
     industries: twoLevel(INDUSTRIES),
     jobTypes: twoLevel(JOB_TYPES),
@@ -579,22 +546,31 @@ function historyEditor(): HistoryEditor {
 }
 
 function recordPage(): RecordPage {
+  const values = {
+    cohort: String(demoData().me.classNumber),
+    yearsFrom: String(demoData().me.atAisFrom),
+    yearsTo: String(demoData().me.graduationYear),
+  };
   return {
     roles: [
       {
         role: "FORMER_STUDENT",
-        label: "Former student / Alumni",
+        label: me().roleLabel,
         rows: [
-          { field: "cohort", value: "Class 3", stillTeaching: false },
-          { field: "yearsFrom", value: "2008", stillTeaching: false },
-          { field: "yearsTo", value: "2014", stillTeaching: false },
+          {
+            field: "cohort",
+            value: `Class ${values.cohort}`,
+            stillTeaching: false,
+          },
+          { field: "yearsFrom", value: values.yearsFrom, stillTeaching: false },
+          { field: "yearsTo", value: values.yearsTo, stillTeaching: false },
         ],
         fields: ["cohort", "yearsFrom", "yearsTo"],
-        values: { cohort: "3", yearsFrom: "2008", yearsTo: "2014" },
+        values,
         pending: null,
       },
     ],
-    cohorts: COHORTS.map((c) => ({
+    cohorts: cohorts().map((c) => ({
       value: String(c.n),
       label: c.label,
       graduated: true,
@@ -604,15 +580,17 @@ function recordPage(): RecordPage {
 }
 
 const cohortChoices = (): CohortChoice[] =>
-  COHORTS.map((c) => ({ value: String(c.n), label: c.label }));
+  cohorts().map((c) => ({ value: String(c.n), label: c.label }));
 
 function family(): FamilyPage {
   return {
-    canClaimChild: false,
-    canClaimParent: true,
+    canClaimChild: demoData().family.canAddChild,
+    canClaimParent: demoData().family.canAddParent,
     toConfirm: [],
     managed: [],
-    members: [],
+    members: demoData().family.memberIds.map((id) =>
+      memberCard(member(id) as DemoMember),
+    ),
     links: [],
     cohorts: cohortChoices(),
   } satisfies FamilyPage;
@@ -621,34 +599,22 @@ function family(): FamilyPage {
 function invites(): InvitesPage {
   return {
     cohorts: cohortChoices(),
-    invites: [
-      {
-        id: "demo-invite-1",
-        kind: "INDIVIDUAL",
-        type: "STUDENT",
-        inviteeName: "Hana Sato",
-        cohortLabel: "Class 3",
-        createdAt: ago(2 * 86_400_000),
-        usedByName: null,
-        uses: 0,
+    invites: demoData().invites.map((inv) => {
+      const usedBy = inv.usedById ? personName(inv.usedById) : null;
+      return {
+        id: inv.id,
+        kind: inv.kind,
+        type: inv.type,
+        inviteeName: inv.inviteeName,
+        cohortLabel: classLabel(inv.classNumber),
+        createdAt: isoAgo(inv.created),
+        usedByName: inv.kind === "INDIVIDUAL" ? usedBy : null,
+        uses: usedBy ? 1 : 0,
         maxUses: 1,
-        usedByNames: [],
-        status: "open",
-      },
-      {
-        id: "demo-invite-2",
-        kind: "INDIVIDUAL",
-        type: "STUDENT",
-        inviteeName: "Yui Hasegawa",
-        cohortLabel: "Class 4",
-        createdAt: ago(15 * 86_400_000),
-        usedByName: "Yui Hasegawa",
-        uses: 1,
-        maxUses: 1,
-        usedByNames: ["Yui Hasegawa"],
-        status: "used",
-      },
-    ],
+        usedByNames: usedBy ? [usedBy] : [],
+        status: inv.status,
+      };
+    }),
   } satisfies InvitesPage;
 }
 
@@ -658,7 +624,7 @@ function exportData() {
     exportedAt: new Date().toISOString(),
     account: {
       id: DEMO_USER_ID,
-      name: ME.name,
+      name: me().name,
       email: myEmail(),
       state: "ACTIVE",
     },
@@ -683,7 +649,8 @@ const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
     // no-ops: nothing to dismiss / link
   },
   support: {
-    GET: () => ({ name: ME.name, email: myEmail() }) satisfies SupportDefaults,
+    GET: () =>
+      ({ name: me().name, email: myEmail() }) satisfies SupportDefaults,
     POST: () => ({ ref: "DEMO-0001" }) satisfies SupportSent,
   },
 
@@ -793,14 +760,14 @@ const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
     GET: () =>
       ({
         available: true,
-        people: MEMBERS.filter(
-          (x) => x.follow === "following" && x.followsYou,
-        ).map((x) => ({
-          id: x.id,
-          name: x.name,
-          kanji: x.kanji,
-          avatar: memberCard(x).avatar,
-        })),
+        people: members()
+          .filter((x) => x.follow === "following" && x.followsYou)
+          .map((x) => ({
+            id: x.id,
+            name: x.name,
+            kanji: x.kanji,
+            avatar: memberCard(x).avatar,
+          })),
       }) satisfies DirectCandidates,
     POST: async ({ request }) => {
       const groupId = directChatId(str((await readBody(request)).userId));
@@ -967,37 +934,7 @@ const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
       const kind = query.get("kind") === "company" ? "company" : "school";
       const q = (query.get("q") ?? "").toLowerCase();
       const all =
-        kind === "school"
-          ? [
-              {
-                id: "demo-org-lakeside",
-                name: "Lakeside University",
-                count: 4,
-              },
-              {
-                id: "demo-org-northfield",
-                name: "Northfield University",
-                count: 3,
-              },
-              {
-                id: "demo-org-chubu-tech",
-                name: "Chubu Institute of Technology",
-                count: 2,
-              },
-            ]
-          : [
-              {
-                id: "demo-org-example-apps",
-                name: "Example Apps Inc.",
-                count: 2,
-              },
-              {
-                id: "demo-org-sakura",
-                name: "Sakura Digital Studio",
-                count: 1,
-              },
-              { id: "demo-org-aoba", name: "Aoba Motors", count: 3 },
-            ];
+        kind === "school" ? demoData().orgs.schools : demoData().orgs.companies;
       return {
         options: all.filter((o) => o.name.toLowerCase().includes(q)),
       } satisfies OrgSearch;

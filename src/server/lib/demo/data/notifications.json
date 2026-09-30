@@ -1,0 +1,46 @@
+[
+  {
+    "id": "demo-n-follow",
+    "kind": "follow_request",
+    "category": "social",
+    "emoji": "👋",
+    "title": "New follow request",
+    "body": "Daniel Okafor would like to follow you.",
+    "path": "/app/follows",
+    "sent": { "hoursAgo": 2 },
+    "read": false
+  },
+  {
+    "id": "demo-n-news",
+    "kind": "news_published",
+    "category": "news",
+    "emoji": "📰",
+    "title": "New post: Alumni Reunion: registration is open",
+    "body": "From: AIS Alumni Committee",
+    "path": "/app/news/demo-news-reunion",
+    "sent": { "hoursAgo": 5 },
+    "read": false
+  },
+  {
+    "id": "demo-n-event",
+    "kind": "event_reminder",
+    "category": "events",
+    "emoji": "📅",
+    "title": "Coming up: Online career talk: working abroad",
+    "body": "Reply by the deadline if you'd like to join.",
+    "path": "/app/events/demo-event-talk",
+    "sent": { "daysAgo": 1 },
+    "read": true
+  },
+  {
+    "id": "demo-n-welcome",
+    "kind": "account_approved",
+    "category": "account",
+    "emoji": "✅",
+    "title": "Your account has been approved",
+    "body": "Welcome to AIS Alumni! You can now use every feature of the app.",
+    "path": "/app/dashboard",
+    "sent": { "daysAgo": 21 },
+    "read": true
+  }
+]

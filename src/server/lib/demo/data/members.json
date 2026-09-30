@@ -1,0 +1,144 @@
+[
+  {
+    "id": "demo-m-emily",
+    "name": "Emily Tanaka",
+    "kanji": "田中 エミリー",
+    "kana": "タナカ エミリー",
+    "gender": "FEMALE",
+    "role": "FORMER_STUDENT",
+    "classNumber": 3,
+    "year": 2014,
+    "graduated": true,
+    "stage": "WORKING",
+    "stageDetail": "Product designer in Tokyo",
+    "bio": "Class 3. Designing apps in Tokyo these days — always happy to chat with fellow AIS alumni!",
+    "education": [
+      {
+        "school": "Northfield University",
+        "level": "University",
+        "field": "Visual Communication",
+        "years": "2020–2024"
+      }
+    ],
+    "work": [
+      {
+        "company": "Sakura Digital Studio",
+        "title": "Product Designer",
+        "industry": "Software & telecommunications › Software",
+        "jobType": "Creative",
+        "years": "2024–present"
+      }
+    ],
+    "counts": { "followers": 34, "following": 28 }
+  },
+  {
+    "id": "demo-m-kenji",
+    "name": "Kenji Morimoto",
+    "kanji": "森本 健二",
+    "kana": "モリモト ケンジ",
+    "gender": "MALE",
+    "role": "FORMER_STUDENT",
+    "classNumber": 3,
+    "year": 2014,
+    "graduated": true,
+    "stage": "WORKING",
+    "stageDetail": "Mechanical engineer in Nagoya",
+    "classRep": true,
+    "bio": "Class rep for Class 3. Organising our next class get-together — message me with ideas!",
+    "education": [
+      {
+        "school": "Chubu Institute of Technology",
+        "level": "University",
+        "field": "Mechanical Engineering",
+        "years": "2020–2024"
+      }
+    ],
+    "work": [
+      {
+        "company": "Aoba Motors",
+        "title": "Engineer",
+        "industry": "Manufacturers",
+        "jobType": "Engineering (architecture & civil)",
+        "years": "2024–present"
+      }
+    ],
+    "counts": { "followers": 51, "following": 47 }
+  },
+  {
+    "id": "demo-m-yui",
+    "name": "Yui Hasegawa",
+    "kanji": "長谷川 結衣",
+    "kana": "ハセガワ ユイ",
+    "gender": "FEMALE",
+    "role": "FORMER_STUDENT",
+    "classNumber": 4,
+    "year": 2015,
+    "graduated": true,
+    "stage": "UNIVERSITY_COLLEGE",
+    "stageDetail": "Studying marine biology",
+    "bio": "Class 4. Currently studying marine biology in Okinawa.",
+    "education": [
+      {
+        "school": "Ryukyu Coastal University",
+        "level": "University",
+        "field": "Marine Biology",
+        "years": "2023–present"
+      }
+    ],
+    "counts": { "followers": 19, "following": 22 }
+  },
+  {
+    "id": "demo-m-daniel",
+    "name": "Daniel Okafor",
+    "gender": "MALE",
+    "role": "FORMER_STUDENT",
+    "classNumber": 5,
+    "year": 2016,
+    "graduated": true,
+    "stage": "UNIVERSITY_COLLEGE",
+    "stageDetail": "Computer science student",
+    "bio": "Class 5. CS student, part-time barista, full-time football fan.",
+    "counts": { "followers": 8, "following": 15 }
+  },
+  {
+    "id": "demo-m-marco",
+    "name": "Marco Rossi",
+    "gender": "MALE",
+    "role": "FORMER_STUDENT",
+    "classNumber": 3,
+    "year": 2012,
+    "graduated": false,
+    "stage": "WORKING",
+    "stageDetail": "Chef in Milan",
+    "bio": "Was at AIS until 3rd grade before moving to Italy. Still remember the school festival!",
+    "counts": { "followers": 6, "following": 4 }
+  },
+  {
+    "id": "demo-m-sophie",
+    "name": "Sophie Laurent",
+    "gender": "FEMALE",
+    "role": "TEACHER",
+    "teacher": { "from": 2008, "to": 2016, "subjects": "French, Art" },
+    "bio": "Taught French and art at AIS for eight wonderful years. Now back in Lyon.",
+    "counts": { "followers": 88, "following": 12 }
+  },
+  {
+    "id": "demo-m-liam",
+    "name": "Liam Carter",
+    "gender": "MALE",
+    "role": "TEACHER",
+    "teacher": { "from": 2015, "to": null, "subjects": "English, PE" },
+    "bio": "English and PE teacher. Ask me about the sports day archives.",
+    "counts": { "followers": 64, "following": 20 }
+  },
+  {
+    "id": "demo-m-aiko",
+    "name": "Aiko Nakamura",
+    "kanji": "中村 愛子",
+    "kana": "ナカムラ アイコ",
+    "gender": "FEMALE",
+    "role": "FORMER_PARENT",
+    "bio": "Parent of two AIS graduates. Helping with the alumni committee's events.",
+    "counts": { "followers": 27, "following": 30 }
+  }
+]

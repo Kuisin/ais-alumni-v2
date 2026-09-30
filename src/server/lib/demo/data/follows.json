@@ -1,0 +1,8 @@
+{
+  "iFollow": ["demo-m-emily", "demo-m-kenji", "demo-m-yui"],
+  "followMe": ["demo-m-emily", "demo-m-kenji", "demo-m-sophie"],
+  "requestsToMe": [
+    { "memberId": "demo-m-daniel", "requested": { "hoursAgo": 2 } }
+  ],
+  "myRequests": [{ "memberId": "demo-m-marco", "requested": { "daysAgo": 3 } }]
+}

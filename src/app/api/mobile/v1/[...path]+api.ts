@@ -35,13 +35,31 @@ const DEMO_REAL = new Set([
 
 const noStore = { "Cache-Control": "private, no-store" };
 
+/**
+ * The demo content (src/server/lib/demo/data) is checked on first use: a
+ * bad edit fails only demo requests — logged, and answered with an error,
+ * never with the real handler's data.
+ */
+function demoDataError(e: unknown): Response {
+  console.error("[demo]", e instanceof Error ? e.message : e);
+  return Response.json(
+    { error: "demo_data" },
+    { status: 500, headers: noStore },
+  );
+}
+
 async function demoAnswer(
   method: string,
   route: string,
   params: Record<string, string>,
   request: Request,
 ): Promise<Response> {
-  const data = await demoResponse(method, route, params, request);
+  let data: unknown;
+  try {
+    data = await demoResponse(method, route, params, request);
+  } catch (e) {
+    return demoDataError(e);
+  }
   if (data !== undefined) return Response.json(data, { headers: noStore });
   if (method === "GET")
     return Response.json(
@@ -61,7 +79,11 @@ async function withDemoMe(response: Response): Promise<Response> {
     token?: string;
   } | null;
   if (!body?.token || !(await isDemoToken(body.token))) return response;
-  return Response.json({ ...body, me: demoMe() }, { headers: noStore });
+  try {
+    return Response.json({ ...body, me: demoMe() }, { headers: noStore });
+  } catch (e) {
+    return demoDataError(e);
+  }
 }
 
 function match(segments: string[]) {

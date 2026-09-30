@@ -20,6 +20,7 @@ jobs:
       - run: npx prisma generate
       - run: pnpm typecheck
       - run: pnpm lint
+      - run: pnpm demo:check
       - run: npx expo export --platform ios --platform android --platform web --output-dir /tmp/expo-export
         env:
           CI: "1"

@@ -1,0 +1,36 @@
+{
+  "schools": [
+    {
+      "id": "demo-org-lakeside",
+      "name": "Lakeside University",
+      "count": 4
+    },
+    {
+      "id": "demo-org-northfield",
+      "name": "Northfield University",
+      "count": 3
+    },
+    {
+      "id": "demo-org-chubu-tech",
+      "name": "Chubu Institute of Technology",
+      "count": 2
+    }
+  ],
+  "companies": [
+    {
+      "id": "demo-org-example-apps",
+      "name": "Example Apps Inc.",
+      "count": 2
+    },
+    {
+      "id": "demo-org-sakura",
+      "name": "Sakura Digital Studio",
+      "count": 1
+    },
+    {
+      "id": "demo-org-aoba",
+      "name": "Aoba Motors",
+      "count": 3
+    }
+  ]
+}
