@@ -2,10 +2,7 @@
   "configVersion": 0,
   "apple": {
     "copyright": "2026 AIS Alumni Committee",
-    "categories": [
-      "SOCIAL_NETWORKING",
-      "EDUCATION"
-    ],
+    "categories": ["SOCIAL_NETWORKING", "EDUCATION"],
     "advisory": {
       "alcoholTobaccoOrDrugUseOrReferences": "NONE",
       "contests": "NONE",
