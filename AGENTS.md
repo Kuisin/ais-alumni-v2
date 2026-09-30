@@ -6,8 +6,9 @@ routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 `src/server/`), deployed with the web app on Vercel (`web.output:
 "server"`, `api/index.ts`). It shares the database with the website in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
-server"/"the website" below), which still owns the schema and migrations,
-stored files, scheduled jobs and the LINE webhook. Every page of the
+server"/"the website" below), which still runs the stored files, scheduled
+jobs and the LINE webhook. The database schema and its migrations are this
+repo's (see "Database" below). Every page of the
 website — public, onboarding, member and admin mode — has a native screen
 here; the app never opens the website. Tokens live in the shared database, so either
 side accepts them.
@@ -29,10 +30,23 @@ package `net.kailab.aisalumni` + its package signature.
 
 This repo owns the API contract types (`src/contract`, used by both the app
 and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);
-change them here. Only the database schema is still copied from the old
-website, which owns the migrations: `pnpm sync:server` (SERVER_DIR: your
-checkout of it, default `../ais-alumni-app`; `--check` only reports a
-difference), then `npx prisma generate`.
+change them here.
+
+**Database.** This repo owns the schema (`prisma/schema.prisma`) and its
+migrations (`prisma/migrations`); the old website no longer migrates.
+Change the schema, then create a migration:
+`npx prisma migrate diff --from-migrations prisma/migrations --to-schema prisma/schema.prisma --script`
+needs a shadow database, so instead diff against the previous schema
+(`git show HEAD:prisma/schema.prisma > /tmp/old.prisma`, then
+`npx prisma migrate diff --from-schema /tmp/old.prisma --to-schema prisma/schema.prisma --script`)
+into `prisma/migrations/<YYYYMMDDHHMMSS>_<name>/migration.sql`, and
+`npx prisma generate`. The Vercel build applies pending migrations
+(`scripts/migrate.mjs`, needs `DIRECT_URL` — the Supabase session pooler;
+the app itself uses the transaction pooler `DATABASE_URL`). Staging and
+production share the database and both builds migrate, so migrations must
+be backward compatible: add; drop or rename only once no deployed code
+uses the old shape. CI checks that the migrations build exactly the
+schema.
 
 ## Expo has changed — do not trust your training data
 
@@ -59,7 +73,6 @@ pnpm typecheck             # tsc --noEmit
 pnpm lint                  # Biome
 npx expo export --platform ios --output-dir /tmp/x   # bundle check
 pnpm icons                 # regenerate the app and web icons from the logo
-pnpm sync:server           # the database schema from the old website's checkout
 ```
 
 `expo-dev-client` is installed (for development builds), so a bare

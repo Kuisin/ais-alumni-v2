@@ -14,7 +14,6 @@
     "icons": "node scripts/make-icons.mjs",
     "doctor": "npx --yes expo-doctor@latest",
     "format": "biome check --write .",
-    "sync:server": "node scripts/sync-server.mjs",
     "demo:check": "tsx --tsconfig tsconfig.json scripts/check-demo-data.ts",
     "eas-build-post-install": "prisma generate"
   },

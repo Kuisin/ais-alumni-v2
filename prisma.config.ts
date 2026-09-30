@@ -1,12 +1,15 @@
 import { defineConfig } from "prisma/config";
 
 /**
- * The database schema is owned by the API server's repo until it is retired
- * (Kuisin/ais-alumni-app: prisma/schema.prisma and its migrations) — this
- * copy only generates the client (`pnpm sync:server` refreshes it). Never
- * run `prisma migrate` from here.
+ * This repo owns the database schema and its migrations (prisma/migrations,
+ * applied by scripts/migrate.mjs in the Vercel build). The CLI connects
+ * with DIRECT_URL (direct / session-mode Postgres): `prisma migrate` can't
+ * work through DATABASE_URL, the transaction pooler the app uses.
  */
 export default defineConfig({
   schema: "prisma/schema.prisma",
-  datasource: { url: process.env.DATABASE_URL ?? "" },
+  migrations: { path: "prisma/migrations" },
+  datasource: {
+    url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "",
+  },
 });
