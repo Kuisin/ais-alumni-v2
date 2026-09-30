@@ -139,6 +139,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // spaces (see each file).
     "./plugins/ios-scene-lifecycle",
     "./plugins/ios-paths-with-spaces",
+    // Build scripts must write into the app (Xcode 27's script sandbox).
+    "./plugins/ios-no-script-sandbox",
   ],
   extra: {
     ...config.extra,
