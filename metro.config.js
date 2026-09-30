@@ -18,6 +18,8 @@ const SHIMS = {
   "next-intl/server": "src/server/shims/next-intl-server.ts",
   "next-intl/routing": "src/server/shims/next-intl-routing.ts",
   "next-intl": "src/server/shims/next-intl.ts",
+  // Not Next.js: satori's HarfBuzz, loaded lazily (see the file).
+  harfbuzzjs: "src/server/shims/harfbuzzjs.js",
 };
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
