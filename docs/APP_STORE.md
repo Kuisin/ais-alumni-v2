@@ -28,6 +28,17 @@ EAS project `@kaisei0807s/ais-alumni`. Release builds talk to
 6. **App Privacy** and **Age Rating**: answers below.
 7. **App Review Information**: contact, demo account, notes below. Submit.
 
+## TestFlight
+
+`npx eas-cli build -p ios --profile testflight --auto-submit` builds a
+store build against the staging server (ais-alumni-dev, i.e. `dev`, with
+the production database) and uploads it to TestFlight; `production` does
+the same against ais-alumni.kai-lab.net (`main`). The first run asks for
+the Apple ID (and 2FA) to create the certificate, provisioning profile and
+push key, and can create the App Store Connect app. After Apple processes
+the build (10–30 min), add yourself under TestFlight → Internal Testing and
+install it with the TestFlight app. Internal testers need no review.
+
 ## App Privacy ("nutrition label")
 
 Tracking: **No** (no ads, no third-party analytics in the app). Everything

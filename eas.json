@@ -22,6 +22,12 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://ais-alumni.kai-lab.net"
       }
+    },
+    "testflight": {
+      "extends": "production",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net"
+      }
     }
   },
   "submit": {
@@ -31,6 +37,9 @@
         "track": "internal",
         "releaseStatus": "draft"
       }
+    },
+    "testflight": {
+      "extends": "production"
     }
   }
 }
