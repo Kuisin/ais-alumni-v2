@@ -1,3 +1,5 @@
+import { demoMe, demoResponse } from "@/server/lib/demo/fixtures";
+import { isDemoRequest, isDemoToken } from "@/server/lib/demo/session";
 import { type Handler, ROUTES } from "@/server/routes/table";
 
 /**
@@ -11,9 +13,56 @@ import { type Handler, ROUTES } from "@/server/routes/table";
 const PREFIX = "/api/mobile/v1/";
 
 const COMPILED = ROUTES.map(([pattern, mod]) => ({
+  pattern,
   parts: pattern.split("/"),
   mod,
 }));
+
+/**
+ * Routes the App Review demo account reaches for real: signing in and out,
+ * the app config and お問い合わせ. Everything else it asks is answered from fixtures
+ * (src/server/lib/demo) — a route without one gets nothing, never data.
+ */
+const DEMO_REAL = new Set([
+  "auth/email/request",
+  "auth/email/verify",
+  "auth/signout",
+  "config",
+  // お問い合わせ: only the account's own name / email; messages reach the
+  // committee, so App Review can write to us.
+  "support",
+]);
+
+const noStore = { "Cache-Control": "private, no-store" };
+
+async function demoAnswer(
+  method: string,
+  route: string,
+  params: Record<string, string>,
+  request: Request,
+): Promise<Response> {
+  const data = await demoResponse(method, route, params, request);
+  if (data !== undefined) return Response.json(data, { headers: noStore });
+  if (method === "GET")
+    return Response.json(
+      { error: "not_found" },
+      { status: 404, headers: noStore },
+    );
+  return Response.json({ ok: true }, { headers: noStore });
+}
+
+/** Signing in as the demo account: its demo profile, not the real one. */
+async function withDemoMe(response: Response): Promise<Response> {
+  if (!response.ok) return response;
+  const body = (await response
+    .clone()
+    .json()
+    .catch(() => null)) as {
+    token?: string;
+  } | null;
+  if (!body?.token || !(await isDemoToken(body.token))) return response;
+  return Response.json({ ...body, me: demoMe() }, { headers: noStore });
+}
 
 function match(segments: string[]) {
   for (const r of COMPILED) {
@@ -30,13 +79,13 @@ function match(segments: string[]) {
         break;
       }
     }
-    if (ok) return { mod: r.mod, params };
+    if (ok) return { route: r.pattern, mod: r.mod, params };
   }
   return null;
 }
 
 function dispatch(method: string) {
-  return (request: Request): Response | Promise<Response> => {
+  return async (request: Request): Promise<Response> => {
     const { pathname } = new URL(request.url);
     const rest = pathname.startsWith(PREFIX)
       ? pathname.slice(PREFIX.length)
@@ -46,7 +95,12 @@ function dispatch(method: string) {
     const handler: Handler | undefined = found.mod[method];
     if (!handler)
       return Response.json({ error: "method_not_allowed" }, { status: 405 });
-    return handler(request, found.params);
+    if (!DEMO_REAL.has(found.route) && (await isDemoRequest(request)))
+      return demoAnswer(method, found.route, found.params, request);
+    const response = await handler(request, found.params);
+    return found.route === "auth/email/verify"
+      ? withDemoMe(response)
+      : response;
   };
 }
 
