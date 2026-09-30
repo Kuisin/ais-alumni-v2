@@ -60,7 +60,7 @@ export default function FollowsScreen() {
   const open = (m: MemberCard) =>
     router.push(
       m.id === me.user.id
-        ? "/me"
+        ? "/profile"
         : { pathname: "/members/[id]", params: { id: m.id } },
     );
   const refresh = async () => {

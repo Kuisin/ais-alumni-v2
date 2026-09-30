@@ -44,7 +44,7 @@ export default function MemberScreen() {
   const [menu, setMenu] = useState(false);
   const profile = query.data;
 
-  if (self) return <Redirect href={"/me"} />;
+  if (self) return <Redirect href={"/profile"} />;
 
   const refresh = async () => {
     setRefreshing(true);
@@ -86,7 +86,7 @@ export default function MemberScreen() {
               <PreviewBanner
                 preview={p.preview}
                 onView={(as) => router.setParams({ as })}
-                onBack={() => router.navigate("/me")}
+                onBack={() => router.navigate("/profile")}
               />
             ) : null}
             <ProfileHeader profile={p} />

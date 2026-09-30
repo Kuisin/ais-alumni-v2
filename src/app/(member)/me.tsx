@@ -5,14 +5,14 @@ import { AccountMenu, SignOutRow } from "@/features/me/account-menu";
 import { PROFILE_KEY, useProfile, useRefetchOnFocus } from "@/features/me/api";
 import { AppInfo } from "@/features/me/app-info";
 import { ProfileHeader } from "@/features/me/profile-header";
-import { ProfileSections } from "@/features/me/profile-sections";
 import { useAuth, useMe } from "@/lib/auth";
-import { ErrorState, Loading, Screen } from "@/ui";
+import { Screen } from "@/ui";
 
 /**
- * マイページ (opened from the photo at the top left of every tab): my
- * profile as others see it, each section editable (the website's /app/profile)
- * and the account menu (フォローリクエスト, 設定, ログアウト).
+ * マイページ (opened from the photo at the top left of every tab): the top
+ * of my profile (photo, names, follow counts), マイプロフィール (the full
+ * profile, its own page) and the account menu (フォローリクエスト, 設定,
+ * ログアウト).
  */
 export default function MeScreen() {
   const t = useTranslations("common.nav");
@@ -36,13 +36,6 @@ export default function MeScreen() {
       <Stack.Screen options={{ title: t("profileShort") }} />
       <ProfileHeader me={me} profile={profile.data} />
       <AccountMenu />
-      {profile.data ? (
-        <ProfileSections profile={profile.data} />
-      ) : profile.isError ? (
-        <ErrorState error={profile.error} onRetry={() => profile.refetch()} />
-      ) : (
-        <Loading inline />
-      )}
       <SignOutRow />
       <AppInfo />
     </Screen>
