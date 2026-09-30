@@ -24,7 +24,7 @@
     "lineNote": "With LINE you'll also confirm an email address, so we can reach you if LINE is unavailable.",
     "or": "or",
     "emailTitle": "Sign in with an email code",
-    "privacy": "By continuing you agree to how we handle your information, as described in our <link>privacy policy</link>.",
+    "privacy": "By continuing you agree to our <terms>terms of use</terms> and to how we handle your information, as described in our <link>privacy policy</link>.",
     "notReady": "Not ready yet",
     "notReadyNote": "Methods marked “Not ready yet” can't be used yet — please sign in with email.",
     "help": "Can't sign in? <link>Contact us</link>."
@@ -93,5 +93,57 @@
       "PARENT": "{cohort} parent",
       "TEACHER": "teacher / staff"
     }
+  },
+  "terms": {
+    "title": "Terms of use",
+    "intro": "These terms set out how you may use the AIS Alumni website and app (the \"service\"), run by the AIS Alumni Committee (the \"Committee\"). By using the service, you agree to these terms.",
+    "eligibility": {
+      "title": "Who can use it",
+      "body": "The service is for former and current students of Aichi International School (AIS), their parents, and current and former teachers and staff. Only accounts the Committee has checked and approved can use the members' features."
+    },
+    "account": {
+      "title": "Your account",
+      "items": [
+        "Give accurate details when you register, and keep them up to date.",
+        "Only you may use your account. Keep the email address and LINE account you sign in with secure.",
+        "If you notice anyone misusing your account, tell the Committee straight away through Contact us."
+      ]
+    },
+    "conduct": {
+      "title": "What's not allowed",
+      "items": [
+        "Harassing, threatening, discriminating against or defaming other members.",
+        "Posting sexual, violent, illegal or otherwise harmful content.",
+        "Spam, advertising, solicitation, pyramid schemes or other commercial messages.",
+        "Pretending to be someone else, or registering with false information.",
+        "Publishing or passing on other members' personal information (e.g. from the directory) without their consent.",
+        "Interfering with the service or accessing it without permission."
+      ]
+    },
+    "zeroTolerance": {
+      "title": "Objectionable content and abusive users",
+      "body": "The Committee has zero tolerance for objectionable content and abusive users. You can report a problem from a chat (\"Report a problem\") or from a member's profile menu, and you can block anyone. We review reports within 24 hours and act on them — removing content that breaks these terms and suspending or removing the accounts responsible."
+    },
+    "content": {
+      "title": "What you post",
+      "body": "You keep the rights to what you post. You allow the Committee to store, show and send it as needed to run the service. Don't post anything that infringes someone else's rights."
+    },
+    "termination": {
+      "title": "Suspension",
+      "body": "If you break these terms, or when needed to keep members safe, the Committee may remove content or suspend or delete accounts without notice. You can delete your account at any time in Settings."
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "body": "The service is run by a volunteer group of graduates and is not an official service of the school. We do our best to keep it running, but it may be interrupted or discontinued, and to the extent the law allows we are not responsible for disputes between members or at events."
+    },
+    "changes": {
+      "title": "Changes",
+      "body": "The Committee may change these terms when needed. We'll announce important changes, and using the service after a change means you accept it. These terms are governed by the laws of Japan."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "For questions about these terms, please contact the Committee through Contact us in the app or on the website."
+    },
+    "updated": "Last updated: September 2026"
   }
 }

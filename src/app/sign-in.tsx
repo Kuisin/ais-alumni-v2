@@ -180,6 +180,17 @@ export default function SignInScreen() {
             <View style={styles.footer}>
               <Text variant="caption" tone="muted">
                 {t.rich("privacy", {
+                  terms: (chunks) => (
+                    <Text
+                      variant="caption"
+                      tone="brand"
+                      accessibilityRole="link"
+                      style={styles.link}
+                      onPress={() => router.push("/terms")}
+                    >
+                      {chunks}
+                    </Text>
+                  ),
                   link: (chunks) => (
                     <Text
                       variant="caption"

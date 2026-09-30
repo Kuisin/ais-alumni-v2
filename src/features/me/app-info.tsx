@@ -6,7 +6,7 @@ import { API_URL, PRODUCTION_URL } from "@/lib/config";
 import { space, Text, TOUCH } from "@/ui";
 
 /**
- * Bottom of マイページ: the privacy policy, app version (and the server, when
+ * Bottom of マイページ: the privacy policy and terms of use, app version (and the server, when
  * it isn't production), the site's footer line.
  */
 export function AppInfo() {
@@ -24,6 +24,15 @@ export function AppInfo() {
       >
         <Text variant="small" tone="brand" style={styles.underline}>
           {tc("privacy")}
+        </Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="link"
+        onPress={() => router.push("/terms")}
+        style={styles.link}
+      >
+        <Text variant="small" tone="brand" style={styles.underline}>
+          {tc("terms")}
         </Text>
       </Pressable>
       {version ? (

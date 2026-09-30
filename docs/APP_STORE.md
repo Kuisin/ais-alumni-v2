@@ -68,7 +68,9 @@ calculation for messaging).
   > account…" at the bottom of the registration screens).
   > Blocking: a member's profile → menu → "Block…".
   > Reporting: in a chat, Chat info → "Report a problem"; on a member's
-  > profile → menu → "Report a problem".
+  > profile → menu → "Report a problem". Terms of use (zero tolerance for
+  > objectionable content and abusive users): linked on the sign-in
+  > screen and at the bottom of Me.
   > Camera: used only by event staff to scan QR tickets at check-in, and to
   > take a photo to upload.
 
@@ -83,3 +85,19 @@ calculation for messaging).
 - **Demo account**: see above.
 - **Guideline 1.2 (UGC)**: report, block and moderation exist; mention
   them in the notes (done above).
+
+## Google Play (Android)
+
+1. **Play Console → Create app** 「AIS同窓会」, package
+   `net.kailab.aisalumni`. The first build has to be uploaded by hand:
+   `npx eas-cli build -p android --profile production`, then upload the
+   .aab to Testing → Internal testing.
+2. **Upload key for `eas submit`**: Google Cloud → a service account with
+   access to the app in Play Console (Users and permissions), JSON key saved
+   as `google-play-service-account.json` in the repo root (git-ignored).
+   Then `npx eas-cli submit -p android --latest` sends builds to the
+   internal track as a draft (eas.json `submit.production.android`).
+3. **Push**: Android needs `google-services.json` from a Firebase project
+   with the same package (not set up yet).
+4. **Store listing / Data safety**: same answers as App Privacy above;
+   account deletion URL: `https://ais-alumni.kai-lab.net/support`.
