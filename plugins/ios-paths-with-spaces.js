@@ -3,15 +3,28 @@
  * (e.g. "/Volumes/Main Storage (4TB)/…"): two generated build scripts run a
  * path without quotes and fail — "syntax error near unexpected token `('"
  * (expo-constants) and "/Volumes/Main: No such file or directory" (bundling
- * React Native). This quotes both; builds elsewhere (EAS) are unaffected.
+ * React Native). This fixes both; builds elsewhere (EAS) are unaffected.
  *
- * expo-constants' script still reads the path unquoted inside, so from such
- * a folder it skips embedding app.config: development builds don't need it
- * (they load the config from Metro); make release builds with EAS Build.
+ * expo-constants' get-app-config-ios.sh also runs `basename $PROJECT_DIR`
+ * unquoted, so from such a folder it silently skipped embedding app.config
+ * and release builds crashed on launch ("expo-linking needs access to the
+ * expo-constants manifest"). Its phase now runs the same steps, quoted.
  */
 const { withPodfile, withXcodeProject } = require("expo/config-plugins");
 
-const MARKER = "# ios-paths-with-spaces";
+const MARKER = "# ios-paths-with-spaces v2";
+
+/** get-app-config-ios.sh for the pod target, with every path quoted. */
+const CONSTANTS_SCRIPT = `set -eo pipefail
+PKG="$PODS_TARGET_SRCROOT/.."
+if [ "$BUNDLE_FORMAT" = "deep" ]; then
+  DEST="$CONFIGURATION_BUILD_DIR/EXConstants.bundle/Contents/Resources"
+  mkdir -p "$DEST"
+else
+  DEST="$CONFIGURATION_BUILD_DIR/EXConstants.bundle"
+fi
+"$PKG/scripts/with-node.sh" "$PKG/scripts/getAppConfig.js" "$PROJECT_DIR/../.." "$DEST"
+`;
 
 /** CocoaPods writes expo-constants' script phase; fix it after install. */
 function withQuotedConstantsScript(config) {
@@ -26,10 +39,10 @@ function withQuotedConstantsScript(config) {
       `${hook}    ${MARKER} (plugins/ios-paths-with-spaces.js)
     installer.pods_project.targets.each do |target|
       target.shell_script_build_phases.each do |phase|
-        phase.shell_script = phase.shell_script.sub(
-          '"$PODS_TARGET_SRCROOT/../scripts/get-app-config-ios.sh"',
-          %q("'$PODS_TARGET_SRCROOT/../scripts/get-app-config-ios.sh'"),
-        )
+        next unless phase.shell_script.include?("get-app-config-ios.sh")
+        phase.shell_script = <<~'EXCONSTANTS'
+${CONSTANTS_SCRIPT.trimEnd().replace(/^/gm, "          ")}
+        EXCONSTANTS
       end
     end
 `,

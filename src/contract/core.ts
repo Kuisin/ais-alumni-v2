@@ -63,6 +63,10 @@ export type AppConfig = {
   lineOaId: string | null;
   /** app versions below this should ask the member to update (none yet) */
   minAppVersion: string | null;
+  /** the LINE Login channel, for the LINE SDK in the app (null: not set up) */
+  lineChannelId?: string | null;
+  /** where to update the app (App Store / Google Play), when known */
+  storeUrl?: { ios: string | null; android: string | null };
 };
 
 // ---- GET /me (any signed-in account) ----

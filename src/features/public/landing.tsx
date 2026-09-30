@@ -174,6 +174,15 @@ export function Landing() {
           </Pressable>
           <Pressable
             accessibilityRole="link"
+            onPress={() => router.push("/terms")}
+            style={styles.link}
+          >
+            <Text variant="small" tone="brand" style={styles.underline}>
+              {tc("terms")}
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="link"
             onPress={() => router.push("/support")}
             style={styles.link}
           >

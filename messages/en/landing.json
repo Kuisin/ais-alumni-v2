@@ -24,21 +24,23 @@
     "lineNote": "With LINE you'll also confirm an email address, so we can reach you if LINE is unavailable.",
     "or": "or",
     "emailTitle": "Sign in with an email code",
-    "privacy": "By continuing you agree to how we handle your information, as described in our <link>privacy notice</link>.",
+    "privacy": "By continuing you agree to our <terms>terms of use</terms> and to how we handle your information, as described in our <link>privacy policy</link>.",
     "notReady": "Not ready yet",
     "notReadyNote": "Methods marked “Not ready yet” can't be used yet — please sign in with email.",
     "help": "Can't sign in? <link>Contact us</link>."
   },
   "privacy": {
-    "title": "Privacy notice",
-    "intro": "This site is run independently by the AIS Alumni Committee, a volunteer group of AIS graduates, to connect alumni, parents and teachers. It is not an official service of Aichi International School, and the school is not involved in running it or in handling your data. This policy explains, under Japan's Act on the Protection of Personal Information (APPI), what personal information the Committee collects and how it is used.",
+    "title": "Privacy policy",
+    "intro": "This service (the website and the app) is run independently by the AIS Alumni Committee, a volunteer group of AIS graduates, to connect alumni, parents and teachers. It is not an official service of Aichi International School, and the school is not involved in running it or in handling your data. This policy explains, under Japan's Act on the Protection of Personal Information (APPI), what personal information the Committee collects and how it is used.",
     "collected": {
       "title": "What we collect",
       "items": [
-        "Account details: your email address, and your LINE or Google account ID if you sign in with them.",
-        "Profile: your name (romaji and kanji/kana), name at AIS, date of birth, photo, short bio, your relationship to AIS (student, parent, teacher) and years/grade.",
+        "Account details: your email address, and your LINE account ID if you sign in with LINE (and your Google account ID if you linked Google earlier).",
+        "Profile: your name (romaji and kanji/kana), name at AIS, date of birth, gender, photo, short bio, your relationship to AIS (student, parent, teacher) and years/grade, and any education or work history you add.",
         "Optional contact details: phone number, LINE display name and social links.",
         "Verification information: your answers and any documents you upload to prove your connection to AIS.",
+        "What you send: chat messages, comments and answers on news, and what you write in inquiries and reports.",
+        "App notifications: the push notification token of each device where you turn notifications on (used only to deliver them).",
         "Activity: event RSVPs, follows and notification history."
       ]
     },
@@ -46,8 +48,9 @@
       "title": "Why we use it",
       "items": [
         "To confirm that members really belong to the AIS community.",
-        "To run the member directory, events and news.",
-        "To send you notifications on LINE or by email.",
+        "To run the member directory, events, news and chat.",
+        "To send you notifications in the app, on LINE or by email.",
+        "To answer your inquiries and reports.",
         "To keep the service safe (for example, preventing abuse and keeping an audit log of admin actions)."
       ]
     },
@@ -60,8 +63,8 @@
       "body": "If you link LINE, we store your LINE user ID and display name so the AIS Alumni Committee Official Account can send you notifications. We do not use the email address registered with LINE. You can unlink LINE or block the Official Account at any time."
     },
     "analytics": {
-      "title": "Site analytics",
-      "body": "To improve the site, we count page views and loading speed with Vercel Web Analytics and Speed Insights. No cookies are used and nothing that identifies you is sent: search words, IDs and tokens are removed from web addresses first, so only the kind of page is recorded."
+      "title": "Analytics",
+      "body": "The app contains no advertising or analytics tools. To improve the website, we count page views and loading speed there with Vercel Web Analytics and Speed Insights. No cookies are used and nothing that identifies you is sent: search words, IDs and tokens are removed from web addresses first, so only the kind of page is recorded."
     },
     "evidence": {
       "title": "Verification documents",
@@ -73,11 +76,11 @@
     },
     "rights": {
       "title": "Your choices",
-      "body": "You can update your profile at any time, export a copy of your data, and delete your account from Settings. Notification preferences (LINE or email) are also in Settings."
+      "body": "You can update your profile at any time, export a copy of your data, and delete your account from Settings. Notification preferences (app notifications, LINE or email) are also in Settings. You can delete your account at any time, including while your registration is being reviewed."
     },
     "contact": {
       "title": "Contact",
-      "body": "For questions about this notice or your personal information, please contact the AIS Alumni Committee."
+      "body": "For questions about this policy or your personal information, please contact the AIS Alumni Committee through Contact us in the app or on the website."
     },
     "updated": "Last updated: September 2026"
   },
@@ -90,5 +93,57 @@
       "PARENT": "{cohort} parent",
       "TEACHER": "teacher / staff"
     }
+  },
+  "terms": {
+    "title": "Terms of use",
+    "intro": "These terms set out how you may use the AIS Alumni website and app (the \"service\"), run by the AIS Alumni Committee (the \"Committee\"). By using the service, you agree to these terms.",
+    "eligibility": {
+      "title": "Who can use it",
+      "body": "The service is for former and current students of Aichi International School (AIS), their parents, and current and former teachers and staff. Only accounts the Committee has checked and approved can use the members' features."
+    },
+    "account": {
+      "title": "Your account",
+      "items": [
+        "Give accurate details when you register, and keep them up to date.",
+        "Only you may use your account. Keep the email address and LINE account you sign in with secure.",
+        "If you notice anyone misusing your account, tell the Committee straight away through Contact us."
+      ]
+    },
+    "conduct": {
+      "title": "What's not allowed",
+      "items": [
+        "Harassing, threatening, discriminating against or defaming other members.",
+        "Posting sexual, violent, illegal or otherwise harmful content.",
+        "Spam, advertising, solicitation, pyramid schemes or other commercial messages.",
+        "Pretending to be someone else, or registering with false information.",
+        "Publishing or passing on other members' personal information (e.g. from the directory) without their consent.",
+        "Interfering with the service or accessing it without permission."
+      ]
+    },
+    "zeroTolerance": {
+      "title": "Objectionable content and abusive users",
+      "body": "The Committee has zero tolerance for objectionable content and abusive users. You can report a problem from a chat (\"Report a problem\") or from a member's profile menu, and you can block anyone. We review reports within 24 hours and act on them — removing content that breaks these terms and suspending or removing the accounts responsible."
+    },
+    "content": {
+      "title": "What you post",
+      "body": "You keep the rights to what you post. You allow the Committee to store, show and send it as needed to run the service. Don't post anything that infringes someone else's rights."
+    },
+    "termination": {
+      "title": "Suspension",
+      "body": "If you break these terms, or when needed to keep members safe, the Committee may remove content or suspend or delete accounts without notice. You can delete your account at any time in Settings."
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "body": "The service is run by a volunteer group of graduates and is not an official service of the school. We do our best to keep it running, but it may be interrupted or discontinued, and to the extent the law allows we are not responsible for disputes between members or at events."
+    },
+    "changes": {
+      "title": "Changes",
+      "body": "The Committee may change these terms when needed. We'll announce important changes, and using the service after a change means you accept it. These terms are governed by the laws of Japan."
+    },
+    "contact": {
+      "title": "Contact",
+      "body": "For questions about these terms, please contact the Committee through Contact us in the app or on the website."
+    },
+    "updated": "Last updated: September 2026"
   }
 }

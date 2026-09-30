@@ -1,15 +1,15 @@
 {
   "pageTitle": "Send a notification",
   "descriptionAny": "Send a message to members. They get a notification by email and read the message in the app.",
-  "descriptionLeader": "As class representative, you can send a message to members of your 学年. They get a notification by email and read the message in the app.",
+  "descriptionLeader": "As class representative, you can send a message to members of your class. They get a notification by email and read the message in the app.",
   "audience": {
     "label": "Send to",
     "ALL": "All members",
     "ROLES": "Members with selected roles",
-    "COHORT": "A 学年 (class)",
-    "cohortHint": "Current and former students who selected this 学年.",
-    "leaderOnly": "Your 学年:",
-    "cohort": "学年 (class)",
+    "COHORT": "A class",
+    "cohortHint": "Current and former students who selected this class.",
+    "leaderOnly": "Your class:",
+    "cohort": "Class",
     "chooseCohort": "Choose a class",
     "desc": {
       "ALL": "Reaches every active member.",
@@ -42,7 +42,7 @@
     "required": "This field is required.",
     "tooLong": "This is too long.",
     "rolesRequired": "Choose at least one role.",
-    "cohortRequired": "Choose a 学年."
+    "cohortRequired": "Choose a class."
   },
   "errors": {
     "forbidden": "Please sign in again.",

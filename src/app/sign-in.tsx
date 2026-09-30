@@ -61,7 +61,9 @@ export default function SignInScreen() {
   const provider = async (p: "line" | "google") => {
     setBusy(p);
     setProviderError(false);
-    const result = await signInWithProvider(p).catch(() => "failed" as const);
+    const result = await signInWithProvider(p, {
+      lineChannelId: config.data?.lineChannelId,
+    }).catch(() => "failed" as const);
     setBusy(null);
     if (result === "failed") setProviderError(true);
   };
@@ -180,6 +182,17 @@ export default function SignInScreen() {
             <View style={styles.footer}>
               <Text variant="caption" tone="muted">
                 {t.rich("privacy", {
+                  terms: (chunks) => (
+                    <Text
+                      variant="caption"
+                      tone="brand"
+                      accessibilityRole="link"
+                      style={styles.link}
+                      onPress={() => router.push("/terms")}
+                    >
+                      {chunks}
+                    </Text>
+                  ),
                   link: (chunks) => (
                     <Text
                       variant="caption"

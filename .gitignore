@@ -17,6 +17,8 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+# Google Play upload key for `eas submit -p android` (eas.json)
+google-play-service-account.json
 
 # Metro
 .metro-health-check*
@@ -46,3 +48,6 @@ src/server/generated/
 
 # local server data (dev mailbox, uploads, push outbox)
 .data/
+
+# Local agent tooling
+.claude-flow/

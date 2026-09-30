@@ -70,7 +70,9 @@ export default function DirectoryTab() {
 
   const open = (id: string) =>
     router.push(
-      id === me.user.id ? "/me" : { pathname: "/members/[id]", params: { id } },
+      id === me.user.id
+        ? "/profile"
+        : { pathname: "/members/[id]", params: { id } },
     );
 
   return (

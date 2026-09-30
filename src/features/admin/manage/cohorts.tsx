@@ -10,6 +10,8 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Notice } from "@/features/events/parts";
 import { confirmAction } from "@/features/me/confirm";
+import { useAuth } from "@/lib/auth";
+import { joinList } from "@/lib/format";
 import {
   Badge,
   Button,
@@ -70,6 +72,7 @@ export function AdminCohortsScreen() {
 function CohortCard({ cohort: c }: { cohort: AdminCohort }) {
   const t = useTranslations("cohorts");
   const tc = useTranslations("common");
+  const { locale } = useAuth();
   const [editing, setEditing] = useState(false);
   return (
     <Card style={styles.card}>
@@ -99,7 +102,10 @@ function CohortCard({ cohort: c }: { cohort: AdminCohort }) {
           {t("reps.title")}:{" "}
         </Text>
         {c.reps.length ? (
-          c.reps.map((r) => r.name).join("、")
+          joinList(
+            c.reps.map((r) => r.name),
+            locale,
+          )
         ) : (
           <Text variant="small" tone="subtle">
             {t("reps.none")}

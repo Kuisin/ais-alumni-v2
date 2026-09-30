@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { useLocale, useTranslations } from "use-intl";
+import { useTranslations } from "use-intl";
 import { colors, radius, Text } from "@/ui";
 
 /** 「第5期」「学年代表」 next to a name (the website's MemberTags). */
@@ -11,14 +11,14 @@ export function MemberTags({
   rep?: boolean;
 }) {
   const t = useTranslations("chat");
-  const locale = useLocale();
+  const tc = useTranslations("common");
   if (!cohort && !rep) return null;
   return (
     <View style={styles.row}>
       {cohort ? (
         <View style={[styles.tag, styles.cohort]}>
           <Text style={[styles.text, styles.cohortText]}>
-            {locale === "en" ? `Class ${cohort}` : `第${cohort}期`}
+            {tc("cohortNumber", { number: cohort })}
           </Text>
         </View>
       ) : null}

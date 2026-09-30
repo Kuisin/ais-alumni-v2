@@ -7,20 +7,43 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "env": { "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net"
+      }
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview",
-      "env": { "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net"
+      }
     },
     "production": {
       "autoIncrement": true,
-      "channel": "production",
-      "env": { "EXPO_PUBLIC_API_URL": "https://ais-alumni.kai-lab.net" }
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni.kai-lab.net"
+      }
+    },
+    "testflight": {
+      "extends": "production",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "6817619381",
+        "appleTeamId": "83BJ8C4G93"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account.json",
+        "track": "internal",
+        "releaseStatus": "draft"
+      }
+    },
+    "testflight": {
+      "extends": "production"
+    }
   }
 }

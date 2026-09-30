@@ -19,7 +19,13 @@ is implemented directly (`src/server/lib/mobile/oauth.ts`); the LINE Login
 channel needs the callback
 `https://<domain>/api/mobile/v1/auth/oauth/callback/line` — also used to
 link LINE to a signed-in member (`src/server/lib/mobile/line-link.ts`,
-`src/features/line`).
+`src/features/line`). In development and store builds, sign-in goes through
+the LINE app instead (LINE SDK, `src/lib/line-sdk.ts` →
+`POST /auth/line/native`, which checks the token was issued to our
+channel); the browser flow stays for the web, Expo Go and as the fallback.
+For that, the same LINE Login channel needs **App types → Mobile app**
+turned on with the iOS bundle ID `net.kailab.aisalumni` and the Android
+package `net.kailab.aisalumni` + its package signature.
 
 This repo owns the API contract types (`src/contract`, used by both the app
 and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);
@@ -73,14 +79,14 @@ project id in the config Expo Go needs no sign-in (with one, run
 ## How it fits together
 
 - **Sign-in** (`src/lib/auth.tsx`, `src/app/sign-in.tsx`): email code
-  (`/auth/email/request` → `/auth/email/verify`), or Google / LINE through
+  (`/auth/email/request` → `/auth/email/verify`), or LINE through
   the system browser with PKCE (`/auth/oauth/start` → Auth.js → `/finish` →
   `aisalumni://auth?code=…` → `/auth/oauth/exchange`). The result is a
   bearer token (keychain, `expo-secure-store`); the server stores only its
   hash (`MobileSession`). `getCurrentUser()` on the server accepts it, so all
   existing authorization code applies unchanged. The mobile API accepts
-  only this header, never the website's cookie (no CSRF); each Google /
-  LINE code works once, and `finish` only answers a sign-in `start` began in
+  only this header, never the website's cookie (no CSRF); each LINE code
+  works once, and `finish` only answers a sign-in `start` began in
   the same browser.
 - **Account state** (`GET /me`): not-yet-approved accounts get the
   registration screens under `src/app/onboarding` (email check, LINE, the
@@ -165,7 +171,7 @@ project id in the config Expo Go needs no sign-in (with one, run
 4. Screenshot a screen signed in: `node scripts/preview.mjs --email hanako@example.com --path /news --out /tmp/news.png` (`--click`, `--fill "selector=>value"`, `--full`, `--signed-out`; uses SERVER_DIR for tokens and playwright-core's Chromium).
 
 The web build runs with web security off; check native-only behavior
-(sign-in with LINE / Google, keychain) in Expo Go or a development build.
+(sign-in with LINE, keychain) in Expo Go or a development build.
 
 ## Testing on the iOS Simulator (Xcode)
 
@@ -184,7 +190,7 @@ visits every tab. Selectors: tabs are "Name, tab, n of 5" (マイページ is th
 cards are one pressable (match `.*title.*`); the header back button has id
 `BackButton`; Maestro's `back` is Android-only.
 
-**Development build** (native modules, push notifications, LINE / Google
+**Development build** (native modules, push notifications, LINE
 sign-in): `npx expo run:ios` (needs CocoaPods). `plugins/` fixes the
 generated project for Xcode 27 (the UIScene life cycle iOS 27 requires) and
 for folders whose path has spaces. Then `pnpm start:dev-client` and open the
@@ -211,7 +217,7 @@ failing on development-build bundles.
 profiles — this repo's own server. First time:
 `npx eas-cli@latest init` (adds the project id), then
 `npx eas-cli@latest build --profile preview --platform all`.
-Google / LINE sign-in need the `aisalumni://` scheme, so they work in
+LINE sign-in needs the `aisalumni://` scheme, so it works in
 development / preview / production builds, not in Expo Go against a
 deployed server (Expo Go works with email codes, or with a local server).
 
@@ -220,3 +226,8 @@ into app.config.ts) and credentials: `npx eas-cli@latest credentials` sets up
 the APNs key (paid Apple Developer account) and the FCM v1 service account
 (Firebase project, for Android). If "enhanced push security" is on, set
 `EXPO_ACCESS_TOKEN` on the server (Vercel env).
+
+Forcing an update: set `MIN_APP_VERSION` (e.g. `1.1.0`) on the server
+(Vercel env) and installed apps older than it show 「アプリを更新してください」
+instead of the app (`src/features/update`); `APP_STORE_URL` (the app's App
+Store link, once it has one) gives iOS its "update" button.

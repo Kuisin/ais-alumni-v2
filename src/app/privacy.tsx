@@ -1,7 +1,8 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { LifeBuoy } from "lucide-react-native";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { Card, Screen, space, Text } from "@/ui";
+import { Button, Card, Screen, space, Text } from "@/ui";
 
 const SECTIONS = [
   "collected",
@@ -15,9 +16,14 @@ const SECTIONS = [
   "contact",
 ] as const;
 
-/** The privacy notice (the website's /privacy): public, signed in or not. */
+/**
+ * The privacy policy (the website's /privacy): public, signed in or not.
+ * Ends with the way to contact the committee (お問い合わせ).
+ */
 export default function PrivacyScreen() {
   const t = useTranslations("landing.privacy");
+  const ts = useTranslations("support");
+  const router = useRouter();
   return (
     <>
       <Stack.Screen options={{ title: t("title") }} />
@@ -44,6 +50,13 @@ export default function PrivacyScreen() {
             );
           })}
         </Card>
+        <Button
+          variant="secondary"
+          label={ts("title")}
+          icon={(c) => <LifeBuoy size={16} color={c} />}
+          onPress={() => router.push("/support?type=QUESTION&topic=PRIVACY")}
+          style={styles.start}
+        />
         <Text variant="small" tone="subtle">
           {t("updated")}
         </Text>
@@ -54,6 +67,7 @@ export default function PrivacyScreen() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  start: { alignSelf: "flex-start" },
   content: { width: "100%", maxWidth: 720, alignSelf: "center" },
   card: { gap: space.xl },
   section: { gap: space.sm },

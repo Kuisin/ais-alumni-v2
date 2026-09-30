@@ -26,7 +26,7 @@ import {
 } from "@/features/admin/notify/receipts";
 import { confirmAction } from "@/features/me/confirm";
 import { Notice } from "@/features/news/parts";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, joinList } from "@/lib/format";
 import {
   Badge,
   Button,
@@ -156,7 +156,7 @@ export function NewsView({
       </Row>
       {view.attachments.length ? (
         <Row label={t("sections.attachments")}>
-          <Text variant="small">{view.attachments.join("、")}</Text>
+          <Text variant="small">{joinList(view.attachments, locale)}</Text>
         </Row>
       ) : null}
       {cover}
@@ -555,7 +555,7 @@ export function ResponsesCard({ r }: { r: AdminNewsResponses }) {
                         (v) =>
                           `${p.kind === "SCHEDULE" ? `${ts(v.answer)} ` : ""}${v.name}`,
                       )
-                      .join("、")}
+                      .join(locale === "ja" ? "、" : ", ")}
                   </Text>
                 </Fold>
               ) : null}

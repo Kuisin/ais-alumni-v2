@@ -3,6 +3,7 @@ export { Badge, CountDot } from "./badge";
 export { Button } from "./button";
 export { Card } from "./card";
 export { TextField } from "./field";
+export { HeaderButton } from "./header-button";
 export { ListGroup, ListRow, Separator } from "./list-row";
 export { Markdown, useOpenLink } from "./markdown";
 export { QueryState } from "./query-state";

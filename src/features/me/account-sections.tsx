@@ -113,8 +113,6 @@ export function SignInMethodsSection({ settings }: { settings: MySettings }) {
                 <Hint>{t("notReadyHint")}</Hint>
               ) : row.method === "line" && !row.linked ? (
                 <Hint>{t("addLineHint")}</Hint>
-              ) : row.method === "google" && !row.linked && !row.addable ? (
-                <Hint>{t("googleInApp")}</Hint>
               ) : null}
 
               {row.linked && row.method !== "email" ? (
@@ -563,9 +561,8 @@ export function AdminModeSection({ areas }: { areas: StaffArea[] }) {
 export function DangerSection() {
   const t = useTranslations("settings");
   const tc = useTranslations("common");
-  const { deactivate, remove } = useCloseAccount();
-  const [open, setOpen] = useState<null | "deactivate" | "delete">(null);
-  const [word, setWord] = useState("");
+  const { deactivate } = useCloseAccount();
+  const [open, setOpen] = useState(false);
 
   return (
     <Section title={t("danger.title")}>
@@ -579,7 +576,7 @@ export function DangerSection() {
             </Text>
           </View>
           <Hint>{t("deactivate.description")}</Hint>
-          {open === "deactivate" ? (
+          {open ? (
             <View style={styles.confirm}>
               <Text variant="small" style={styles.red}>
                 {t("deactivate.confirmText")}
@@ -603,7 +600,7 @@ export function DangerSection() {
                   variant="secondary"
                   label={tc("cancel")}
                   disabled={deactivate.isPending}
-                  onPress={() => setOpen(null)}
+                  onPress={() => setOpen(false)}
                 />
               </View>
             </View>
@@ -613,75 +610,94 @@ export function DangerSection() {
               label={t("deactivate.button")}
               onPress={() => {
                 deactivate.reset();
-                setOpen("deactivate");
+                setOpen(true);
               }}
               style={styles.start}
             />
           )}
         </View>
 
-        <View style={[styles.gapSm, styles.divider]}>
-          <View style={styles.check}>
-            <Trash2 color={colors.red700} size={20} aria-hidden />
-            <Text
-              weight="semibold"
-              accessibilityRole="header"
-              style={styles.red}
-            >
-              {t("delete.title")}
-            </Text>
-          </View>
-          <Hint>{t("delete.description")}</Hint>
-          {open === "delete" ? (
-            <View style={styles.confirm}>
-              <TextField
-                label={t("delete.typeToConfirm", {
-                  word: t("delete.confirmWord"),
-                })}
-                value={word}
-                onChangeText={setWord}
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="off"
-                error={remove.data?.error}
-              />
-              {remove.isError ? <ErrorLine error={remove.error} /> : null}
-              <View style={styles.buttons}>
-                <Button
-                  variant="danger"
-                  label={
-                    remove.isPending
-                      ? t("delete.working")
-                      : t("delete.confirmButton")
-                  }
-                  loading={remove.isPending}
-                  onPress={() => remove.mutate(word)}
-                />
-                <Button
-                  variant="secondary"
-                  label={tc("cancel")}
-                  disabled={remove.isPending}
-                  onPress={() => {
-                    setOpen(null);
-                    setWord("");
-                  }}
-                />
-              </View>
-            </View>
-          ) : (
-            <Button
-              variant="danger"
-              label={t("delete.button")}
-              onPress={() => {
-                remove.reset();
-                setOpen("delete");
-              }}
-              style={styles.start}
-            />
-          )}
+        <View style={styles.divider}>
+          <DeleteAccount />
         </View>
       </Card>
     </Section>
+  );
+}
+
+/**
+ * アカウントの削除, confirmed by typing the confirmation word. Also at the
+ * bottom of the onboarding screens, so an applicant can delete theirs.
+ */
+export function DeleteAccount({
+  onCancel,
+}: {
+  /** shown already confirming; 取消 calls this (onboarding) */
+  onCancel?: () => void;
+}) {
+  const t = useTranslations("settings");
+  const tc = useTranslations("common");
+  const { remove } = useCloseAccount();
+  const [open, setOpen] = useState(onCancel !== undefined);
+  const [word, setWord] = useState("");
+  return (
+    <View style={styles.gapSm}>
+      <View style={styles.check}>
+        <Trash2 color={colors.red700} size={20} aria-hidden />
+        <Text weight="semibold" accessibilityRole="header" style={styles.red}>
+          {t("delete.title")}
+        </Text>
+      </View>
+      <Hint>{t("delete.description")}</Hint>
+      {open ? (
+        <View style={styles.confirm}>
+          <TextField
+            label={t("delete.typeToConfirm", {
+              word: t("delete.confirmWord"),
+            })}
+            value={word}
+            onChangeText={setWord}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="off"
+            error={remove.data?.error}
+          />
+          {remove.isError ? <ErrorLine error={remove.error} /> : null}
+          <View style={styles.buttons}>
+            <Button
+              variant="danger"
+              label={
+                remove.isPending
+                  ? t("delete.working")
+                  : t("delete.confirmButton")
+              }
+              loading={remove.isPending}
+              onPress={() => remove.mutate(word)}
+            />
+            <Button
+              variant="secondary"
+              label={tc("cancel")}
+              disabled={remove.isPending}
+              onPress={() => {
+                setOpen(false);
+                setWord("");
+                onCancel?.();
+              }}
+            />
+          </View>
+        </View>
+      ) : (
+        <Button
+          variant="danger"
+          label={t("delete.button")}
+          onPress={() => {
+            remove.reset();
+            setOpen(true);
+          }}
+          style={styles.start}
+        />
+      )}
+    </View>
   );
 }
 

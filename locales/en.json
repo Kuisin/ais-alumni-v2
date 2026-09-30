@@ -1,8 +1,8 @@
 {
   "ios": {
     "CFBundleDisplayName": "AIS Alumni",
-    "NSCameraUsageDescription": "Used to take a photo when you upload a picture or a document.",
-    "NSPhotoLibraryUsageDescription": "Used to choose a picture or a document to upload."
+    "NSCameraUsageDescription": "Used to scan attendees' QR tickets at event check-in and to take photos you upload.",
+    "NSPhotoLibraryUsageDescription": "Used to choose photos and documents to upload, such as your profile photo."
   },
   "android": {
     "app_name": "AIS Alumni"

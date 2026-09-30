@@ -14,10 +14,10 @@ export async function getTranslations(opts?: Opts) {
   const locale =
     o.locale === "en" || o.locale === "ja" ? o.locale : await getLocale();
   const messages = await loadMessages(locale);
-  // biome-ignore lint/suspicious/noExplicitAny: namespaces are checked at runtime
   return createTranslator({
     locale,
     messages,
     namespace: o.namespace,
+    // biome-ignore lint/suspicious/noExplicitAny: namespaces are checked at runtime
   } as any) as any;
 }

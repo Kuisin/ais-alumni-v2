@@ -7,6 +7,7 @@ import {
   Settings,
   ShieldCheck,
   UserPlus,
+  UserRound,
 } from "lucide-react-native";
 import { useState } from "react";
 import { ActivityIndicator } from "react-native";
@@ -21,7 +22,7 @@ const icon = (I: typeof Settings) => (
 );
 
 /**
- * The account menu (the website's app shell): 家族, フォローリクエスト
+ * The account menu (the website's app shell): マイプロフィール, 家族, フォローリクエスト
  * (with the count waiting), 同窓生を招待, 設定, お問い合わせ and, for
  * staff, 管理モード.
  */
@@ -31,6 +32,12 @@ export function AccountMenu() {
   const { badges, access } = useMe();
   return (
     <ListGroup>
+      <ListRow
+        leading={icon(UserRound)}
+        title={tc("nav.profile")}
+        onPress={() => router.push("/profile")}
+      />
+      <Separator />
       <ListRow
         leading={icon(HeartHandshake)}
         title={tc("nav.family")}

@@ -79,7 +79,7 @@
     "school": "学校名を入力すると候補が表示されます。",
     "company": "会社名を入力すると候補が表示されます。"
   },
-  "yearPlaceholder": "例: 2020",
+  "yearPlaceholder": "例：2020",
   "close": "閉じる",
   "industryNone": "選択しない",
   "industryDetailAny": "詳細は選択しない",

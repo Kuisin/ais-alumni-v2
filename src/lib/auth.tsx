@@ -21,6 +21,7 @@ import {
 import { Platform } from "react-native";
 import { ApiError, api, setApiSession, setUnauthorizedHandler } from "./api";
 import { API_URL } from "./config";
+import { lineSdkSignIn } from "./line-sdk";
 import { deviceLocale } from "./locale";
 import { clearToken, loadToken, saveToken } from "./token-store";
 
@@ -43,8 +44,13 @@ type Ctx = {
   locale: Locale;
   setGuestLocale: (locale: Locale) => void;
   finishSignIn: (result: SessionResult) => Promise<void>;
+  /**
+   * LINE: through the LINE app (LINE SDK) when this build has it and the
+   * server gave `lineChannelId`, else in the browser.
+   */
   signInWithProvider: (
     provider: "google" | "line",
+    options?: { lineChannelId?: string | null },
   ) => Promise<"ok" | "cancelled" | "failed">;
   /** Web: finish a LINE / Google sign-in on return to /auth?code=… */
   completeWebSignIn: (code: string) => Promise<"ok" | "failed">;
@@ -145,7 +151,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const signInWithProvider = useCallback(
-    async (provider: "google" | "line") => {
+    async (
+      provider: "google" | "line",
+      options?: { lineChannelId?: string | null },
+    ) => {
+      if (provider === "line" && options?.lineChannelId) {
+        const line = await lineSdkSignIn(options.lineChannelId);
+        if (line.type === "cancelled") return "cancelled" as const;
+        if (line.type === "ok") {
+          try {
+            const result = await api<SessionResult>("/auth/line/native", {
+              body: {
+                accessToken: line.accessToken,
+                locale: guestLocale,
+                device: device(),
+              },
+            });
+            await finishSignIn(result);
+            return "ok" as const;
+          } catch {
+            return "failed" as const;
+          }
+        }
+        // No SDK here (Expo Go, web) or it failed: the browser sign-in.
+      }
       const { verifier, challenge } = await pkce();
       const redirect = Linking.createURL("auth");
       const url = `${API_URL}/api/mobile/v1/auth/oauth/start?${new URLSearchParams(

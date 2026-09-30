@@ -261,8 +261,8 @@
     "summaryCohorts": "{count, plural, one {# class} other {# classes}}",
     "summaryParents": "incl. parents",
     "summaryUsers": "{count, plural, one {# member} other {# members}}",
-    "ownCohortLegend": "Your 学年",
-    "ownCohortHint": "As 学年代表 you can send news to the students and former students of your own 学年.",
+    "ownCohortLegend": "Your class",
+    "ownCohortHint": "As a class rep you can send news to the students and former students of your own class.",
     "teachersAlways": "Current teachers always receive the news you send."
   },
   "staff": {
@@ -379,12 +379,12 @@
   },
   "approval": {
     "title": "Approval",
-    "ask": "A 同窓会委員 created this, so it needs approval before members can see it. Check the content, then approve.",
+    "ask": "An alumni committee member created this, so it needs approval before members can see it. Check the content, then approve.",
     "approve": "Approve",
-    "waiting": "Waiting for another 同窓会委員 to approve. Members can't see it and no notification goes out until then.",
+    "waiting": "Waiting for another alumni committee member to approve. Members can't see it and no notification goes out until then.",
     "approved": "Approved by {name} on {date}.",
     "done": "Approved.",
-    "formHint": "As a 同窓会委員, what you create is shown to members (and notified) only after another 同窓会委員 approves it. Editing it later needs a new approval.",
+    "formHint": "As an alumni committee member, what you create is shown to members (and notified) only after another committee member approves it. Editing it later needs a new approval.",
     "submit": "Save and request approval"
   }
 }

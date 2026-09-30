@@ -59,3 +59,8 @@ export function formatTime(d: Input, locale: Locale): string {
     hour12: locale !== "ja",
   }).format(asDate(d));
 }
+
+/** A short list in running text: ja → A、B、C   en → A, B, C */
+export function joinList(items: readonly string[], locale: Locale): string {
+  return items.join(locale === "ja" ? "、" : ", ");
+}

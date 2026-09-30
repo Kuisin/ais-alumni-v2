@@ -28,6 +28,7 @@ import { OPTIONAL_CATEGORIES } from "@/server/lib/notify/catalog";
 import {
   AuthError,
   actionActive,
+  actionUser,
   type CurrentUser,
 } from "@/server/lib/session";
 import { ssoReady } from "@/server/lib/sso";
@@ -430,7 +431,9 @@ export async function deleteAccountAction(
   const t = await getTranslations("settings");
   let locale: string;
   try {
-    const user = await guard();
+    // Any signed-in account, not only approved ones: an applicant can
+    // delete theirs too (APPI; App Store guideline 5.1.1(v)).
+    const user = await actionUser();
     const word = String(formData.get("confirmWord") ?? "").trim();
     // Accept the confirmation word of either UI language.
     const [ja, en] = await Promise.all([

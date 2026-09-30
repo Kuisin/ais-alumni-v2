@@ -9,17 +9,17 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 const IDENTIFIER = "net.kailab.aisalumni";
 const BRAND = "#1e3a8a";
 /**
- * The EAS project (push notification tokens and credentials): set
- * EAS_PROJECT_ID after `npx eas-cli@latest init`, or paste the id here.
- * Without it, push notifications only work against a local server with
- * EXPO_PUSH_OUTBOX=1 (development builds; see AGENTS.md).
+ * The EAS project @kaisei0807s/ais-alumni (builds, submissions, push
+ * notification tokens). EAS_PROJECT_ID overrides it (e.g. a fork).
  */
-const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID?.trim() || undefined;
+const EAS_PROJECT_ID =
+  process.env.EAS_PROJECT_ID?.trim() || "9f724ed6-6adf-4933-afd3-e15b48d0ffc0";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "AIS Alumni",
   slug: "ais-alumni",
+  owner: "kaisei0807s",
   // Google / LINE sign-in returns to aisalumni://auth (src/lib/auth.tsx).
   scheme: "aisalumni",
   version: "1.0.0",
@@ -32,11 +32,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     infoPlist: {
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,
-      // Choosing photos and documents to upload (e.g. the profile photo).
+      // Scanning tickets at check-in; photos and documents to upload.
+      // Localized in locales/*.json (these are the fallback).
       NSCameraUsageDescription:
-        "Used to take a photo when you upload a picture or a document.",
+        "Used to scan attendees' QR tickets at event check-in and to take photos you upload.",
       NSPhotoLibraryUsageDescription:
-        "Used to choose a picture or a document to upload.",
+        "Used to choose photos and documents to upload, such as your profile photo.",
     },
     // "Required reason" APIs used by React Native and the Expo modules
     // (Apple rejects builds that don't declare them).
@@ -70,15 +71,25 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: BRAND,
     },
     predictiveBackGestureEnabled: false,
-    // Web view: ticket scanning at check-in, and "take photo" on uploads.
+    // Ticket scanning at check-in, and "take photo" on uploads.
     permissions: ["android.permission.CAMERA"],
+    // Added by libraries but not used: photos come through the system
+    // photo picker, and nothing records audio or draws over other apps.
+    blockedPermissions: [
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.READ_MEDIA_IMAGES",
+      "android.permission.READ_MEDIA_VIDEO",
+      "android.permission.RECORD_AUDIO",
+      "android.permission.SYSTEM_ALERT_WINDOW",
+    ],
   },
   locales: {
     ja: "./locales/ja.json",
     en: "./locales/en.json",
   },
   web: {
-    // Web is only used for local testing of the screens.
+    // The web app (ais-alumni.kai-lab.net) with its API routes (src/server).
     output: "server",
     favicon: "./assets/images/favicon.png",
   },
@@ -108,7 +119,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "expo-camera",
       {
         cameraPermission:
-          "イベントの受付で参加者のQRコードを読み取るためにカメラを使います。",
+          "Used to scan attendees' QR tickets at event check-in and to take photos you upload.",
         microphonePermission: false,
         recordAudioAndroid: false,
       },
@@ -117,17 +128,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "expo-image-picker",
       {
         photosPermission:
-          "ニュースの画像や添付する写真を選ぶために写真へのアクセスを使います。",
+          "Used to choose photos and documents to upload, such as your profile photo.",
         cameraPermission:
-          "イベントの受付で参加者のQRコードを読み取るためにカメラを使います。",
+          "Used to scan attendees' QR tickets at event check-in and to take photos you upload.",
         microphonePermission: false,
       },
     ],
     "@react-native-community/datetimepicker",
+    // LINE sign-in through the LINE app (src/lib/line-sdk.ts).
+    "@xmartlabs/react-native-line",
     // Native project fixes for building with Xcode 27 / from paths with
     // spaces (see each file).
     "./plugins/ios-scene-lifecycle",
     "./plugins/ios-paths-with-spaces",
+    // Build scripts must write into the app (Xcode 27's script sandbox).
+    "./plugins/ios-no-script-sandbox",
   ],
   extra: {
     ...config.extra,

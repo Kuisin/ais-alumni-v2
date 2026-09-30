@@ -28,7 +28,7 @@ import { Notice } from "@/features/events/parts";
 import { confirmAction } from "@/features/me/confirm";
 import { ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, joinList } from "@/lib/format";
 import {
   Badge,
   Button,
@@ -511,6 +511,7 @@ export function StaffCard({
   const t = useTranslations("adminContent.staff");
   const ta = useTranslations("adminContent.audience");
   const tc = useTranslations("common");
+  const { locale } = useAuth();
   const [editing, setEditing] = useState(false);
   const [q, setQ] = useState("");
   const [term, setTerm] = useState("");
@@ -562,7 +563,12 @@ export function StaffCard({
       </View>
       {!editing ? (
         staff.length ? (
-          <Text variant="small">{staff.map((s) => s.name).join("、")}</Text>
+          <Text variant="small">
+            {joinList(
+              staff.map((s) => s.name),
+              locale,
+            )}
+          </Text>
         ) : (
           <Text variant="small" tone="subtle">
             {t("none")}

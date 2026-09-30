@@ -299,6 +299,54 @@ export async function lineIdentity(
   };
 }
 
+const LINE_PROFILE = "https://api.line.me/v2/profile";
+
+/**
+ * The LINE account behind an access token that the app's LINE SDK got
+ * (native sign-in: the LINE app, or LINE's own login screen when it isn't
+ * installed). The token must have been issued to our channel — a token for
+ * any other LINE app is refused — and still be valid; the profile it opens
+ * says who it is. LINE's recommended check for a native app's backend.
+ */
+export async function lineIdentityFromAccessToken(
+  accessToken: string,
+): Promise<LineIdentity | null> {
+  const clientId = process.env.AUTH_LINE_ID?.trim();
+  if (!clientId) return null;
+  const verify = await fetch(
+    `${LINE_VERIFY}?${new URLSearchParams({ access_token: accessToken })}`,
+  );
+  if (!verify.ok) return null;
+  const token = (await verify.json()) as {
+    client_id?: string;
+    expires_in?: number;
+    scope?: string;
+  };
+  if (
+    token.client_id !== clientId ||
+    !(Number(token.expires_in) > 0) ||
+    !token.scope?.split(" ").includes("profile")
+  )
+    return null;
+  const res = await fetch(LINE_PROFILE, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) return null;
+  const profile = (await res.json()) as {
+    userId?: string;
+    displayName?: string;
+    pictureUrl?: string;
+  };
+  if (!profile.userId) return null;
+  return {
+    sub: profile.userId,
+    name: profile.displayName ?? null,
+    picture: profile.pictureUrl ?? null,
+    accessToken,
+    idToken: "",
+  };
+}
+
 /**
  * The member signing in with this LINE account — linked before, or a new
  * account without email (as the website's Auth.js adapter creates it) —

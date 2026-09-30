@@ -1,0 +1,49 @@
+{
+  "configVersion": 0,
+  "apple": {
+    "copyright": "2026 AIS Alumni Committee",
+    "categories": ["SOCIAL_NETWORKING", "EDUCATION"],
+    "info": {
+      "ja": {
+        "title": "AIS同窓会",
+        "subtitle": "愛知インターナショナルスクール同窓会",
+        "description": "愛知インターナショナルスクール（AIS）の卒業生・元生徒、保護者、教職員のための同窓会アプリです。AIS同窓会委員会（卒業生による有志の団体）が運営しています。学校の公式サービスではありません。\n\n■ 同級生や先生を探す\n会員名簿から検索し、フォローすると連絡先を共有できます。公開する情報は自分で選べます。\n\n■ 同窓会・イベント\nワンタップで出欠を登録。受付では QR コードのチケットを使えます。\n\n■ 委員会からのニュース\nAIS同窓会委員会からの最新情報をアプリの通知、LINE またはメールでお届けします。\n\n■ チャット\nつながった会員と 1 対 1 やグループで連絡できます。不適切な投稿は通報・ブロックできます。\n\n■ 会員限定\n新しいアカウントは、名簿を閲覧できるようになる前に委員会が在籍を確認します。\n\nログインはメールで届く確認コード、または LINE で行えます。アカウントはアプリの「設定」からいつでも削除できます。",
+        "keywords": [
+          "AIS",
+          "同窓会",
+          "愛知インターナショナルスクール",
+          "卒業生",
+          "名簿",
+          "イベント",
+          "Alumni",
+          "Aichi"
+        ],
+        "releaseNotes": "最初のリリースです。",
+        "promoText": "AIS の卒業生・保護者・教職員をつなぐ同窓会アプリ。",
+        "supportUrl": "https://ais-alumni.kai-lab.net/support",
+        "marketingUrl": "https://ais-alumni.kai-lab.net",
+        "privacyPolicyUrl": "https://ais-alumni.kai-lab.net/privacy"
+      },
+      "en-US": {
+        "title": "AIS Alumni",
+        "subtitle": "Aichi International School",
+        "description": "The alumni app of Aichi International School (AIS) — for former students, parents, teachers and staff. Run by the AIS Alumni Committee, a volunteer group of AIS graduates; not an official service of the school.\n\n• Find classmates and teachers\nSearch the member directory and follow people to share contact details. You choose what you share.\n\n• Reunions and events\nRSVP in one tap and check in with a QR ticket.\n\n• News from the committee\nUpdates from the AIS Alumni Committee as app notifications, on LINE or by email.\n\n• Chat\nMessage the members you're connected with, one-to-one or in groups. Report or block anyone who posts something inappropriate.\n\n• Members only\nNew accounts are checked by the committee before they can see the directory.\n\nSign in with a code sent to your email, or with LINE. You can delete your account at any time in Settings.",
+        "keywords": [
+          "AIS",
+          "alumni",
+          "Aichi International School",
+          "reunion",
+          "directory",
+          "classmates",
+          "events",
+          "school"
+        ],
+        "releaseNotes": "First release.",
+        "promoText": "The alumni network of Aichi International School, in your pocket.",
+        "supportUrl": "https://ais-alumni.kai-lab.net/support",
+        "marketingUrl": "https://ais-alumni.kai-lab.net",
+        "privacyPolicyUrl": "https://ais-alumni.kai-lab.net/privacy"
+      }
+    }
+  }
+}

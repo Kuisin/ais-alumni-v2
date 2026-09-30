@@ -1,16 +1,26 @@
 import { useRouter } from "expo-router";
-import { Ban } from "lucide-react-native";
+import { Ban, Flag } from "lucide-react-native";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { Button, colors, ListGroup, ListRow, radius, space, Text } from "@/ui";
+import {
+  Button,
+  colors,
+  ListGroup,
+  ListRow,
+  radius,
+  Separator,
+  space,
+  Text,
+} from "@/ui";
 import { useBlockMember } from "./api";
 import { StatusLine, useFailureText } from "./follow-button";
 import { Sheet } from "./sheet";
 
 /**
  * 「その他の操作」 on a profile (src/components/follows/member-menu.tsx):
- * block, after a confirmation. Blocking leaves the (now hidden) profile
+ * report to the committee (お問い合わせ → 会員の言動について), and block,
+ * after a confirmation. Blocking leaves the (now hidden) profile
  * for the blocked list, as the website does.
  */
 export function MemberMenu({
@@ -71,6 +81,15 @@ export function MemberMenu({
         </View>
       ) : (
         <ListGroup>
+          <ListRow
+            title={t("actions.report")}
+            leading={<Flag size={20} color={colors.slate600} aria-hidden />}
+            onPress={() => {
+              close();
+              router.push("/support?type=COMPLAINT&topic=MEMBER_CONDUCT");
+            }}
+          />
+          <Separator />
           <ListRow
             title={t("actions.block")}
             destructive

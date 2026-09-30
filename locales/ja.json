@@ -1,8 +1,8 @@
 {
   "ios": {
     "CFBundleDisplayName": "AIS同窓会",
-    "NSCameraUsageDescription": "写真や書類をアップロードするときに撮影するために使います。",
-    "NSPhotoLibraryUsageDescription": "アップロードする写真や書類を選ぶために使います。"
+    "NSCameraUsageDescription": "イベント受付で参加者のQRコードを読み取るときや、アップロードする写真を撮影するときに使います。",
+    "NSPhotoLibraryUsageDescription": "プロフィール写真など、アップロードする写真や書類を選ぶときに使います。"
   },
   "android": {
     "app_name": "AIS同窓会"

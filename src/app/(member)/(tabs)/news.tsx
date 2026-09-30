@@ -1,6 +1,6 @@
 import type { MessageSummary, NewsSummary } from "@contract/news";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { Mail, Newspaper, Plus } from "lucide-react-native";
+import { Tabs, useLocalSearchParams, useRouter } from "expo-router";
+import { Mail, Newspaper } from "lucide-react-native";
 import { type ReactElement, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -14,6 +14,7 @@ import {
   colors,
   EmptyState,
   ErrorState,
+  HeaderButton,
   Loading,
   space,
   Text,
@@ -23,8 +24,8 @@ type Tab = "news" | "messages";
 
 /**
  * ニュース (the website's /app/news): pinned posts first, 10 per page,
- * loaded as the member scrolls. News authors get 「ニュースを作成」
- * (/news/new). While messages are switched on (me.features.messages), a
+ * loaded as the member scrolls. News authors get 「ニュースを作成」 in the
+ * header (/news/new), like イベント's 「イベントを作成」. While messages are switched on (me.features.messages), a
  * second tab lists あなた宛ての連絡 (?tab=messages).
  */
 export default function NewsScreen() {
@@ -37,6 +38,22 @@ export default function NewsScreen() {
   // Opened again from a link (Home's banner, a notification).
   useEffect(() => setTab(wanted), [wanted]);
   const t = useTranslations("news");
+  const router = useRouter();
+  const canCreate = useNewsList().data?.pages[0]?.canCreate ?? false;
+  const header = (
+    <Tabs.Screen
+      options={{
+        headerRight: canCreate
+          ? () => (
+              <HeaderButton
+                label={t("create")}
+                onPress={() => router.push("/news/new")}
+              />
+            )
+          : undefined,
+      }}
+    />
+  );
   const tabs = messagesOn ? (
     <SegmentedTabs
       label={t("tabs.label")}
@@ -51,10 +68,15 @@ export default function NewsScreen() {
       ]}
     />
   ) : null;
-  return tab === "messages" ? (
-    <MessagesTab tabs={tabs} />
-  ) : (
-    <NewsTab tabs={tabs} />
+  return (
+    <>
+      {header}
+      {tab === "messages" ? (
+        <MessagesTab tabs={tabs} />
+      ) : (
+        <NewsTab tabs={tabs} />
+      )}
+    </>
   );
 }
 
@@ -76,7 +98,6 @@ function NewsTab({ tabs }: { tabs: ReactElement | null }) {
         seen.add(p.id);
         posts.push(p);
       }
-  const canCreate = list.data?.pages[0]?.canCreate ?? false;
 
   const refresh = async () => {
     setRefreshing(true);
@@ -108,14 +129,6 @@ function NewsTab({ tabs }: { tabs: ReactElement | null }) {
           <Text variant="small" tone="muted">
             {t("description")}
           </Text>
-          {canCreate ? (
-            <Button
-              variant="secondary"
-              label={t("create")}
-              icon={(c) => <Plus size={18} color={c} aria-hidden />}
-              onPress={() => router.push("/news/new")}
-            />
-          ) : null}
         </View>
       }
       ListEmptyComponent={
