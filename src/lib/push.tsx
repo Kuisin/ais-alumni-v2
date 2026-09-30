@@ -268,29 +268,39 @@ export function PushProvider({ children }: { children: ReactNode }) {
     ]).catch(() => {});
   }, [locale, tn, ta, unavailable]);
 
-  const register = useCallback(async (): Promise<boolean> => {
-    const s = queryClient.getQueryData<PushState>(PUSH_KEY) ?? state;
-    const token = await currentToken(Boolean(s?.devTokens)).catch((e) => {
-      console.warn("[push] no token", e);
-      return null;
-    });
-    if (!token) return false;
-    try {
-      const next = await api<PushState>("/push", {
-        method: "PUT",
-        body: {
-          token,
-          platform: Platform.OS === "android" ? "android" : "ios",
-          enabled: true,
-        },
+  // One registration at a time: a call while one runs gets its result.
+  const registering = useRef<Promise<boolean> | null>(null);
+  const register = useCallback((): Promise<boolean> => {
+    if (registering.current) return registering.current;
+    const run = async (): Promise<boolean> => {
+      const s = queryClient.getQueryData<PushState>(PUSH_KEY);
+      const token = await currentToken(Boolean(s?.devTokens)).catch((e) => {
+        console.warn("[push] no token", e);
+        return null;
       });
-      queryClient.setQueryData(PUSH_KEY, next);
-      return true;
-    } catch (e) {
-      console.warn("[push] register failed", e);
-      return false;
-    }
-  }, [queryClient, state]);
+      if (!token) return false;
+      try {
+        const next = await api<PushState>("/push", {
+          method: "PUT",
+          body: {
+            token,
+            platform: Platform.OS === "android" ? "android" : "ios",
+            enabled: true,
+          },
+        });
+        queryClient.setQueryData(PUSH_KEY, next);
+        return true;
+      } catch (e) {
+        console.warn("[push] register failed", e);
+        return false;
+      }
+    };
+    const p = run().finally(() => {
+      registering.current = null;
+    });
+    registering.current = p;
+    return p;
+  }, [queryClient]);
 
   // Keep the server in step with this device: register on every launch
   // (tokens can change) while the OS allows notifications and the member
@@ -327,10 +337,19 @@ export function PushProvider({ children }: { children: ReactNode }) {
     if (!signedIn) syncedFor.current = null;
   }, [signedIn]);
 
+  // A new device token (APNs / FCM rotated it): register again. Asking for
+  // the Expo push token reports the device token here too, so only a token
+  // that differs from the last one counts — otherwise every registration
+  // would start the next one, forever.
+  const deviceToken = useRef<string | null>(null);
   useEffect(() => {
     if (unavailable !== null) return;
-    const sub = Notifications.addPushTokenListener(() => {
-      if (signedIn && optOut === false && permission === "granted")
+    const sub = Notifications.addPushTokenListener(({ data }) => {
+      const next = typeof data === "string" ? data : JSON.stringify(data);
+      const changed =
+        deviceToken.current !== null && deviceToken.current !== next;
+      deviceToken.current = next;
+      if (changed && signedIn && optOut === false && permission === "granted")
         void register();
     });
     return () => sub.remove();
