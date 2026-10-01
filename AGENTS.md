@@ -41,8 +41,8 @@ needs a shadow database, so instead diff against the previous schema
 `npx prisma migrate diff --from-schema /tmp/old.prisma --to-schema prisma/schema.prisma --script`)
 into `prisma/migrations/<YYYYMMDDHHMMSS>_<name>/migration.sql`, and
 `npx prisma generate`. The Vercel build applies pending migrations
-(`scripts/migrate.mjs`, needs `DIRECT_URL` — the Supabase session pooler;
-the app itself uses the transaction pooler `DATABASE_URL`). Staging and
+(`scripts/migrate.mjs`: `DIRECT_URL` if set, else the Supabase session
+pooler derived from the transaction-pooler `DATABASE_URL` the app uses). Staging and
 production share the database and both builds migrate, so migrations must
 be backward compatible: add; drop or rename only once no deployed code
 uses the old shape. CI checks that the migrations build exactly the
