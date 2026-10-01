@@ -32,8 +32,8 @@ export function chooseChannel(user: RoutableUser): LineOrEmail | null {
 export type RouteOptions = {
   /** a LINE-enabled kind (ニュース, unread chat notices) */
   line?: boolean;
-  /** also by email when it goes to the app (security, application results,
-   *  anything with a committee note) */
+  /** also by email when it goes to the app or LINE (security, application
+   *  results, anything with a committee note) */
   alwaysEmail?: boolean;
   /** only to the app (immediate chat pushes); nothing without it */
   pushOnly?: boolean;
@@ -49,7 +49,12 @@ export function lineOrEmail(
     : user.primaryEmail
       ? "EMAIL"
       : null;
-  return channel ? [channel] : [];
+  if (!channel) return [];
+  // A committee note never goes on LINE, and important kinds (application
+  // results) are worth an email record too.
+  if (channel === "LINE" && opts.alwaysEmail && user.primaryEmail)
+    return ["LINE", "EMAIL"];
+  return [channel];
 }
 
 /**
