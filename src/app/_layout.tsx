@@ -2,7 +2,7 @@
 import "@/lib/intl-polyfills";
 // Before the first render: sees the notification tap that launched the app.
 import "@/lib/push-core";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -16,7 +16,7 @@ import { AuthProvider, useAuth } from "@/lib/auth";
 import { I18nProvider } from "@/lib/i18n";
 import { stackScreenOptions } from "@/lib/navigation";
 import { PushProvider } from "@/lib/push";
-import { queryClient } from "@/lib/query";
+import { persistOptions, queryClient } from "@/lib/query";
 import { RealtimeProvider } from "@/lib/realtime";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -27,11 +27,14 @@ export { CrashScreen as ErrorBoundary } from "@/features/errors/crash-screen";
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={persistOptions}
+      >
         <AuthProvider>
           <Root />
         </AuthProvider>
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </SafeAreaProvider>
   );
 }

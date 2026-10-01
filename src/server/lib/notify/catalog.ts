@@ -43,10 +43,13 @@ type KindSpec = {
   category: NotifyCategory;
   emoji: string;
   /**
-   * May go by LINE (for members who get notifications there). Only ニュース
-   * and the unread chat notices (1:1 / @mention, 5 minutes unread, once per
-   * streak) do; everything else is email, so LINE's monthly message
-   * allowance (free plan: 200) lasts.
+   * May go by LINE (for members who get notifications there): ニュース, the
+   * unread chat notices (1:1 / @mention, 5 minutes unread, once per
+   * streak), and what the committee decides or asks about the member's own
+   * account — the application result / request for more information and
+   * the results of their name, birth date, gender and record requests.
+   * Everything else is email, so LINE's monthly message allowance lasts
+   * (LINE falls back to email once it's used up).
    */
   line?: true;
   /** Also by email for members who get notifications in the app. */
@@ -58,16 +61,19 @@ export const NOTIFY_KINDS = {
   VERIFICATION_APPROVED: {
     category: "account",
     emoji: "🎉",
+    line: true,
     alwaysEmail: true,
   },
   VERIFICATION_REJECTED: {
     category: "account",
     emoji: "📋",
+    line: true,
     alwaysEmail: true,
   },
   VERIFICATION_NEEDS_INFO: {
     category: "account",
     emoji: "📝",
+    line: true,
     alwaysEmail: true,
   },
   SECURITY_METHOD_ADDED: {
@@ -87,14 +93,14 @@ export const NOTIFY_KINDS = {
   },
   ACCOUNT_DEACTIVATED: { category: "account", emoji: "⏸️", alwaysEmail: true },
   ACCOUNT_REACTIVATED: { category: "account", emoji: "▶️" },
-  NAME_REQUEST_APPROVED: { category: "account", emoji: "✅" },
-  NAME_REQUEST_REJECTED: { category: "account", emoji: "📋" },
-  BIRTH_DATE_REQUEST_APPROVED: { category: "account", emoji: "✅" },
-  BIRTH_DATE_REQUEST_REJECTED: { category: "account", emoji: "📋" },
-  GENDER_REQUEST_APPROVED: { category: "account", emoji: "✅" },
-  GENDER_REQUEST_REJECTED: { category: "account", emoji: "📋" },
-  RECORD_REQUEST_APPROVED: { category: "account", emoji: "✅" },
-  RECORD_REQUEST_REJECTED: { category: "account", emoji: "📋" },
+  NAME_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
+  NAME_REQUEST_REJECTED: { category: "account", emoji: "📋", line: true },
+  BIRTH_DATE_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
+  BIRTH_DATE_REQUEST_REJECTED: { category: "account", emoji: "📋", line: true },
+  GENDER_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
+  GENDER_REQUEST_REJECTED: { category: "account", emoji: "📋", line: true },
+  RECORD_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
+  RECORD_REQUEST_REJECTED: { category: "account", emoji: "📋", line: true },
   // News
   NEWS: { category: "news", emoji: "📰", line: true },
   NEWS_REMINDER: { category: "news", emoji: "⏰" },
