@@ -1,5 +1,6 @@
 import type { ApiErrorBody, Locale } from "@contract/core";
 import { API_URL } from "./config";
+import { reportReachable } from "./connectivity";
 
 /**
  * Client for the website's /api/mobile/v1 JSON API. The signed-in session
@@ -77,8 +78,10 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
     });
   } catch (e) {
     if ((e as { name?: string })?.name === "AbortError") throw e;
+    reportReachable(false);
     throw new ApiError(0, "network");
   }
+  reportReachable(true);
   const data = (await res.json().catch(() => null)) as unknown;
   if (!res.ok) {
     const body =

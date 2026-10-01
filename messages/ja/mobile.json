@@ -185,5 +185,9 @@
     "openInSafari": "Safari で寄付ページを開く",
     "appNote": "寄付はウェブサイトで受け付けています。",
     "submitAny": "寄付する"
+  },
+  "offline": {
+    "banner": "オフライン",
+    "hint": "保存したデータを表示しています"
   }
 }

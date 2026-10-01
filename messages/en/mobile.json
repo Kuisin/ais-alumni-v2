@@ -185,5 +185,9 @@
     "openInSafari": "Open the donation page in Safari",
     "appNote": "Donations are made on the website.",
     "submitAny": "Donate"
+  },
+  "offline": {
+    "banner": "Offline",
+    "hint": "Showing saved data"
   }
 }
