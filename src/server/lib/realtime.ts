@@ -9,6 +9,11 @@ import { createHmac } from "node:crypto";
  * names are HMACs of the group / member id with AUTH_SECRET, handed only to
  * members; a leaked name reveals activity, not content. Without the env
  * vars nothing is pushed and the UI polls instead.
+ *
+ * Keys (Supabase's API keys): NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+ * (sb_publishable_…, handed to the app for listening) and
+ * SUPABASE_SECRET_KEY (sb_secret_…, server only, for sending). The legacy
+ * SUPABASE_SERVICE_ROLE_KEY (a JWT) still works as a fallback.
  */
 
 export type RealtimePublic = { url: string; key: string };
@@ -45,18 +50,23 @@ export async function broadcast(
   events: readonly RealtimeEvent[],
 ): Promise<void> {
   const pub = realtimePublic();
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key =
+    process.env.SUPABASE_SECRET_KEY?.trim() ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!pub || !key || events.length === 0) return;
+  // New keys go on the apikey header only (they aren't JWTs: a Bearer
+  // header with one is rejected); the legacy JWT key also as Bearer.
+  const headers: Record<string, string> = {
+    apikey: key,
+    "Content-Type": "application/json",
+  };
+  if (!key.startsWith("sb_")) headers.Authorization = `Bearer ${key}`;
   for (let i = 0; i < events.length; i += 100) {
     const chunk = events.slice(i, i + 100);
     try {
       const res = await fetch(`${pub.url}/realtime/v1/api/broadcast`, {
         method: "POST",
-        headers: {
-          apikey: key,
-          Authorization: `Bearer ${key}`,
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify({
           messages: chunk.map((e) => ({ ...e, private: false })),
         }),

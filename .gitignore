@@ -51,3 +51,6 @@ src/server/generated/
 
 # Local agent tooling
 .claude-flow/
+
+# Supabase CLI local state
+supabase/.temp/
