@@ -23,6 +23,7 @@ import { ApiError, api, setApiSession, setUnauthorizedHandler } from "./api";
 import { API_URL } from "./config";
 import { lineSdkSignIn } from "./line-sdk";
 import { deviceLocale } from "./locale";
+import { clearPersistedCache } from "./query";
 import { clearToken, loadToken, saveToken } from "./token-store";
 
 /**
@@ -109,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setApiSession(null, guestLocale);
     setToken(null);
     queryClient.clear();
+    await clearPersistedCache();
     await clearToken().catch(() => {});
   }, [queryClient, guestLocale]);
 
