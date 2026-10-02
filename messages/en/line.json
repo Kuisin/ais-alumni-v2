@@ -10,8 +10,8 @@
     "expired": "The link expired. Please start again."
   },
   "panel": {
-    "linkedFollowing": "LINE is linked. News and mentions come on LINE.",
-    "linkedFollowingAs": "Linked to LINE as {name}. News and mentions come on LINE.",
+    "linkedFollowing": "LINE is linked. Chat mentions and important notices come on LINE.",
+    "linkedFollowingAs": "Linked to LINE as {name}. Chat mentions and important notices come on LINE.",
     "linkedNotFollowing": "LINE is linked, but you haven't added the Official Account as a friend yet, so we can't send news or mentions there.",
     "linkedNotFollowingAs": "Linked to LINE as {name}, but you haven't added the Official Account as a friend yet, so we can't send news or mentions there.",
     "refresh": "Done? Check again",
@@ -25,8 +25,8 @@
   },
   "banner": {
     "title": "Get updates on LINE",
-    "body": "Link LINE to get committee news and chat mentions there.",
-    "bodyNotFollowing": "Add the AIS Alumni Committee Official Account as a friend to get news and mentions on LINE.",
+    "body": "Link LINE to get chat mentions and important notices (like the result of your application) there.",
+    "bodyNotFollowing": "Add the AIS Alumni Committee Official Account as a friend to get chat mentions and important notices on LINE.",
     "dismiss": "Not now"
   },
   "done": {
@@ -61,13 +61,13 @@
     "title": "[Welcome to AIS Alumni]",
     "about": "This account is run by the AIS Alumni Committee, a volunteer group of AIS graduates. It is not an official account of Aichi International School.",
     "receiveTitle": "■ What you'll get on LINE",
-    "receiveItems": "・News from the committee\n・Mentions in chats\n(Other notifications come by email. Use “Unread chats” and “News list” in the menu below to check chats and news any time.)",
+    "receiveItems": "・Chat mentions and one-to-one messages\n・Notices about your account, like the result of an application\n(News and reminders come by email. Use “Unread chats” and “News list” in the menu below to check chats and news any time.)",
     "linkedTitle": "■ Your account",
-    "linked": "✅ Linked to your AIS Alumni account. News and mentions will arrive here on LINE.",
+    "linked": "✅ Linked to your AIS Alumni account. Chat mentions and important notices will arrive here on LINE.",
     "notLinkedTitle": "■ Not linked to the app yet",
     "notLinked": "To get notifications here, link LINE in the app:\n1. Tap “Open app” below and sign in (new here? you can sign up right away)\n2. Go to Settings → LINE → “Link LINE”\n3. Sign in with LINE and allow access — that's it",
     "settingsTitle": "■ Notification settings",
-    "settings": "Choose LINE or email for news and mentions in the app under Settings → Notifications. If you block this account, we'll email you instead.",
+    "settings": "Choose LINE or email for these notices in the app under Settings → Notifications. If you block this account, we'll email you instead.",
     "privacyTitle": "■ Your privacy",
     "privacy": "We only store your LINE user ID and display name, and never read your chats. See the privacy policy for details:\n{url}",
     "buttonsAlt": "Open the AIS Alumni app: {url}",

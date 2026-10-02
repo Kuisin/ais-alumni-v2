@@ -7,7 +7,7 @@
   },
   "line": {
     "title": "Get updates on LINE",
-    "description": "Link LINE and add the AIS Alumni Committee Official Account to get news and chat mentions there.",
+    "description": "Link LINE and add the AIS Alumni Committee Official Account to get chat mentions and important notices there.",
     "benefits": {
       "mentions": "Mentions of you in chats",
       "news": "News from the committee"
@@ -24,7 +24,7 @@
     "reviewNote": "Message from the committee",
     "contact": "If you think this is a mistake, please contact the AIS Alumni Committee.",
     "lineTitle": "Link LINE",
-    "lineBody": "Once approved, get news and chat mentions on LINE. We'll email you the result of your application.",
+    "lineBody": "Once approved, get chat mentions and important notices on LINE. We'll send you the result of your application on LINE and by email.",
     "PENDING_REVIEW": {
       "title": "Thanks — we're checking your application",
       "body": "The AIS Alumni Committee is reviewing your details. This usually takes a few days. We'll let you know as soon as it's done."

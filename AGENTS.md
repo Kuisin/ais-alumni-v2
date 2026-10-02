@@ -127,11 +127,13 @@ project id in the config Expo Go needs no sign-in (with one, run
   `src/app/(member)/notifications.tsx`; settings, the Home prompt and chat
   levels are in `src/features/notifications`. Push needs a development or
   store build — Expo Go can't receive it.
-  Without app notifications, members get ニュース, unread chat notices and
-  what the committee decides or asks about their account (application
-  result / more information needed, results of name, birth date, gender
-  and record requests) on LINE if they linked it and follow the Official
-  Account, else by email (`src/server/lib/notify/catalog.ts`, `route.ts`).
+  Without app notifications, members get what needs them personally —
+  unread 1:1 chat / @mention notices, what the committee decides or asks
+  about their account (application result / more information needed,
+  results of name, birth date, gender and record requests) and, for staff,
+  admin tasks — on LINE if they linked it and follow the Official Account,
+  else by email; bulk mail (ニュース, reminders, unread summaries) is always
+  email (`src/server/lib/notify/catalog.ts`, `route.ts`).
   Sending on LINE needs `LINE_MESSAGING_CHANNEL_ID` and
   `LINE_MESSAGING_CHANNEL_SECRET` (the Messaging API channel) on the
   server; without them LINE sends fail and fall back to email.
