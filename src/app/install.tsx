@@ -1,13 +1,24 @@
 import type { AppConfig } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
 import { Stack } from "expo-router";
-import { Download, ExternalLink } from "lucide-react-native";
+import {
+  BellRing,
+  Download,
+  ExternalLink,
+  MessageCircleReply,
+  QrCode,
+  Smartphone,
+  Zap,
+} from "lucide-react-native";
 import { Linking, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { api } from "@/lib/api";
-import { Button, Card, Loading, Screen, space, Text } from "@/ui";
+import { Button, Card, colors, Loading, Screen, space, Text } from "@/ui";
 
 const TESTFLIGHT_APP = "https://apps.apple.com/app/testflight/id899247664";
+
+/** One icon per benefit (mobile.install.benefits.items, in order). */
+const BENEFIT_ICONS = [BellRing, Zap, MessageCircleReply, Smartphone, QrCode];
 
 const open = (url: string) => void Linking.openURL(url).catch(() => {});
 
@@ -28,6 +39,28 @@ export default function InstallScreen() {
   const testflight = config.data?.install?.testflightUrl ?? null;
   const steps = t.raw("steps") as string[];
   const notes = t.raw("notes") as string[];
+  const benefits = t.raw("benefits.items") as [string, string][];
+  const whatImproves = (
+    <Card style={styles.card}>
+      <Text variant="subheading" accessibilityRole="header">
+        {t("benefits.title")}
+      </Text>
+      {benefits.map(([title, body], i) => {
+        const Icon = BENEFIT_ICONS[i] ?? Smartphone;
+        return (
+          <View key={title} style={styles.step}>
+            <Icon size={20} color={colors.brand700} aria-hidden />
+            <View style={styles.flex}>
+              <Text weight="semibold">{title}</Text>
+              <Text variant="small" tone="muted">
+                {body}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+    </Card>
+  );
 
   return (
     <Screen contentStyle={styles.content}>
@@ -42,10 +75,12 @@ export default function InstallScreen() {
             icon={(c) => <Download size={18} color={c} aria-hidden />}
             onPress={() => open(store)}
           />
+          {whatImproves}
         </>
       ) : (
         <>
           <Text>{t("intro")}</Text>
+          {whatImproves}
           <Card style={styles.card}>
             <Text variant="subheading" accessibilityRole="header">
               {t("stepsTitle")}

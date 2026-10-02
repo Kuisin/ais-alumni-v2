@@ -43,13 +43,15 @@ type KindSpec = {
   category: NotifyCategory;
   emoji: string;
   /**
-   * May go by LINE (for members who get notifications there): ニュース, the
-   * unread chat notices (1:1 / @mention, 5 minutes unread, once per
-   * streak), and what the committee decides or asks about the member's own
-   * account — the application result / request for more information and
-   * the results of their name, birth date, gender and record requests.
-   * Everything else is email, so LINE's monthly message allowance lasts
-   * (LINE falls back to email once it's used up).
+   * May go by LINE (for members who get notifications there): what needs
+   * the member personally — unread 1:1 chat / @mention notices (5 minutes
+   * unread, once per streak), what the committee decides or asks about
+   * their own account (application result / more information, results of
+   * name, birth date, gender and record requests), and for staff the admin
+   * tasks (applications and requests to review, posts to approve).
+   * Bulk mail — ニュース, reminders, unread summaries — is email, so LINE's
+   * monthly message allowance lasts (LINE falls back to email when it's
+   * used up).
    */
   line?: true;
   /** Also by email for members who get notifications in the app. */
@@ -102,7 +104,7 @@ export const NOTIFY_KINDS = {
   RECORD_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
   RECORD_REQUEST_REJECTED: { category: "account", emoji: "📋", line: true },
   // News
-  NEWS: { category: "news", emoji: "📰", line: true },
+  NEWS: { category: "news", emoji: "📰" },
   NEWS_REMINDER: { category: "news", emoji: "⏰" },
   BROADCAST: { category: "news", emoji: "✉️" },
   // Events
@@ -134,18 +136,45 @@ export const NOTIFY_KINDS = {
   VERIFICATION_SUBMITTED_ADMIN: {
     category: "admin",
     emoji: "🆕",
+    line: true,
     alwaysEmail: true,
   },
-  NEWS_APPROVAL_ADMIN: { category: "admin", emoji: "📰", alwaysEmail: true },
-  EVENT_APPROVAL_ADMIN: { category: "admin", emoji: "📅", alwaysEmail: true },
-  NAME_REQUEST_ADMIN: { category: "admin", emoji: "🗂️", alwaysEmail: true },
+  NEWS_APPROVAL_ADMIN: {
+    category: "admin",
+    emoji: "📰",
+    line: true,
+    alwaysEmail: true,
+  },
+  EVENT_APPROVAL_ADMIN: {
+    category: "admin",
+    emoji: "📅",
+    line: true,
+    alwaysEmail: true,
+  },
+  NAME_REQUEST_ADMIN: {
+    category: "admin",
+    emoji: "🗂️",
+    line: true,
+    alwaysEmail: true,
+  },
   BIRTH_DATE_REQUEST_ADMIN: {
     category: "admin",
     emoji: "🗂️",
+    line: true,
     alwaysEmail: true,
   },
-  GENDER_REQUEST_ADMIN: { category: "admin", emoji: "🗂️", alwaysEmail: true },
-  RECORD_REQUEST_ADMIN: { category: "admin", emoji: "🗂️", alwaysEmail: true },
+  GENDER_REQUEST_ADMIN: {
+    category: "admin",
+    emoji: "🗂️",
+    line: true,
+    alwaysEmail: true,
+  },
+  RECORD_REQUEST_ADMIN: {
+    category: "admin",
+    emoji: "🗂️",
+    line: true,
+    alwaysEmail: true,
+  },
 } as const satisfies Record<string, KindSpec>;
 
 export type NotifyKind = keyof typeof NOTIFY_KINDS;

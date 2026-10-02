@@ -21,7 +21,8 @@
     "company": "会社",
     "self": "本人による操作",
     "user": "アカウントの自動統合",
-    "donation": "寄付"
+    "donation": "寄付",
+    "line": "LINE"
   },
   "targetTypes": {
     "User": "会員",
@@ -142,6 +143,9 @@
       "monthly_started": "毎月の寄付を開始",
       "monthly_paid": "毎月の寄付を受領",
       "monthly_stopped": "毎月の寄付を停止"
+    },
+    "line": {
+      "announcement_sent": "LINE でお知らせを送信"
     }
   }
 }

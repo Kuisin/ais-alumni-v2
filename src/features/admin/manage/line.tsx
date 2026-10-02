@@ -1,4 +1,8 @@
-import type { AdminLine, RichMenuResult } from "@contract/admin-manage";
+import type {
+  AdminLine,
+  LineAnnouncePreview,
+  RichMenuResult,
+} from "@contract/admin-manage";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Stack } from "expo-router";
@@ -7,7 +11,7 @@ import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Notice } from "@/features/events/parts";
 import { confirmAction } from "@/features/me/confirm";
-import { getApiToken } from "@/lib/api";
+import { getApiToken, isApiError } from "@/lib/api";
 import { API_URL } from "@/lib/config";
 import {
   Badge,
@@ -20,6 +24,7 @@ import {
   Screen,
   space,
   Text,
+  TextField,
   TOUCH,
 } from "@/ui";
 import { adminManageApi, useAdminLine, useRefreshAdmin } from "./api";
@@ -48,6 +53,9 @@ export function AdminLineScreen() {
               <Notice tone="warning">{t("errors.notConfigured")}</Notice>
             ) : null}
             <UsageCard usage={d.usage} />
+            {d.announce ? (
+              <AnnounceCard announce={d.announce} quota={d.usage.quota} />
+            ) : null}
             <Card style={styles.card}>
               <View style={styles.head}>
                 <Text variant="subheading" accessibilityRole="header">
@@ -152,6 +160,176 @@ function UsageCard({ usage }: { usage: AdminLine["usage"] }) {
       <Text variant="caption" tone="subtle">
         {t("hint")}
       </Text>
+    </Card>
+  );
+}
+
+const ANNOUNCE_MAX = 1000;
+const ANNOUNCE_ERRORS = [
+  "not_configured",
+  "no_recipients",
+  "quota",
+  "too_soon",
+  "line_failed",
+  "invalid",
+] as const;
+type AnnounceError = (typeof ANNOUNCE_ERRORS)[number] | "failed";
+
+function announceError(e: unknown): AnnounceError {
+  const code = isApiError(e) ? e.code : "";
+  return ANNOUNCE_ERRORS.find((c) => c === code) ?? "failed";
+}
+
+/**
+ * 「LINE でお知らせ」: one text message to every member on LINE. Two steps —
+ * check who it reaches and what it costs, then send.
+ */
+function AnnounceCard({
+  announce,
+  quota,
+}: {
+  announce: NonNullable<AdminLine["announce"]>;
+  quota: AdminLine["usage"]["quota"];
+}) {
+  const t = useTranslations("line.richMenu.admin.announce");
+  const refresh = useRefreshAdmin();
+  const [text, setText] = useState("");
+  const [preview, setPreview] = useState<LineAnnouncePreview | null>(null);
+  const [busy, setBusy] = useState<"preview" | "send" | null>(null);
+  const [error, setError] = useState<AnnounceError | null>(null);
+  const [sent, setSent] = useState<number | null>(null);
+  const body = text.trim();
+  const remaining =
+    quota && quota.limit !== null
+      ? Math.max(0, quota.limit - quota.used)
+      : null;
+  const edit = (value: string) => {
+    setText(value);
+    setPreview(null);
+    setError(null);
+    setSent(null);
+  };
+  const check = async () => {
+    setBusy("preview");
+    setError(null);
+    setSent(null);
+    try {
+      setPreview(await adminManageApi.previewLineAnnouncement(body));
+    } catch (e) {
+      setError(announceError(e));
+    } finally {
+      setBusy(null);
+    }
+  };
+  const send = async () => {
+    setBusy("send");
+    setError(null);
+    try {
+      const res = await adminManageApi.sendLineAnnouncement(body);
+      setSent(res.sent);
+      setText("");
+      setPreview(null);
+      await refresh("line");
+    } catch (e) {
+      setError(announceError(e));
+    } finally {
+      setBusy(null);
+    }
+  };
+  return (
+    <Card style={styles.card}>
+      <Text variant="subheading" accessibilityRole="header">
+        {t("title")}
+      </Text>
+      <Text variant="small" tone="muted">
+        {t("intro")}
+      </Text>
+      <View style={styles.head}>
+        <Text variant="small" weight="semibold">
+          {t("recipients", { count: announce.recipients })}
+        </Text>
+        {remaining !== null ? (
+          <Text variant="small" tone="muted">
+            {t("remaining", { count: remaining })}
+          </Text>
+        ) : null}
+      </View>
+      {!announce.configured ? (
+        <Notice tone="warning">{t("notConfigured")}</Notice>
+      ) : null}
+      {sent !== null ? (
+        <Notice tone="success">{t("sent", { count: sent })}</Notice>
+      ) : null}
+      <TextField
+        label={t("label")}
+        placeholder={t("placeholder")}
+        value={text}
+        onChangeText={edit}
+        multiline
+        maxLength={ANNOUNCE_MAX}
+        editable={busy === null}
+        textAlignVertical="top"
+        hint={t("count", { count: text.length, max: ANNOUNCE_MAX })}
+        style={styles.message}
+      />
+      <Button
+        variant="secondary"
+        label={t("insertTemplate")}
+        disabled={busy !== null}
+        onPress={() => edit(t("template"))}
+      />
+      {error ? (
+        <Notice tone="error">
+          {t(`errors.${error}`, { max: ANNOUNCE_MAX })}
+        </Notice>
+      ) : null}
+      {preview ? (
+        <View style={styles.confirm}>
+          <Text variant="small" weight="semibold">
+            {t("confirmTitle")}
+          </Text>
+          <Text variant="small">
+            {t("confirmRecipients", { count: preview.recipients })}
+          </Text>
+          <Text variant="small" tone="muted">
+            {preview.quota.remaining !== null
+              ? t("confirmRemaining", {
+                  count: preview.quota.remaining,
+                  after: Math.max(
+                    0,
+                    preview.quota.remaining - preview.recipients,
+                  ),
+                })
+              : preview.quota.limit === null && preview.quota.used > 0
+                ? t("confirmNoLimit")
+                : t("confirmUnknown")}
+          </Text>
+          <Button
+            variant="danger"
+            label={
+              busy === "send"
+                ? t("sending")
+                : t("send", { count: preview.recipients })
+            }
+            loading={busy === "send"}
+            disabled={!announce.configured || preview.recipients === 0}
+            onPress={send}
+          />
+          <Button
+            variant="ghost"
+            label={t("back")}
+            disabled={busy !== null}
+            onPress={() => setPreview(null)}
+          />
+        </View>
+      ) : (
+        <Button
+          label={busy === "preview" ? t("previewing") : t("preview")}
+          loading={busy === "preview"}
+          disabled={!announce.configured || !body}
+          onPress={check}
+        />
+      )}
     </Card>
   );
 }
@@ -303,6 +481,13 @@ const styles = StyleSheet.create({
   },
   breakdownRow: { flexDirection: "row", gap: space.md },
   install: { gap: space.sm },
+  message: { minHeight: 160 },
+  confirm: {
+    gap: space.sm,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.slate100,
+    paddingTop: space.md,
+  },
   imageBox: {
     aspectRatio: 1250 / 843,
     width: "100%",

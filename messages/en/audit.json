@@ -21,7 +21,8 @@
     "company": "Companies",
     "self": "Member’s own actions",
     "user": "Automatic account merges",
-    "donation": "Donations"
+    "donation": "Donations",
+    "line": "LINE"
   },
   "targetTypes": {
     "User": "Member",
@@ -142,6 +143,9 @@
       "monthly_started": "Monthly donation started",
       "monthly_paid": "Monthly donation received",
       "monthly_stopped": "Monthly donation stopped"
+    },
+    "line": {
+      "announcement_sent": "LINE announcement sent"
     }
   }
 }

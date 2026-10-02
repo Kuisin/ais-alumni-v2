@@ -17,13 +17,13 @@
   },
   "notifications": {
     "title": "Notifications",
-    "description": "News and chat mentions can reach you on LINE right away. Everything else (application results, requests, reminders…) is sent by email.",
-    "auto": "News and mentions on LINE (recommended)",
-    "autoHint": "If you've linked LINE and added the AIS Alumni Committee as a friend, news and chat mentions come on LINE; otherwise by email.",
+    "description": "Chat mentions and notices about your account (like the result of an application) can reach you on LINE right away. News, reminders and unread summaries are sent by email.",
+    "auto": "Mentions and important notices on LINE (recommended)",
+    "autoHint": "If you've linked LINE and added the AIS Alumni Committee as a friend, chat mentions and important notices come on LINE; otherwise by email.",
     "emailOnly": "Everything by email",
-    "emailOnlyHint": "News and mentions come by email too.",
-    "rule": "All other notifications are sent by email, whatever you choose here.",
-    "current": "News and mentions go to: {channel}",
+    "emailOnlyHint": "Mentions and important notices come by email too.",
+    "rule": "News, reminders and unread summaries are sent by email, whatever you choose here.",
+    "current": "Mentions and important notices go to: {channel}",
     "channel": {
       "LINE": "LINE",
       "EMAIL": "Email",
@@ -40,7 +40,7 @@
   },
   "line": {
     "title": "LINE",
-    "description": "Get news and chat mentions on LINE. Other notifications come by email.",
+    "description": "Get chat mentions and important notices on LINE. News and reminders come by email.",
     "status": "Status",
     "linked": "Linked",
     "notLinked": "Not linked",

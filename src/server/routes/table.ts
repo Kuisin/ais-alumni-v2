@@ -21,6 +21,7 @@ import * as ae4 from "./mobile/v1/admin/events/[id]/rsvp-closed";
 import * as ae5 from "./mobile/v1/admin/events/[id]/staff";
 import * as ae6 from "./mobile/v1/admin/events/[id]/xlsx";
 import * as adminLine from "./mobile/v1/admin/line";
+import * as adminLineAnnounce from "./mobile/v1/admin/line/announce";
 import * as adminLinePreview from "./mobile/v1/admin/line/preview";
 import * as adminLineRichMenu from "./mobile/v1/admin/line/richmenu";
 import * as adminMembers from "./mobile/v1/admin/members";
@@ -288,6 +289,7 @@ export const ROUTES: [string, RouteModule][] = [
   ],
   ["admin/destinations", adminDestinations as unknown as RouteModule],
   ["admin/line", adminLine as unknown as RouteModule],
+  ["admin/line/announce", adminLineAnnounce as unknown as RouteModule],
   ["admin/line/preview", adminLinePreview as unknown as RouteModule],
   ["admin/line/richmenu", adminLineRichMenu as unknown as RouteModule],
   ["admin/organizations", adminOrgs as unknown as RouteModule],

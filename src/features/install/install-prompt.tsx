@@ -49,7 +49,13 @@ function WebInstallPrompt() {
     }
   };
 
-  if (!show || pathname === "/install") return null;
+  // Not over the install page itself, admin mode or an open chat (its
+  // composer sits where the popup would).
+  const hidden =
+    pathname === "/install" ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/chat/");
+  if (!show || hidden) return null;
   return (
     <View
       pointerEvents="box-none"

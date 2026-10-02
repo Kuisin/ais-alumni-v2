@@ -13,6 +13,9 @@ import type {
   AdminOrgs,
   AdminStats,
   AdminSupport,
+  LineAnnounceInput,
+  LineAnnouncePreview,
+  LineAnnounceSent,
   OrgKind,
   RichMenuResult,
 } from "@contract/admin-manage";
@@ -167,6 +170,14 @@ export const adminManageApi = {
     api<{ ok?: boolean; error?: boolean }>("/admin/chat/rules", {
       method: "PUT",
       body,
+    }),
+  previewLineAnnouncement: (text: string) =>
+    api<LineAnnouncePreview>("/admin/line/announce", {
+      body: { intent: "preview", text } satisfies LineAnnounceInput,
+    }),
+  sendLineAnnouncement: (text: string) =>
+    api<LineAnnounceSent>("/admin/line/announce", {
+      body: { intent: "send", text } satisfies LineAnnounceInput,
     }),
   installRichMenu: () =>
     api<RichMenuResult>("/admin/line/richmenu", { method: "POST", body: {} }),
