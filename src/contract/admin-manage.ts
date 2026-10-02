@@ -234,7 +234,24 @@ export type AdminLine = {
     replies: { key: string; label: string }[];
     items: { key: string; label: string; path: string }[];
   }[];
+  /** 「LINE でお知らせ」: who it would reach, and whether LINE can send */
+  announce?: { recipients: number; configured: boolean };
 };
+
+/** POST /admin/line/announce { intent: "preview" | "send", text } */
+export type LineAnnounceInput = { intent: "preview" | "send"; text: string };
+
+/** intent "preview" (nulls: no limit, or LINE didn't answer) */
+export type LineAnnouncePreview = {
+  recipients: number;
+  quota: { limit: number | null; used: number; remaining: number | null };
+};
+
+/**
+ * intent "send". Errors: not_configured, no_recipients, quota (400),
+ * too_soon (429, one within the last 5 minutes), line_failed (502).
+ */
+export type LineAnnounceSent = { sent: number };
 
 /** POST /admin/line/richmenu */
 export type RichMenuResult = {

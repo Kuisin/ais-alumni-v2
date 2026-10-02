@@ -1,4 +1,13 @@
-import type { AdminLine } from "@contract/admin-manage";
+import type {
+  AdminLine,
+  LineAnnouncePreview,
+  LineAnnounceSent,
+} from "@contract/admin-manage";
+import { z } from "zod";
+import type { Prisma } from "@/server/generated/prisma/client";
+import { audit } from "@/server/lib/audit";
+import { db } from "@/server/lib/db";
+import { lineConfigured, lineMulticast } from "@/server/lib/line";
 import {
   RICH_MENU_ITEMS,
   RICH_MENU_REPLIES,
@@ -9,18 +18,20 @@ import {
   richMenuLabels,
 } from "@/server/lib/line-richmenu-image";
 import { lineQuota, lineSendsByCategory } from "@/server/lib/line-usage";
+import { ApiError } from "@/server/lib/mobile/http";
 
 /**
  * LINE Official Account (the website's /app/admin/line; the caller checks
  * admin): this month's messages, the rich menu's state and its tiles.
  */
 export async function loadAdminLine(): Promise<AdminLine> {
-  const [status, ja, en, quota, byCategory] = await Promise.all([
+  const [status, ja, en, quota, byCategory, recipients] = await Promise.all([
     richMenuStatus(),
     richMenuLabels("ja"),
     richMenuLabels("en"),
     lineQuota(),
     lineSendsByCategory(new Date()),
+    db.user.count({ where: ANNOUNCE_RECIPIENTS }),
   ]);
   const installed = Boolean(status.installed.ja);
   return {
@@ -28,6 +39,7 @@ export async function loadAdminLine(): Promise<AdminLine> {
     installed,
     isDefault: installed && status.defaultId === status.installed.ja,
     usage: { quota, byCategory },
+    announce: { recipients, configured: lineConfigured() },
     previews: (
       [
         ["ja", ja],
@@ -65,4 +77,113 @@ export async function richMenuPreview(
       "Cache-Control": "private, no-store",
     },
   });
+}
+
+// ---- 「LINE でお知らせ」: one text message to every member on LINE ----
+
+/** The longest announcement (LINE itself allows 5000). */
+export const ANNOUNCE_MAX = 1000;
+
+/** No second announcement within this long of the last one. */
+const ANNOUNCE_GAP_MS = 5 * 60_000;
+
+export const ANNOUNCE_ACTION = "line.announcement_sent";
+
+/** POST /admin/line/announce */
+export const AnnounceSchema = z.object({
+  intent: z.enum(["preview", "send"]),
+  text: z.string().trim().min(1).max(ANNOUNCE_MAX),
+});
+
+/**
+ * Who an announcement reaches: approved members who linked LINE, follow the
+ * Official Account, haven't chosen email only, and haven't turned off
+ * ニュース notifications (an announcement is committee news).
+ */
+export const ANNOUNCE_RECIPIENTS = {
+  state: "ACTIVE",
+  deactivatedAt: null,
+  lineUserId: { not: null },
+  lineFollowing: true,
+  notifyVia: { not: "EMAIL_ONLY" },
+  NOT: { notifyOff: { has: "news" } },
+} as const satisfies Prisma.UserWhereInput;
+
+async function announceRecipients(): Promise<string[]> {
+  const rows = await db.user.findMany({
+    where: ANNOUNCE_RECIPIENTS,
+    select: { lineUserId: true },
+  });
+  return rows.flatMap((r) => (r.lineUserId ? [r.lineUserId] : []));
+}
+
+/** LINE's figures as the announcement's allowance (nulls when unknown). */
+export function announceQuota(
+  quota: { used: number; limit: number | null } | null,
+): LineAnnouncePreview["quota"] {
+  if (!quota) return { limit: null, used: 0, remaining: null };
+  return {
+    limit: quota.limit,
+    used: quota.used,
+    remaining:
+      quota.limit === null ? null : Math.max(0, quota.limit - quota.used),
+  };
+}
+
+/** How many it would reach and what is left of this month's allowance. */
+export async function previewLineAnnouncement(): Promise<LineAnnouncePreview> {
+  const [recipients, quota] = await Promise.all([
+    db.user.count({ where: ANNOUNCE_RECIPIENTS }),
+    lineQuota(),
+  ]);
+  return { recipients, quota: announceQuota(quota) };
+}
+
+/** Send it (the caller checked admin and parsed `text`). */
+export async function sendLineAnnouncement(
+  adminId: string,
+  text: string,
+): Promise<LineAnnounceSent> {
+  if (!lineConfigured()) throw new ApiError(400, "not_configured");
+  const [ids, quota, last] = await Promise.all([
+    announceRecipients(),
+    lineQuota(),
+    db.auditLog.findFirst({
+      where: { action: ANNOUNCE_ACTION },
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true },
+    }),
+  ]);
+  if (!ids.length) throw new ApiError(400, "no_recipients");
+  const { remaining } = announceQuota(quota);
+  if (remaining !== null && ids.length > remaining)
+    throw new ApiError(400, "quota");
+  if (last && Date.now() - last.createdAt.getTime() < ANNOUNCE_GAP_MS)
+    throw new ApiError(429, "too_soon");
+  // LINE takes 500 recipients per request. Sent batch by batch so a failure
+  // partway is recorded with how many got it — the log then blocks an
+  // immediate retry (ANNOUNCE_GAP_MS), which would reach them twice.
+  let sent = 0;
+  try {
+    for (let i = 0; i < ids.length; i += 500) {
+      const batch = ids.slice(i, i + 500);
+      await lineMulticast(batch, [{ type: "text", text }]);
+      sent += batch.length;
+    }
+  } catch (e) {
+    console.error("[line-announce] multicast failed", e);
+    if (sent > 0)
+      await audit(adminId, ANNOUNCE_ACTION, undefined, {
+        recipients: sent,
+        intended: ids.length,
+        partial: true,
+        text,
+      });
+    throw new ApiError(502, "line_failed", { sent });
+  }
+  await audit(adminId, ANNOUNCE_ACTION, undefined, {
+    recipients: sent,
+    text,
+  });
+  return { sent };
 }

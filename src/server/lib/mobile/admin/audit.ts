@@ -22,6 +22,7 @@ export const AUDIT_CATEGORIES = [
   "self",
   "user",
   "donation",
+  "line",
 ] as const;
 
 export const AUDIT_ROW_INCLUDE = {

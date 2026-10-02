@@ -101,7 +101,39 @@
         "failed": "Couldn't install the menu on LINE."
       },
       "installConfirm": "This changes the menu for every LINE friend. Continue?",
-      "replyNote": "(reply in the chat, free)"
+      "replyNote": "(reply in the chat, free)",
+      "announce": {
+        "title": "Announce on LINE",
+        "intro": "Sends one message on LINE to every approved member who linked LINE and follows the Official Account (not those who chose email only or turned off news notifications). Each send uses one message per person from this month's LINE allowance.",
+        "recipients": "Recipients: {count}",
+        "remaining": "Left this month: {count}",
+        "notConfigured": "The server has no LINE sending settings (Messaging API).",
+        "label": "Message",
+        "placeholder": "The text to send on LINE",
+        "count": "{count} / {max} characters",
+        "insertTemplate": "Insert the app announcement",
+        "template": "📱 The AIS Alumni app is here\n\nWith the app…\n• Chat and notice notifications arrive right away\n• It opens fast and shows what you last saw, even with a weak signal\n• Reply straight from a notification\n• Show your QR ticket at event check-in in a tap\n\nHow to install (iPhone) ▶ https://ais-alumni.kai-lab.net/install",
+        "preview": "Review before sending",
+        "previewing": "Checking…",
+        "confirmTitle": "Send this on LINE?",
+        "confirmRecipients": "Recipients: {count}",
+        "confirmRemaining": "Left this month: {count} ({after} after sending)",
+        "confirmNoLimit": "This month's limit: none set",
+        "confirmUnknown": "LINE didn't report what is left this month.",
+        "send": "Send to {count} on LINE",
+        "sending": "Sending…",
+        "back": "Edit the message",
+        "sent": "Sent to {count} people",
+        "errors": {
+          "not_configured": "The server has no LINE sending settings (Messaging API).",
+          "no_recipients": "There is no one to send to (no member has linked LINE and follows the account).",
+          "quota": "Not enough of this month's LINE allowance is left to send this.",
+          "too_soon": "An announcement was just sent. Wait about 5 minutes and try again.",
+          "line_failed": "LINE couldn't send it. Some people may have received it — check before trying again later.",
+          "invalid": "Enter a message of 1–{max} characters.",
+          "failed": "Couldn't send. Check your connection and try again."
+        }
+      }
     },
     "replies": {
       "chats": "Unread chats",

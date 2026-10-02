@@ -235,10 +235,7 @@
           "Sign in with LINE in a tap",
           "The LINE app opens and you just confirm."
         ],
-        [
-          "QR ticket at check-in",
-          "Bring up your event ticket in a tap."
-        ]
+        ["QR ticket at check-in", "Bring up your event ticket in a tap."]
       ]
     }
   }
