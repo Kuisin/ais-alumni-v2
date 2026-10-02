@@ -64,6 +64,7 @@ const PATTERNS: Rule[] = [
   { re: /^\/app\/handover\/ID$/, to: (m) => `/handover/${m[1]}` },
   { re: /^\/privacy$/, to: () => "/privacy" },
   { re: /^\/donate$/, to: () => "/donate" },
+  { re: /^\/install$/, to: () => "/install" },
   { re: /^\/terms$/, to: () => "/terms" },
   { re: /^\/support$/, to: () => "/support", keep: ["type", "topic"] },
   // 管理モード pages below a section (sections: src/features/admin/nav.ts)

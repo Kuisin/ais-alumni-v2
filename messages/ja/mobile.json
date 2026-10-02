@@ -185,5 +185,36 @@
     "openInSafari": "Safari で寄付ページを開く",
     "appNote": "寄付はウェブサイトで受け付けています。",
     "submitAny": "寄付する"
+  },
+  "offline": {
+    "banner": "オフライン",
+    "hint": "保存したデータを表示しています"
+  },
+  "install": {
+    "title": "アプリのインストール",
+    "intro": "AIS同窓会にはiPhoneアプリがあります。通知がすぐ届き、すばやく開けます。現在は App Store での公開前のため、Apple の「TestFlight」アプリからインストールします（無料）。",
+    "stepsTitle": "インストール手順（iPhone）",
+    "steps": [
+      "App Store で「TestFlight」をインストールします。",
+      "下の「TestFlight で開く」をタップします。",
+      "TestFlight が開いたら「同意する」→「インストール」をタップします。",
+      "ホーム画面の「AIS同窓会」を開き、ウェブと同じ方法（メールのコード、または LINE）でログインします。"
+    ],
+    "getTestflight": "TestFlight を入手（App Store）",
+    "openTestflight": "TestFlight で開く",
+    "openAppStore": "App Store で開く",
+    "storeIntro": "AIS同窓会の iPhone アプリは App Store からインストールできます。",
+    "notReady": "招待リンクは準備中です。公開され次第、ここからインストールできます。",
+    "lineNote": "LINE の中のブラウザでは TestFlight が開かないことがあります。右下（または右上）のメニューから「Safari で開く」を選んでからお試しください。",
+    "notes": [
+      "TestFlight 版は約90日ごとに更新が必要です（TestFlight アプリから「アップデート」）。",
+      "Android 版は準備中です。それまではこのウェブ版をご利用ください。"
+    ],
+    "prompt": {
+      "title": "アプリ版が使えます",
+      "body": "通知がすぐ届き、すばやく開けます。",
+      "open": "インストール方法",
+      "later": "あとで"
+    }
   }
 }

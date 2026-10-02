@@ -8,6 +8,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { InstallPrompt } from "@/features/install/install-prompt";
+import { OfflineIndicator } from "@/features/offline/offline-indicator";
 import {
   UpdateRequired,
   useUpdateRequired,
@@ -96,6 +98,8 @@ function Root() {
               <Stack.Screen name="(member)" options={{ headerShown: false }} />
             </Stack.Protected>
           </Stack>
+          <OfflineIndicator />
+          <InstallPrompt />
         </RealtimeProvider>
       </PushProvider>
     </I18nProvider>

@@ -67,6 +67,9 @@ export type AppConfig = {
   lineChannelId?: string | null;
   /** 寄付 through Stripe (/donate); null: not set up on this server */
   donations?: { portalUrl: string | null } | null;
+  /** installing the app before it's on the stores: the TestFlight public
+   *  link (iPhone), when the committee has opened one */
+  install?: { testflightUrl: string | null };
   /** where to update the app (App Store / Google Play), when known */
   storeUrl?: { ios: string | null; android: string | null };
 };

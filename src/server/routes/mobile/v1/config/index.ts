@@ -3,6 +3,14 @@ import { donationsReady, portalLoginUrl } from "@/server/lib/donations";
 import { publicRoute } from "@/server/lib/mobile/http";
 import { ssoReady } from "@/server/lib/sso";
 
+/** TESTFLIGHT_URL: the external testing group's public link. */
+function testflightUrl(): string | null {
+  const url = process.env.TESTFLIGHT_URL?.trim();
+  return url && /^https:\/\/testflight\.apple\.com\/join\/\w+$/.test(url)
+    ? url
+    : null;
+}
+
 /** What the app needs before sign-in (which sign-in buttons to show). */
 export const GET = publicRoute(
   async (): Promise<AppConfig> => ({
@@ -17,6 +25,7 @@ export const GET = publicRoute(
     // e.g. "1.1.0": older installed apps show "update the app" (src/app/
     // _layout.tsx) and stop there, for when the API changes incompatibly.
     donations: donationsReady() ? { portalUrl: portalLoginUrl() } : null,
+    install: { testflightUrl: testflightUrl() },
     minAppVersion: process.env.MIN_APP_VERSION?.trim() || null,
     storeUrl: {
       ios: process.env.APP_STORE_URL?.trim() || null,
