@@ -212,9 +212,34 @@
     ],
     "prompt": {
       "title": "Get the app",
-      "body": "Notifications arrive right away and it opens fast.",
+      "body": "Instant notifications, opens fast, reply from a notification.",
       "open": "How to install",
       "later": "Later"
+    },
+    "benefits": {
+      "title": "What's better in the app",
+      "items": [
+        [
+          "Notifications right away",
+          "Notice chats and announcements without opening email or LINE."
+        ],
+        [
+          "Opens instantly",
+          "Shows what you last saw straight away — even with a weak signal."
+        ],
+        [
+          "Reply from the notification",
+          "Answer a chat or accept a follow request without opening the app."
+        ],
+        [
+          "Sign in with LINE in a tap",
+          "The LINE app opens and you just confirm."
+        ],
+        [
+          "QR ticket at check-in",
+          "Bring up your event ticket in a tap."
+        ]
+      ]
     }
   }
 }
