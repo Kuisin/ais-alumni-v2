@@ -191,33 +191,35 @@
     "hint": "保存したデータを表示しています"
   },
   "install": {
-    "title": "アプリのインストール",
-    "intro": "AIS同窓会にはiPhoneアプリがあります。通知がすぐ届き、すばやく開けます。現在は App Store での公開前のため、Apple の「TestFlight」アプリからインストールします（無料）。",
-    "stepsTitle": "インストール手順（iPhone）",
+    "title": "アプリのベータテスト",
+    "intro": "AIS同窓会の iPhone アプリを、App Store での公開に向けて準備しています。公開前のベータ版を試して、気づいたことを教えてくださるテスターを募集しています。ベータ版は Apple の「TestFlight」アプリ（無料）から参加できます。",
+    "stepsTitle": "ベータテストに参加する（iPhone）",
     "steps": [
       "App Store で「TestFlight」をインストールします。",
-      "下の「TestFlight で開く」をタップします。",
+      "下の「TestFlight でベータ版に参加」をタップします。",
       "TestFlight が開いたら「同意する」→「インストール」をタップします。",
-      "ホーム画面の「AIS同窓会」を開き、ウェブと同じ方法（メールのコード、または LINE）でログインします。"
+      "ホーム画面の「AIS同窓会」を開き、ウェブと同じ方法（メールのコード、または LINE）でログインして、ふだんどおり使ってみてください。",
+      "不具合や使いにくい点は、TestFlight の「フィードバックを送信」か、アプリの「お問い合わせ」からお知らせください。"
     ],
     "getTestflight": "TestFlight を入手（App Store）",
-    "openTestflight": "TestFlight で開く",
+    "openTestflight": "TestFlight でベータ版に参加",
     "openAppStore": "App Store で開く",
     "storeIntro": "AIS同窓会の iPhone アプリは App Store からインストールできます。",
-    "notReady": "招待リンクは準備中です。公開され次第、ここからインストールできます。",
+    "notReady": "ベータテストの受付は準備中です。始まり次第、ここから参加できます。",
     "lineNote": "LINE の中のブラウザでは TestFlight が開かないことがあります。右下（または右上）のメニューから「Safari で開く」を選んでからお試しください。",
     "notes": [
-      "TestFlight 版は約90日ごとに更新が必要です（TestFlight アプリから「アップデート」）。",
+      "ベータ版は開発中のため、不具合が残っていることがあります。新しいベータ版は TestFlight アプリから更新できます。",
+      "App Store で公開されたら、このページからそのままインストールできるようになります。",
       "Android 版は準備中です。それまではこのウェブ版をご利用ください。"
     ],
     "prompt": {
-      "title": "アプリ版が使えます",
-      "body": "通知がすぐ届き、すばやく開けて、通知から返信もできます。",
-      "open": "インストール方法",
+      "title": "アプリのベータ版を試せます",
+      "body": "App Store 公開前のベータテストに参加して、ご意見をお聞かせください。",
+      "open": "参加方法",
       "later": "あとで"
     },
     "benefits": {
-      "title": "アプリでよくなること",
+      "title": "アプリ版でできること",
       "items": [
         [
           "通知がすぐ届く",
