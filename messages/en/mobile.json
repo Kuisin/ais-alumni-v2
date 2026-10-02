@@ -189,5 +189,32 @@
   "offline": {
     "banner": "Offline",
     "hint": "Showing saved data"
+  },
+  "install": {
+    "title": "Install the app",
+    "intro": "AIS Alumni has an iPhone app: notifications arrive right away and it opens fast. It isn't on the App Store yet, so for now you install it through Apple's TestFlight app (free).",
+    "stepsTitle": "How to install (iPhone)",
+    "steps": [
+      "Install “TestFlight” from the App Store.",
+      "Tap “Open in TestFlight” below.",
+      "When TestFlight opens, tap “Accept”, then “Install”.",
+      "Open “AIS Alumni” on your Home Screen and sign in the same way as on the web (email code or LINE)."
+    ],
+    "getTestflight": "Get TestFlight (App Store)",
+    "openTestflight": "Open in TestFlight",
+    "openAppStore": "Open in the App Store",
+    "storeIntro": "The AIS Alumni iPhone app is on the App Store.",
+    "notReady": "The invitation link isn't ready yet. You'll be able to install from here once it's open.",
+    "lineNote": "TestFlight may not open from LINE's in-app browser. Choose “Open in Safari” from the menu at the bottom right (or top right), then try again.",
+    "notes": [
+      "The TestFlight version needs updating about every 90 days (tap “Update” in the TestFlight app).",
+      "An Android version is on the way. Until then, please use this web version."
+    ],
+    "prompt": {
+      "title": "Get the app",
+      "body": "Notifications arrive right away and it opens fast.",
+      "open": "How to install",
+      "later": "Later"
+    }
   }
 }

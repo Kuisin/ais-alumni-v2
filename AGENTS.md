@@ -147,6 +147,12 @@ project id in the config Expo Go needs no sign-in (with one, run
   Marketplace Stripe integration; production offers donations only with a
   live key. STRIPE_PORTAL_LOGIN_URL (optional) links monthly donors to
   Stripe's Customer Portal.
+- **Installing the app** (`src/app/install.tsx`, `src/features/install`):
+  the web app shows 「アプリ版が使えます」 (web only; 「あとで」 hides it for
+  two weeks) leading to /install — the App Store link once `APP_STORE_URL`
+  is set on the server, until then the steps to install through TestFlight
+  with the external group's public link (`TESTFLIGHT_URL`,
+  `https://testflight.apple.com/join/…`).
 - **Strings** (`src/lib/i18n.tsx`): the website's `messages/<locale>/*.json`
   (synced) through use-intl (next-intl's core), so both say the same thing.
   App-only strings: `messages/<locale>/mobile.json` (also kept in the
