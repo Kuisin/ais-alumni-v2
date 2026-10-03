@@ -8,8 +8,14 @@ export function appUrl(path = ""): string {
   return `${base.replace(/\/$/, "")}${path}`;
 }
 
-/** The production site, used for every link sent by email or LINE. */
-export const PUBLIC_SITE_URL = "https://ais-alumni.kai-lab.net";
+/**
+ * The production site, used for every link sent by email or LINE: the
+ * PUBLIC_SITE_URL environment variable (Vercel, not secret), else
+ * ais-alumni.kai-lab.net.
+ */
+export const PUBLIC_SITE_URL = (
+  process.env.PUBLIC_SITE_URL?.trim() || "https://ais-alumni.kai-lab.net"
+).replace(/\/+$/, "");
 
 /**
  * Absolute link for notifications (email, LINE). Always the production
