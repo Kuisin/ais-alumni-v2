@@ -6,7 +6,8 @@
   "outputDirectory": "dist/client",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "dist/server/**"
+      "includeFiles": "dist/server/**",
+      "maxDuration": 300
     }
   },
   "rewrites": [

@@ -6,8 +6,11 @@ routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 `src/server/`), deployed with the web app on Vercel (`web.output:
 "server"`, `api/index.ts`). It shares the database with the website in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
-server"/"the website" below), which still runs the stored files, scheduled
-jobs and the LINE webhook. The database schema and its migrations are this
+server"/"the website" below). The website's server routes are here too,
+at the same paths, so this project can take over its domain: the job
+runner `/api/cron` (`src/server/lib/jobs`), the LINE webhook, the
+notification short links `/n/…`, and its pages (`/ja`, `/en`, `/app/…`)
+redirect to `/moved`. The database schema and its migrations are this
 repo's (see "Database" below). Every page of the
 website — public, onboarding, member and admin mode — has a native screen
 here; the app never opens the website. Tokens live in the shared database, so either
@@ -110,8 +113,9 @@ project id in the config Expo Go needs no sign-in (with one, run
   the web the landing page at `/` when signed out.
 - **Links** (`src/lib/links.ts`): website paths and URLs in content and
   notifications map to the matching app screen (`hrefFor`); ones without
-  one are ignored, never opened in a browser or web view. Admin mode's
-  paths map through `src/features/admin/nav.ts` (`adminHrefFor`).
+  one are ignored, never opened in a browser or web view. The path rules
+  are `src/lib/site-paths.ts` (no React Native: the server's `/n/…` links
+  use them too); admin mode's through `src/features/admin/paths.ts`.
 - **Realtime** (`src/lib/realtime.tsx`): the website's signal-only Supabase
   Broadcast channels; topics come from `/me` (and room responses).
 - **Notifications** (`src/lib/push-core.ts`, `src/lib/push.tsx`; server:
@@ -187,7 +191,7 @@ project id in the config Expo Go needs no sign-in (with one, run
 
 - Screens: tabs in `src/app/(member)/(tabs)/<tab>.tsx`; pushed screens in
   `src/app/(member)/<feature>/…`. Set titles with
-  `<Stack.Screen options={{ title }} />`. Keep `src/lib/links.ts` in step.
+  `<Stack.Screen options={{ title }} />`. Keep `src/lib/site-paths.ts` in step.
 - Feature code in `src/features/<feature>/` (components, `api.ts` hooks).
   Shared primitives in `src/ui` (`Text`, `Button`, `Card`, `ListRow`,
   `Screen`, `QueryState`, `Markdown`, …) — use them; always `Text` from
