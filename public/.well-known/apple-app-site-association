@@ -1,0 +1,18 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["83BJ8C4G93.net.kailab.aisalumni"],
+        "components": [
+          { "/": "/api/*", "exclude": true, "comment": "server routes" },
+          { "/": "/auth", "exclude": true, "comment": "web sign-in return" },
+          { "/": "/donate*", "exclude": true, "comment": "donations stay on the web (App Store 3.2.2)" },
+          { "/": "/install*", "exclude": true },
+          { "/": "/moved*", "exclude": true },
+          { "/": "/*/og", "exclude": true, "comment": "notification preview images" },
+          { "/": "*" }
+        ]
+      }
+    ]
+  }
+}
