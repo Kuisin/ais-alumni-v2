@@ -193,7 +193,7 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
     focused,
     fresh,
   });
-  const { messages, reads, divider } = state;
+  const { messages, reads, readBy, divider } = state;
   const list = useRef<FlatList<RoomItem>>(null);
   const [selected, setSelected] = useState<ChatMessage | null>(null);
   /** the sheet shows the full emoji picker */
@@ -202,7 +202,10 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
 
   const canPost = room.member && !room.stopped;
   const others = room.members.filter((m) => m.id !== me);
-  const namesById = new Map(room.members.map((m) => [m.id, m.name]));
+  const namesById = useMemo(
+    () => new Map(room.members.map((m) => [m.id, m.name])),
+    [room.members],
+  );
   const allLabels = [t("mentionAll"), ...ALL_LABELS];
   const sortedReads = [...reads].sort();
   const words = { today: t("today"), yesterday: t("yesterday") };
@@ -289,6 +292,20 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
     },
     [react, tr],
   );
+  // Tapping 既読 under an own message: who has read it (newest first).
+  const onShowReaders = useCallback(
+    (m: ChatMessage) => {
+      if (!readBy) return;
+      const names = readBy
+        .filter((r) => r.at >= m.createdAt)
+        .sort((a, b) => b.at.localeCompare(a.at))
+        .map((r) => namesById.get(r.userId))
+        .filter((n): n is string => Boolean(n));
+      if (!names.length) return;
+      showInfo(t("readersTitle", { count: names.length }), names.join("\n"));
+    },
+    [readBy, namesById, t],
+  );
   const onShowReactors = useCallback(
     (r: ChatReactionSummary) => {
       const more = r.count - r.names.length;
@@ -367,6 +384,8 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
               reactionLabels={reactionLabels}
               onReact={canReact ? onReact : undefined}
               onShowReactors={onShowReactors}
+              onShowReaders={readBy ? onShowReaders : undefined}
+              readersHint={t("readersHint")}
             />
           )}
           onEndReached={() => void state.loadOlder()}
