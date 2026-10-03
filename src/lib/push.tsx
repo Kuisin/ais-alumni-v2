@@ -224,6 +224,35 @@ export function PushProvider({ children }: { children: ReactNode }) {
     return () => sub.remove();
   }, [readPermission]);
 
+  // First launch after install: ask for the permission right away (the OS
+  // asks only once — "undetermined" until then), once the first screen is
+  // up. Signing in later registers the device (the sync below); the
+  // member can still turn them off in settings.
+  const asked = useRef(false);
+  useEffect(() => {
+    if (
+      asked.current ||
+      unavailable !== null ||
+      !navReady ||
+      permission !== "undetermined" ||
+      !canAskAgain ||
+      optOut !== false
+    )
+      return;
+    asked.current = true;
+    const timer = setTimeout(() => {
+      void Notifications.requestPermissionsAsync({
+        ios: { allowAlert: true, allowBadge: true, allowSound: true },
+      })
+        .then((p) => {
+          setPermission(permissionOf(p));
+          setCanAskAgain(p.canAskAgain);
+        })
+        .catch((e) => console.warn("[push] permission request failed", e));
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [unavailable, navReady, permission, canAskAgain, optOut]);
+
   // Android channels and the quick actions, in the member's language.
   useEffect(() => {
     if (unavailable === "web") return;
