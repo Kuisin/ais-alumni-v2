@@ -54,3 +54,5 @@ src/server/generated/
 
 # Supabase CLI local state
 supabase/.temp/
+.claude/proven-config.json
+.claude/.proven-config-version
