@@ -121,6 +121,27 @@
       "denied": "Notifications are turned off in your phone’s settings. You can turn them on in the Settings app.",
       "onboardingTitle": "Hear about your application in the app",
       "onboardingBody": "Turn on notifications to hear on this device as soon as your application is approved."
+    },
+    "intro": {
+      "title": "Turn on notifications",
+      "body": "Don't miss news from AIS Alumni or messages from friends.",
+      "points": {
+        "chat": {
+          "title": "Chat messages",
+          "body": "Direct messages and mentions, with what they say, right away."
+        },
+        "news": {
+          "title": "News and messages",
+          "body": "Committee news with its title and a summary."
+        },
+        "events": {
+          "title": "Events and results",
+          "body": "Reminders for events you're attending, and the results of your applications and requests."
+        }
+      },
+      "note": "You can choose which ones you get in settings at any time. While they're on, we send them to the app instead of LINE or email.",
+      "enable": "Turn on notifications",
+      "later": "Not now"
     }
   },
   "inbox": {
