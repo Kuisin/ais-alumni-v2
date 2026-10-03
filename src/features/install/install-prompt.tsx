@@ -53,6 +53,7 @@ function WebInstallPrompt() {
   // composer sits where the popup would).
   const hidden =
     pathname === "/install" ||
+    pathname === "/moved" ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/chat/");
   if (!show || hidden) return null;

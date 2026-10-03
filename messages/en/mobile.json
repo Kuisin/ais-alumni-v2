@@ -240,5 +240,12 @@
         ["QR ticket at check-in", "Bring up your event ticket in a tap."]
       ]
     }
+  },
+  "moved": {
+    "title": "The site has moved",
+    "body": "The AIS Alumni website has moved to a new address: ais-alumni.kai-lab.net. Your account and data are the same; if you aren't signed in, sign in the same way as before (email code or LINE).",
+    "open": "Open the new site",
+    "bookmark": "Please update any bookmarks or Home Screen shortcuts to the new address.",
+    "app": "You can also join the iPhone app's beta"
   }
 }

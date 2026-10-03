@@ -35,13 +35,43 @@ export type ImageOptions = {
   }[];
 };
 
+/**
+ * Emoji as Twemoji images (next/og draws them the same way): satori asks
+ * for each emoji the fonts don't have. Without the network: no emoji.
+ */
+async function loadEmoji(code: string, segment: string) {
+  if (code !== "emoji") return [];
+  // Twemoji's file names: code points in hex, without VS16 unless a ZWJ
+  // sequence.
+  const chars = segment.includes("\u200d")
+    ? segment
+    : segment.replaceAll("\ufe0f", "");
+  const name = [...chars].map((c) => c.codePointAt(0)?.toString(16)).join("-");
+  try {
+    const res = await fetch(
+      `https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/${name}.svg`,
+      { signal: AbortSignal.timeout(3000) },
+    );
+    if (!res.ok) return [];
+    const svg = await res.text();
+    return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+  } catch {
+    return [];
+  }
+}
+
 /** The element as a PNG response (like `new ImageResponse(element, opts)`). */
 export async function imageResponse(
   element: ReactElement,
   { width, height, fonts }: ImageOptions,
 ): Promise<Response> {
   if (!fonts?.length) throw new Error("image font unavailable");
-  const svg = await satori(element, { width, height, fonts });
+  const svg = await satori(element, {
+    width,
+    height,
+    fonts,
+    loadAdditionalAsset: loadEmoji,
+  });
   await loadResvg();
   const png = new Resvg(svg, { fitTo: { mode: "original" } }).render().asPng();
   return new Response(png as BodyInit, {

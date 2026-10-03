@@ -1,3 +1,4 @@
+import { webPathFor } from "@/lib/site-paths";
 import type { LineTextMessage } from "@/server/lib/line";
 
 // Replies to the rich menu's 未読のチャット / ニュース一覧 buttons (and the
@@ -98,9 +99,9 @@ export type ReplyChat = {
 /** 未読のチャット: talks with unread messages, each with its count and link. */
 export function chatsReply(
   chats: readonly ReplyChat[],
-  { t, locale, url }: Opts,
+  { t, url }: Opts,
 ): LineTextMessage[] {
-  const list = url(`/${locale}/app/chat`);
+  const list = url(webPathFor(`/app/chat`));
   const unread = chats.filter((c) => c.unread > 0);
   if (unread.length === 0)
     return [
@@ -117,7 +118,7 @@ export function chatsReply(
         item: false,
       },
       ...unread.map((c) => ({
-        text: `■ ${c.name}　${t("chats.count", { count: c.unread })}${c.mentioned ? `　${t("chats.mentioned")}` : ""}\n${url(`/${locale}/app/chat/${c.id}`)}`,
+        text: `■ ${c.name}　${t("chats.count", { count: c.unread })}${c.mentioned ? `　${t("chats.mentioned")}` : ""}\n${url(webPathFor(`/app/chat/${c.id}`))}`,
         item: true,
       })),
     ],
@@ -148,13 +149,13 @@ export function newsReply(
   posts: readonly ReplyPost[],
   { t, locale, url }: Opts,
 ): LineTextMessage[] {
-  const all = url(`/${locale}/app/news`);
+  const all = url(webPathFor(`/app/news`));
   if (posts.length === 0)
     return [
       { type: "text", text: `${t("news.none")}\n\n${t("news.all")} ▶ ${all}` },
     ];
   const item = (p: ReplyPost): Part => ({
-    text: `${p.title}（${date(p.publishedAt, locale)}）\n${url(`/${locale}/app/news/${p.id}`)}`,
+    text: `${p.title}（${date(p.publishedAt, locale)}）\n${url(webPathFor(`/app/news/${p.id}`))}`,
     item: true,
   });
   const unread = posts.filter((p) => p.unread);

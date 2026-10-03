@@ -1,3 +1,4 @@
+import { webPathFor } from "@/lib/site-paths";
 import { AccountState, type Locale } from "@/server/generated/prisma/enums";
 import { lineConfigured, lineRequest } from "@/server/lib/line";
 import { LINE_POSTBACK } from "@/server/lib/line-reply";
@@ -132,7 +133,7 @@ export function richMenuBody(
         action: {
           type: "uri" as const,
           label: labels[item.key].slice(0, 20),
-          uri: publicUrl(`/${locale}${item.path}`),
+          uri: publicUrl(webPathFor(item.path)),
         },
       })),
     ],
