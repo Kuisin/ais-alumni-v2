@@ -33,6 +33,8 @@ export const RoomRow = memo(function RoomRow({
   reactionLabels,
   onReact,
   onShowReactors,
+  onShowReaders,
+  readersHint,
 }: {
   item: RoomItem;
   direct: boolean;
@@ -43,6 +45,9 @@ export const RoomRow = memo(function RoomRow({
   /** toggle the member's reaction; undefined = can't react here */
   onReact?: (messageId: string, emoji: string) => void;
   onShowReactors: (r: ChatReactionSummary) => void;
+  /** tapping 既読 lists who read it; undefined = only the count */
+  onShowReaders?: (m: ChatMessage) => void;
+  readersHint: string;
 }) {
   if (item.kind === "day")
     return (
@@ -140,15 +145,36 @@ export const RoomRow = memo(function RoomRow({
               </Text>
             </Pressable>
           )}
-          <View
-            style={[styles.meta, mine ? styles.metaMine : null]}
-            importantForAccessibility="no-hide-descendants"
-            accessibilityElementsHidden
-          >
-            {readLabel ? (
-              <Text style={styles.metaText}>{readLabel}</Text>
+          <View style={[styles.meta, mine ? styles.metaMine : null]}>
+            {readLabel && onShowReaders ? (
+              <Pressable
+                onPress={() => onShowReaders(m)}
+                hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
+                accessibilityRole="button"
+                accessibilityLabel={readLabel}
+                accessibilityHint={readersHint}
+                style={({ pressed }) => (pressed ? styles.pressed : null)}
+              >
+                <Text style={[styles.metaText, styles.readLink]}>
+                  {readLabel}
+                </Text>
+              </Pressable>
+            ) : readLabel ? (
+              <Text
+                style={styles.metaText}
+                importantForAccessibility="no"
+                accessibilityElementsHidden
+              >
+                {readLabel}
+              </Text>
             ) : null}
-            <Text style={[styles.metaText, styles.nums]}>{time}</Text>
+            <Text
+              style={[styles.metaText, styles.nums]}
+              importantForAccessibility="no"
+              accessibilityElementsHidden
+            >
+              {time}
+            </Text>
           </View>
         </View>
         {!m.deleted && m.reactions?.length ? (
@@ -239,4 +265,5 @@ const styles = StyleSheet.create({
   metaMine: { alignItems: "flex-end" },
   metaText: { fontSize: 10, lineHeight: 13, color: colors.slate500 },
   nums: { fontVariant: ["tabular-nums"] },
+  readLink: { textDecorationLine: "underline" },
 });

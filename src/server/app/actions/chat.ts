@@ -284,17 +284,20 @@ export async function markChatReadAction(groupId: string): Promise<void> {
   ]);
 }
 
-/** When the other members last read the chat (for 既読 marks). */
+/** Who of the other members last read the chat when (for 既読 marks). */
 export async function chatReadStateAction(
   groupId: string,
-): Promise<string[] | null> {
+): Promise<{ userId: string; at: string }[] | null> {
   const g = await openGroup(groupId);
   if (!g) return null;
   const rows = await db.chatMember.findMany({
     where: { groupId: g.groupId, userId: { not: g.user.id } },
-    select: { lastReadAt: true },
+    select: { userId: true, lastReadAt: true },
   });
-  return rows.map((r) => r.lastReadAt.toISOString());
+  return rows.map((r) => ({
+    userId: r.userId,
+    at: r.lastReadAt.toISOString(),
+  }));
 }
 
 /** Why the 1:1 talk can't go on (see directStopReason); null = it can. */

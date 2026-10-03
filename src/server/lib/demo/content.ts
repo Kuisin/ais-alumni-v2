@@ -461,6 +461,7 @@ export function chatRoom(id: string): ChatRoom | undefined {
     messages: c.messages.map(chatMessage),
     hasOlder: false,
     reads: chatReads(id),
+    readBy: chatReadBy(id),
     lastReadAt: unreadFrom ? ago(agoMs(unreadFrom.sent) + MIN) : ago(0),
     muted: false,
     notifyLevel: isDirect(c) ? "all" : "mentions",
@@ -470,9 +471,15 @@ export function chatRoom(id: string): ChatRoom | undefined {
 
 /** When the other members last read (既読 marks). */
 export function chatReads(id: string): string[] {
+  return chatReadBy(id).map((r) => r.at);
+}
+
+export function chatReadBy(id: string): { userId: string; at: string }[] {
   const c = findChat(id);
   if (!c) return [];
-  return c.others.slice(0, 3).map((_, i) => ago((i + 1) * 30 * MIN));
+  return c.others
+    .slice(0, 3)
+    .map((x, i) => ({ userId: roomMember(x).id, at: ago((i + 1) * 30 * MIN) }));
 }
 
 export function chatInfo(id: string): ChatInfo | undefined {
