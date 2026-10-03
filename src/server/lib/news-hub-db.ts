@@ -1,7 +1,8 @@
 import type { Prisma } from "@/server/generated/prisma/client";
 import { NewsPollKind } from "@/server/generated/prisma/enums";
+import { getTranslatorFor } from "@/server/i18n/translator";
 import { db } from "@/server/lib/db";
-import { parseJstLocal, toJstLocalInput } from "@/server/lib/format";
+import { localized, parseJstLocal, toJstLocalInput } from "@/server/lib/format";
 import { deadlineFrom, leaseUntil } from "@/server/lib/jobs/budget";
 import { approvedWhere, targetedRecipients } from "@/server/lib/news";
 import {
@@ -283,6 +284,14 @@ export async function sendDeadlineReminders(
             refId: post.id,
             dedupe: true,
             path: `/app/news/${post.id}`,
+            params: async (locale) => ({
+              title:
+                localized(post.titleJa, post.titleEn, locale).text ||
+                (await getTranslatorFor(locale, "notifications"))(
+                  "untitledNews",
+                ),
+              deadline: post.deadline,
+            }),
           },
           { deadline },
         );

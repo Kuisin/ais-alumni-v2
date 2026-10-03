@@ -108,11 +108,10 @@
         "recipients": "対象：{count}人",
         "remaining": "今月の残り：{count}通",
         "notConfigured": "LINE の送信設定（Messaging API）がサーバーにありません",
-        "label": "メッセージ",
+        "label": "メッセージ（日本語）",
         "placeholder": "LINE で送る文面",
         "count": "{count} / {max} 文字",
-        "insertTemplate": "ベータテスター募集の文面を入れる",
-        "template": "📱 AIS同窓会アプリ（iPhone）のベータテスターを募集しています\n\nApp Store での公開に向けて、公開前のベータ版を試して感想を教えてくださる方を募集しています。\n\nアプリ版でできること\n・チャットやお知らせの通知がすぐ届きます\n・すばやく開けて、電波が弱いときも前回の内容を見られます\n・通知からそのまま返信できます\n・イベント受付のQRチケットをすぐに出せます\n\n参加方法はこちら ▶ https://ais-alumni.kai-lab.net/install",
+        "insertTemplate": "アプリ公開のお知らせ（日本語・英語）を入れる",
         "preview": "送信内容を確認",
         "previewing": "確認中…",
         "confirmTitle": "この内容を LINE で送信しますか？",
@@ -132,7 +131,13 @@
           "line_failed": "LINE で送信できませんでした。一部の人には届いている可能性があります。時間をおいて、状況を確認してからやり直してください。",
           "invalid": "メッセージは1〜{max}文字で入力してください。",
           "failed": "送信できませんでした。通信状況を確認して、もう一度お試しください。"
-        }
+        },
+        "labelEn": "English（英語）",
+        "placeholderEn": "英語を使う会員に送る文面（任意）",
+        "hintEn": "英語を使う会員にはこちらを送ります。空欄なら全員に日本語の文面を送ります。（{count} / {max} 文字）",
+        "confirmLanguages": "日本語：{ja}人・English：{en}人",
+        "templateJa": "📱 AIS同窓会アプリ（iPhone版）のベータ版を公開しました\n\nAIS同窓会のアプリを、App Store での公開に先立ってベータ版（TestFlight）でお試しいただけます。ぜひ使ってみて、感想をお聞かせください。\n\nアプリ版のおすすめポイント\n・チャットのメッセージやニュースが、内容つきの通知ですぐ届きます\n・通知からそのまま返信できます\n・すばやく開けて、電波が弱いときも前回の内容を見られます\n・イベント受付のQRチケットをすぐに出せます\n\nインストール方法はこちら ▶ https://ais-alumni.kai-lab.net/install\n\n※ Android版は準備中です。ウェブ版も引き続きご利用いただけます。",
+        "templateEn": "📱 The AIS Alumni iPhone app is now in beta\n\nBefore its App Store release, you can try the AIS Alumni app as a beta (TestFlight). Please give it a try and tell us what you think.\n\nWhy we recommend the app\n• Chat messages and news arrive right away as notifications, with what they say\n• Reply straight from a notification\n• It opens fast and shows what you last saw, even with a weak signal\n• Show your QR ticket at event check-in in a tap\n\nHow to install ▶ https://ais-alumni.kai-lab.net/install\n\nThe Android version is on its way, and the website keeps working as before."
       }
     },
     "replies": {

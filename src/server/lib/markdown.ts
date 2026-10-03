@@ -174,3 +174,17 @@ export function markdownToPlain(
     return `${text.slice(0, maxLength - 1).trimEnd()}…`;
   return text;
 }
+
+/**
+ * Plain text that keeps the lines (headings, paragraphs, list items each on
+ * their own): a notification's summary of a post or message.
+ */
+export function markdownToLines(src: string | null | undefined): string {
+  if (!src) return "";
+  return src
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((line) => markdownToPlain(line))
+    .filter(Boolean)
+    .join("\n");
+}

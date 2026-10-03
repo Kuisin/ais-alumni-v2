@@ -1,4 +1,5 @@
 import type { PushState } from "@contract/notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Notifications from "expo-notifications";
 import { usePathname, useRootNavigationState, useRouter } from "expo-router";
@@ -70,6 +71,8 @@ type Ctx = {
   optedOut: boolean;
   state: PushState | null;
   busy: boolean;
+  /** the phone's permission dialog only; signing in registers the device */
+  askPermission: () => Promise<PushPermission>;
   /** ask the OS (first time) and register; "denied" = open settings */
   enable: () => Promise<"ok" | "denied" | "unavailable" | "failed">;
   disable: () => Promise<void>;
@@ -80,6 +83,8 @@ type Ctx = {
 const PushContext = createContext<Ctx | null>(null);
 
 const OPT_OUT_KEY = "ais.pushOptOut";
+/** The first-launch intro was shown (AsyncStorage: gone with the app). */
+const INTRO_KEY = "ais.pushIntroShown";
 const INSTALL_KEY = "ais.installId";
 
 async function installId(): Promise<string> {
@@ -223,6 +228,52 @@ export function PushProvider({ children }: { children: ReactNode }) {
     });
     return () => sub.remove();
   }, [readPermission]);
+
+  // First launch after install: before the phone's own dialog (the OS asks
+  // only once — "undetermined" until then), a screen says what
+  // notifications bring (src/app/notifications-intro.tsx), once per install
+  // and once sign-in state is known. Signing in later registers the device
+  // (the sync below).
+  const introShown = useRef(false);
+  useEffect(() => {
+    if (
+      introShown.current ||
+      unavailable !== null ||
+      !navReady ||
+      status === "loading" ||
+      permission !== "undetermined" ||
+      !canAskAgain ||
+      optOut !== false
+    )
+      return;
+    introShown.current = true;
+    let cancelled = false;
+    void AsyncStorage.getItem(INTRO_KEY)
+      .catch(() => null)
+      .then((seen) => {
+        if (seen || cancelled) return;
+        void AsyncStorage.setItem(INTRO_KEY, "1").catch(() => {});
+        router.push("/notifications-intro");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [unavailable, navReady, status, permission, canAskAgain, optOut, router]);
+
+  /** The phone's permission dialog only (the intro screen's button). */
+  const askPermission = useCallback(async (): Promise<PushPermission> => {
+    try {
+      const p = await Notifications.requestPermissionsAsync({
+        ios: { allowAlert: true, allowBadge: true, allowSound: true },
+      });
+      setPermission(permissionOf(p));
+      setCanAskAgain(p.canAskAgain);
+      return permissionOf(p);
+    } catch (e) {
+      console.warn("[push] permission request failed", e);
+      return "undetermined";
+    }
+  }, []);
 
   // Android channels and the quick actions, in the member's language.
   useEffect(() => {
@@ -464,6 +515,7 @@ export function PushProvider({ children }: { children: ReactNode }) {
       optedOut: optOut === true,
       state,
       busy,
+      askPermission,
       enable,
       disable,
       sendTest,
@@ -476,6 +528,7 @@ export function PushProvider({ children }: { children: ReactNode }) {
       optOut,
       state,
       busy,
+      askPermission,
       enable,
       disable,
       sendTest,

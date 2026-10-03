@@ -94,6 +94,8 @@ export const ANNOUNCE_ACTION = "line.announcement_sent";
 export const AnnounceSchema = z.object({
   intent: z.enum(["preview", "send"]),
   text: z.string().trim().min(1).max(ANNOUNCE_MAX),
+  /** members using English get this one; absent / empty = `text` */
+  textEn: z.string().trim().max(ANNOUNCE_MAX).optional(),
 });
 
 /**
@@ -110,12 +112,18 @@ export const ANNOUNCE_RECIPIENTS = {
   NOT: { notifyOff: { has: "news" } },
 } as const satisfies Prisma.UserWhereInput;
 
-async function announceRecipients(): Promise<string[]> {
+async function announceRecipients(): Promise<
+  { lineUserId: string; english: boolean }[]
+> {
   const rows = await db.user.findMany({
     where: ANNOUNCE_RECIPIENTS,
-    select: { lineUserId: true },
+    select: { lineUserId: true, locale: true },
   });
-  return rows.flatMap((r) => (r.lineUserId ? [r.lineUserId] : []));
+  return rows.flatMap((r) =>
+    r.lineUserId
+      ? [{ lineUserId: r.lineUserId, english: r.locale === "en" }]
+      : [],
+  );
 }
 
 /** LINE's figures as the announcement's allowance (nulls when unknown). */
@@ -133,20 +141,25 @@ export function announceQuota(
 
 /** How many it would reach and what is left of this month's allowance. */
 export async function previewLineAnnouncement(): Promise<LineAnnouncePreview> {
-  const [recipients, quota] = await Promise.all([
+  const [recipients, english, quota] = await Promise.all([
     db.user.count({ where: ANNOUNCE_RECIPIENTS }),
+    db.user.count({ where: { ...ANNOUNCE_RECIPIENTS, locale: "en" } }),
     lineQuota(),
   ]);
-  return { recipients, quota: announceQuota(quota) };
+  return { recipients, english, quota: announceQuota(quota) };
 }
 
-/** Send it (the caller checked admin and parsed `text`). */
+/**
+ * Send it (the caller checked admin and parsed the texts): `textEn` to
+ * members using English when given, `text` to everyone else.
+ */
 export async function sendLineAnnouncement(
   adminId: string,
   text: string,
+  textEn?: string,
 ): Promise<LineAnnounceSent> {
   if (!lineConfigured()) throw new ApiError(400, "not_configured");
-  const [ids, quota, last] = await Promise.all([
+  const [recipients, quota, last] = await Promise.all([
     announceRecipients(),
     lineQuota(),
     db.auditLog.findFirst({
@@ -155,10 +168,23 @@ export async function sendLineAnnouncement(
       select: { createdAt: true },
     }),
   ]);
-  if (!ids.length) throw new ApiError(400, "no_recipients");
+  if (!recipients.length) throw new ApiError(400, "no_recipients");
+  // One multicast list per text.
+  const lists = textEn
+    ? [
+        {
+          text,
+          ids: recipients.filter((r) => !r.english).map((r) => r.lineUserId),
+        },
+        {
+          text: textEn,
+          ids: recipients.filter((r) => r.english).map((r) => r.lineUserId),
+        },
+      ]
+    : [{ text, ids: recipients.map((r) => r.lineUserId) }];
+  const total = recipients.length;
   const { remaining } = announceQuota(quota);
-  if (remaining !== null && ids.length > remaining)
-    throw new ApiError(400, "quota");
+  if (remaining !== null && total > remaining) throw new ApiError(400, "quota");
   if (last && Date.now() - last.createdAt.getTime() < ANNOUNCE_GAP_MS)
     throw new ApiError(429, "too_soon");
   // LINE takes 500 recipients per request. Sent batch by batch so a failure
@@ -166,25 +192,28 @@ export async function sendLineAnnouncement(
   // immediate retry (ANNOUNCE_GAP_MS), which would reach them twice.
   let sent = 0;
   try {
-    for (let i = 0; i < ids.length; i += 500) {
-      const batch = ids.slice(i, i + 500);
-      await lineMulticast(batch, [{ type: "text", text }]);
-      sent += batch.length;
-    }
+    for (const list of lists)
+      for (let i = 0; i < list.ids.length; i += 500) {
+        const batch = list.ids.slice(i, i + 500);
+        await lineMulticast(batch, [{ type: "text", text: list.text }]);
+        sent += batch.length;
+      }
   } catch (e) {
     console.error("[line-announce] multicast failed", e);
     if (sent > 0)
       await audit(adminId, ANNOUNCE_ACTION, undefined, {
         recipients: sent,
-        intended: ids.length,
+        intended: total,
         partial: true,
         text,
+        textEn,
       });
     throw new ApiError(502, "line_failed", { sent });
   }
   await audit(adminId, ANNOUNCE_ACTION, undefined, {
     recipients: sent,
     text,
+    textEn,
   });
   return { sent };
 }

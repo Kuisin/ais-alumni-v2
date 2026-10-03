@@ -17,6 +17,8 @@ import {
   recipientUrl,
 } from "./links";
 import {
+  CONTENT_MAX,
+  clip,
   lineText,
   type NotifyParams,
   type RenderedNotification,
@@ -58,6 +60,15 @@ export type Notification = {
   params?:
     | NotifyParams
     | ((locale: Locale) => NotifyParams | Promise<NotifyParams>);
+  /**
+   * What it's about (catalog rules): a news post's title and summary, a
+   * message's text — only to members who may read it. Per language when a
+   * function; null = none.
+   */
+  content?:
+    | string
+    | null
+    | ((locale: Locale) => string | null | Promise<string | null>);
   /** Committee note etc. — email only, never on LINE or in the app. */
   note?: string | null;
   /**
@@ -194,7 +205,14 @@ export async function notifyBatch(
   for (const locale of LOCALES) {
     const params =
       typeof n.params === "function" ? await n.params(locale) : n.params;
-    rendered[locale] = await renderNotification(n.kind, locale, params);
+    const content =
+      typeof n.content === "function" ? await n.content(locale) : n.content;
+    rendered[locale] = await renderNotification(
+      n.kind,
+      locale,
+      params,
+      content,
+    );
   }
   const link =
     n.path && n.link !== false
@@ -243,7 +261,9 @@ export async function notifyBatch(
             category: spec.category,
             emoji: text.emoji,
             title: text.title,
-            body: text.body,
+            body: text.content
+              ? clip(text.content, CONTENT_MAX.push)
+              : text.body,
             path: n.path,
             receipt: link?.token,
             refId: n.refId,

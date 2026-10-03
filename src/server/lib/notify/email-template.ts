@@ -1,7 +1,7 @@
 import type { Locale } from "@/server/generated/prisma/enums";
 import { getTranslatorFor } from "@/server/i18n/translator";
 import { publicUrl } from "@/server/lib/urls";
-import type { RenderedNotification } from "./render";
+import { CONTENT_MAX, clip, type RenderedNotification } from "./render";
 
 const esc = (s: string) =>
   s
@@ -29,12 +29,14 @@ export async function renderEmail(input: {
     : t("email.greetingNoName");
   const settingsUrl = publicUrl("/settings#notifications");
   const why = t("email.why", { category: r.categoryLabel });
+  const content = r.content ? clip(r.content, CONTENT_MAX.email) : "";
 
   const text = [
     greeting,
     "",
     `${r.emoji} ${r.title}`,
     r.body,
+    content ? `\n${content}\n` : "",
     r.detail,
     note ? `\n${t("email.note")}:\n${note}` : "",
     url ? `\n${r.cta || url}: ${url}` : "",
@@ -63,6 +65,7 @@ export async function renderEmail(input: {
 <p style="margin:0 0 4px;font-size:12px;font-weight:600;color:#1e3a8a">${esc(r.categoryLabel)}</p>
 <h1 style="margin:0 0 12px;font-size:20px;line-height:1.4">${esc(r.emoji)} ${esc(r.title)}</h1>
 <p style="margin:0 0 8px">${esc(r.body)}</p>
+${content ? `<div style="margin:12px 0 16px;padding:12px 14px;background:#f8fafc;border-left:3px solid #1e3a8a;border-radius:6px;white-space:pre-line">${esc(content)}</div>` : ""}
 ${r.detail ? `<p style="margin:0;color:#334155">${esc(r.detail)}</p>` : ""}
 ${noteBlock}${button}
 </td></tr>

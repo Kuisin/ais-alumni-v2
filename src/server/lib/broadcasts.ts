@@ -8,6 +8,7 @@ import { blockedUserIds, isCurrentTeacher } from "@/server/lib/authz";
 import { db } from "@/server/lib/db";
 import { MESSAGES_ENABLED } from "@/server/lib/features";
 import { displayName } from "@/server/lib/format";
+import { markdownToLines } from "@/server/lib/markdown";
 import {
   estimateLinePushes,
   NOTIFY_USER_SELECT,
@@ -166,12 +167,14 @@ export async function sendBroadcast(params: {
     kind: "BROADCAST",
     refId: broadcast.id,
     dedupe: true,
-    // No content in the notification: members open it in the app, which
-    // also records that they read it.
+    // Its subject and text go with it; opening it in the app records that
+    // they read it.
     path: `/app/news/messages/${broadcast.id}`,
+    content: markdownToLines(body),
     params: async (locale) => {
       const t = await getTranslatorFor(locale, "broadcast");
       return {
+        subject: title,
         from: right.position
           ? t("fromPosition", {
               name: displayName(sender, locale),

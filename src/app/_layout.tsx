@@ -79,6 +79,10 @@ function Root() {
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="auth" options={{ headerShown: false }} />
             <Stack.Screen
+              name="notifications-intro"
+              options={{ headerShown: false, presentation: "fullScreenModal" }}
+            />
+            <Stack.Screen
               name="invite/[token]"
               options={{ headerShown: false }}
             />

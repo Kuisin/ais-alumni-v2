@@ -194,27 +194,36 @@ function AnnounceCard({
   const t = useTranslations("line.richMenu.admin.announce");
   const refresh = useRefreshAdmin();
   const [text, setText] = useState("");
+  const [textEn, setTextEn] = useState("");
   const [preview, setPreview] = useState<LineAnnouncePreview | null>(null);
   const [busy, setBusy] = useState<"preview" | "send" | null>(null);
   const [error, setError] = useState<AnnounceError | null>(null);
   const [sent, setSent] = useState<number | null>(null);
   const body = text.trim();
+  const bodyEn = textEn.trim() || undefined;
   const remaining =
     quota && quota.limit !== null
       ? Math.max(0, quota.limit - quota.used)
       : null;
-  const edit = (value: string) => {
-    setText(value);
+  const changed = () => {
     setPreview(null);
     setError(null);
     setSent(null);
+  };
+  const edit = (value: string) => {
+    setText(value);
+    changed();
+  };
+  const editEn = (value: string) => {
+    setTextEn(value);
+    changed();
   };
   const check = async () => {
     setBusy("preview");
     setError(null);
     setSent(null);
     try {
-      setPreview(await adminManageApi.previewLineAnnouncement(body));
+      setPreview(await adminManageApi.previewLineAnnouncement(body, bodyEn));
     } catch (e) {
       setError(announceError(e));
     } finally {
@@ -225,9 +234,10 @@ function AnnounceCard({
     setBusy("send");
     setError(null);
     try {
-      const res = await adminManageApi.sendLineAnnouncement(body);
+      const res = await adminManageApi.sendLineAnnouncement(body, bodyEn);
       setSent(res.sent);
       setText("");
+      setTextEn("");
       setPreview(null);
       await refresh("line");
     } catch (e) {
@@ -272,11 +282,27 @@ function AnnounceCard({
         hint={t("count", { count: text.length, max: ANNOUNCE_MAX })}
         style={styles.message}
       />
+      <TextField
+        label={t("labelEn")}
+        placeholder={t("placeholderEn")}
+        value={textEn}
+        onChangeText={editEn}
+        multiline
+        maxLength={ANNOUNCE_MAX}
+        editable={busy === null}
+        textAlignVertical="top"
+        hint={t("hintEn", { count: textEn.length, max: ANNOUNCE_MAX })}
+        style={styles.message}
+      />
       <Button
         variant="secondary"
         label={t("insertTemplate")}
         disabled={busy !== null}
-        onPress={() => edit(t("template"))}
+        onPress={() => {
+          setText(t("templateJa"));
+          setTextEn(t("templateEn"));
+          changed();
+        }}
       />
       {error ? (
         <Notice tone="error">
@@ -291,6 +317,14 @@ function AnnounceCard({
           <Text variant="small">
             {t("confirmRecipients", { count: preview.recipients })}
           </Text>
+          {bodyEn && preview.english !== undefined ? (
+            <Text variant="small" tone="muted">
+              {t("confirmLanguages", {
+                ja: preview.recipients - preview.english,
+                en: preview.english,
+              })}
+            </Text>
+          ) : null}
           <Text variant="small" tone="muted">
             {preview.quota.remaining !== null
               ? t("confirmRemaining", {

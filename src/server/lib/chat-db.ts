@@ -6,8 +6,10 @@ import {
   PositionKey,
   RoleKey,
 } from "@/server/generated/prisma/enums";
+import { getTranslatorFor } from "@/server/i18n/translator";
 import { AVATAR_SELECT } from "@/server/lib/avatar";
 import { desiredGroups, directKey, isAdult } from "@/server/lib/chat";
+import { chatGroupName } from "@/server/lib/chat-labels";
 import { db } from "@/server/lib/db";
 import {
   canHaveDirect,
@@ -22,7 +24,9 @@ import {
   DIRECT_CHAT_ENABLED,
   GRADUATE_CHATS_ENABLED,
 } from "@/server/lib/features";
+import { displayName } from "@/server/lib/format";
 import { NOTIFY_USER_SELECT, notifyBatch } from "@/server/lib/notify";
+import { clip } from "@/server/lib/notify/render";
 
 type Client = Prisma.TransactionClient | typeof db;
 
@@ -197,19 +201,33 @@ export const GROUP_SELECT = {
 } as const;
 
 /**
- * Daily digest: one LINE/email per member with unread messages from the
- * last day in groups they haven't muted. No content, only a count + link.
- * `now` is the digest's time (the job's slot), so a retry sends the same
- * day's digest; deduped per member and day, it reaches only those not
- * reached yet. Stops starting new sends at `deadline`.
+ * Daily digest: one email per member with unread messages from the last
+ * day in groups they haven't muted — how many in all, and per chat how
+ * many and the latest message (messages from people they blocked, or who
+ * blocked them, are left out). `now` is the digest's time (the job's slot),
+ * so a retry sends the same day's digest; deduped per member and day, it
+ * reaches only those not reached yet. Stops starting new sends at
+ * `deadline`.
  */
 export async function sendChatDigest(
   now: Date = new Date(),
   opts: { deadline?: number } = {},
 ): Promise<{ recipients: number; failed: number; remaining: number }> {
   const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const rows = await db.$queryRaw<{ userId: string; n: bigint }[]>`
-    SELECT cm."userId", count(*) AS n
+  const rows = await db.$queryRaw<
+    {
+      userId: string;
+      groupId: string;
+      n: bigint;
+      body: string;
+      senderId: string;
+      last: Date;
+    }[]
+  >`
+    SELECT cm."userId", m."groupId", count(*) AS n,
+      (array_agg(m.body ORDER BY m."createdAt" DESC))[1] AS body,
+      (array_agg(m."userId" ORDER BY m."createdAt" DESC))[1] AS "senderId",
+      max(m."createdAt") AS last
     FROM "ChatMessage" m
     JOIN "ChatMember" cm ON cm."groupId" = m."groupId"
     JOIN "User" u ON u.id = cm."userId"
@@ -219,36 +237,79 @@ export async function sendChatDigest(
       AND m."deletedAt" IS NULL
       AND NOT cm.muted
       AND u.state = 'ACTIVE'
-    GROUP BY cm."userId"`;
+      AND NOT EXISTS (
+        SELECT 1 FROM "Block" b
+        WHERE (b."blockerId" = cm."userId" AND b."blockedId" = m."userId")
+           OR (b."blockerId" = m."userId" AND b."blockedId" = cm."userId"))
+    GROUP BY cm."userId", m."groupId"`;
   if (rows.length === 0) return { recipients: 0, failed: 0, remaining: 0 };
-  const counts = new Map(rows.map((r) => [r.userId, Number(r.n)]));
-  const users = await db.user.findMany({
-    where: { id: { in: [...counts.keys()] } },
-    select: NOTIFY_USER_SELECT,
-  });
+  const byUser = new Map<string, typeof rows>();
+  for (const r of rows)
+    byUser.set(r.userId, [...(byUser.get(r.userId) ?? []), r]);
+  const [users, groups, senders] = await Promise.all([
+    db.user.findMany({
+      where: { id: { in: [...byUser.keys()] } },
+      select: NOTIFY_USER_SELECT,
+    }),
+    db.chatGroup.findMany({
+      where: { id: { in: [...new Set(rows.map((r) => r.groupId))] } },
+      select: GROUP_SELECT,
+    }),
+    db.user.findMany({
+      where: { id: { in: [...new Set(rows.map((r) => r.senderId))] } },
+      select: { id: true, nameRomaji: true, nameKanji: true },
+    }),
+  ]);
+  const groupById = new Map(groups.map((g) => [g.id, g]));
+  const senderById = new Map(senders.map((u) => [u.id, u]));
+  const t = {
+    ja: await getTranslatorFor("ja", "notifications"),
+    en: await getTranslatorFor("en", "notifications"),
+  };
+  const chatT = {
+    ja: await getTranslatorFor("ja", "chat"),
+    en: await getTranslatorFor("en", "chat"),
+  };
+  /** Per chat, newest first: "・<chat>（3件）<who>: <latest>". */
+  const summary = (chats: typeof rows, locale: "ja" | "en") =>
+    [...chats]
+      .sort((a, b) => b.last.getTime() - a.last.getTime())
+      .slice(0, DIGEST_CHATS)
+      .map((r) => {
+        const g = groupById.get(r.groupId);
+        const sender = senderById.get(r.senderId);
+        const who = sender ? displayName(sender, locale) : "—";
+        const direct = g?.kind === ChatGroupKind.DIRECT;
+        return t[locale]("digestLine", {
+          chat: direct || !g ? who : chatGroupName(chatT[locale], g, locale),
+          count: Number(r.n),
+          text: clip(
+            (direct ? "" : `${who}: `) + r.body.replace(/\s+/g, " ").trim(),
+            DIGEST_TEXT,
+          ),
+        });
+      })
+      .join("\n");
   const day = new Date(now.getTime() + 9 * 3600_000).toISOString().slice(0, 10);
-  // One notification call per count, so each member sees their own number.
-  const byCount = new Map<number, typeof users>();
-  for (const u of users) {
-    const n = counts.get(u.id) ?? 0;
-    byCount.set(n, [...(byCount.get(n) ?? []), u]);
-  }
   let recipients = 0;
   let failed = 0;
   let remaining = 0;
-  for (const [count, group] of byCount) {
+  // One notification per member: each sees their own chats.
+  for (const u of users) {
     if (opts.deadline !== undefined && Date.now() > opts.deadline) {
-      remaining += group.length;
+      remaining++;
       continue;
     }
+    const chats = byUser.get(u.id) ?? [];
     const res = await notifyBatch(
-      group,
+      [u],
       {
         kind: "CHAT_DIGEST",
         refId: day,
         dedupe: true,
         path: "/app/chat",
-        params: { count },
+        params: { count: chats.reduce((sum, r) => sum + Number(r.n), 0) },
+        content: (locale) => summary(chats, locale),
       },
       { deadline: opts.deadline },
     );
@@ -258,6 +319,10 @@ export async function sendChatDigest(
   }
   return { recipients, failed, remaining };
 }
+
+/** The digest lists this many chats, each latest message this long. */
+const DIGEST_CHATS = 8;
+const DIGEST_TEXT = 60;
 
 export type DirectDenial =
   | "disabled"
