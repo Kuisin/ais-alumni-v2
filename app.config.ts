@@ -29,6 +29,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: IDENTIFIER,
     supportsTablet: false,
+    // Universal links: links to the site open the app when it's installed
+    // (public/.well-known/apple-app-site-association; +native-intent.tsx).
+    // ais.kai-lab.net is the old website, whose links are still around.
+    associatedDomains: [
+      "applinks:ais-alumni.kai-lab.net",
+      "applinks:ais-alumni-dev.kai-lab.net",
+      "applinks:ais.kai-lab.net",
+    ],
     infoPlist: {
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,

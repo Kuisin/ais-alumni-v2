@@ -116,6 +116,11 @@ project id in the config Expo Go needs no sign-in (with one, run
   one are ignored, never opened in a browser or web view. The path rules
   are `src/lib/site-paths.ts` (no React Native: the server's `/n/…` links
   use them too); admin mode's through `src/features/admin/paths.ts`.
+  On iOS, links to ais-alumni(-dev).kai-lab.net and the old ais.kai-lab.net
+  open the app when it's installed (universal links: `associatedDomains`,
+  `public/.well-known/apple-app-site-association` — not /api, /auth,
+  /donate, /install, /moved); `src/app/+native-intent.tsx` maps the old
+  site's paths and resolves `/n/…` through the server.
 - **Realtime** (`src/lib/realtime.tsx`): the website's signal-only Supabase
   Broadcast channels; topics come from `/me` (and room responses).
 - **Notifications** (`src/lib/push-core.ts`, `src/lib/push.tsx`; server:
