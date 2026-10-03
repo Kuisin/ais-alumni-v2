@@ -14,6 +14,7 @@ import {
   UpdateRequired,
   useUpdateRequired,
 } from "@/features/update/update-required";
+import { startAnalytics } from "@/lib/analytics";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { I18nProvider } from "@/lib/i18n";
 import { stackScreenOptions } from "@/lib/navigation";
@@ -22,6 +23,8 @@ import { persistOptions, queryClient } from "@/lib/query";
 import { RealtimeProvider } from "@/lib/realtime";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+// Page views on the web (Vercel Web Analytics); nothing in the apps.
+startAnalytics();
 
 // A screen that fails to render shows what went wrong, not a closed app.
 export { CrashScreen as ErrorBoundary } from "@/features/errors/crash-screen";
