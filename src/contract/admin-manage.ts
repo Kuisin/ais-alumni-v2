@@ -238,12 +238,21 @@ export type AdminLine = {
   announce?: { recipients: number; configured: boolean };
 };
 
-/** POST /admin/line/announce { intent: "preview" | "send", text } */
-export type LineAnnounceInput = { intent: "preview" | "send"; text: string };
+/**
+ * POST /admin/line/announce { intent: "preview" | "send", text, textEn? }.
+ * textEn: what members using English get (absent: everyone gets `text`).
+ */
+export type LineAnnounceInput = {
+  intent: "preview" | "send";
+  text: string;
+  textEn?: string;
+};
 
 /** intent "preview" (nulls: no limit, or LINE didn't answer) */
 export type LineAnnouncePreview = {
   recipients: number;
+  /** of them, members using English (they get textEn when given) */
+  english?: number;
   quota: { limit: number | null; used: number; remaining: number | null };
 };
 

@@ -108,11 +108,10 @@
         "recipients": "Recipients: {count}",
         "remaining": "Left this month: {count}",
         "notConfigured": "The server has no LINE sending settings (Messaging API).",
-        "label": "Message",
+        "label": "Message (Japanese)",
         "placeholder": "The text to send on LINE",
         "count": "{count} / {max} characters",
-        "insertTemplate": "Insert the beta tester invitation",
-        "template": "📱 We're looking for beta testers for the AIS Alumni iPhone app\n\nBefore it's released on the App Store, we'd like members to try the beta and tell us what they think.\n\nWhat the app can do\n• Chat and notice notifications arrive right away\n• It opens fast and shows what you last saw, even with a weak signal\n• Reply straight from a notification\n• Show your QR ticket at event check-in in a tap\n\nHow to join ▶ https://ais-alumni.kai-lab.net/install",
+        "insertTemplate": "Insert the app release message (Japanese and English)",
         "preview": "Review before sending",
         "previewing": "Checking…",
         "confirmTitle": "Send this on LINE?",
@@ -132,7 +131,13 @@
           "line_failed": "LINE couldn't send it. Some people may have received it — check before trying again later.",
           "invalid": "Enter a message of 1–{max} characters.",
           "failed": "Couldn't send. Check your connection and try again."
-        }
+        },
+        "labelEn": "English",
+        "placeholderEn": "Text for members using English (optional)",
+        "hintEn": "Members using English get this one. Leave it empty to send the Japanese text to everyone. ({count} / {max} characters)",
+        "confirmLanguages": "Japanese: {ja} · English: {en}",
+        "templateJa": "📱 AIS同窓会アプリ（iPhone版）のベータ版を公開しました\n\nAIS同窓会のアプリを、App Store での公開に先立ってベータ版（TestFlight）でお試しいただけます。ぜひ使ってみて、感想をお聞かせください。\n\nアプリ版のおすすめポイント\n・チャットのメッセージやニュースが、内容つきの通知ですぐ届きます\n・通知からそのまま返信できます\n・すばやく開けて、電波が弱いときも前回の内容を見られます\n・イベント受付のQRチケットをすぐに出せます\n\nインストール方法はこちら ▶ https://ais-alumni.kai-lab.net/install\n\n※ Android版は準備中です。ウェブ版も引き続きご利用いただけます。",
+        "templateEn": "📱 The AIS Alumni iPhone app is now in beta\n\nBefore its App Store release, you can try the AIS Alumni app as a beta (TestFlight). Please give it a try and tell us what you think.\n\nWhy we recommend the app\n• Chat messages and news arrive right away as notifications, with what they say\n• Reply straight from a notification\n• It opens fast and shows what you last saw, even with a weak signal\n• Show your QR ticket at event check-in in a tap\n\nHow to install ▶ https://ais-alumni.kai-lab.net/install\n\nThe Android version is on its way, and the website keeps working as before."
       }
     },
     "replies": {
