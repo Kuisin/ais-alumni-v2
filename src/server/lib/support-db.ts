@@ -1,3 +1,4 @@
+import { webPathFor } from "@/lib/site-paths";
 import { AccountState, type Locale } from "@/server/generated/prisma/enums";
 import { getTranslatorFor } from "@/server/i18n/translator";
 import { db } from "@/server/lib/db";
@@ -94,7 +95,7 @@ export async function createSupportRequest(input: SupportInput) {
         "",
         t("email.admin.reply"),
       ].join("\n"),
-      url: publicUrl(`/${a.locale}/app/admin/support#${req.id}`),
+      url: publicUrl(webPathFor(`/app/admin/support#${req.id}`)),
     });
   });
   const receipt = (async () => {

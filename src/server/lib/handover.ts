@@ -82,7 +82,7 @@ export async function startHandover(
       parent: displayName(parent, locale),
       child: displayName(child, locale),
     }),
-    url: publicUrl(`/${locale}/app/handover/${token}`),
+    url: publicUrl(`/handover/${token}`),
   });
   await audit(parent.id, "family.handover_started", {
     type: "User",

@@ -42,7 +42,7 @@ function toHtml(msg: EmailMessage): string {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden">
 <tr><td style="background:#1e3a8a;color:#ffffff;padding:16px 24px;font-weight:700;font-size:16px">🎓 AIS同窓会 · AIS Alumni</td></tr>
 <tr><td style="padding:24px;font-size:15px;line-height:1.7">${body}${cta}</td></tr>
-<tr><td style="padding:16px 24px;background:#f8fafc;color:#64748b;font-size:12px">AIS同窓会委員会 · AIS Alumni Committee · ais.kai-lab.net</td></tr>
+<tr><td style="padding:16px 24px;background:#f8fafc;color:#64748b;font-size:12px">AIS同窓会委員会 · AIS Alumni Committee · ais-alumni.kai-lab.net</td></tr>
 </table></td></tr></table></body></html>`;
 }
 

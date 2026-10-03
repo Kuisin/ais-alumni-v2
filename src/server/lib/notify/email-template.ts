@@ -27,7 +27,7 @@ export async function renderEmail(input: {
   const greeting = input.recipientName
     ? t("email.greeting", { name: input.recipientName })
     : t("email.greetingNoName");
-  const settingsUrl = publicUrl(`/${locale}/app/settings#notifications`);
+  const settingsUrl = publicUrl("/settings#notifications");
   const why = t("email.why", { category: r.categoryLabel });
 
   const text = [

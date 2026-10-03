@@ -4,6 +4,7 @@ import type {
   LineAnnounceSent,
 } from "@contract/admin-manage";
 import { z } from "zod";
+import { webPathFor } from "@/lib/site-paths";
 import type { Prisma } from "@/server/generated/prisma/client";
 import { audit } from "@/server/lib/audit";
 import { db } from "@/server/lib/db";
@@ -56,7 +57,7 @@ export async function loadAdminLine(): Promise<AdminLine> {
       items: RICH_MENU_ITEMS.map((i) => ({
         key: i.key,
         label: l.labels[i.key],
-        path: `/${locale}${i.path}`,
+        path: webPathFor(i.path),
       })),
     })),
   };

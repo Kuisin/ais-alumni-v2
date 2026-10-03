@@ -52,7 +52,9 @@ export function checkInPath(eventId: string): string {
 
 /** What the QR code encodes. */
 export function ticketUrl(eventId: string, token: string): string {
-  return publicUrl(`${checkInPath(eventId)}?t=${encodeURIComponent(token)}`);
+  return publicUrl(
+    `/events/${eventId}/check-in?t=${encodeURIComponent(token)}`,
+  );
 }
 
 /** Accepts a scanned link (any host/locale) or a bare token. */

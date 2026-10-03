@@ -141,6 +141,8 @@ project id in the config Expo Go needs no sign-in (with one, run
   Sending on LINE needs `LINE_MESSAGING_CHANNEL_ID` and
   `LINE_MESSAGING_CHANNEL_SECRET` (the Messaging API channel) on the
   server; without them LINE sends fail and fall back to email.
+  Links in LINE and email use `PUBLIC_SITE_URL` (Vercel env, not secret;
+  default ais-alumni.kai-lab.net — staging sends production links too).
 - **Donations (寄付)** (`src/server/lib/donations.ts`, `src/app/donate.tsx`):
   Stripe Checkout, once or monthly, from anyone (a signed-in member's
   donation is linked through their Stripe Customer's metadata.userId).
