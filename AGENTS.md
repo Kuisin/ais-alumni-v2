@@ -143,6 +143,10 @@ project id in the config Expo Go needs no sign-in (with one, run
   admin tasks — on LINE if they linked it and follow the Official Account,
   else by email; bulk mail (ニュース, reminders, unread summaries) is always
   email (`src/server/lib/notify/catalog.ts`, `route.ts`).
+  News, お知らせ and chat notifications carry their content (news: the
+  post's title and a summary; chat: the message's text; the 20:00 chat
+  email: per chat the unread count and latest message), shortened per
+  channel (`src/server/lib/notify/render.ts`).
   Sending on LINE needs `LINE_MESSAGING_CHANNEL_ID` and
   `LINE_MESSAGING_CHANNEL_SECRET` (the Messaging API channel) on the
   server; without them LINE sends fail and fall back to email.

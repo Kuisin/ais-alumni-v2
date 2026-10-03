@@ -14,8 +14,8 @@ import { membersWithPush } from "./devices";
  *  - groups: members mentioned by name (CHAT_MENTION), and members who
  *    chose "every message" for the group (ChatMember.pushAll, not muted;
  *    CHAT_GROUP). @全員 isn't pushed (the daily summary covers it).
- * Never the message text (catalog rules). One notification per chat is
- * kept on the phone (collapse), so a burst shows as the latest.
+ * With the message's text (catalog rules: content). One notification per
+ * chat is kept on the phone (collapse), so a burst shows as the latest.
  *
  * Members without the app keep the 5-minute LINE / email notice
  * (src/lib/jobs/chat-unread.ts); those pushed here are logged under the
@@ -25,6 +25,8 @@ export async function pushChatMessage(input: {
   groupId: string;
   senderId: string;
   mentionUserIds: readonly string[];
+  /** the message's text */
+  body: string;
 }): Promise<void> {
   try {
     const group = await db.chatGroup.findUnique({
@@ -91,6 +93,12 @@ export async function pushChatMessage(input: {
         refId: input.groupId,
         path: `/app/chat/${input.groupId}`,
         params,
+        // In a group the push's title is the group, so the text says who.
+        content:
+          kind === "CHAT_GROUP"
+            ? (locale) =>
+                `${sender ? displayName(sender, locale) : "—"}: ${input.body}`
+            : input.body,
         pushOnly: true,
         link: false,
         push: {

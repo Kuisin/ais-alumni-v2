@@ -6,8 +6,13 @@
  *  - title: short, what happened (≤ ~20 chars in Japanese). No brand prefix
  *    on LINE (the official account name shows); email subjects get
  *    「【AIS同窓会】」.
- *  - body: one sentence, who / what — never private content (message text,
- *    post bodies, committee notes). LINE shows only title + body + link.
+ *  - body: one sentence, who / what.
+ *  - content (news, お知らせ, chat): what it's about — a news post's title
+ *    and summary, a message's text — sent only to members who may read it,
+ *    shortened per channel (render.ts CONTENT_MAX). Other kinds carry none:
+ *    committee notes and account details stay in the email / app.
+ *  - push / LINE: title + body (a push shows the content instead of the
+ *    body) + content + link.
  *  - email: the same, plus `detail` (what to do next) and the committee
  *    note if any, in a branded wrapper with a button and a footer saying
  *    why it was sent and where to change settings.

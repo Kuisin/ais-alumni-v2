@@ -232,6 +232,7 @@ export async function sendChatMessageAction(
       groupId: g.groupId,
       senderId: g.user.id,
       mentionUserIds: mentioned,
+      body: row.body,
     }),
   );
   return { ok: true, message };

@@ -7,8 +7,9 @@ import type { ExpoMessage } from "./expo";
  * reports `receipt` (the notification's short-link token) so the open counts
  * as a read receipt, like opening the LINE / email link.
  *
- * Texts follow the catalog rules (src/lib/notify/catalog.ts): title and one
- * sentence, never private content (message text, post bodies, notes).
+ * Texts follow the catalog rules (src/lib/notify/catalog.ts): the title,
+ * and as the body the content (a news summary, a message's text) when the
+ * kind carries one, else the one sentence. Never committee notes.
  */
 
 /** Push payload `data` (keep additive: installed apps read it). */

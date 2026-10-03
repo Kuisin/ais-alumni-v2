@@ -85,22 +85,22 @@
       "cta": "See details"
     },
     "NEWS": {
-      "title": "New news from the committee",
-      "body": "The AIS Alumni Committee posted news.",
-      "detail": "Please open the app to read it.",
-      "cta": "Read the news"
+      "title": "{title}",
+      "body": "News from AIS Alumni.",
+      "detail": "Read the rest, attachments and any questions in the app.",
+      "cta": "Read more"
     },
     "NEWS_REMINDER": {
       "title": "A response deadline is near",
-      "body": "There's a news post you haven't responded to yet.",
-      "detail": "Please check it and respond in the app before the deadline.",
+      "body": "Responses to “{title}” close {deadline}.",
+      "detail": "We're sending this to members who haven't responded yet. Please respond in the app.",
       "cta": "Respond"
     },
     "BROADCAST": {
       "title": "A message from {from}",
-      "body": "{from} sent you a message.",
-      "detail": "Please open the app to read it.",
-      "cta": "Read the message"
+      "body": "“{subject}”",
+      "detail": "Opening it in the app marks it as read.",
+      "cta": "Open the message"
     },
     "EVENT_REMINDER_7D": {
       "title": "Event next week",
@@ -115,21 +115,21 @@
       "cta": "View ticket"
     },
     "CHAT_MENTION": {
-      "title": "You were mentioned",
-      "body": "{name} mentioned you in a chat (unread).",
-      "detail": "Please open the app to read it.",
-      "cta": "Open chat"
+      "title": "{name} mentioned you",
+      "body": "{name} mentioned you in {group}.",
+      "detail": "Reply in the app.",
+      "cta": "Open the chat"
     },
     "CHAT_DIGEST": {
-      "title": "You have unread chat messages",
-      "body": "You have {count, plural, one {# unread message} other {# unread messages}} in your group chats.",
+      "title": "{count, plural, one {# unread chat message} other {# unread chat messages}}",
+      "body": "Here's what's unread in your group chats from the last 24 hours.",
       "detail": "We send this at 8 pm only when there are unread messages. You can turn it off per group in the chat menu.",
       "cta": "Open chat"
     },
     "CHAT_GROUP": {
-      "title": "New message in a group",
-      "body": "{name} posted in {group}.",
-      "detail": "Open the app to read it.",
+      "title": "{group}",
+      "body": "{name} posted.",
+      "detail": "Reply in the app.",
       "cta": "Open the chat"
     },
     "FOLLOW_REQUEST": {
@@ -235,9 +235,9 @@
       "cta": "Review"
     },
     "CHAT_DIRECT": {
-      "title": "You have a new message",
+      "title": "Message from {name}",
       "body": "{name} sent you a direct message.",
-      "detail": "Open the app to read it.",
+      "detail": "Reply in the app.",
       "cta": "Open the chat"
     }
   },
@@ -298,5 +298,7 @@
     "testTitle": "Test notification",
     "testBody": "Notifications reach this device.",
     "channelDefault": "Notifications"
-  }
+  },
+  "untitledNews": "New post",
+  "digestLine": "• {chat} ({count}): {text}"
 }

@@ -1,4 +1,6 @@
 import { AccountState, ChatGroupKind } from "@/server/generated/prisma/enums";
+import { getTranslatorFor } from "@/server/i18n/translator";
+import { chatGroupName } from "@/server/lib/chat-labels";
 import {
   alreadyNotified,
   pickUnreadNotices,
@@ -18,7 +20,8 @@ import { NOTIFY_USER_SELECT, notify } from "@/server/lib/notify";
 
 /**
  * Every minute: 1:1 messages and personal @mentions unread for 5 minutes →
- * one LINE (or email) notice per unread streak (src/lib/chat-unread.ts).
+ * one LINE (or email) notice per unread streak (src/lib/chat-unread.ts),
+ * with the text of the first unread message.
  */
 export async function sendUnreadChatNotices(ctx: JobContext): Promise<JobStep> {
   const now = new Date();
@@ -38,6 +41,7 @@ export async function sendUnreadChatNotices(ctx: JobContext): Promise<JobStep> {
         groupId: true,
         userId: true,
         createdAt: true,
+        body: true,
         group: {
           select: { members: { select: { userId: true, lastReadAt: true } } },
         },
@@ -55,7 +59,14 @@ export async function sendUnreadChatNotices(ctx: JobContext): Promise<JobStep> {
         groupId: true,
         userId: true,
         createdAt: true,
+        body: true,
         mentionUserIds: true,
+        group: {
+          select: {
+            kind: true,
+            cohort: { select: { number: true, elementaryEndYear: true } },
+          },
+        },
       },
     }),
   ]);
@@ -122,6 +133,10 @@ export async function sendUnreadChatNotices(ctx: JobContext): Promise<JobStep> {
     select: { ...NOTIFY_USER_SELECT, state: true },
   });
   const byId = new Map(people.map((p) => [p.id, p]));
+  const bodies = new Map(
+    [...direct, ...mentions].map((m) => [m.id, m.body] as const),
+  );
+  const groups = new Map(mentions.map((m) => [m.groupId, m.group] as const));
   let sent = 0;
   let failed = 0;
   for (const n of due) {
@@ -134,9 +149,20 @@ export async function sendUnreadChatNotices(ctx: JobContext): Promise<JobStep> {
         kind: n.kind,
         refId: n.groupId,
         path: `/app/chat/${n.groupId}`,
-        params: (locale) => ({
-          name: sender ? displayName(sender, locale) : "—",
-        }),
+        params: async (locale) => {
+          const group = groups.get(n.groupId);
+          return {
+            name: sender ? displayName(sender, locale) : "—",
+            group: group
+              ? chatGroupName(
+                  await getTranslatorFor(locale, "chat"),
+                  group,
+                  locale,
+                )
+              : "",
+          };
+        },
+        content: bodies.get(n.messageId) ?? null,
       });
       sent++;
     } catch (e) {

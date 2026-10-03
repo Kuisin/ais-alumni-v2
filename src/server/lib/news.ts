@@ -1,9 +1,12 @@
 import type { Prisma } from "@/server/generated/prisma/client";
 import { AccountState } from "@/server/generated/prisma/enums";
+import { getTranslatorFor } from "@/server/i18n/translator";
 import { awaitingApproval } from "@/server/lib/approval";
 import { audienceWhere, type Targeted } from "@/server/lib/audience";
 import { db } from "@/server/lib/db";
+import { localized } from "@/server/lib/format";
 import { deadlineFrom, leaseUntil } from "@/server/lib/jobs/budget";
+import { markdownToLines } from "@/server/lib/markdown";
 import { audienceUserWhere, specFromPost } from "@/server/lib/news-audience";
 import {
   NOTIFY_USER_SELECT,
@@ -136,8 +139,16 @@ export async function sendNewsNotification(
         kind: "NEWS",
         refId: post.id,
         dedupe: true,
-        // No content in the notification; the post is read in the app.
         path: `/app/news/${post.id}`,
+        // The post's title as the headline and a summary of it (only
+        // members it is addressed to get it).
+        params: async (locale) => ({
+          title:
+            localized(post.titleJa, post.titleEn, locale).text ||
+            (await getTranslatorFor(locale, "notifications"))("untitledNews"),
+        }),
+        content: (locale) =>
+          markdownToLines(localized(post.bodyJa, post.bodyEn, locale).text),
       },
       { deadline },
     );
