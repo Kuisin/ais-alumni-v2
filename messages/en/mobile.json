@@ -191,33 +191,35 @@
     "hint": "Showing saved data"
   },
   "install": {
-    "title": "Install the app",
-    "intro": "AIS Alumni has an iPhone app: notifications arrive right away and it opens fast. It isn't on the App Store yet, so for now you install it through Apple's TestFlight app (free).",
-    "stepsTitle": "How to install (iPhone)",
+    "title": "Beta test the app",
+    "intro": "We're getting the AIS Alumni iPhone app ready for the App Store. Before it's released, we're looking for testers to try the beta and tell us what they find. You join the beta through Apple's TestFlight app (free).",
+    "stepsTitle": "Join the beta (iPhone)",
     "steps": [
       "Install “TestFlight” from the App Store.",
-      "Tap “Open in TestFlight” below.",
+      "Tap “Join the beta in TestFlight” below.",
       "When TestFlight opens, tap “Accept”, then “Install”.",
-      "Open “AIS Alumni” on your Home Screen and sign in the same way as on the web (email code or LINE)."
+      "Open “AIS Alumni” on your Home Screen, sign in the same way as on the web (email code or LINE), and use it as you normally would.",
+      "Tell us about bugs or anything awkward with “Send Beta Feedback” in TestFlight, or Contact us in the app."
     ],
     "getTestflight": "Get TestFlight (App Store)",
-    "openTestflight": "Open in TestFlight",
+    "openTestflight": "Join the beta in TestFlight",
     "openAppStore": "Open in the App Store",
     "storeIntro": "The AIS Alumni iPhone app is on the App Store.",
-    "notReady": "The invitation link isn't ready yet. You'll be able to install from here once it's open.",
+    "notReady": "The beta isn't open yet. You'll be able to join from here when it starts.",
     "lineNote": "TestFlight may not open from LINE's in-app browser. Choose “Open in Safari” from the menu at the bottom right (or top right), then try again.",
     "notes": [
-      "The TestFlight version needs updating about every 90 days (tap “Update” in the TestFlight app).",
+      "A beta is still in development, so it may have bugs. New beta versions arrive through the TestFlight app.",
+      "Once the app is on the App Store, you'll be able to install it straight from this page.",
       "An Android version is on the way. Until then, please use this web version."
     ],
     "prompt": {
-      "title": "Get the app",
-      "body": "Instant notifications, opens fast, reply from a notification.",
-      "open": "How to install",
+      "title": "Try the app's beta",
+      "body": "Join the beta test before the App Store release and tell us what you think.",
+      "open": "How to join",
       "later": "Later"
     },
     "benefits": {
-      "title": "What's better in the app",
+      "title": "What the app can do",
       "items": [
         [
           "Notifications right away",
