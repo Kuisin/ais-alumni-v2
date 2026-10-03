@@ -1,3 +1,4 @@
+import { webPathFor } from "@/lib/site-paths";
 import { AccountState, ChatGroupKind } from "@/server/generated/prisma/enums";
 import { getTranslatorFor } from "@/server/i18n/translator";
 import {
@@ -39,7 +40,7 @@ export async function lineReplyFor(
     return [
       {
         type: "text",
-        text: `${ja("reply.notLinked")}\n${en("reply.notLinked")}\n\n${publicUrl("/ja/app/settings#line")}`,
+        text: `${ja("reply.notLinked")}\n${en("reply.notLinked")}\n\n${publicUrl(webPathFor("/app/settings#line"))}`,
       },
     ];
   }
@@ -49,7 +50,7 @@ export async function lineReplyFor(
     return [
       {
         type: "text",
-        text: `${t("reply.notActive")}\n\n${publicUrl(`/${locale}/app`)}`,
+        text: `${t("reply.notActive")}\n\n${publicUrl("/")}`,
       },
     ];
   }

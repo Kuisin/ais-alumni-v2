@@ -1,3 +1,4 @@
+import { webPathFor } from "@/lib/site-paths";
 import { getTranslatorFor } from "@/server/i18n/translator";
 import {
   CHAT_REPORT_LIMITS,
@@ -73,7 +74,7 @@ export async function createChatReport(input: {
         reason: t(`report.reasons.${input.reason}`),
       }),
       text: t("report.email.text"),
-      url: publicUrl(`/${a.locale}/app/admin/chat#${report.id}`),
+      url: publicUrl(webPathFor(`/app/admin/chat#${report.id}`)),
     });
   });
   for (const r of await Promise.allSettled(sends))

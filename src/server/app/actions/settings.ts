@@ -3,6 +3,7 @@
 import { refresh } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
+import { webPathFor } from "@/lib/site-paths";
 import { signIn, signOut } from "@/server/auth";
 import {
   AccountState,
@@ -340,7 +341,7 @@ export async function emailChangeAction(
       );
 
       const tr = await getTranslatorFor(user.locale, "settings");
-      const settingsUrl = publicUrl(`/${user.locale}/app/settings`);
+      const settingsUrl = publicUrl(webPathFor("/app/settings"));
       const sends: Promise<void>[] = [
         sendEmail({
           to: email,
