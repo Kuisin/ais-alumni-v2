@@ -20,7 +20,12 @@
     "lineUnlinked": "Not linked",
     "adminOnly": "Admins only",
     "more": "Filters",
-    "activeCount": "{count} on"
+    "activeCount": "{count} on",
+    "app": "App",
+    "appAny": "Using the app",
+    "appIos": "iOS app",
+    "appAndroid": "Android app",
+    "appNone": "Not using the app"
   },
   "columns": {
     "name": "Name",
@@ -28,10 +33,13 @@
     "state": "State",
     "roles": "Roles",
     "line": "LINE",
-    "created": "Joined"
+    "created": "Joined",
+    "app": "App"
   },
   "badge": {
-    "admin": "Admin"
+    "admin": "Admin",
+    "appIos": "iOS app",
+    "appAndroid": "Android app"
   },
   "line": {
     "notLinked": "Not linked",
@@ -42,6 +50,14 @@
       "linkedNotFollowing": "Linked",
       "following": "Following"
     }
+  },
+  "app": {
+    "none": "Not in use",
+    "ios": "iOS",
+    "android": "Android",
+    "lastUsed": "last used {date}",
+    "pushOn": "notifications on",
+    "pushOff": "notifications off"
   },
   "detail": {
     "title": "Member",

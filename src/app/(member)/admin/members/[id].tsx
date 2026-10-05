@@ -7,7 +7,7 @@ import { useTranslations } from "use-intl";
 import { AccountCard } from "@/features/admin/members/account-card";
 import { useAdminMember } from "@/features/admin/members/api";
 import { AuditCard } from "@/features/admin/members/audit-card";
-import { StateBadge } from "@/features/admin/members/badges";
+import { AppBadges, StateBadge } from "@/features/admin/members/badges";
 import { FamilyCard } from "@/features/admin/members/family-card";
 import { HistoryCard } from "@/features/admin/members/history-card";
 import { MergeCard } from "@/features/admin/members/merge-card";
@@ -16,7 +16,7 @@ import { ProfileCard } from "@/features/admin/members/profile-card";
 import { RolesCard } from "@/features/admin/members/roles-card";
 import { AdminCard, Facts, Notice } from "@/features/admin/parts";
 import { useAuth } from "@/lib/auth";
-import { formatDateTime } from "@/lib/format";
+import { formatDate, formatDateTime } from "@/lib/format";
 import { Badge, QueryState, Screen, space, Text } from "@/ui";
 
 /**
@@ -84,6 +84,9 @@ function Header({ m }: { m: AdminMemberDetail }) {
       ) : null}
       <View style={styles.badges}>
         <StateBadge state={m.state} label={m.stateLabel} />
+        <AppBadges
+          platforms={[...new Set(m.devices?.map((d) => d.platform))]}
+        />
       </View>
     </View>
   );
@@ -108,6 +111,29 @@ function Overview({ m }: { m: AdminMemberDetail }) {
             t("columns.line"),
             `${t(`line.${m.line.status}`)}${m.line.displayName ? ` · ${m.line.displayName}` : ""}`,
           ],
+          ...(m.devices
+            ? ([
+                [
+                  t("columns.app"),
+                  m.devices.length
+                    ? m.devices
+                        .map((d) =>
+                          [
+                            t(`app.${d.platform}`),
+                            d.name,
+                            t("app.lastUsed", {
+                              date: formatDate(d.lastUsedAt, locale),
+                            }),
+                            d.push ? t("app.pushOn") : t("app.pushOff"),
+                          ]
+                            .filter(Boolean)
+                            .join(" · "),
+                        )
+                        .join("\n")
+                    : t("app.none"),
+                ],
+              ] as [string, string][])
+            : []),
           [t("detail.providers"), m.providers.join(", ")],
           [t("detail.notifyVia"), m.notifyVia],
           [t("columns.created"), formatDateTime(m.createdAt, locale)],

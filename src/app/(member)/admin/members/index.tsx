@@ -21,7 +21,11 @@ import {
   NO_FILTERS,
   useAdminMembers,
 } from "@/features/admin/members/api";
-import { LineDot, StateBadge } from "@/features/admin/members/badges";
+import {
+  AppBadges,
+  LineDot,
+  StateBadge,
+} from "@/features/admin/members/badges";
 import { Picker } from "@/features/admin/parts";
 import { Chips } from "@/features/people/choices";
 import { useAuth } from "@/lib/auth";
@@ -43,7 +47,7 @@ import {
 
 /**
  * 会員 (the website's /app/admin/members): search by name, email or ID,
- * filter by state, 区分, LINE and admins; 25 at a time, newest first.
+ * filter by state, 区分, LINE, the native app and admins; 25 at a time, newest first.
  * The website's table is a list of cards here.
  */
 export default function AdminMembersScreen() {
@@ -62,6 +66,7 @@ export default function AdminMembersScreen() {
     filters.state,
     filters.role,
     filters.line,
+    filters.app,
     filters.admin,
   ].filter(Boolean).length;
   const filtered = Boolean(filters.q) || secondary > 0;
@@ -152,6 +157,18 @@ export default function AdminMembersScreen() {
               ]}
               value={filters.line}
               onChange={(line) => set({ line })}
+            />
+            <Picker
+              label={t("filters.app")}
+              choices={[
+                any,
+                { value: "any", label: t("filters.appAny") },
+                { value: "ios", label: t("filters.appIos") },
+                { value: "android", label: t("filters.appAndroid") },
+                { value: "none", label: t("filters.appNone") },
+              ]}
+              value={filters.app}
+              onChange={(app) => set({ app })}
             />
             <Chips
               label={t("badge.admin")}
@@ -263,6 +280,7 @@ function MemberRow({ m, onPress }: { m: AdminMemberRow; onPress: () => void }) {
         {m.roles.map((r) => (
           <Badge key={r} label={r} />
         ))}
+        <AppBadges platforms={m.app} />
       </View>
       <View style={styles.meta}>
         <LineDot status={m.line} />

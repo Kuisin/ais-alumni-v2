@@ -31,6 +31,8 @@ export type MemberFilters = {
   state: string;
   role: string;
   line: string;
+  /** "" | "any" | "ios" | "android" | "none" — the native app */
+  app: string;
   admin: boolean;
 };
 
@@ -39,6 +41,7 @@ export const NO_FILTERS: MemberFilters = {
   state: "",
   role: "",
   line: "",
+  app: "",
   admin: false,
 };
 
@@ -52,6 +55,7 @@ export function useAdminMembers(f: MemberFilters) {
       if (f.state) p.set("state", f.state);
       if (f.role) p.set("role", f.role);
       if (f.line) p.set("line", f.line);
+      if (f.app) p.set("app", f.app);
       if (f.admin) p.set("admin", "1");
       if (pageParam) p.set("cursor", pageParam);
       const qs = p.toString();
