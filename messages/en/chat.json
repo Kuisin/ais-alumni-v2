@@ -73,7 +73,9 @@
     "mentionAll": "all",
     "mentionAllHint": "Everyone in this group",
     "infoOpen": "Chat details & members",
-    "restrictedNotice": "One-to-one chats between your member types aren't available."
+    "restrictedNotice": "One-to-one chats between your member types aren't available.",
+    "readersTitle": "Read by {count}",
+    "readersHint": "Shows who has read it"
   },
   "digest": {
     "subject": "[AIS Alumni] You have unread chat messages",

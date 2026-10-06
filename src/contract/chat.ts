@@ -189,6 +189,8 @@ export type ChatRoom = {
   hasOlder: boolean;
   /** when each other member last read the talk (既読 marks) */
   reads: IsoDate[];
+  /** the same, with who (tapping 既読 lists them); absent on older servers */
+  readBy?: ChatReadBy[];
   /** when the member last read it before opening (the 「ここから未読」 line) */
   lastReadAt: IsoDate | null;
   /** no daily digest for this talk */
@@ -256,7 +258,10 @@ export type ToggleReactionError =
 
 // ---- GET /chat/:id/read ----
 
-export type ChatReads = { reads: IsoDate[] };
+/** A member (ChatRoom.members) and when they last read the talk. */
+export type ChatReadBy = { userId: string; at: IsoDate };
+
+export type ChatReads = { reads: IsoDate[]; readBy?: ChatReadBy[] };
 
 // ---- PUT /chat/:id/mute ----
 

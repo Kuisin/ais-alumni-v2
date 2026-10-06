@@ -20,7 +20,12 @@
     "lineUnlinked": "未連携",
     "adminOnly": "管理者のみ",
     "more": "絞り込み",
-    "activeCount": "{count}件"
+    "activeCount": "{count}件",
+    "app": "アプリ",
+    "appAny": "アプリを利用中",
+    "appIos": "iOSアプリ",
+    "appAndroid": "Androidアプリ",
+    "appNone": "アプリ未利用"
   },
   "columns": {
     "name": "氏名",
@@ -28,10 +33,13 @@
     "state": "状態",
     "roles": "区分",
     "line": "LINE",
-    "created": "登録日"
+    "created": "登録日",
+    "app": "アプリ"
   },
   "badge": {
-    "admin": "管理者"
+    "admin": "管理者",
+    "appIos": "iOSアプリ",
+    "appAndroid": "Androidアプリ"
   },
   "line": {
     "notLinked": "未連携",
@@ -42,6 +50,14 @@
       "linkedNotFollowing": "連携のみ",
       "following": "友だち"
     }
+  },
+  "app": {
+    "none": "未利用",
+    "ios": "iOS",
+    "android": "Android",
+    "lastUsed": "最終利用 {date}",
+    "pushOn": "通知オン",
+    "pushOff": "通知オフ"
   },
   "detail": {
     "title": "会員詳細",

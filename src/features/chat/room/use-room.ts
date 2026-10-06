@@ -1,6 +1,7 @@
 import type {
   ChatMessage,
   ChatReactionSummary,
+  ChatReadBy,
   ChatRoom,
 } from "@contract/chat";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -95,6 +96,7 @@ export function useRoom({
   const refreshBadges = useRefreshChatBadges();
   const [messages, setMessages] = useState<ChatMessage[]>(room.messages);
   const [reads, setReads] = useState<string[]>(room.reads);
+  const [readBy, setReadBy] = useState<ChatReadBy[] | undefined>(room.readBy);
   const [hasOlder, setHasOlder] = useState(room.hasOlder);
   const [loadingOlder, setLoadingOlder] = useState(false);
   /** undefined = not placed yet; null = nothing unread */
@@ -177,7 +179,10 @@ export function useRoom({
 
   const fetchReads = useCallback(async () => {
     const r = await chatApi.reads(id).catch(() => null);
-    if (r) setReads(r.reads);
+    if (r) {
+      setReads(r.reads);
+      setReadBy(r.readBy);
+    }
   }, [id]);
 
   // Reactions: on screen, and in the cached room (shown when reopened).
@@ -281,6 +286,7 @@ export function useRoom({
       );
     });
     setReads(room.reads);
+    setReadBy(room.readBy);
     void fetchNew();
   }, [room, fetchNew]);
 
@@ -336,6 +342,7 @@ export function useRoom({
     live,
     messages,
     reads,
+    readBy,
     hasOlder,
     loadingOlder,
     divider: divider ?? null,

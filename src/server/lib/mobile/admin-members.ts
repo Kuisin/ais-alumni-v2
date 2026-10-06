@@ -3,6 +3,7 @@ import type {
   AdminAuditEntry,
   AdminFamilyLink,
   AdminMemberDetail,
+  AdminMemberDevice,
   AdminMemberList,
   AdminMemberPosition,
   AdminMemberRole,
@@ -11,6 +12,7 @@ import type {
   AdminPositionKey,
   AdminResult,
   AdminRoleUpdate,
+  AppPlatform,
   LineStatus,
   RoleKeyName,
 } from "@contract/admin-members";
@@ -82,6 +84,21 @@ function lineStatus(u: {
       : "linkedNotFollowing";
 }
 
+/**
+ * Using the native app = signed in to it: a live session started by the
+ * iOS / Android build (the web app's sessions say "web"). Signing out
+ * deletes the session, so it stops counting.
+ */
+const APP_PLATFORMS: readonly AppPlatform[] = ["ios", "android"];
+const APP_FILTERS = ["any", "ios", "android", "none"] as const;
+type AppFilter = (typeof APP_FILTERS)[number];
+
+function appSessionWhere(
+  platforms: readonly AppPlatform[] = APP_PLATFORMS,
+): Prisma.MobileSessionWhereInput {
+  return { platform: { in: [...platforms] }, expiresAt: { gt: new Date() } };
+}
+
 const named = (u: { nameRomaji: string | null; nameKanji: string | null }) =>
   Boolean(u.nameRomaji || u.nameKanji);
 
@@ -103,6 +120,7 @@ export async function adminMemberList(
   const state = pick(query.state, Object.values(AccountState));
   const role = parseMemberFilter(query.role);
   const line = pick<LineFilter>(query.line, LINE_FILTERS);
+  const app = pick<AppFilter>(query.app, APP_FILTERS);
   const adminOnly = query.admin === "1";
   const cursor = query.cursor?.slice(0, 64) || null;
 
@@ -125,6 +143,13 @@ export async function adminMemberList(
   if (line === "following")
     and.push({ lineUserId: { not: null }, lineFollowing: true });
   if (line === "unlinked") and.push({ lineUserId: null });
+  if (app === "none") and.push({ mobileSessions: { none: appSessionWhere() } });
+  else if (app)
+    and.push({
+      mobileSessions: {
+        some: appSessionWhere(app === "any" ? APP_PLATFORMS : [app]),
+      },
+    });
   if (adminOnly) and.push({ isAdmin: true });
   const where: Prisma.UserWhereInput = and.length ? { AND: and } : {};
 
@@ -148,6 +173,10 @@ export async function adminMemberList(
         roles: {
           select: { role: true, teacherStatus: true, didGraduate: true },
         },
+        mobileSessions: {
+          where: appSessionWhere(),
+          select: { platform: true },
+        },
       },
     }),
     db.user.count({ where }),
@@ -166,6 +195,9 @@ export async function adminMemberList(
       isAdmin: u.isAdmin,
       roles: u.roles.map(roleLabel),
       line: lineStatus(u),
+      app: APP_PLATFORMS.filter((p) =>
+        u.mobileSessions.some((s) => s.platform === p),
+      ),
       createdAt: u.createdAt.toISOString(),
     })),
     nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
@@ -206,7 +238,7 @@ export async function adminMemberDetail(
     getTranslatorFor(locale, "adminMembers.roles"),
   ]);
 
-  const [audits, linkRows, familyMembers, positions, cohortChoices] =
+  const [audits, linkRows, familyMembers, positions, cohortChoices, sessions] =
     await Promise.all([
       db.auditLog.findMany({
         where: { OR: [{ targetId: id }, { actorId: id }] },
@@ -239,7 +271,25 @@ export async function adminMemberDetail(
         select: { position: true, cohortId: true },
       }),
       loadCohortChoices(locale),
+      db.mobileSession.findMany({
+        where: { userId: user.id, ...appSessionWhere() },
+        orderBy: { lastUsedAt: "desc" },
+        select: {
+          platform: true,
+          deviceName: true,
+          createdAt: true,
+          lastUsedAt: true,
+          pushDevice: { select: { enabled: true, failedAt: true } },
+        },
+      }),
     ]);
+  const devices: AdminMemberDevice[] = sessions.map((s) => ({
+    platform: s.platform as AppPlatform,
+    name: s.deviceName,
+    since: s.createdAt.toISOString(),
+    lastUsedAt: s.lastUsedAt.toISOString(),
+    push: Boolean(s.pushDevice?.enabled && !s.pushDevice.failedAt),
+  }));
   const [cohortNumbers, cohortLabels] = await Promise.all([
     cohortNumbersById(),
     cohortShortLabels(locale),
@@ -392,6 +442,7 @@ export async function adminMemberDetail(
     stateLabel: tr(`state.${user.state}`),
     roleLabels: roles.map((r) => tr(roleLabelKey(r))),
     line: { status: lineStatus(user), displayName: user.lineDisplayName },
+    devices,
     providers: [
       user.primaryEmail && user.emailVerifiedAt ? "email" : null,
       ...user.accounts.map((a) => a.provider),

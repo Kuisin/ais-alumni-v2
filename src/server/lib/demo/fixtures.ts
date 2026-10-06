@@ -74,6 +74,7 @@ import { JOB_TYPES } from "@/server/lib/job-types";
 import {
   chatInfo,
   chatList,
+  chatReadBy,
   chatReads,
   chatRoom,
   demoMessageReactions,
@@ -810,7 +811,11 @@ const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
       ) satisfies ChatReactionsResult | undefined,
   },
   "chat/[id]/read": {
-    GET: ({ params }) => ({ reads: chatReads(params.id) }) satisfies ChatReads,
+    GET: ({ params }) =>
+      ({
+        reads: chatReads(params.id),
+        readBy: chatReadBy(params.id),
+      }) satisfies ChatReads,
     POST: () => OK satisfies OkResult,
   },
   "chat/[id]/mute": {

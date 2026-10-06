@@ -38,7 +38,10 @@ export type RoleKeyName =
 /** LINE: not linked / linked and following the official account / blocked it */
 export type LineStatus = "notLinked" | "following" | "linkedNotFollowing";
 
-// ---- GET /admin/members?q=&state=&role=&line=&admin=1&cursor= ----
+/** The native app (App Store / Google Play build), not the web app. */
+export type AppPlatform = "ios" | "android";
+
+// ---- GET /admin/members?q=&state=&role=&line=&app=&admin=1&cursor= ----
 
 export type AdminMemberRow = {
   id: string;
@@ -53,6 +56,11 @@ export type AdminMemberRow = {
   /** 教職員（元教職員）, 卒業生 … */
   roles: string[];
   line: LineStatus;
+  /**
+   * the native apps the member is signed in to ([] = none: web only or
+   * never signed in); absent from servers before this was added
+   */
+  app?: AppPlatform[];
   createdAt: IsoDate;
 };
 
@@ -150,6 +158,19 @@ export type AdminAuditEntry = {
   createdAt: IsoDate;
 };
 
+/** One phone / tablet the member is signed in to with the native app. */
+export type AdminMemberDevice = {
+  platform: AppPlatform;
+  /** "iPhone 16" …, when the device told us */
+  name: string | null;
+  /** first sign-in on this device */
+  since: IsoDate;
+  /** accurate to a day (sessions are touched at most daily) */
+  lastUsedAt: IsoDate;
+  /** app notifications are on and reach this device */
+  push: boolean;
+};
+
 export type AdminMemberDetail = {
   id: string;
   name: string | null;
@@ -163,6 +184,8 @@ export type AdminMemberDetail = {
   stateLabel: string;
   roleLabels: string[];
   line: { status: LineStatus; displayName: string | null };
+  /** native app devices, latest used first; absent from older servers */
+  devices?: AdminMemberDevice[];
   /** "email", "google", "line" … */
   providers: string[];
   notifyVia: string;

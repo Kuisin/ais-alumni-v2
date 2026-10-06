@@ -73,7 +73,9 @@
     "mentionAll": "全員",
     "mentionAllHint": "このグループの全員",
     "infoOpen": "トークの詳細・メンバー",
-    "restrictedNotice": "この会員区分どうしでは1対1のトークを利用できません。"
+    "restrictedNotice": "この会員区分どうしでは1対1のトークを利用できません。",
+    "readersTitle": "既読 {count}人",
+    "readersHint": "読んだ人を表示します"
   },
   "digest": {
     "subject": "【AIS同窓会】未読のチャットがあります",

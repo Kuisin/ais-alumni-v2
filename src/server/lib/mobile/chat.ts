@@ -213,7 +213,8 @@ export async function chatRoom(
     partner: direct ? other : null,
     messages: page,
     hasOlder: page.length >= CHAT_PAGE_SIZE,
-    reads: reads ?? [],
+    reads: (reads ?? []).map((r) => r.at),
+    readBy: reads ?? [],
     lastReadAt: me?.lastReadAt.toISOString() ?? null,
     muted: me?.muted ?? false,
     notifyLevel: me ? chatNotifyLevel(me) : "mentions",
@@ -282,7 +283,9 @@ export async function sendMessage(
  * The talk is open to the member (chatReadStateAction applies the same
  * rule as the room: members, and admins for group chats).
  */
-async function requireVisible(id: string): Promise<string[]> {
+async function requireVisible(
+  id: string,
+): Promise<{ userId: string; at: string }[]> {
   const reads = await chatReadStateAction(id);
   if (!reads) throw notFound();
   return reads;
@@ -306,7 +309,8 @@ export async function deleteMessage(
 }
 
 export async function chatReads(id: string): Promise<ChatReads> {
-  return { reads: await requireVisible(id) };
+  const readBy = await requireVisible(id);
+  return { reads: readBy.map((r) => r.at), readBy };
 }
 
 /** The member has seen everything up to now (senders' 既読 update). */
