@@ -31,7 +31,7 @@
   },
   "privacy": {
     "title": "Privacy policy",
-    "intro": "This service (the website and the app) is run independently by the AIS Alumni Committee, a volunteer group of AIS graduates, to connect alumni, parents and teachers. It is not an official service of Aichi International School, and the school is not involved in running it or in handling your data. This policy explains, under Japan's Act on the Protection of Personal Information (APPI), what personal information the Committee collects and how it is used.",
+    "intro": "This service (the website and the app) is run independently by the AIS Alumni Committee (\"the Committee\"), a volunteer group of AIS graduates, to connect alumni, parents and teachers. It is not an official service of Aichi International School (\"the school\") and is not run by the school, but the Committee may work with the school on alumni activities (see \"Working with the school\"). This policy explains, with Japan's Act on the Protection of Personal Information (APPI) in mind, what personal information the Committee collects and how it is handled. By registering for or using the service, you agree to this policy.",
     "collected": {
       "title": "What we collect",
       "items": [
@@ -39,9 +39,11 @@
         "Profile: your name (romaji and kanji/kana), name at AIS, date of birth, gender, photo, short bio, your relationship to AIS (student, parent, teacher) and years/grade, and any education or work history you add.",
         "Optional contact details: phone number, LINE display name and social links.",
         "Verification information: your answers and any documents you upload to prove your connection to AIS.",
+        "Family information: the name and grade of a child registered by a parent, and family connections.",
         "What you send: chat messages, comments and answers on news, and what you write in inquiries and reports.",
-        "App notifications: the push notification token of each device where you turn notifications on (used only to deliver them).",
-        "Activity: event RSVPs, follows and notification history."
+        "App notifications and signed-in devices: the push notification token of each device where you turn notifications on, and the kind (iOS, Android, web) and name of each signed-in device and the day it was last used.",
+        "Activity: event RSVPs, follows, invitations and recommendations, and notification history.",
+        "Donations: the amount and date if you donate on the website (card details are handled by the payment provider; the Committee does not store them)."
       ]
     },
     "purpose": {
@@ -51,12 +53,22 @@
         "To run the member directory, events, news and chat.",
         "To send you notifications in the app, on LINE or by email.",
         "To answer your inquiries and reports.",
-        "To keep the service safe (for example, preventing abuse and keeping an audit log of admin actions)."
+        "To keep the service safe (for example, preventing abuse and keeping an audit log of admin actions).",
+        "For alumni activities and for working with the school (see \"Working with the school\").",
+        "For other related purposes the Committee judges necessary to run the alumni association."
       ]
     },
     "visibility": {
       "title": "Who can see your information",
-      "body": "Only verified members can see the directory. Other members see your public profile (name, photo, role and years). Your private details — email, phone, LINE name, social links and detailed current status — are only shown to members whose follow request you have accepted, and to your confirmed family members. Committee admins can see all information when needed to run the service. We never sell your data or share it with advertisers."
+      "body": "Only verified members can see the directory. Other members see your public profile (name, photo, role and years). Your private details — email, phone, LINE name, social links and detailed current status — are only shown to members whose follow request you have accepted, and to your confirmed family members. Committee admins can see all information when needed to run the service. We never sell your data or share it with advertisers. The exceptions are the cases described in \"Working with the school\", the providers listed in \"Outside services and storage outside Japan\", and where the law requires it."
+    },
+    "school": {
+      "title": "Working with the school",
+      "body": "The Committee may provide members' information (such as name, years/grade, role, contact details, and registration and usage status) to the school, to the extent the Committee judges necessary for alumni activities and for working with the school — for example confirming enrollment, announcing school and alumni events and news, keeping records about alumni, and responding to matters of members' safety. By registering for or using the service, you agree to this. Information provided to the school is handled under the school's own policies; the Committee cannot control or guarantee how it is handled afterwards. If you do not want your information provided, tell us through Contact us. We will try to stop further provision, but information already provided may not be recoverable."
+    },
+    "roster": {
+      "title": "The school's lists and contact details",
+      "body": "The Committee does not receive the contact details the school holds (email addresses, phone numbers, addresses and so on). When the service is announced through the school, the school sends the announcement itself. To confirm that a person who registers attended AIS, the Committee may check against an enrollment record that holds only names, dates of birth and years at AIS. That record contains no contact details and is not shown to members."
     },
     "line": {
       "title": "LINE",
@@ -70,19 +82,65 @@
       "title": "Verification documents",
       "body": "Documents you upload for verification are only visible to committee admins and are deleted automatically 30 days after your application is decided."
     },
+    "invites": {
+      "title": "Invitations and recommendations",
+      "body": "When a member creates an invitation link, we record who created it, its kind (student, parent or teacher) and grade, the invitee's name if the member entered one, its expiry date, and who registered with it. We do not store the invitee's contact details; the member sends the link themself. When another member is asked to recommend an applicant (confirm who they are), we record who was asked, their answer and when, and committee admins use it in the review."
+    },
+    "minors": {
+      "title": "Minors and parents",
+      "body": "Current students and other minors should register and use the service only with a parent's or guardian's consent. If a minor registers, we treat that consent as given; the Committee does not check it case by case. Parents who register their child's information do so on their own responsibility. A parent can ask to delete the information they registered about their child, or their minor child's account, from Settings or through Contact us."
+    },
+    "storage": {
+      "title": "Where it is kept and how it is protected",
+      "body": "Information is kept on the servers and database of cloud providers the Committee uses (hosting and file storage: Vercel; database: Supabase). Connections are encrypted (TLS), and encryption at rest relies on each provider's features. Sign-in tokens are not stored in their original form, and uploaded files are shown only through short-lived links after a permission check. Only committee admins can access members' information, and admin actions are logged. As a volunteer group the Committee takes reasonable care, but it does not guarantee that unauthorized access, leaks or loss will never happen."
+    },
+    "external": {
+      "title": "Outside services and storage outside Japan",
+      "body": "To provide the service we use the following providers, which handle information as far as needed. Their servers may be outside Japan (for example in the United States), so information may be stored and processed abroad. Each provider handles it under its own terms and privacy policy. The providers we use may change.",
+      "items": [
+        "Vercel: hosting of the website and server, file storage, and website analytics.",
+        "Supabase: the database and live updates.",
+        "LINE (LY Corporation): sign-in with LINE and notifications from the Official Account.",
+        "Google: account links of members who signed in with Google earlier, and Android push notifications (Firebase Cloud Messaging).",
+        "Expo and Apple: delivery of app push notifications (Expo Push, Apple Push Notification service).",
+        "Resend: sending email.",
+        "Stripe: donation payments (website only).",
+        "Apple and Google: distributing the app (App Store, TestFlight, Google Play)."
+      ]
+    },
+    "governance": {
+      "title": "Who is responsible, and handing over",
+      "body": "The Committee is responsible for the personal information. As a rule it keeps at least two admins. When an admin changes or steps down, admin rights are handed to a successor on the Committee and the former admin's rights are removed. If the Committee dissolves or the service ends, we will tell members in advance and then delete the personal information we hold. If another group takes over the alumni activities, information may be handed to that group after members are told."
+    },
     "retention": {
       "title": "How long we keep it",
-      "body": "We keep your information while your account exists. When you delete your account, your personal information is removed, except for records we must keep for security (such as the admin audit log)."
+      "body": "We keep your information while your account exists. When you delete your account, your personal information is removed, except for records we must keep for security (such as the admin audit log), copies that remain in providers' backups for a time, and information already provided to the school."
     },
     "rights": {
       "title": "Your choices",
       "body": "You can update your profile at any time, export a copy of your data, and delete your account from Settings. Notification preferences (app notifications, LINE or email) are also in Settings. You can delete your account at any time, including while your registration is being reviewed."
     },
+    "requests": {
+      "title": "Requests to disclose, correct or stop using your information",
+      "body": "Beyond what you can do in Settings, you can ask us to disclose, correct, add to or delete your personal information, to stop using it, or to stop providing it to third parties (including the school) through Contact us. After confirming your identity we will respond within a reasonable time, as the law requires. We may be unable to do what you ask where the law allows, or where it could harm another member's rights."
+    },
+    "incident": {
+      "title": "If a leak or similar incident happens",
+      "body": "If we learn of a leak, loss or unauthorized access involving personal information, we will investigate the facts and cause and act to limit the harm. We will promptly tell members who may be affected, by announcement or email, and report to the Personal Information Protection Commission where the law requires."
+    },
+    "disclaimer": {
+      "title": "Disclaimer and things to keep in mind",
+      "body": "The service is run by a volunteer group free of charge; use it at your own judgment and risk. The Committee gives no guarantee of the service's security, accuracy or continuity. Information you show or send to other members, in your profile or in chat, can be saved or copied by them; share it on your own responsibility. To the extent the law allows, the Committee is not liable for damage arising from what members register or post, dealings between members, failures or handling by outside services, or how information is handled after it is provided to the school."
+    },
+    "changes": {
+      "title": "Changes to this policy",
+      "body": "The Committee may revise this policy when needed. The revised policy is published on this page, and important changes are announced in the app or on the website, or by email. If you use the service after a revision, you agree to the revised policy."
+    },
     "contact": {
       "title": "Contact",
       "body": "For questions about this policy or your personal information, please contact the AIS Alumni Committee through Contact us in the app or on the website."
     },
-    "updated": "Last updated: September 2026"
+    "updated": "Established: September 29, 2026 · Last revised: October 7, 2026"
   },
   "operatedBy": "Run by the AIS Alumni Committee, a volunteer group of graduates (not an official school service).",
   "invite": {
