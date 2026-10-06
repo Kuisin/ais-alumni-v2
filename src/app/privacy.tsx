@@ -21,7 +21,6 @@ const SECTIONS = [
   "retention",
   "rights",
   "requests",
-  "incident",
   "disclaimer",
   "changes",
   "contact",
