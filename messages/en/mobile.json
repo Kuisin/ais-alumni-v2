@@ -214,6 +214,7 @@
   },
   "install": {
     "title": "Beta test the app",
+    "button": "Install the app",
     "intro": "We're getting the AIS Alumni iPhone app ready for the App Store. Before it's released, we're looking for testers to try the beta and tell us what they find. You join the beta through Apple's TestFlight app (free).",
     "stepsTitle": "Join the beta (iPhone)",
     "steps": [
@@ -270,7 +271,9 @@
     "device": {
       "label": "Your phone",
       "ios": "iPhone",
-      "android": "Android"
+      "android": "Android",
+      "toAndroid": "Using Android? See those steps",
+      "toIos": "Using an iPhone? See those steps"
     },
     "android": {
       "title": "Add to home screen",

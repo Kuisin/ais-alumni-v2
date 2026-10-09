@@ -214,6 +214,7 @@
   },
   "install": {
     "title": "アプリのベータテスト",
+    "button": "アプリをインストール",
     "intro": "AIS同窓会の iPhone アプリを、App Store での公開に向けて準備しています。公開前のベータ版を試して、気づいたことを教えてくださるテスターを募集しています。ベータ版は Apple の「TestFlight」アプリ（無料）から参加できます。",
     "stepsTitle": "ベータテストに参加する（iPhone）",
     "steps": [
@@ -270,7 +271,9 @@
     "device": {
       "label": "お使いの端末",
       "ios": "iPhone",
-      "android": "Android"
+      "android": "Android",
+      "toAndroid": "Android をお使いの方はこちら",
+      "toIos": "iPhone をお使いの方はこちら"
     },
     "android": {
       "title": "ホーム画面に追加",
