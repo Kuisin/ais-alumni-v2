@@ -3,16 +3,27 @@ import { useQuery } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import {
   BellRing,
+  CircleCheck,
   Download,
   ExternalLink,
   MessageCircleReply,
   QrCode,
+  RefreshCw,
   Smartphone,
   Zap,
 } from "lucide-react-native";
-import { Linking, StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Linking, Platform, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import {
+  type InstallDevice,
+  installDevice,
+  usePwaInstall,
+} from "@/features/install/pwa";
+import { Chips } from "@/features/people/choices";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import { usePush } from "@/lib/push";
 import { Button, Card, colors, Loading, Screen, space, Text } from "@/ui";
 
 const TESTFLIGHT_APP = "https://apps.apple.com/app/testflight/id899247664";
@@ -22,13 +33,195 @@ const BENEFIT_ICONS = [BellRing, Zap, MessageCircleReply, Smartphone, QrCode];
 
 const open = (url: string) => void Linking.openURL(url).catch(() => {});
 
+/** One icon per Android benefit (mobile.install.android.benefits). */
+const ANDROID_BENEFIT_ICONS = [BellRing, Smartphone, RefreshCw];
+
 /**
- * アプリのインストール (public): how to get the iPhone app. Once it has an
- * App Store link (config.storeUrl.ios) that's the button; until then the
- * steps to install it through TestFlight with the committee's public link
- * (config.install.testflightUrl, TESTFLIGHT_URL on the server).
+ * アプリのインストール (public): how to get the app on this phone. An
+ * iPhone gets the iOS app's steps (IosInstall); Android gets the web app
+ * added to the home screen, with notifications (AndroidInstall). The phone
+ * is recognized from the browser; the choice at the top is for anything
+ * else (a computer) or a wrong guess.
  */
 export default function InstallScreen() {
+  const t = useTranslations("mobile.install");
+  // Known after mount: the server render can't see the browser.
+  const [device, setDevice] = useState<InstallDevice | null>(
+    Platform.OS === "web" ? null : installDevice(),
+  );
+  const [detected, setDetected] = useState<InstallDevice | null>(device);
+  useEffect(() => {
+    const d = installDevice();
+    setDetected(d);
+    setDevice((current) => current ?? (d === "android" ? "android" : "ios"));
+  }, []);
+
+  return (
+    <Screen contentStyle={styles.content}>
+      <Stack.Screen
+        options={{
+          title: device === "android" ? t("android.title") : t("title"),
+        }}
+      />
+      {device === null ? (
+        <Loading inline />
+      ) : (
+        <>
+          {detected === "other" ? (
+            <Chips
+              label={t("device.label")}
+              choices={[
+                { value: "ios", label: t("device.ios") },
+                { value: "android", label: t("device.android") },
+              ]}
+              value={device}
+              onChange={(v) => setDevice(v as InstallDevice)}
+            />
+          ) : null}
+          {device === "android" ? <AndroidInstall /> : <IosInstall />}
+        </>
+      )}
+    </Screen>
+  );
+}
+
+/**
+ * Android: the web app on the home screen. Chrome's own install dialog
+ * when it offered one (usePwaInstall), else the steps through its menu;
+ * once it's installed, turning notifications on (Web Push).
+ */
+function AndroidInstall() {
+  const t = useTranslations("mobile.install.android");
+  const pwa = usePwaInstall();
+  const steps = t.raw("steps") as string[];
+  const benefits = t.raw("benefits") as [string, string][];
+  return (
+    <>
+      <Text>{t("intro")}</Text>
+      {pwa.installed ? (
+        <Card style={styles.card}>
+          <View style={styles.step}>
+            <CircleCheck size={20} color={colors.green600} aria-hidden />
+            <View style={styles.flex}>
+              <Text weight="semibold">{t("installedTitle")}</Text>
+              <Text variant="small" tone="muted">
+                {t("installed")}
+              </Text>
+            </View>
+          </View>
+        </Card>
+      ) : pwa.canPrompt ? (
+        <Button
+          label={t("install")}
+          icon={(c) => <Download size={18} color={c} aria-hidden />}
+          onPress={() => void pwa.prompt()}
+        />
+      ) : null}
+      {pwa.installed ? <WebNotifications /> : null}
+      <Card style={styles.card}>
+        {benefits.map(([title, body], i) => {
+          const Icon = ANDROID_BENEFIT_ICONS[i] ?? Smartphone;
+          return (
+            <View key={title} style={styles.step}>
+              <Icon size={20} color={colors.brand700} aria-hidden />
+              <View style={styles.flex}>
+                <Text weight="semibold">{title}</Text>
+                <Text variant="small" tone="muted">
+                  {body}
+                </Text>
+              </View>
+            </View>
+          );
+        })}
+      </Card>
+      {pwa.installed ? null : (
+        <>
+          <Card style={styles.card}>
+            <Text variant="subheading" accessibilityRole="header">
+              {t("stepsTitle")}
+            </Text>
+            {steps.map((step, i) => (
+              <View key={step} style={styles.step}>
+                <Text weight="semibold" tone="brand" style={styles.number}>
+                  {i + 1}
+                </Text>
+                <Text style={styles.flex}>{step}</Text>
+              </View>
+            ))}
+          </Card>
+          <Text variant="small" tone="muted">
+            {t("lineNote")}
+          </Text>
+          <WebNotifications />
+        </>
+      )}
+    </>
+  );
+}
+
+/** Notifications for the web app on this device, in one tap. */
+function WebNotifications() {
+  const t = useTranslations("mobile.install.android");
+  const { status } = useAuth();
+  const push = usePush();
+  const [failed, setFailed] = useState(false);
+  if (Platform.OS !== "web") return null;
+  const denied = push.permission === "denied";
+  return (
+    <Card style={styles.card}>
+      <View style={styles.step}>
+        <BellRing size={20} color={colors.brand700} aria-hidden />
+        <View style={styles.flex}>
+          <Text weight="semibold">{t("notifyTitle")}</Text>
+          <Text variant="small" tone="muted">
+            {t("notifyBody")}
+          </Text>
+        </View>
+      </View>
+      {push.blocker ? (
+        <Text variant="small" tone="muted">
+          {t("notifyUnavailable")}
+        </Text>
+      ) : status !== "signedIn" ? (
+        <Text variant="small" tone="muted">
+          {t("notifySignIn")}
+        </Text>
+      ) : push.enabled ? (
+        <Text variant="small" tone="success">
+          {t("notifyOn")}
+        </Text>
+      ) : denied ? (
+        <Text variant="small" tone="danger" accessibilityRole="alert">
+          {t("notifyDenied")}
+        </Text>
+      ) : (
+        <Button
+          label={t("notifyEnable")}
+          icon={(c) => <BellRing size={18} color={c} aria-hidden />}
+          loading={push.busy}
+          disabled={push.state === null}
+          onPress={async () => {
+            setFailed(false);
+            setFailed((await push.enable()) === "failed");
+          }}
+        />
+      )}
+      {failed ? (
+        <Text variant="small" tone="danger" accessibilityRole="alert">
+          {t("notifyFailed")}
+        </Text>
+      ) : null}
+    </Card>
+  );
+}
+
+/**
+ * iPhone: once the app has an App Store link (config.storeUrl.ios) that's
+ * the button; until then the steps to install it through TestFlight with
+ * the committee's public link (config.install.testflightUrl, TESTFLIGHT_URL
+ * on the server).
+ */
+function IosInstall() {
   const t = useTranslations("mobile.install");
   const config = useQuery({
     queryKey: ["config"],
@@ -63,8 +256,7 @@ export default function InstallScreen() {
   );
 
   return (
-    <Screen contentStyle={styles.content}>
-      <Stack.Screen options={{ title: t("title") }} />
+    <>
       {config.data === undefined ? (
         <Loading inline />
       ) : store ? (
@@ -132,7 +324,7 @@ export default function InstallScreen() {
           ))}
         </>
       )}
-    </Screen>
+    </>
   );
 }
 
