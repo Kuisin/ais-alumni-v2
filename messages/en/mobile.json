@@ -271,7 +271,9 @@
     "device": {
       "label": "Your phone",
       "ios": "iPhone",
-      "android": "Android"
+      "android": "Android",
+      "toAndroid": "Using Android? See those steps",
+      "toIos": "Using an iPhone? See those steps"
     },
     "android": {
       "title": "Add to home screen",

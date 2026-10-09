@@ -271,7 +271,9 @@
     "device": {
       "label": "お使いの端末",
       "ios": "iPhone",
-      "android": "Android"
+      "android": "Android",
+      "toAndroid": "Android をお使いの方はこちら",
+      "toIos": "iPhone をお使いの方はこちら"
     },
     "android": {
       "title": "ホーム画面に追加",

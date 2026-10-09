@@ -2,6 +2,7 @@ import type { AppConfig } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import {
+  ArrowLeftRight,
   BellRing,
   CircleCheck,
   Download,
@@ -40,8 +41,9 @@ const ANDROID_BENEFIT_ICONS = [BellRing, Smartphone, RefreshCw];
  * アプリのインストール (public): how to get the app on this phone. An
  * iPhone gets the iOS app's steps (IosInstall); Android gets the web app
  * added to the home screen, with notifications (AndroidInstall). The phone
- * is recognized from the browser; the choice at the top is for anything
- * else (a computer) or a wrong guess.
+ * is recognized from the browser; anything else (a computer) gets a choice
+ * at the top, and a recognized phone a small button at the bottom to see
+ * the other one's steps, in case the guess is wrong.
  */
 export default function InstallScreen() {
   const t = useTranslations("mobile.install");
@@ -79,6 +81,21 @@ export default function InstallScreen() {
             />
           ) : null}
           {device === "android" ? <AndroidInstall /> : <IosInstall />}
+          {/* The guess can be wrong (a browser hiding what it runs on). */}
+          {Platform.OS === "web" && detected !== "other" ? (
+            <Button
+              variant="ghost"
+              compact
+              label={t(
+                device === "android" ? "device.toIos" : "device.toAndroid",
+              )}
+              icon={(c) => <ArrowLeftRight size={16} color={c} aria-hidden />}
+              onPress={() =>
+                setDevice(device === "android" ? "ios" : "android")
+              }
+              style={styles.switch}
+            />
+          ) : null}
         </>
       )}
     </Screen>
@@ -336,4 +353,5 @@ const styles = StyleSheet.create({
   number: { width: 20 },
   inline: { alignSelf: "flex-start", marginTop: space.sm },
   note: { flexDirection: "row", gap: space.sm },
+  switch: { alignSelf: "center" },
 });
