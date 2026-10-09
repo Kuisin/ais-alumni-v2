@@ -51,8 +51,8 @@ shown in search results; optional — without them search shows screenshots).
 
 | Slot | Japanese | English (U.S.) | Size |
 |---|---|---|---|
-| Header | [`ios/creative/ja/header.jpg`](ios/creative/ja/header.jpg) | [`ios/creative/en-US/header.jpg`](ios/creative/en-US/header.jpg) | 3840 × 1646 (21:9) |
-| Search Results | [`ios/creative/ja/search-results.jpg`](ios/creative/ja/search-results.jpg) | [`ios/creative/en-US/search-results.jpg`](ios/creative/en-US/search-results.jpg) | 3840 × 2560 (3:2) |
+| Header | [`ios/creative/ja/header.png`](ios/creative/ja/header.png) | [`ios/creative/en-US/header.png`](ios/creative/en-US/header.png) | 3840 × 1646 (21:9) |
+| Search Results | [`ios/creative/ja/search-results.png`](ios/creative/ja/search-results.png) | [`ios/creative/en-US/search-results.png`](ios/creative/en-US/search-results.png) | 3840 × 2560 (3:2) |
 
 Rebuilt from the frameless screenshots with
 `node scripts/store-creative-assets.mjs`.

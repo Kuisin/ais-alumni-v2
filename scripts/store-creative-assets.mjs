@@ -90,11 +90,11 @@ for (const locale of Object.keys(COPY)) {
     ).newPage();
     await page.setContent(html(locale, kind));
     await page.waitForTimeout(400);
-    // JPEG: no alpha channel (App Store Connect rejects transparency).
+    // PNG without transparency (App Store Connect rejects an alpha channel;
+    // its uploader also refused a .jpeg saved from Photos on iOS).
     await page.screenshot({
-      path: path.join(dir, `${kind}.jpg`),
-      type: "jpeg",
-      quality: 95,
+      path: path.join(dir, `${kind}.png`),
+      omitBackground: false,
     });
     await page.close();
   }
