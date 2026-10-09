@@ -101,11 +101,12 @@
       "on": "Notifications come to this device.",
       "others": "{count, plural, one {# other device gets them too.} other {# other devices get them too.}}",
       "denied": "Notifications for this app are turned off in your phone’s settings.",
+      "deniedWeb": "Your browser is blocking notifications from this site. Allow them from the lock icon in the address bar (site settings).",
       "openSettings": "Open phone settings",
       "failed": "Notifications stopped reaching this device. Turn them on again.",
       "expoGo": "Expo Go can’t receive notifications. Use the App Store or Google Play app (or a development build).",
-      "web": "The web version can’t receive notifications.",
-      "notConfigured": "This build isn’t set up to receive notifications.",
+      "web": "This browser can’t receive notifications. On Android, add the app to your home screen from Chrome to get them; on iPhone, use the app.",
+      "notConfigured": "Notifications aren’t set up in this environment.",
       "enableFailed": "Couldn’t turn notifications on. Please try again.",
       "test": "Send a test notification",
       "testSent": "Test notification sent. It should arrive shortly.",
@@ -231,13 +232,18 @@
     "notes": [
       "A beta is still in development, so it may have bugs. New beta versions arrive through the TestFlight app.",
       "Once the app is on the App Store, you'll be able to install it straight from this page.",
-      "An Android version is on the way. Until then, please use this web version."
+      "On Android? Open this page on your Android phone to see how to add it to your home screen."
     ],
     "prompt": {
       "title": "Try the app's beta",
       "body": "Join the beta test before the App Store release and tell us what you think.",
       "open": "How to join",
       "later": "Later"
+    },
+    "promptAndroid": {
+      "title": "Add it to your home screen",
+      "body": "Open it like an app and get notifications.",
+      "open": "How to add"
     },
     "benefits": {
       "title": "What the app can do",
@@ -259,6 +265,49 @@
           "The LINE app opens and you just confirm."
         ],
         ["QR ticket at check-in", "Bring up your event ticket in a tap."]
+      ]
+    },
+    "device": {
+      "label": "Your phone",
+      "ios": "iPhone",
+      "android": "Android"
+    },
+    "android": {
+      "title": "Add to home screen",
+      "intro": "On Android, add this web app to your home screen (install it) to open it like an app and get notifications. No store download needed.",
+      "install": "Add to home screen (install)",
+      "installedTitle": "Added to your home screen",
+      "installed": "Open it from the \"AIS Alumni\" icon on your home screen.",
+      "stepsTitle": "Add to your home screen (Android)",
+      "steps": [
+        "Open this page in Chrome.",
+        "Tap the menu (⋮) at the top right.",
+        "Tap \"Install app\" or \"Add to Home screen\".",
+        "Open \"AIS Alumni\" from your home screen and sign in as usual (email code or LINE).",
+        "Turn notifications on in Settings → App notifications."
+      ],
+      "lineNote": "It can't be added from LINE's in-app browser. Choose \"Open in other app\" → Chrome from the menu first.",
+      "notifyTitle": "Get notifications",
+      "notifyBody": "Turn them on to hear about chats and news on this device right away.",
+      "notifyEnable": "Turn on notifications",
+      "notifyOn": "Notifications reach this device.",
+      "notifySignIn": "After signing in, turn them on in Settings → App notifications.",
+      "notifyDenied": "Your browser is blocking notifications. Allow them in the site settings.",
+      "notifyFailed": "Couldn’t turn notifications on. Please try again.",
+      "notifyUnavailable": "This browser can't receive notifications. Try Chrome.",
+      "benefits": [
+        [
+          "Notifications right away",
+          "Know about chats and news without opening email or LINE."
+        ],
+        [
+          "Opens from your home screen",
+          "Full screen from its icon, without opening the browser."
+        ],
+        [
+          "Always up to date",
+          "Nothing to update: you get the latest every time you open it."
+        ]
       ]
     }
   },

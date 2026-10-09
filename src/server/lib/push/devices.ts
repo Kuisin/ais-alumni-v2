@@ -13,6 +13,9 @@ export type PushTarget = {
   userId: string;
   token: string;
   platform: string | null;
+  /** "web": the subscription's keys */
+  webP256dh: string | null;
+  webAuth: string | null;
 };
 
 const usable = (now: Date) =>
@@ -30,7 +33,14 @@ export async function pushTargetsFor(
   if (userIds.length === 0) return out;
   const rows = await db.pushDevice.findMany({
     where: { userId: { in: [...new Set(userIds)] }, ...usable(new Date()) },
-    select: { id: true, userId: true, token: true, platform: true },
+    select: {
+      id: true,
+      userId: true,
+      token: true,
+      platform: true,
+      webP256dh: true,
+      webAuth: true,
+    },
   });
   for (const r of rows) out.set(r.userId, [...(out.get(r.userId) ?? []), r]);
   return out;
@@ -75,13 +85,17 @@ export async function registerPushDevice(input: {
   sessionId: string;
   userId: string;
   token: string;
-  platform: "ios" | "android";
+  platform: "ios" | "android" | "web";
+  /** "web": the subscription's keys */
+  web?: { p256dh: string; auth: string };
   enabled: boolean;
 }): Promise<PushDeviceRow> {
   const data = {
     userId: input.userId,
     token: input.token,
     platform: input.platform,
+    webP256dh: input.web?.p256dh ?? null,
+    webAuth: input.web?.auth ?? null,
     enabled: input.enabled,
     failedAt: null,
   };
@@ -116,7 +130,7 @@ export async function removePushDevice(sessionId: string): Promise<void> {
   await db.pushDevice.deleteMany({ where: { sessionId } });
 }
 
-/** Expo said these tokens can't receive anything anymore. */
+/** Expo / the push service said these can't receive anything anymore. */
 export async function retirePushDevices(ids: readonly string[]): Promise<void> {
   if (ids.length === 0) return;
   await db.pushDevice.updateMany({
