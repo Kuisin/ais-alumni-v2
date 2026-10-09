@@ -102,7 +102,7 @@ function WebInstallPrompt() {
 }
 
 /** Above the tab bar (and clear of the composer on other screens). */
-const TAB_BAR = 64;
+const TAB_BAR = 68;
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
