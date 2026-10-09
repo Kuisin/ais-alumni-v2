@@ -105,7 +105,7 @@ export default function InstallScreen() {
 /**
  * Android: the web app on the home screen. Chrome's own install dialog
  * when it offered one (usePwaInstall) — shown on arrival and from the
- * button — else the steps through its menu;
+ * button, which is always there — else the steps through its menu;
  * once it's installed, turning notifications on (Web Push).
  */
 function AndroidInstall() {
@@ -118,6 +118,8 @@ function AndroidInstall() {
   // button below shows it again.
   const offered = useRef(false);
   const { canPrompt, prompt } = pwa;
+  // The button was tapped while Chrome had no dialog to show.
+  const [manual, setManual] = useState(false);
   useEffect(() => {
     if (!canPrompt || offered.current) return;
     offered.current = true;
@@ -138,13 +140,30 @@ function AndroidInstall() {
             </View>
           </View>
         </Card>
-      ) : pwa.canPrompt ? (
-        <Button
-          label={t("install")}
-          icon={(c) => <Download size={18} color={c} aria-hidden />}
-          onPress={() => void pwa.prompt()}
-        />
-      ) : null}
+      ) : (
+        <>
+          <Button
+            label={t("install")}
+            icon={(c) => <Download size={18} color={c} aria-hidden />}
+            onPress={() => {
+              // Chrome's dialog when it has offered one; otherwise only
+              // its menu can add the app — say so and point at the steps.
+              if (canPrompt) void prompt();
+              else setManual(true);
+            }}
+          />
+          {manual && !canPrompt ? (
+            <Text
+              variant="small"
+              tone="muted"
+              accessibilityRole="alert"
+              accessibilityLiveRegion="polite"
+            >
+              {t("installManual")}
+            </Text>
+          ) : null}
+        </>
+      )}
       {pwa.installed ? <WebNotifications /> : null}
       <Card style={styles.card}>
         {benefits.map(([title, body], i) => {
