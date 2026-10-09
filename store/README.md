@@ -43,6 +43,20 @@ data (a private test database), never real members. Apple scales the 6.9"
 set for smaller iPhones; the 6.3" copies are that set resized
 (`sips -z 2622 1206`).
 
+## Header and Search Results (creative assets)
+
+App Store Connect → the version → Product Page Information → Header and
+Search Results, per language (iOS 27's product page header and the image
+shown in search results; optional — without them search shows screenshots).
+
+| Slot | Japanese | English (U.S.) | Size |
+|---|---|---|---|
+| Header | [`ios/creative/ja/header.png`](ios/creative/ja/header.png) | [`ios/creative/en-US/header.png`](ios/creative/en-US/header.png) | 3840 × 1646 (21:9) |
+| Search Results | [`ios/creative/ja/search-results.png`](ios/creative/ja/search-results.png) | [`ios/creative/en-US/search-results.png`](ios/creative/en-US/search-results.png) | 3840 × 2560 (3:2) |
+
+Rebuilt from the frameless screenshots with
+`node scripts/store-creative-assets.mjs`.
+
 ## Listing text
 
 ### Japanese (日本語)
