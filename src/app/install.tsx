@@ -13,7 +13,7 @@ import {
   Smartphone,
   Zap,
 } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Linking, Platform, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import {
@@ -104,7 +104,8 @@ export default function InstallScreen() {
 
 /**
  * Android: the web app on the home screen. Chrome's own install dialog
- * when it offered one (usePwaInstall), else the steps through its menu;
+ * when it offered one (usePwaInstall) — shown on arrival and from the
+ * button — else the steps through its menu;
  * once it's installed, turning notifications on (Web Push).
  */
 function AndroidInstall() {
@@ -112,6 +113,16 @@ function AndroidInstall() {
   const pwa = usePwaInstall();
   const steps = t.raw("steps") as string[];
   const benefits = t.raw("benefits") as [string, string][];
+  // Arriving here is asking to install: show Chrome's dialog right away
+  // when it lets us (it needs the tap that opened this page), once. The
+  // button below shows it again.
+  const offered = useRef(false);
+  const { canPrompt, prompt } = pwa;
+  useEffect(() => {
+    if (!canPrompt || offered.current) return;
+    offered.current = true;
+    void prompt({ auto: true });
+  }, [canPrompt, prompt]);
   return (
     <>
       <Text>{t("intro")}</Text>

@@ -47,8 +47,9 @@ function update(next: Partial<State>) {
 if (Platform.OS === "web" && typeof window !== "undefined") {
   state = { canPrompt: false, installed: isInstalledWebApp() };
   window.addEventListener("beforeinstallprompt", (event) => {
-    // Our own button and steps instead of Chrome's bar.
-    event.preventDefault();
+    // Our own popup and button instead of Chrome's bar — except on the
+    // install page itself, where Chrome may offer to install right away.
+    if (window.location.pathname !== "/install") event.preventDefault();
     deferred = event as InstallPromptEvent;
     update({ canPrompt: true });
   });
@@ -61,11 +62,42 @@ if (Platform.OS === "web" && typeof window !== "undefined") {
 const SERVER: State = { canPrompt: false, installed: false };
 
 /**
+ * Show the browser's install dialog; false = dismissed or unavailable.
+ * Browsers only show it in answer to a tap. `auto` is for showing it
+ * unasked (the install page, on arrival): it does so when the tap that led
+ * here still counts, and otherwise leaves the dialog for the button.
+ *
+ * A plain function, outside the hook, on purpose: inside it the React
+ * Compiler read `deferred` again after it was cleared.
+ */
+async function showInstallPrompt(options?: {
+  auto?: boolean;
+}): Promise<boolean> {
+  const event = deferred;
+  if (!event) return false;
+  if (
+    options?.auto &&
+    !(navigator as { userActivation?: { isActive: boolean } }).userActivation
+      ?.isActive
+  )
+    return false;
+  // Chrome allows one prompt() per event.
+  deferred = null;
+  update({ canPrompt: false });
+  try {
+    await event.prompt();
+    return (await event.userChoice).outcome === "accepted";
+  } catch {
+    return false;
+  }
+}
+
+/**
  * `canPrompt`: the browser can show its install dialog (Android Chrome,
  * not yet installed). `installed`: running from the home screen, or just
- * installed. `prompt()` shows the dialog; false = dismissed or unavailable.
+ * installed. `prompt()`: showInstallPrompt.
  */
-export function usePwaInstall(): State & { prompt: () => Promise<boolean> } {
+export function usePwaInstall(): State & { prompt: typeof showInstallPrompt } {
   const current = useSyncExternalStore(
     (fn) => {
       listeners.add(fn);
@@ -74,20 +106,5 @@ export function usePwaInstall(): State & { prompt: () => Promise<boolean> } {
     () => state,
     () => SERVER,
   );
-  return {
-    ...current,
-    prompt: async () => {
-      const event = deferred;
-      if (!event) return false;
-      // Chrome allows one prompt() per event.
-      deferred = null;
-      update({ canPrompt: false });
-      try {
-        await event.prompt();
-        return (await event.userChoice).outcome === "accepted";
-      } catch {
-        return false;
-      }
-    },
-  };
+  return { ...current, prompt: showInstallPrompt };
 }
