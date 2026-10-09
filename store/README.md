@@ -25,6 +25,9 @@ Upload in this order (App Store Connect → the version → iPhone 6.9" Display)
 - Japanese: [`ios/screenshots/ja/`](ios/screenshots/ja/)
 - English (U.S.): [`ios/screenshots/en-US/`](ios/screenshots/en-US/)
 - Without headline or frame: [`ios/screenshots/plain/`](ios/screenshots/plain/)
+- The same set at 1206 × 2622, for the iPhone 6.1" / 6.3" Display slot when
+  App Store Connect asks for it:
+  [`ios/screenshots/6.3-inch/`](ios/screenshots/6.3-inch/) (`ja`, `en-US`)
 
 | File | Headline (ja) | Headline (en) | Shows |
 |---|---|---|---|
@@ -37,7 +40,8 @@ Upload in this order (App Store Connect → the version → iPhone 6.9" Display)
 
 All names, photos, events, news and messages in them are fictional demo
 data (a private test database), never real members. Apple scales the 6.9"
-set for smaller iPhones.
+set for smaller iPhones; the 6.3" copies are that set resized
+(`sips -z 2622 1206`).
 
 ## Listing text
 
