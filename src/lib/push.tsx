@@ -1,4 +1,4 @@
-import type { PushState } from "@contract/notifications";
+import type { PushRegisterRequest, PushState } from "@contract/notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Notifications from "expo-notifications";
@@ -18,11 +18,13 @@ import { AppState, Linking, Platform } from "react-native";
 import { useTranslations } from "use-intl";
 import { api, isApiError } from "./api";
 import { ME_KEY, useAuth } from "./auth";
+import { getDeviceItem, removeDeviceItem, setDeviceItem } from "./device-store";
 import { hrefFor, nativeHref, siteUrl } from "./links";
 import {
   ACTION,
   CATEGORY,
   easProjectId,
+  notificationOpened,
   onActionDone,
   onNotificationOpen,
   type PushUnavailable,
@@ -31,6 +33,16 @@ import {
   setCurrentScreen,
   setScreenResolver,
 } from "./push-core";
+import {
+  askWebPermission,
+  listenToWebPush,
+  removeWebSubscription,
+  setWebBadge,
+  takeLaunchTap,
+  webPermission,
+  webPushSupported,
+  webSubscription,
+} from "./web-push";
 
 /**
  * App notifications, the React side (the rest is push-core.ts):
@@ -45,6 +57,11 @@ import {
  * - keeps the app icon's number in step with the tab bar, and refreshes
  *   lists when a notification arrives.
  * Screens use usePush() (settings, the prompt on Home, onboarding).
+ *
+ * The web app does the same through the browser (Web Push, web-push.ts):
+ * its permission, a push subscription instead of an Expo token, and the
+ * service worker (public/sw.js) for what arrives and what's tapped. No
+ * channels or quick actions there, and no first-launch intro.
  */
 
 export const PUSH_KEY = ["push"] as const;
@@ -53,7 +70,8 @@ export const INBOX_KEY = ["notifications"] as const;
 /** What stops notifications on this device (null = nothing). */
 export type PushBlocker =
   | PushUnavailable
-  /** no EAS project id in this build, and the server has no dev outbox */
+  /** no EAS project id in this build, and the server has no dev outbox;
+   *  the web app: the server has no Web Push key */
   | "not-configured";
 
 export type PushPermission = "granted" | "denied" | "undetermined";
@@ -175,6 +193,8 @@ export function PushProvider({ children }: { children: ReactNode }) {
   const signedIn = status === "signedIn";
   const active = signedIn && me?.user.state === "ACTIVE";
   const unavailable = pushUnavailable();
+  // The web app in a browser that can subscribe ("web" otherwise blocks).
+  const webPush = useMemo(() => webPushSupported(), []);
 
   const [permission, setPermission] = useState<PushPermission | null>(null);
   const [canAskAgain, setCanAskAgain] = useState(true);
@@ -183,16 +203,19 @@ export function PushProvider({ children }: { children: ReactNode }) {
 
   const query = useQuery({
     queryKey: PUSH_KEY,
-    enabled: signedIn && unavailable === null,
+    enabled: signedIn && (unavailable === null || webPush),
     queryFn: () => api<PushState>("/push"),
     staleTime: 60_000,
   });
   const state = signedIn ? (query.data ?? null) : null;
-  const blocker: PushBlocker =
-    unavailable ??
-    (state && !easProjectId() && !(__DEV__ && state.devTokens)
+  const blocker: PushBlocker = webPush
+    ? state && !state.webPushKey
       ? "not-configured"
-      : null);
+      : null
+    : (unavailable ??
+      (state && !easProjectId() && !(__DEV__ && state.devTokens)
+        ? "not-configured"
+        : null));
 
   // Keep a chat's banner quiet while that chat is open (push-core).
   useEffect(() => {
@@ -209,18 +232,22 @@ export function PushProvider({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   useEffect(() => {
-    void SecureStore.getItemAsync(OPT_OUT_KEY)
-      .then((v) => setOptOut(v === "1"))
-      .catch(() => setOptOut(false));
+    void getDeviceItem(OPT_OUT_KEY).then((v) => setOptOut(v === "1"));
   }, []);
 
   const readPermission = useCallback(async () => {
+    if (webPush) {
+      const p = webPermission();
+      setPermission(p);
+      // A browser asks once; after "block" only its site settings help.
+      setCanAskAgain(p !== "denied");
+    }
     if (unavailable === "web") return;
     const p = await Notifications.getPermissionsAsync().catch(() => null);
     if (!p) return;
     setPermission(permissionOf(p));
     setCanAskAgain(p.canAskAgain);
-  }, [unavailable]);
+  }, [unavailable, webPush]);
   useEffect(() => {
     void readPermission();
     const sub = AppState.addEventListener("change", (s) => {
@@ -262,6 +289,12 @@ export function PushProvider({ children }: { children: ReactNode }) {
 
   /** The phone's permission dialog only (the intro screen's button). */
   const askPermission = useCallback(async (): Promise<PushPermission> => {
+    if (webPush) {
+      const p = await askWebPermission();
+      setPermission(p);
+      setCanAskAgain(p !== "denied");
+      return p;
+    }
     try {
       const p = await Notifications.requestPermissionsAsync({
         ios: { allowAlert: true, allowBadge: true, allowSound: true },
@@ -273,7 +306,7 @@ export function PushProvider({ children }: { children: ReactNode }) {
       console.warn("[push] permission request failed", e);
       return "undetermined";
     }
-  }, []);
+  }, [webPush]);
 
   // Android channels and the quick actions, in the member's language.
   useEffect(() => {
@@ -325,20 +358,30 @@ export function PushProvider({ children }: { children: ReactNode }) {
     if (registering.current) return registering.current;
     const run = async (): Promise<boolean> => {
       const s = queryClient.getQueryData<PushState>(PUSH_KEY);
-      const token = await currentToken(Boolean(s?.devTokens)).catch((e) => {
-        console.warn("[push] no token", e);
-        return null;
-      });
-      if (!token) return false;
-      try {
-        const next = await api<PushState>("/push", {
-          method: "PUT",
-          body: {
-            token,
-            platform: Platform.OS === "android" ? "android" : "ios",
-            enabled: true,
-          },
+      let body: PushRegisterRequest;
+      if (webPush) {
+        const subscription = s?.webPushKey
+          ? await webSubscription(s.webPushKey).catch((e) => {
+              console.warn("[push] no subscription", e);
+              return null;
+            })
+          : null;
+        if (!subscription) return false;
+        body = { platform: "web", subscription, enabled: true };
+      } else {
+        const token = await currentToken(Boolean(s?.devTokens)).catch((e) => {
+          console.warn("[push] no token", e);
+          return null;
         });
+        if (!token) return false;
+        body = {
+          token,
+          platform: Platform.OS === "android" ? "android" : "ios",
+          enabled: true,
+        };
+      }
+      try {
+        const next = await api<PushState>("/push", { method: "PUT", body });
         queryClient.setQueryData(PUSH_KEY, next);
         return true;
       } catch (e) {
@@ -351,7 +394,7 @@ export function PushProvider({ children }: { children: ReactNode }) {
     });
     registering.current = p;
     return p;
-  }, [queryClient]);
+  }, [queryClient, webPush]);
 
   // Keep the server in step with this device: register on every launch
   // (tokens can change) while the OS allows notifications and the member
@@ -428,9 +471,16 @@ export function PushProvider({ children }: { children: ReactNode }) {
     });
   }, [signedIn, active, navReady, router, queryClient]);
 
+  // The web app, opened by tapping a notification: once / has redirected.
+  useEffect(() => {
+    if (!webPush || !signedIn || !navReady || pathname === "/") return;
+    const tap = takeLaunchTap();
+    if (tap) notificationOpened(tap);
+  }, [webPush, signedIn, navReady, pathname]);
+
   // A notification arrived, or a quick action ran: refresh what it touches.
   useEffect(() => {
-    if (unavailable !== null) return;
+    if (unavailable !== null && !webPush) return;
     const refresh = () => {
       void queryClient.invalidateQueries({ queryKey: ME_KEY });
       void queryClient.invalidateQueries({ queryKey: INBOX_KEY });
@@ -439,20 +489,29 @@ export function PushProvider({ children }: { children: ReactNode }) {
       void queryClient.invalidateQueries({ queryKey: ["chat", "list"] });
       void queryClient.invalidateQueries({ queryKey: ["follows"] });
     };
+    // The web app: the service worker reports arrivals and taps.
+    if (webPush)
+      return listenToWebPush({
+        onOpen: notificationOpened,
+        onReceived: refresh,
+      });
     const sub = Notifications.addNotificationReceivedListener(refresh);
     const off = onActionDone(refresh);
     return () => {
       sub.remove();
       off();
     };
-  }, [unavailable, queryClient]);
+  }, [unavailable, webPush, queryClient]);
 
   // The app icon's number = the tab bar's.
   const badge = me
     ? me.badges.news + me.badges.messages + me.badges.chat + me.badges.follows
     : 0;
   useEffect(() => {
-    if (unavailable === "web") return;
+    if (unavailable === "web") {
+      setWebBadge(signedIn ? badge : 0);
+      return;
+    }
     void Notifications.setBadgeCountAsync(signedIn ? badge : 0).catch(() => {});
   }, [unavailable, signedIn, badge]);
 
@@ -460,8 +519,17 @@ export function PushProvider({ children }: { children: ReactNode }) {
     if (blocker) return "unavailable" as const;
     setBusy(true);
     try {
-      await SecureStore.deleteItemAsync(OPT_OUT_KEY).catch(() => {});
+      await removeDeviceItem(OPT_OUT_KEY);
       setOptOut(false);
+      if (webPush) {
+        let w = webPermission();
+        if (w === "undetermined") w = await askWebPermission();
+        setPermission(w);
+        setCanAskAgain(w !== "denied");
+        if (w !== "granted") return "denied" as const;
+        if (me) syncedFor.current = `${me.user.id}:true`;
+        return (await register()) ? ("ok" as const) : ("failed" as const);
+      }
       let p = await Notifications.getPermissionsAsync();
       if (permissionOf(p) !== "granted" && p.canAskAgain)
         p = await Notifications.requestPermissionsAsync({
@@ -475,21 +543,22 @@ export function PushProvider({ children }: { children: ReactNode }) {
     } finally {
       setBusy(false);
     }
-  }, [blocker, register, me]);
+  }, [blocker, register, me, webPush]);
 
   const disable = useCallback(async () => {
     setBusy(true);
     try {
-      await SecureStore.setItemAsync(OPT_OUT_KEY, "1").catch(() => {});
+      await setDeviceItem(OPT_OUT_KEY, "1");
       setOptOut(true);
       const next = await api<PushState>("/push", { method: "DELETE" });
       queryClient.setQueryData(PUSH_KEY, next);
+      if (webPush) await removeWebSubscription();
     } catch (e) {
       console.warn("[push] unregister failed", e);
     } finally {
       setBusy(false);
     }
-  }, [queryClient]);
+  }, [queryClient, webPush]);
 
   const sendTest = useCallback(async () => {
     try {

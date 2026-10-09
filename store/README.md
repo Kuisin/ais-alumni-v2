@@ -25,6 +25,9 @@ Upload in this order (App Store Connect → the version → iPhone 6.9" Display)
 - Japanese: [`ios/screenshots/ja/`](ios/screenshots/ja/)
 - English (U.S.): [`ios/screenshots/en-US/`](ios/screenshots/en-US/)
 - Without headline or frame: [`ios/screenshots/plain/`](ios/screenshots/plain/)
+- The same set at 1206 × 2622, for the iPhone 6.1" / 6.3" Display slot when
+  App Store Connect asks for it:
+  [`ios/screenshots/6.3-inch/`](ios/screenshots/6.3-inch/) (`ja`, `en-US`)
 
 | File | Headline (ja) | Headline (en) | Shows |
 |---|---|---|---|
@@ -37,7 +40,22 @@ Upload in this order (App Store Connect → the version → iPhone 6.9" Display)
 
 All names, photos, events, news and messages in them are fictional demo
 data (a private test database), never real members. Apple scales the 6.9"
-set for smaller iPhones.
+set for smaller iPhones; the 6.3" copies are that set resized
+(`sips -z 2622 1206`).
+
+## Header and Search Results (creative assets)
+
+App Store Connect → the version → Product Page Information → Header and
+Search Results, per language (iOS 27's product page header and the image
+shown in search results; optional — without them search shows screenshots).
+
+| Slot | Japanese | English (U.S.) | Size |
+|---|---|---|---|
+| Header | [`ios/creative/ja/header.png`](ios/creative/ja/header.png) | [`ios/creative/en-US/header.png`](ios/creative/en-US/header.png) | 3840 × 1646 (21:9) |
+| Search Results | [`ios/creative/ja/search-results.png`](ios/creative/ja/search-results.png) | [`ios/creative/en-US/search-results.png`](ios/creative/en-US/search-results.png) | 3840 × 2560 (3:2) |
+
+Rebuilt from the frameless screenshots with
+`node scripts/store-creative-assets.mjs`.
 
 ## Listing text
 

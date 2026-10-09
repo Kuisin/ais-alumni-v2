@@ -5,6 +5,7 @@ import { Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { Button, colors, radius, space, Text } from "@/ui";
+import { installDevice, usePwaInstall } from "./pwa";
 
 const LATER_KEY = "ais.installPromptLater";
 /** 「あとで」 hides the popup this long. */
@@ -12,7 +13,9 @@ const LATER_MS = 14 * 86_400_000;
 
 /**
  * 「アプリ版が使えます」 on the web app: a popup at the bottom that leads to
- * /install (how to get the app). Web only — the app itself never shows it.
+ * /install (how to get the app). Web only — the app itself never shows it,
+ * nor does the web app once it's on the home screen. On Android it offers
+ * adding the web app to the home screen instead of the iPhone app.
  * 「あとで」 hides it for two weeks (localStorage).
  */
 export function InstallPrompt() {
@@ -21,14 +24,18 @@ export function InstallPrompt() {
 }
 
 function WebInstallPrompt() {
-  const t = useTranslations("mobile.install.prompt");
+  const tIos = useTranslations("mobile.install.prompt");
+  const tAndroid = useTranslations("mobile.install.promptAndroid");
+  const { installed } = usePwaInstall();
   const router = useRouter();
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
   // Decided after mount: the server render has no localStorage.
   const [show, setShow] = useState(false);
+  const [android, setAndroid] = useState(false);
 
   useEffect(() => {
+    setAndroid(installDevice() === "android");
     try {
       const until = Number(globalThis.localStorage?.getItem(LATER_KEY) ?? 0);
       setShow(!(until > Date.now()));
@@ -56,7 +63,8 @@ function WebInstallPrompt() {
     pathname === "/moved" ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/chat/");
-  if (!show || hidden) return null;
+  if (!show || hidden || installed) return null;
+  const t = android ? tAndroid : tIos;
   return (
     <View
       pointerEvents="box-none"
@@ -81,7 +89,12 @@ function WebInstallPrompt() {
               router.push("/install");
             }}
           />
-          <Button variant="ghost" compact label={t("later")} onPress={later} />
+          <Button
+            variant="ghost"
+            compact
+            label={tIos("later")}
+            onPress={later}
+          />
         </View>
       </View>
     </View>
@@ -89,7 +102,7 @@ function WebInstallPrompt() {
 }
 
 /** Above the tab bar (and clear of the composer on other screens). */
-const TAB_BAR = 64;
+const TAB_BAR = 68;
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },

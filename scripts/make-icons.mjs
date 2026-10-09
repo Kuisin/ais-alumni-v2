@@ -117,6 +117,14 @@ const TARGETS = [
     bg: null,
     tassel: WHITE,
   },
+  // Web notifications' status bar icon (public/sw.js): the same, served.
+  {
+    file: "public/icons/notification-badge.png",
+    size: 96,
+    glyph: 0.9,
+    bg: null,
+    tassel: WHITE,
+  },
   // Web (PWA manifest + apple-touch icon): full-bleed, safe for maskable.
   { file: "public/icons/icon-192.png", size: 192, opaque: true },
   { file: "public/icons/icon-512.png", size: 512, opaque: true },

@@ -112,6 +112,12 @@ export function onNotificationOpen(fn: OpenListener): () => void {
   };
 }
 
+/** A tap that didn't come through expo-notifications (the web app's). */
+export function notificationOpened(data: PushData): void {
+  if (openListeners.size) for (const fn of openListeners) fn(data);
+  else pendingOpens.push(data);
+}
+
 /** A quick action finished (to refresh lists and badges). */
 export function onActionDone(fn: DoneListener): () => void {
   doneListeners.add(fn);
