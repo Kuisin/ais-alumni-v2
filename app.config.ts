@@ -29,6 +29,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: IDENTIFIER,
     supportsTablet: false,
+    // Sign in with Apple (App Store guideline 4.8; src/lib/apple-sign-in.ts).
+    usesAppleSignIn: true,
     // Universal links: links to the site open the app when it's installed
     // (public/.well-known/apple-app-site-association; +native-intent.tsx).
     // ais.kai-lab.net is the old website, whose links are still around.
@@ -113,6 +115,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     "expo-secure-store",
     "expo-web-browser",
+    "expo-apple-authentication",
     "expo-localization",
     "expo-image",
     [

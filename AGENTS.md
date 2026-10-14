@@ -30,6 +30,11 @@ channel); the browser flow stays for the web, Expo Go and as the fallback.
 For that, the same LINE Login channel needs **App types → Mobile app**
 turned on with the iOS bundle ID `net.kailab.aisalumni` and the Android
 package `net.kailab.aisalumni` + its package signature.
+On iOS the app also offers Sign in with Apple (App Store guideline 4.8),
+first: `src/lib/apple-sign-in.ts` → `POST /auth/apple/native`, which
+checks Apple's identity token and finds or creates the member by Apple's
+confirmed email (`src/server/lib/mobile/apple.ts`; setup in
+docs/APP_STORE.md). Not in Expo Go, which lacks the module.
 
 This repo owns the API contract types (`src/contract`, used by both the app
 and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);
