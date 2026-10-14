@@ -25,6 +25,7 @@ import {
 } from "@/server/lib/push/expo";
 import { pushMessageFor } from "@/server/lib/push/message";
 import { deliverPushes } from "@/server/lib/push/send";
+import { isWebPushEndpoint, webPushPublicKey } from "@/server/lib/push/web";
 import type { CurrentUser } from "@/server/lib/session";
 
 /**
@@ -48,6 +49,7 @@ export async function pushState(session: Session): Promise<PushState> {
   ).length;
   return {
     devTokens: pushOutboxEnabled(),
+    webPushKey: webPushPublicKey(),
     device: device
       ? {
           enabled: device.enabled,
@@ -61,8 +63,19 @@ export async function pushState(session: Session): Promise<PushState> {
 }
 
 export const RegisterBody = z.object({
-  token: z.string().max(200),
-  platform: z.enum(["ios", "android"]),
+  /** the apps: the Expo push token */
+  token: z.string().max(200).optional(),
+  platform: z.enum(["ios", "android", "web"]),
+  /** "web": the browser's PushSubscription (toJSON()) */
+  subscription: z
+    .object({
+      endpoint: z.string().max(1000),
+      keys: z.object({
+        p256dh: z.string().min(1).max(200),
+        auth: z.string().min(1).max(100),
+      }),
+    })
+    .optional(),
   enabled: z.boolean().default(true),
 });
 
@@ -70,6 +83,21 @@ export async function registerDevice(
   session: Session,
   body: z.infer<typeof RegisterBody>,
 ): Promise<PushState> {
+  if (body.platform === "web") {
+    const sub = body.subscription;
+    if (!sub || !isWebPushEndpoint(sub.endpoint))
+      throw new ApiError(400, "invalid_token");
+    if (!webPushPublicKey()) throw new ApiError(400, "push_unavailable");
+    await registerPushDevice({
+      sessionId: session.id,
+      userId: session.userId,
+      token: sub.endpoint,
+      platform: "web",
+      web: sub.keys,
+      enabled: body.enabled,
+    });
+    return pushState(session);
+  }
   if (!isExpoPushToken(body.token)) throw new ApiError(400, "invalid_token");
   // Development builds without an EAS project use made-up tokens that only
   // the local outbox can "deliver".
@@ -102,6 +130,8 @@ export async function sendTestPush(
       userId: true,
       token: true,
       platform: true,
+      webP256dh: true,
+      webAuth: true,
       enabled: true,
       failedAt: true,
       lastSentAt: true,

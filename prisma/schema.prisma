@@ -1309,10 +1309,14 @@ model PushDevice {
   session    MobileSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   userId     String
   user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  /// ExponentPushToken[…]; a phone signed in to another account takes it over
+  /// ExponentPushToken[…]; a phone signed in to another account takes it over.
+  /// "web": the browser's push subscription endpoint (a URL)
   token      String        @unique
-  /// "ios" | "android"
+  /// "ios" | "android" | "web" (a browser / installed web app: Web Push)
   platform   String?
+  /// "web" only: the subscription's keys (p256dh, auth), base64url
+  webP256dh  String?
+  webAuth    String?
   /// app notifications switched off on this device (the app's settings)
   enabled    Boolean       @default(true)
   /// Expo reported the token dead (DeviceNotRegistered): not used again

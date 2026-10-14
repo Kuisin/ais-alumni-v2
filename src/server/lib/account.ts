@@ -1,4 +1,5 @@
 import { db } from "@/server/lib/db";
+import { revokeAppleTokens } from "@/server/lib/mobile/apple";
 import { deletePrivate } from "@/server/lib/storage";
 
 /**
@@ -141,6 +142,9 @@ export async function deleteUserAccount(
     if (!other) return { ok: false, error: "sole_admin_content" };
     heir = other.id;
   }
+
+  // Sign in with Apple: its tokens are revoked (App Store 5.1.1(v)).
+  await revokeAppleTokens(userId);
 
   // Files first: once the row is gone we lose the keys. A failed file delete
   // is logged but does not block the account deletion.

@@ -35,6 +35,7 @@
     "@xmartlabs/react-native-line": "^6.0.1",
     "exceljs": "^4.4.0",
     "expo": "~57.0.26",
+    "expo-apple-authentication": "~57.0.2",
     "expo-camera": "~57.0.6",
     "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.20",
@@ -60,6 +61,7 @@
     "expo-task-manager": "~57.0.21",
     "expo-web-browser": "~57.0.3",
     "harfbuzzjs": "0.10.0",
+    "jose": "^5.10.0",
     "lucide-react-native": "^1.48.0",
     "pg": "^8.23.0",
     "qrcode": "^1.5.4",
@@ -77,6 +79,7 @@
     "satori": "0.33.5",
     "stripe": "22.6.0",
     "use-intl": "^4.14.7",
+    "web-push": "^3.6.7",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -85,6 +88,7 @@
     "@types/pg": "^8.23.1",
     "@types/qrcode": "^1.5.6",
     "@types/react": "~19.2.2",
+    "@types/web-push": "^3.6.4",
     "playwright-core": "^1.63.0",
     "prisma": "7.10.0",
     "tsx": "^4.23.15",
