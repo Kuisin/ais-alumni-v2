@@ -10,6 +10,9 @@ export type PushState = {
   /** the server writes pushes to its local outbox (development): a build
    *  without an EAS project may register a development token */
   devTokens: boolean;
+  /** the web app: the key browsers subscribe with (Web Push, VAPID);
+   *  null / absent = the server can't send to browsers */
+  webPushKey?: string | null;
   /** this device's registration (null = not registered) */
   device: {
     enabled: boolean;
@@ -28,12 +31,23 @@ export type PushState = {
  * errors: invalid_token (400), push_unavailable (400: a development token
  * on a server that can't deliver it)
  */
-export type PushRegisterRequest = {
-  /** ExponentPushToken[…] */
-  token: string;
-  platform: "ios" | "android";
-  enabled?: boolean;
-};
+export type PushRegisterRequest =
+  | {
+      /** ExponentPushToken[…] */
+      token: string;
+      platform: "ios" | "android";
+      enabled?: boolean;
+    }
+  | {
+      /** the web app in a browser / installed to the home screen */
+      platform: "web";
+      /** the browser's PushSubscription (toJSON()) */
+      subscription: {
+        endpoint: string;
+        keys: { p256dh: string; auth: string };
+      };
+      enabled?: boolean;
+    };
 
 /** DELETE /push — this device stops getting notifications → PushState */
 

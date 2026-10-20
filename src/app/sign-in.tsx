@@ -6,6 +6,7 @@ import type {
 } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
 import { isRunningInExpoGo } from "expo";
+import * as AppleAuthentication from "expo-apple-authentication";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Mail, MessageCircle } from "lucide-react-native";
@@ -21,10 +22,21 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
+import { appleSignInOffered } from "@/lib/apple-sign-in";
 import { signInDevice, useAuth } from "@/lib/auth";
 import { API_URL } from "@/lib/config";
 import { usePendingInvite } from "@/lib/invite";
-import { Button, Card, colors, Screen, space, Text, TextField } from "@/ui";
+import {
+  Button,
+  Card,
+  colors,
+  radius,
+  Screen,
+  space,
+  Text,
+  TextField,
+  TOUCH,
+} from "@/ui";
 
 type Step = { step: "email" } | { step: "code"; email: string; notice: string };
 
@@ -40,7 +52,8 @@ const OTP_ERRORS = new Set([
 
 /**
  * Sign in or create an account (the website's /app page): LINE or Google
- * through the system browser, or a 6-digit code sent by email.
+ * through the system browser, or a 6-digit code sent by email — and on
+ * iOS, Sign in with Apple (App Store guideline 4.8), first.
  */
 export default function SignInScreen() {
   const t = useTranslations("landing.signIn");
@@ -53,12 +66,13 @@ export default function SignInScreen() {
     queryFn: () => api<AppConfig>("/config"),
     staleTime: 5 * 60_000,
   });
-  const [busy, setBusy] = useState<null | "line" | "google">(null);
+  const [busy, setBusy] = useState<null | "line" | "google" | "apple">(null);
+
   // Web: /auth sends us back here with ?failed=1 when LINE sign-in failed.
   const { failed } = useLocalSearchParams<{ failed?: string }>();
   const [providerError, setProviderError] = useState(failed === "1");
 
-  const provider = async (p: "line" | "google") => {
+  const provider = async (p: "line" | "google" | "apple") => {
     setBusy(p);
     setProviderError(false);
     const result = await signInWithProvider(p, {
@@ -76,6 +90,7 @@ export default function SignInScreen() {
     isRunningInExpoGo() &&
     !/^http:\/\/(localhost|127\.|192\.168\.|10\.)/.test(API_URL);
   const sso = expoGo ? { line: false, google: false } : config.data?.sso;
+  const showApple = appleSignInOffered();
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
@@ -128,9 +143,24 @@ export default function SignInScreen() {
               </Text>
             ) : null}
 
-            {sso?.line || sso?.google ? (
+            {sso?.line || sso?.google || showApple ? (
               <View style={styles.gapMd}>
-                {sso.line ? (
+                {showApple ? (
+                  <AppleAuthentication.AppleAuthenticationButton
+                    buttonType={
+                      AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
+                    }
+                    buttonStyle={
+                      AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+                    }
+                    cornerRadius={radius.md}
+                    style={styles.apple}
+                    onPress={() => {
+                      if (busy === null) void provider("apple");
+                    }}
+                  />
+                ) : null}
+                {sso?.line ? (
                   <Button
                     variant="line"
                     label={t("line")}
@@ -140,7 +170,7 @@ export default function SignInScreen() {
                     onPress={() => provider("line")}
                   />
                 ) : null}
-                {sso.google ? (
+                {sso?.google ? (
                   <Button
                     variant="secondary"
                     label={t("google")}
@@ -154,7 +184,7 @@ export default function SignInScreen() {
                     {tm("signIn.providerFailed")}
                   </Text>
                 ) : null}
-                {sso.line ? (
+                {sso?.line ? (
                   <Text variant="caption" tone="subtle">
                     {t("lineNote")}
                   </Text>
@@ -432,6 +462,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
   },
   link: { textDecorationLine: "underline" },
+  apple: { height: TOUCH + 4, width: "100%" },
   footer: {
     gap: space.sm,
     borderTopWidth: StyleSheet.hairlineWidth,

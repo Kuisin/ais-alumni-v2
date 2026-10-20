@@ -95,12 +95,21 @@ calculation for messaging).
 
 ## Things that can cause a rejection
 
-- **Guideline 4.8 (Login Services)**: the app offers LINE sign-in, a
-  third-party login. Apple then requires an equivalent privacy-focused
-  option — in practice **Sign in with Apple**. Our own email-code sign-in
-  may not be accepted as that option. Adding Sign in with Apple needs the
-  capability on the App ID, a Services ID + key for the server, and
-  `expo-apple-authentication`.
+- **Guideline 4.8 (Login Services)**: rejected once (1.0 build 22) for
+  offering LINE sign-in without an equivalent privacy-focused option. The
+  app now offers **Sign in with Apple** on iOS, first on the sign-in screen
+  (`src/lib/apple-sign-in.ts`, `POST /auth/apple/native`,
+  `src/server/lib/mobile/apple.ts`). The capability comes from
+  `ios.usesAppleSignIn` (EAS enables it on the App ID when building).
+  Expo Go has no Apple sign-in module: test it in a development build.
+  Two things in the Apple Developer account:
+  - **Email relay**: register the `EMAIL_FROM` domain under Sign in with
+    Apple → email communication, or mail to private relay addresses
+    (…@privaterelay.appleid.com) isn't delivered.
+  - **Token revocation (guideline 5.1.1(v))**: create a Sign in with Apple
+    key and set `APPLE_TEAM_ID`, `APPLE_SIGN_IN_KEY_ID` and
+    `APPLE_SIGN_IN_PRIVATE_KEY` (the .p8) on the server; then deleting an
+    account revokes the member's Apple tokens. Without them it's skipped.
 - **Demo account**: see above (REVIEW_EMAIL / REVIEW_CODE).
 - **Guideline 1.2 (UGC)**: report, block and moderation exist; mention
   them in the notes (done above).

@@ -1,9 +1,10 @@
-import * as SecureStore from "expo-secure-store";
 import { BellRing } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { getDeviceItem, setDeviceItem } from "@/lib/device-store";
 import { usePush } from "@/lib/push";
+import { isInstalledWebApp } from "@/lib/web-push";
 import { Button, colors, radius, space, Text } from "@/ui";
 
 const LATER_KEY = "ais.pushPromptLater";
@@ -29,9 +30,9 @@ export function PushPrompt({
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    void SecureStore.getItemAsync(LATER_KEY)
-      .then((v) => setLaterUntil(v ? Number(v) : null))
-      .catch(() => setLaterUntil(null));
+    void getDeviceItem(LATER_KEY).then((v) =>
+      setLaterUntil(v ? Number(v) : null),
+    );
   }, []);
 
   if (
@@ -48,11 +49,16 @@ export function PushPrompt({
   const blockedByPhone =
     push.permission === "denied" ||
     (push.permission === "undetermined" && !push.canAskAgain);
+  // The web app: suggested once it's on the home screen (in a browser tab
+  // it's in settings only), and not when the browser blocks them — there
+  // are no settings this button could open.
+  if (Platform.OS === "web" && (!isInstalledWebApp() || blockedByPhone))
+    return null;
 
   const later = () => {
     const until = Date.now() + LATER_MS;
     setLaterUntil(until);
-    void SecureStore.setItemAsync(LATER_KEY, String(until)).catch(() => {});
+    void setDeviceItem(LATER_KEY, String(until));
   };
 
   const enable = async () => {

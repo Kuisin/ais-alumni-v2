@@ -68,6 +68,7 @@ import * as adminVerificationDetail from "./mobile/v1/admin/verification/[id]";
 import * as adminVerificationDecision from "./mobile/v1/admin/verification/[id]/decision";
 import * as adminVerificationMerge from "./mobile/v1/admin/verification/[id]/merge";
 import * as adminVerificationVouchers from "./mobile/v1/admin/verification/[id]/vouchers";
+import * as authAppleNative from "./mobile/v1/auth/apple/native";
 import * as r0 from "./mobile/v1/auth/email/request";
 import * as r1 from "./mobile/v1/auth/email/verify";
 import * as authLineNative from "./mobile/v1/auth/line/native";
@@ -301,6 +302,7 @@ export const ROUTES: [string, RouteModule][] = [
   ["admin/support/[id]", adminSupportRequest as unknown as RouteModule],
   ["auth/email/request", r0 as unknown as RouteModule],
   ["auth/email/verify", r1 as unknown as RouteModule],
+  ["auth/apple/native", authAppleNative as unknown as RouteModule],
   ["auth/line/native", authLineNative as unknown as RouteModule],
   ["auth/oauth/callback/line", r2 as unknown as RouteModule],
   ["auth/oauth/exchange", r3 as unknown as RouteModule],

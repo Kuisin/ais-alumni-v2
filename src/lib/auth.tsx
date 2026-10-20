@@ -20,6 +20,7 @@ import {
 } from "react";
 import { Platform } from "react-native";
 import { ApiError, api, setApiSession, setUnauthorizedHandler } from "./api";
+import { appleSignIn } from "./apple-sign-in";
 import { API_URL } from "./config";
 import { lineSdkSignIn } from "./line-sdk";
 import { deviceLocale } from "./locale";
@@ -47,10 +48,11 @@ type Ctx = {
   finishSignIn: (result: SessionResult) => Promise<void>;
   /**
    * LINE: through the LINE app (LINE SDK) when this build has it and the
-   * server gave `lineChannelId`, else in the browser.
+   * server gave `lineChannelId`, else in the browser. Apple: iOS's own
+   * sheet (iOS only).
    */
   signInWithProvider: (
-    provider: "google" | "line",
+    provider: "google" | "line" | "apple",
     options?: { lineChannelId?: string | null },
   ) => Promise<"ok" | "cancelled" | "failed">;
   /** Web: finish a LINE / Google sign-in on return to /auth?code=… */
@@ -154,9 +156,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithProvider = useCallback(
     async (
-      provider: "google" | "line",
+      provider: "google" | "line" | "apple",
       options?: { lineChannelId?: string | null },
     ) => {
+      if (provider === "apple") {
+        const apple = await appleSignIn();
+        if (apple.type !== "ok") return apple.type;
+        try {
+          const result = await api<SessionResult>("/auth/apple/native", {
+            body: {
+              identityToken: apple.identityToken,
+              nonce: apple.nonce,
+              authorizationCode: apple.authorizationCode ?? undefined,
+              locale: guestLocale,
+              device: device(),
+            },
+          });
+          await finishSignIn(result);
+          return "ok" as const;
+        } catch {
+          return "failed" as const;
+        }
+      }
       if (provider === "line" && options?.lineChannelId) {
         const line = await lineSdkSignIn(options.lineChannelId);
         if (line.type === "cancelled") return "cancelled" as const;

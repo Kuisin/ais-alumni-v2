@@ -30,6 +30,11 @@ channel); the browser flow stays for the web, Expo Go and as the fallback.
 For that, the same LINE Login channel needs **App types → Mobile app**
 turned on with the iOS bundle ID `net.kailab.aisalumni` and the Android
 package `net.kailab.aisalumni` + its package signature.
+On iOS the app also offers Sign in with Apple (App Store guideline 4.8),
+first: `src/lib/apple-sign-in.ts` → `POST /auth/apple/native`, which
+checks Apple's identity token and finds or creates the member by Apple's
+confirmed email (`src/server/lib/mobile/apple.ts`; setup in
+docs/APP_STORE.md). Not in Expo Go, which lacks the module.
 
 This repo owns the API contract types (`src/contract`, used by both the app
 and `src/server`) and the UI strings (`messages/<locale>/<namespace>.json`);
@@ -136,6 +141,14 @@ project id in the config Expo Go needs no sign-in (with one, run
   `src/app/(member)/notifications.tsx`; settings, the Home prompt and chat
   levels are in `src/features/notifications`. Push needs a development or
   store build — Expo Go can't receive it.
+  The web app gets them too, as Web Push (`src/lib/web-push.ts`, the
+  service worker `public/sw.js`; server: `src/server/lib/push/web.ts`) —
+  for Android, where the web app added to the home screen is the app: the
+  browser's push subscription is registered like a token (`PUT /push`,
+  platform `web`) and sent to directly, without Expo. It needs a VAPID key
+  pair on the server (`npx web-push generate-vapid-keys` →
+  `WEB_PUSH_PUBLIC_KEY`, `WEB_PUSH_PRIVATE_KEY`, Vercel env); without it
+  the web app doesn't offer notifications. No quick actions there.
   Without app notifications, members get what needs them personally —
   unread 1:1 chat / @mention notices, what the committee decides or asks
   about their account (application result / more information needed,
@@ -166,10 +179,14 @@ project id in the config Expo Go needs no sign-in (with one, run
   Stripe's Customer Portal.
 - **Installing the app** (`src/app/install.tsx`, `src/features/install`):
   the web app shows 「アプリ版が使えます」 (web only; 「あとで」 hides it for
-  two weeks) leading to /install — the App Store link once `APP_STORE_URL`
-  is set on the server, until then the steps to install through TestFlight
-  with the external group's public link (`TESTFLIGHT_URL`,
-  `https://testflight.apple.com/join/…`).
+  two weeks) leading to /install, which shows what fits the phone it's
+  opened on (`pwa.ts`; a choice on anything else). iPhone: the App Store
+  link once `APP_STORE_URL` is set on the server, until then the steps to
+  install through TestFlight with the external group's public link
+  (`TESTFLIGHT_URL`, `https://testflight.apple.com/join/…`). Android: there
+  is no store app — the web app is installed to the home screen (Chrome's
+  "Install app"; `public/manifest.webmanifest`, linked by
+  `src/app/+html.tsx`) and gets notifications as above.
 - **Strings** (`src/lib/i18n.tsx`): the website's `messages/<locale>/*.json`
   (synced) through use-intl (next-intl's core), so both say the same thing.
   App-only strings: `messages/<locale>/mobile.json` (also kept in the

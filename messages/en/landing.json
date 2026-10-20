@@ -35,7 +35,7 @@
     "collected": {
       "title": "What we collect",
       "items": [
-        "Account details: your email address, and your LINE account ID if you sign in with LINE (and your Google account ID if you linked Google earlier).",
+        "Account details: your email address, and your LINE or Apple account ID if you sign in with LINE or Apple (and your Google account ID if you linked Google earlier). If you sign in with Apple, we use the email address Apple confirmed (which may be Apple’s relay address).",
         "Profile: your name (romaji and kanji/kana), name at AIS, date of birth, gender, photo, short bio, your relationship to AIS (student, parent, teacher) and years/grade, and any education or work history you add.",
         "Optional contact details: phone number, LINE display name and social links.",
         "Verification information: your answers and any documents you upload to prove your connection to AIS.",
@@ -103,6 +103,7 @@
         "LINE (LY Corporation): sign-in with LINE and notifications from the Official Account.",
         "Google: account links of members who signed in with Google earlier, and Android push notifications (Firebase Cloud Messaging).",
         "Expo and Apple: delivery of app push notifications (Expo Push, Apple Push Notification service).",
+        "Apple: Sign in with Apple (iPhone app).",
         "Resend: sending email.",
         "Stripe: donation payments (website only).",
         "Apple and Google: distributing the app (App Store, TestFlight, Google Play)."
@@ -136,7 +137,7 @@
       "title": "Contact",
       "body": "For questions about this policy or your personal information, please contact the AIS Alumni Committee through Contact us in the app or on the website."
     },
-    "updated": "Established: September 29, 2026 · Last revised: October 7, 2026"
+    "updated": "Established: September 29, 2026 · Last revised: October 15, 2026"
   },
   "operatedBy": "Run by the AIS Alumni Committee, a volunteer group of graduates (not an official school service).",
   "invite": {

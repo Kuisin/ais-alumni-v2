@@ -1,5 +1,6 @@
 import { BellRing, Settings2 } from "lucide-react-native";
 import { useState } from "react";
+import { Platform } from "react-native";
 import { useTranslations } from "use-intl";
 import { Notice } from "@/features/me/parts";
 import { ToggleRow } from "@/features/me/rows";
@@ -9,7 +10,8 @@ import { Button, ListGroup, Section, Text } from "@/ui";
 type Note = { tone: "success" | "danger" | "muted"; text: string };
 
 /**
- * 設定 → アプリの通知 (app only): notifications on this device. While
+ * 設定 → アプリの通知: notifications on this device (the apps, and the web
+ * app in a browser that supports Web Push). While
  * they're on, the server sends everything here instead of LINE / email
  * (src/lib/notify/route.ts), so the section says so; the categories below
  * (受け取る通知) apply to the app too. Explains what's in the way when this
@@ -89,14 +91,16 @@ export function PushSection() {
           {deniedByPhone ? (
             <>
               <Text variant="small" tone="danger" accessibilityRole="alert">
-                {t("denied")}
+                {t(Platform.OS === "web" ? "deniedWeb" : "denied")}
               </Text>
-              <Button
-                variant="secondary"
-                label={t("openSettings")}
-                icon={(c) => <Settings2 color={c} size={18} aria-hidden />}
-                onPress={push.openSettings}
-              />
+              {Platform.OS === "web" ? null : (
+                <Button
+                  variant="secondary"
+                  label={t("openSettings")}
+                  icon={(c) => <Settings2 color={c} size={18} aria-hidden />}
+                  onPress={push.openSettings}
+                />
+              )}
             </>
           ) : null}
           {others > 0 ? (
