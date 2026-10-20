@@ -154,8 +154,9 @@ project id in the config Expo Go needs no sign-in (with one, run
   about their account (application result / more information needed,
   results of name, birth date, gender and record requests) and, for staff,
   admin tasks — on LINE if they linked it and follow the Official Account,
-  else by email; bulk mail (ニュース, reminders, unread summaries) is always
-  email (`src/server/lib/notify/catalog.ts`, `route.ts`).
+  else by email; bulk mail (ニュース, reminders, unread summaries, the weekly
+  "finish your registration" reminder — `src/server/lib/jobs/onboarding-reminders.ts`,
+  at most 8 times) is always email (`src/server/lib/notify/catalog.ts`, `route.ts`).
   News, お知らせ and chat notifications carry their content (news: the
   post's title and a summary; chat: the message's text; the 20:00 chat
   email: per chat the unread count and latest message), shortened per
