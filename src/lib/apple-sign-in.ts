@@ -26,6 +26,12 @@ export type AppleSignIn =
       identityToken: string;
       nonce: string;
       authorizationCode: string | null;
+      /** first sign-in only: what the member gave Apple */
+      fullName: {
+        givenName: string | null;
+        middleName: string | null;
+        familyName: string | null;
+      } | null;
     }
   | { type: "cancelled" }
   | { type: "failed" };
@@ -46,6 +52,13 @@ export async function appleSignIn(): Promise<AppleSignIn> {
       identityToken: credential.identityToken,
       nonce,
       authorizationCode: credential.authorizationCode,
+      fullName: credential.fullName
+        ? {
+            givenName: credential.fullName.givenName,
+            middleName: credential.fullName.middleName,
+            familyName: credential.fullName.familyName,
+          }
+        : null,
     };
   } catch (e) {
     return (e as { code?: string }).code === "ERR_REQUEST_CANCELED"
