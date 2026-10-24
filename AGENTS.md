@@ -291,6 +291,12 @@ failing on development-build bundles.
 profiles — this repo's own server. First time:
 `npx eas-cli@latest init` (adds the project id), then
 `npx eas-cli@latest build --profile preview --platform all`.
+iOS builds use EAS's Xcode 27.1 image (`ios.image` per profile): built
+with the iOS 27.1 SDK the app fills the iPhone Duo's inner display (older
+SDKs leave a margin there) and the App Store marks it optimized for it.
+That display ignores the portrait lock and is iPad-wide, so lay screens out
+by window width (`useWindowDimensions`), never by orientation or device;
+`Screen` caps pages at `CONTENT_MAX_WIDTH`.
 LINE sign-in needs the `aisalumni://` scheme, so it works in
 development / preview / production builds, not in Expo Go against a
 deployed server (Expo Go works with email codes, or with a local server).
