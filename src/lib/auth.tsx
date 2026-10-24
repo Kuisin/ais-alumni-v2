@@ -168,6 +168,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               identityToken: apple.identityToken,
               nonce: apple.nonce,
               authorizationCode: apple.authorizationCode ?? undefined,
+              fullName: apple.fullName,
               locale: guestLocale,
               device: device(),
             },

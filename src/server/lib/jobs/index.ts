@@ -10,12 +10,14 @@ import {
   PartialFailure,
 } from "@/server/lib/jobs/context";
 import { sendEventReminders } from "@/server/lib/jobs/event-reminders";
+import { sendOnboardingReminders } from "@/server/lib/jobs/onboarding-reminders";
 import { publishDueNews } from "@/server/lib/jobs/publish-news";
 import {
   daily,
   EVERY_MINUTE,
   lastSlot,
   type Schedule,
+  weekly,
   yearly,
 } from "@/server/lib/jobs/schedule";
 import { sendStagePrompt } from "@/server/lib/jobs/stage-prompt";
@@ -28,7 +30,7 @@ import { checkPushReceipts } from "@/server/lib/push/receipts";
  * minute (scripts/setup-supabase-cron.ts). Each call works through the
  * tasks that are due, within a time budget (budget.ts) that keeps it under
  * Vercel's 5-minute limit:
- * - due = its latest slot (every minute, daily HH:MM or yearly MM-DD HH:MM
+ * - due = its latest slot (every minute, daily HH:MM, weekly "mon HH:MM" or yearly MM-DD HH:MM
  *   JST) isn't finished yet (CronRun.doneAt);
  * - a task is claimed with a lease, so overlapping calls never run it twice;
  * - work stops at the budget and the next call continues from the saved
@@ -75,6 +77,11 @@ export const JOBS = {
   "cleanup-evidence": { schedule: daily("03:00"), run: cleanupEvidence },
   // Yearly "is your status still …?" prompt (§7).
   "stage-prompt": { schedule: yearly("04-01 09:00"), run: sendStagePrompt },
+  // Registration not finished: Monday mornings, at most 8 times each.
+  "onboarding-reminders": {
+    schedule: weekly("mon 10:00"),
+    run: sendOnboardingReminders,
+  },
 } satisfies Record<string, Job>;
 
 export type JobName = keyof typeof JOBS;

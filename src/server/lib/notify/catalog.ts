@@ -135,6 +135,11 @@ export const NOTIFY_KINDS = {
   FAMILY_HANDOVER_DONE: { category: "family", emoji: "🔑" },
   // Profile
   STAGE_PROMPT: { category: "profile", emoji: "🎓" },
+  // Registration not finished (weekly, at most 8 times: jobs/onboarding-
+  // reminders.ts). Their own account, so not something to turn off — and
+  // applicants can't reach Settings yet.
+  ONBOARDING_REMINDER: { category: "account", emoji: "📝" },
+  NEEDS_INFO_REMINDER: { category: "account", emoji: "📝" },
   // Admin work: sent the moment it happens (src/lib/notify/staff.ts), and
   // always by email too, so it reaches committee members at their desk even
   // when they use the app.

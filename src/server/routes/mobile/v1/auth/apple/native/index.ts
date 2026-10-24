@@ -20,6 +20,15 @@ const Body = z.object({
   nonce: z.string().min(16).max(200),
   /** one-time code for a refresh token (revoked when the account is deleted) */
   authorizationCode: z.string().max(2000).optional(),
+  /** the name iOS gave (first sign-in only) */
+  fullName: z
+    .object({
+      givenName: z.string().max(200).nullish(),
+      middleName: z.string().max(200).nullish(),
+      familyName: z.string().max(200).nullish(),
+    })
+    .nullish()
+    .catch(null),
   locale: z.enum(["ja", "en"]).catch("ja"),
   device: DeviceSchema,
 });
@@ -34,7 +43,11 @@ export const POST = publicRoute(async (request): Promise<SessionResult> => {
   const body = await readJson(request, Body);
   const identity = await appleIdentity(body.identityToken, body.nonce);
   if (!identity) throw new ApiError(400, "invalid_token");
-  const userId = await memberForApple(identity, body.locale);
+  const userId = await memberForApple(
+    identity,
+    body.locale,
+    body.fullName ?? null,
+  );
   if (body.authorizationCode)
     await keepAppleToken(identity.sub, body.authorizationCode);
   const user = await db.user.findUniqueOrThrow({

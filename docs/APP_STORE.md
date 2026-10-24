@@ -24,7 +24,9 @@ EAS project `@kaisei0807s/ais-alumni`. Release builds talk to
 5. **Screenshots** (App Store Connect, per language): iPhone 6.9"
    (1320 × 2868) is required; iPad not needed (`supportsTablet: false`).
    Take them on the iPhone 17 Pro Max simulator with the demo account —
-   no real members' names or photos in them.
+   no real members' names or photos in them. From April 2027 App Store
+   Connect also requires iPhone Duo screenshots (its simulator in Xcode
+   27.1's Device Hub, unfolded).
 6. **App Privacy** and **Age Rating**: answers below.
 7. **App Review Information**: contact, demo account, notes below. Submit.
 

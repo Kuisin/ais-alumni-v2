@@ -154,8 +154,9 @@ project id in the config Expo Go needs no sign-in (with one, run
   about their account (application result / more information needed,
   results of name, birth date, gender and record requests) and, for staff,
   admin tasks — on LINE if they linked it and follow the Official Account,
-  else by email; bulk mail (ニュース, reminders, unread summaries) is always
-  email (`src/server/lib/notify/catalog.ts`, `route.ts`).
+  else by email; bulk mail (ニュース, reminders, unread summaries, the weekly
+  "finish your registration" reminder — `src/server/lib/jobs/onboarding-reminders.ts`,
+  at most 8 times) is always email (`src/server/lib/notify/catalog.ts`, `route.ts`).
   News, お知らせ and chat notifications carry their content (news: the
   post's title and a summary; chat: the message's text; the 20:00 chat
   email: per chat the unread count and latest message), shortened per
@@ -290,6 +291,12 @@ failing on development-build bundles.
 profiles — this repo's own server. First time:
 `npx eas-cli@latest init` (adds the project id), then
 `npx eas-cli@latest build --profile preview --platform all`.
+iOS builds use EAS's Xcode 27.1 image (`ios.image` per profile): built
+with the iOS 27.1 SDK the app fills the iPhone Duo's inner display (older
+SDKs leave a margin there) and the App Store marks it optimized for it.
+That display ignores the portrait lock and is iPad-wide, so lay screens out
+by window width (`useWindowDimensions`), never by orientation or device;
+`Screen` caps pages at `CONTENT_MAX_WIDTH`.
 LINE sign-in needs the `aisalumni://` scheme, so it works in
 development / preview / production builds, not in Expo Go against a
 deployed server (Expo Go works with email codes, or with a local server).

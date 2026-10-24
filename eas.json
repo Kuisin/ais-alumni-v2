@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "ios": { "image": "macos-tahoe-26.6-xcode-27.1" },
       "developmentClient": true,
       "distribution": "internal",
       "env": {
@@ -12,12 +13,14 @@
       }
     },
     "preview": {
+      "ios": { "image": "macos-tahoe-26.6-xcode-27.1" },
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://ais-alumni-dev.kai-lab.net"
       }
     },
     "production": {
+      "ios": { "image": "macos-tahoe-26.6-xcode-27.1" },
       "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_API_URL": "https://ais-alumni.kai-lab.net"

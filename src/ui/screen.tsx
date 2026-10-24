@@ -10,6 +10,13 @@ import {
 import { colors, space } from "./theme";
 
 /**
+ * Pages are a column at most this wide, centred: on a wide window (the
+ * iPhone Duo's inner display, a desktop browser) lines and cards don't
+ * stretch across the whole screen.
+ */
+export const CONTENT_MAX_WIDTH = 720;
+
+/**
  * Scrolling page body on the slate background, with pull-to-refresh when
  * `onRefresh` is given. Headers come from the navigator (Stack / Tabs).
  */
@@ -68,5 +75,12 @@ export function ScreenView({
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: space.lg, gap: space.lg, paddingBottom: space.xxl },
+  content: {
+    width: "100%",
+    maxWidth: CONTENT_MAX_WIDTH + 2 * space.lg,
+    alignSelf: "center",
+    padding: space.lg,
+    gap: space.lg,
+    paddingBottom: space.xxl,
+  },
 });
