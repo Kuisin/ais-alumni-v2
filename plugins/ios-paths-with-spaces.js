@@ -59,9 +59,10 @@ function withQuotedBundleScript(config) {
     for (const phase of Object.values(phases)) {
       if (typeof phase !== "object" || typeof phase.shellScript !== "string")
         continue;
-      // `"$NODE_BINARY" --print "…/react-native-xcode.sh"` → "$(…)"
+      // `"$NODE_BINARY" --print "…/react-native-xcode.sh"` → "$(…)" (SDK 58's
+      // template already quotes the backticks: "`…`" → "$(…)" too)
       phase.shellScript = phase.shellScript.replace(
-        /`(\\"\$NODE_BINARY\\" --print \\"[^`]*react-native-xcode\.sh'\\")`/,
+        /(?:\\")?`(\\"\$NODE_BINARY\\" --print \\"[^`]*react-native-xcode\.sh'\\")`(?:\\")?/,
         '\\"$($1)\\"',
       );
     }

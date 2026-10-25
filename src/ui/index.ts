@@ -6,6 +6,7 @@ export { TextField } from "./field";
 export { HeaderButton } from "./header-button";
 export { ListGroup, ListRow, Separator } from "./list-row";
 export { Markdown, useOpenLink } from "./markdown";
+export { PANES_MIN_WIDTH, Panes } from "./panes";
 export { QueryState } from "./query-state";
 export { Screen, ScreenView } from "./screen";
 export { Section } from "./section";

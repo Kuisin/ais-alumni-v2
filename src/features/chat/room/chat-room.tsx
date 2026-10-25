@@ -33,7 +33,10 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { useLocale, useTranslations } from "use-intl";
 import { isApiError } from "@/lib/api";
 import { useMe } from "@/lib/auth";
@@ -77,8 +80,24 @@ function countFrom(sorted: readonly string[], at: string): number {
  * opens the talk's details.
  */
 export function ChatRoomScreen() {
-  const t = useTranslations("chat");
   const { id } = useLocalSearchParams<{ id: string }>();
+  return <ChatRoomView id={id} />;
+}
+
+/**
+ * The talk in the chat tab's detail pane (wide windows: src/ui/panes.tsx).
+ * The screen's header is the tab's, so the talk's title and buttons are a
+ * bar above it.
+ */
+export function ChatRoomPane({ id }: { id: string }) {
+  return <ChatRoomView id={id} pane />;
+}
+
+/** The pane's title bar (ChatRoomPane). */
+const PANE_BAR = 56;
+
+function ChatRoomView({ id, pane = false }: { id: string; pane?: boolean }) {
+  const t = useTranslations("chat");
   const query = useChatRoom(id);
   const room = query.data;
   const title = room
@@ -88,23 +107,37 @@ export function ChatRoomScreen() {
     : t("title");
   return (
     <>
-      <Stack.Screen
-        options={{
-          title,
-          headerBackButtonDisplayMode: "minimal",
-          headerTitle: room ? () => <RoomTitle room={room} /> : undefined,
-          headerRight: room
-            ? () => <RoomHeaderRight id={room.id} />
-            : undefined,
-        }}
-      />
-      <View style={styles.screen}>
+      {pane ? (
+        room ? (
+          <View style={styles.paneBar}>
+            <RoomTitle room={room} />
+            <RoomHeaderRight id={room.id} />
+          </View>
+        ) : null
+      ) : (
+        <Stack.Screen
+          options={{
+            title,
+            headerBackButtonDisplayMode: "minimal",
+            headerTitle: room ? () => <RoomTitle room={room} /> : undefined,
+            headerRight: room
+              ? () => <RoomHeaderRight id={room.id} />
+              : undefined,
+          }}
+        />
+      )}
+      <SafeAreaView edges={["left", "right"]} style={styles.screen}>
         <QueryState query={query}>
           {(data) => (
-            <Room key={data.id} room={data} fresh={query.isFetchedAfterMount} />
+            <Room
+              key={data.id}
+              room={data}
+              fresh={query.isFetchedAfterMount}
+              topOffset={pane ? PANE_BAR : 0}
+            />
           )}
         </QueryState>
-      </View>
+      </SafeAreaView>
     </>
   );
 }
@@ -174,7 +207,16 @@ function RoomHeaderRight({ id }: { id: string }) {
   );
 }
 
-function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
+function Room({
+  room,
+  fresh,
+  topOffset,
+}: {
+  room: ChatRoom;
+  fresh: boolean;
+  /** what sits between the screen's header and the talk (the pane's bar) */
+  topOffset: number;
+}) {
   const t = useTranslations("chat.room");
   const tc = useTranslations("chat");
   const tCommon = useTranslations("common");
@@ -358,7 +400,7 @@ function Room({ room, fresh }: { room: ChatRoom; fresh: boolean }) {
     <KeyboardAvoidingView
       style={styles.flex}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={headerHeight}
+      keyboardVerticalOffset={headerHeight + topOffset}
     >
       {messages.length === 0 ? (
         <View style={styles.emptyWrap}>
@@ -531,6 +573,17 @@ function useKeyboardShown(): boolean {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.slate100 },
+  paneBar: {
+    height: PANE_BAR,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: space.sm,
+    paddingHorizontal: space.md,
+    backgroundColor: colors.surface,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
+  },
   flex: { flex: 1 },
   title: { maxWidth: 240, minHeight: TOUCH, justifyContent: "center" },
   titleLine: { flexDirection: "row", alignItems: "center", gap: 2 },

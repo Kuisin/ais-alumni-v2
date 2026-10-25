@@ -99,12 +99,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     en: "./locales/en.json",
   },
   web: {
-    // The web app (ais-alumni.kai-lab.net) with its API routes (src/server).
-    output: "server",
+    // The web app (ais-alumni.kai-lab.net): pages rendered at build time,
+    // with the API routes (src/server; expo-router's apiRoutes below). SDK
+    // 58's "server" renders pages per request (SSR) instead.
+    output: "static",
     favicon: "./assets/images/favicon.png",
   },
   plugins: [
-    "expo-router",
+    ["expo-router", { apiRoutes: true }],
     [
       "expo-splash-screen",
       {
@@ -118,6 +120,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-apple-authentication",
     "expo-localization",
     "expo-image",
+    "expo-sharing",
+    "expo-status-bar",
     [
       "expo-notifications",
       {
@@ -148,9 +152,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "@react-native-community/datetimepicker",
     // LINE sign-in through the LINE app (src/lib/line-sdk.ts).
     "@xmartlabs/react-native-line",
-    // Native project fixes for building with Xcode 27 / from paths with
-    // spaces (see each file).
-    "./plugins/ios-scene-lifecycle",
+    // …which needs AppDelegate's openURL, gone from SDK 58's template.
+    "./plugins/ios-open-url",
+    // Native project fixes for building from paths with spaces / with
+    // Xcode 27 (see each file).
     "./plugins/ios-paths-with-spaces",
     // Build scripts must write into the app (Xcode 27's script sandbox).
     "./plugins/ios-no-script-sandbox",

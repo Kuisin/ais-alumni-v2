@@ -5,7 +5,7 @@ import { type ReactNode, type RefObject, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  type ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   View,
 } from "react-native";
@@ -38,7 +38,7 @@ export function OnboardingShell({
   /** sticky actions under the scrolling page (the application's 戻る / 次へ) */
   footer?: ReactNode;
   /** to scroll the page (the application's steps start at the top) */
-  scrollRef?: RefObject<ScrollView | null>;
+  scrollRef?: RefObject<ScrollViewInstance | null>;
 }) {
   const tm = useTranslations("mobile.onboarding");
   const ts = useTranslations("support.dialog");

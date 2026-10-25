@@ -5,7 +5,13 @@ import { Image } from "expo-image";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Archive, ArchiveRestore, Eye, Trash2 } from "lucide-react-native";
 import { useRef, useState } from "react";
-import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  type ScrollViewInstance,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useTranslations } from "use-intl";
 import { useErrorText, useWide } from "@/features/admin/events/parts";
 import {
@@ -60,7 +66,7 @@ export default function AdminNewsPostScreen() {
   const t = useTranslations("adminContent");
   const query = useAdminNews(id);
   const wide = useWide();
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
   const [refreshing, setRefreshing] = useState(false);
   // The website's ?created=1 / ?notify=1 / ?notified=1 / ?approved=1.
   const [flags, setFlags] = useState<Flags>(() => ({

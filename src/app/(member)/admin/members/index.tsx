@@ -231,7 +231,7 @@ export default function AdminMembersScreen() {
               variant="secondary"
               onPress={() => query.fetchNextPage()}
             />
-          ) : null
+          ) : undefined
         }
         onEndReached={() => {
           if (query.hasNextPage && !query.isFetchingNextPage)

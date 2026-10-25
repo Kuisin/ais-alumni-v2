@@ -1,5 +1,5 @@
 import type { MessageSummary, NewsSummary } from "@contract/news";
-import { Tabs, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Mail, Newspaper } from "lucide-react-native";
 import { type ReactElement, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
@@ -41,7 +41,7 @@ export default function NewsScreen() {
   const router = useRouter();
   const canCreate = useNewsList().data?.pages[0]?.canCreate ?? false;
   const header = (
-    <Tabs.Screen
+    <Stack.Screen
       options={{
         headerRight: canCreate
           ? () => (
@@ -152,7 +152,7 @@ function NewsTab({ tabs }: { tabs: ReactElement | null }) {
               onPress={() => void list.fetchNextPage()}
             />
           </View>
-        ) : null
+        ) : undefined
       }
       onEndReachedThreshold={0.5}
       onEndReached={() => {
@@ -237,7 +237,7 @@ function MessagesTab({ tabs }: { tabs: ReactElement | null }) {
               onPress={() => void list.fetchNextPage()}
             />
           </View>
-        ) : null
+        ) : undefined
       }
       onEndReachedThreshold={0.5}
       onEndReached={() => {

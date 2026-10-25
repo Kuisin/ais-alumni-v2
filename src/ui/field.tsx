@@ -1,5 +1,11 @@
 import { forwardRef } from "react";
-import { StyleSheet, TextInput, type TextInputProps, View } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  type TextInputInstance,
+  type TextInputProps,
+  View,
+} from "react-native";
 import { Text } from "./text";
 import { colors, font, radius, space, TOUCH } from "./theme";
 
@@ -10,7 +16,7 @@ export type TextFieldProps = TextInputProps & {
 };
 
 /** Labelled text input with hint / error text below. */
-export const TextField = forwardRef<TextInput, TextFieldProps>(
+export const TextField = forwardRef<TextInputInstance, TextFieldProps>(
   function TextField({ label, hint, error, style, ...props }, ref) {
     return (
       <View style={styles.wrap}>

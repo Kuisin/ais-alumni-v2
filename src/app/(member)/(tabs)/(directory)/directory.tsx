@@ -170,7 +170,7 @@ export default function DirectoryTab() {
                 onPress={() => list.fetchNextPage()}
               />
             </View>
-          ) : null
+          ) : undefined
         }
         onEndReached={() => {
           if (list.hasNextPage && !list.isFetching) void list.fetchNextPage();

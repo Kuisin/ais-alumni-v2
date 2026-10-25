@@ -1,4 +1,7 @@
-import { ScrollViewStyleReset } from "expo-router/html";
+import {
+  ScrollViewStyleReset,
+  useServerDocumentContext,
+} from "expo-router/html";
 import type { PropsWithChildren } from "react";
 
 /** Registers public/sw.js (notifications; it caches nothing). */
@@ -11,8 +14,12 @@ const REGISTER_SW = `if ("serviceWorker" in navigator) window.addEventListener("
  * the service worker that shows notifications.
  */
 export default function Root({ children }: PropsWithChildren) {
+  // What the renderer adds (SDK 58): metadata and CSS in <head>, and the
+  // JavaScript bundles — without them the page never becomes the app.
+  const { htmlAttributes, headNodes, bodyAttributes, bodyNodes } =
+    useServerDocumentContext();
   return (
-    <html lang="en">
+    <html lang="en" {...htmlAttributes}>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -27,8 +34,12 @@ export default function Root({ children }: PropsWithChildren) {
         <ScrollViewStyleReset />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: a constant */}
         <script dangerouslySetInnerHTML={{ __html: REGISTER_SW }} />
+        {headNodes}
       </head>
-      <body>{children}</body>
+      <body {...bodyAttributes}>
+        {children}
+        {bodyNodes}
+      </body>
     </html>
   );
 }

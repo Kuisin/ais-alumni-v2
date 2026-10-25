@@ -11,6 +11,7 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   View,
 } from "react-native";
@@ -96,7 +97,7 @@ export function NewsArticle({
   const th = useTranslations("news.hub");
   const { locale } = useAuth();
   const headerHeight = useHeaderHeight();
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
   const respondY = useRef(0);
   const [typing, setTyping] = useState(false);
 

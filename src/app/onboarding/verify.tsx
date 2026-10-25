@@ -1,7 +1,7 @@
 import type { VerifyForm as VerifyFormData } from "@contract/onboarding";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
-import type { ScrollView } from "react-native";
+import type { ScrollViewInstance } from "react-native";
 import { useTranslations } from "use-intl";
 import { ONBOARDING_KEY } from "@/features/onboarding/api";
 import { Notice } from "@/features/onboarding/controls";
@@ -26,7 +26,7 @@ export default function OnboardingVerifyScreen() {
   const t = useTranslations("verify");
   const { locale, refreshMe } = useAuth();
   const queryClient = useQueryClient();
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const q = useQuery({
     queryKey: [...ONBOARDING_KEY, "verify", locale],
     queryFn: async () => {

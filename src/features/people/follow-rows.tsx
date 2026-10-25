@@ -2,7 +2,13 @@ import type { Locale } from "@contract/core";
 import type { FollowLists, FollowUiState, MemberCard } from "@contract/people";
 import { CircleCheck } from "lucide-react-native";
 import { useRef } from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  type ScrollViewInstance,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useLocale, useTranslations } from "use-intl";
 import { formatDate } from "@/lib/format";
 import { Button, CountDot, colors, radius, space, Text, TOUCH } from "@/ui";
@@ -42,7 +48,7 @@ export function FollowTabs({
 }) {
   const t = useTranslations("follows");
   // Keep the chosen list in view (e.g. opened with ?tab=blocked).
-  const scroller = useRef<ScrollView>(null);
+  const scroller = useRef<ScrollViewInstance>(null);
   const xs = useRef(new Map<FollowTab, number>());
   const reveal = (key: FollowTab, animated: boolean) => {
     const x = xs.current.get(key);

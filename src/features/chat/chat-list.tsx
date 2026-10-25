@@ -1,8 +1,13 @@
 import type { ChatList, ChatListRow } from "@contract/chat";
 import type { Locale } from "@contract/core";
-import { Tabs, useFocusEffect, useRouter } from "expo-router";
+import {
+  Stack,
+  useFocusEffect,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import { MessageCirclePlus, Search, Users } from "lucide-react-native";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Pressable,
   RefreshControl,
@@ -18,6 +23,7 @@ import {
   colors,
   EmptyState,
   HeaderButton,
+  Panes,
   QueryState,
   ScreenView,
   space,
@@ -25,6 +31,7 @@ import {
   TOUCH,
 } from "@/ui";
 import { useChatList } from "./api";
+import { ChatRoomPane } from "./room/chat-room";
 import { listTime } from "./time";
 
 type Filter = "all" | "direct" | "groups";
@@ -34,11 +41,14 @@ const POLL_MS = 20_000;
 /**
  * チャット (the website's /app/chat): talks and group chats, newest
  * activity first — search, filter chips, unread counts, 「あなた宛」 for
- * mentions; admins also see the groups they're not in.
+ * mentions; admins also see the groups they're not in. On a wide window
+ * the selected talk (?room=) is beside the list (Panes).
  */
 export function ChatListScreen() {
   const t = useTranslations("chat");
+  const tm = useTranslations("mobile.chat");
   const router = useRouter();
+  const { room } = useLocalSearchParams<{ room?: string }>();
   const live = useRealtimeLive();
   const list = useChatList();
   const { refetch } = list;
@@ -57,7 +67,7 @@ export function ChatListScreen() {
 
   return (
     <ScreenView>
-      <Tabs.Screen
+      <Stack.Screen
         options={{
           headerRight: list.data?.canStartDirect
             ? () => (
@@ -70,19 +80,57 @@ export function ChatListScreen() {
             : undefined,
         }}
       />
-      <QueryState query={list}>
-        {(data) => <ChatListBody data={data} refetch={refetch} />}
-      </QueryState>
+      <Panes
+        list={(wide) => (
+          <>
+            {!wide && room ? <OpenFullScreen id={room} /> : null}
+            <QueryState query={list}>
+              {(data) => (
+                <ChatListBody
+                  data={data}
+                  refetch={refetch}
+                  selected={wide ? (room ?? null) : undefined}
+                />
+              )}
+            </QueryState>
+          </>
+        )}
+        detail={
+          room ? (
+            <ChatRoomPane key={room} id={room} />
+          ) : (
+            <View style={styles.pick}>
+              <EmptyState title={tm("pickTalk")} />
+            </View>
+          )
+        }
+      />
     </ScreenView>
   );
+}
+
+/**
+ * The window narrowed (the iPhone Duo closed) with a talk in the pane:
+ * it goes on full screen.
+ */
+function OpenFullScreen({ id }: { id: string }) {
+  const router = useRouter();
+  useEffect(() => {
+    router.setParams({ room: undefined });
+    router.push({ pathname: "/chat/[id]", params: { id } });
+  }, [id, router]);
+  return null;
 }
 
 function ChatListBody({
   data,
   refetch,
+  selected,
 }: {
   data: ChatList;
   refetch: () => Promise<unknown>;
+  /** side by side (Panes): the talk in the pane — rows select instead of opening */
+  selected?: string | null;
 }) {
   const t = useTranslations("chat");
   const [q, setQ] = useState("");
@@ -116,7 +164,13 @@ function ChatListBody({
     <SectionList
       sections={sections}
       keyExtractor={(r) => r.id}
-      renderItem={({ item }) => <ChatRowItem row={item} />}
+      renderItem={({ item }) => (
+        <ChatRowItem
+          row={item}
+          selected={selected === undefined ? undefined : selected === item.id}
+        />
+      )}
+      extraData={selected}
       renderSectionHeader={({ section }) =>
         section.title ? (
           <View style={styles.sectionHeader}>
@@ -204,7 +258,14 @@ function RowSeparator() {
   return <View style={styles.separator} />;
 }
 
-function ChatRowItem({ row: r }: { row: ChatListRow }) {
+function ChatRowItem({
+  row: r,
+  selected,
+}: {
+  row: ChatListRow;
+  /** side by side: whether it's the talk in the pane (undefined: not) */
+  selected?: boolean;
+}) {
   const t = useTranslations("chat");
   const locale = useLocale() as Locale;
   const router = useRouter();
@@ -224,10 +285,16 @@ function ChatRowItem({ row: r }: { row: ChatListRow }) {
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityState={selected === undefined ? undefined : { selected }}
       onPress={() =>
-        router.push({ pathname: "/chat/[id]", params: { id: r.id } })
+        selected === undefined
+          ? router.push({ pathname: "/chat/[id]", params: { id: r.id } })
+          : router.setParams({ room: r.id })
       }
-      style={({ pressed }) => [styles.row, pressed ? styles.rowPressed : null]}
+      style={({ pressed }) => [
+        styles.row,
+        selected ? styles.rowSelected : pressed ? styles.rowPressed : null,
+      ]}
     >
       {r.direct ? (
         <Avatar uri={r.avatar} size={52} />
@@ -332,6 +399,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   rowPressed: { backgroundColor: colors.slate50 },
+  rowSelected: { backgroundColor: colors.brand50 },
+  pick: { flex: 1, justifyContent: "center", padding: space.lg },
   groupIcon: {
     width: 52,
     height: 52,

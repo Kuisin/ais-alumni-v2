@@ -1,7 +1,7 @@
 import type { VerifyForm as VerifyFormData } from "@contract/onboarding";
 import { GraduationCap } from "lucide-react-native";
 import { type RefObject, useEffect, useState } from "react";
-import { type ScrollView, StyleSheet, View } from "react-native";
+import { type ScrollViewInstance, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -69,7 +69,7 @@ export function VerifyForm({
   onSubmitted,
 }: {
   data: VerifyFormData;
-  scrollRef: RefObject<ScrollView | null>;
+  scrollRef: RefObject<ScrollViewInstance | null>;
   /** the invitation the app kept, used up by this application */
   inviteToken: string | null;
   onSubmitted: () => Promise<void>;

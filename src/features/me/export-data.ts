@@ -43,7 +43,7 @@ export async function exportMyData(dialogTitle: string): Promise<void> {
   const file = new File(Paths.cache, name);
   if (file.exists) file.delete();
   file.create();
-  file.write(text);
+  await file.write(text);
   await Sharing.shareAsync(file.uri, {
     mimeType: "application/json",
     UTI: "public.json",

@@ -10,7 +10,13 @@ import {
   Trash2,
 } from "lucide-react-native";
 import { useRef, useState } from "react";
-import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  type ScrollViewInstance,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useTranslations } from "use-intl";
 import {
   adminEventKeys,
@@ -54,7 +60,7 @@ export default function AdminEventScreen() {
   const query = useAdminEvent(id);
   const [refreshing, setRefreshing] = useState(false);
   const [approved, setApproved] = useState(false);
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
   const wide = useWide();
 
   const refresh = async () => {
