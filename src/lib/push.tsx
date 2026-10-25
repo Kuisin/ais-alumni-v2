@@ -2,7 +2,12 @@ import type { PushRegisterRequest, PushState } from "@contract/notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Notifications from "expo-notifications";
-import { usePathname, useRootNavigationState, useRouter } from "expo-router";
+import {
+  useGlobalSearchParams,
+  usePathname,
+  useRootNavigationState,
+  useRouter,
+} from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import {
   createContext,
@@ -226,10 +231,13 @@ export function PushProvider({ children }: { children: ReactNode }) {
     });
   }, []);
   const here = useRef(pathname);
+  // On a wide window the chat tab shows a talk beside the list (?room=).
+  const { room } = useGlobalSearchParams<{ room?: string }>();
+  const paneRoom = pathname === "/chat" && room ? room : null;
   useEffect(() => {
     here.current = pathname;
-    setCurrentScreen(pathname);
-  }, [pathname]);
+    setCurrentScreen(paneRoom ? `/chat/${paneRoom}` : pathname);
+  }, [pathname, paneRoom]);
 
   useEffect(() => {
     void getDeviceItem(OPT_OUT_KEY).then((v) => setOptOut(v === "1"));

@@ -4,6 +4,7 @@ import { AccountState, Locale } from "@/server/generated/prisma/enums";
 import { resolveUserId } from "@/server/lib/auth/adapter";
 import { normalizeEmail } from "@/server/lib/auth/otp";
 import { db } from "@/server/lib/db";
+import { nameColumns } from "@/server/lib/names";
 
 /**
  * Sign in with Apple in the iOS app (App Store guideline 4.8: an app with
@@ -11,7 +12,10 @@ import { db } from "@/server/lib/db";
  * iOS (expo-apple-authentication) and sends it with the nonce it asked
  * for; we check Apple signed it for our app, then find or create the
  * member as email sign-in does — Apple has already confirmed the address,
- * so it isn't asked for again.
+ * so it isn't asked for again. Nor is the name (App Store guideline 4:
+ * nothing Sign in with Apple gave may be asked for again): iOS gives it to
+ * the app on the first sign-in only, and it fills in the member's name, so
+ * the application starts with it.
  *
  * Addresses can be Apple's private relay (…@privaterelay.appleid.com):
  * mail to them is forwarded only from senders registered in the Apple
@@ -76,15 +80,93 @@ export async function appleIdentity(
   }
 }
 
+/** The name iOS gave the app (first sign-in only); parts may be missing. */
+export type AppleName = {
+  givenName?: string | null;
+  middleName?: string | null;
+  familyName?: string | null;
+};
+
+/** Han or kana: the name is the kanji name (姓 名), else the romaji one. */
+const JAPANESE = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u;
+
+/** User columns for Apple's name; null when it has no family and given name. */
+export function appleNameColumns(name: AppleName | null | undefined) {
+  const given = name?.givenName?.trim().slice(0, 50) || null;
+  const family = name?.familyName?.trim().slice(0, 50) || null;
+  const middle = name?.middleName?.trim().slice(0, 50) || null;
+  if (!given && !family) return null;
+  return JAPANESE.test(`${family ?? ""}${given ?? ""}`)
+    ? nameColumns({
+        lastNameRomaji: null,
+        firstNameRomaji: null,
+        middleNameRomaji: null,
+        lastNameKanji: family,
+        firstNameKanji: given,
+      })
+    : nameColumns({
+        lastNameRomaji: family,
+        firstNameRomaji: given,
+        middleNameRomaji: middle,
+        lastNameKanji: null,
+        firstNameKanji: null,
+      });
+}
+
+/**
+ * Fill in what Apple gave that a member not yet approved lacks: the name,
+ * and — for an account made without an address — Apple's confirmed one
+ * (when no other account has it), so the email step is skipped.
+ */
+async function completeFromApple(
+  userId: string,
+  id: AppleIdentity,
+  name: AppleName | null,
+): Promise<void> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: {
+      state: true,
+      primaryEmail: true,
+      nameRomaji: true,
+      nameKanji: true,
+    },
+  });
+  if (!user || user.state === AccountState.ACTIVE) return;
+  const names =
+    user.nameRomaji || user.nameKanji ? null : appleNameColumns(name);
+  const email =
+    id.email &&
+    !user.primaryEmail &&
+    user.state === AccountState.UNVERIFIED_EMAIL &&
+    !(await db.user.findUnique({
+      where: { primaryEmail: id.email },
+      select: { id: true },
+    }))
+      ? {
+          primaryEmail: id.email,
+          emailVerifiedAt: new Date(),
+          state: AccountState.EMAIL_VERIFIED,
+        }
+      : null;
+  if (!names && !email) return;
+  await db.user.update({
+    where: { id: userId },
+    data: { ...names, ...email },
+  });
+}
+
 /**
  * The member signing in with this Apple ID: linked before; else the member
  * with Apple's confirmed address (now linked); else a new account with that
  * address confirmed (as email sign-in creates one), or — without one — a
- * new account that confirms an address in onboarding, like LINE's.
+ * new account that confirms an address in onboarding, like LINE's. Apple's
+ * name and address fill in what a member not yet approved lacks.
  */
 export async function memberForApple(
   id: AppleIdentity,
   locale: "ja" | "en",
+  name: AppleName | null = null,
 ): Promise<string> {
   const account = await db.account.findUnique({
     where: {
@@ -95,7 +177,11 @@ export async function memberForApple(
     },
     select: { userId: true },
   });
-  if (account) return resolveUserId(account.userId);
+  if (account) {
+    const userId = await resolveUserId(account.userId);
+    await completeFromApple(userId, id, name);
+    return userId;
+  }
 
   const existing = id.email
     ? await db.user.findUnique({
@@ -139,6 +225,7 @@ export async function memberForApple(
     },
     update: {},
   });
+  await completeFromApple(userId, id, name);
   return userId;
 }
 

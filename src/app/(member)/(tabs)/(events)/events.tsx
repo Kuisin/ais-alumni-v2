@@ -1,5 +1,5 @@
 import type { EventTab } from "@contract/events";
-import { Tabs, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { CalendarDays } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
@@ -42,7 +42,7 @@ export default function EventsTab() {
 
   return (
     <ScreenView>
-      <Tabs.Screen
+      <Stack.Screen
         options={{
           headerRight: canCreate
             ? () => (
@@ -111,7 +111,7 @@ export default function EventsTab() {
                 onPress={() => list.fetchNextPage()}
               />
             </View>
-          ) : null
+          ) : undefined
         }
         onEndReached={() => {
           if (list.hasNextPage && !list.isFetching) void list.fetchNextPage();

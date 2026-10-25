@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  type TextInputInstance,
   View,
 } from "react-native";
 import { useTranslations } from "use-intl";
@@ -48,7 +49,7 @@ export function Composer({
   const tm = useTranslations("mobile.chat");
   const [text, setText] = useState("");
   const [selection, setSelection] = useState<Selection>({ start: 0, end: 0 });
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputInstance>(null);
   // Where the caret goes once a picked mention is in the text.
   const [caretAfterPick, setCaretAfterPick] = useState<number | null>(null);
   const [sending, setSending] = useState(false);
@@ -76,7 +77,9 @@ export function Composer({
   };
   useEffect(() => {
     const el = input.current as
-      | (TextInput & { setSelectionRange?: (a: number, b: number) => void })
+      | (TextInputInstance & {
+          setSelectionRange?: (a: number, b: number) => void;
+        })
       | null;
     if (caretAfterPick === null || !el) return;
     el.focus();

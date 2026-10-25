@@ -8,7 +8,7 @@ import type { MemberCard } from "@contract/people";
 import { useRouter } from "expo-router";
 import { Search, Send, UserRoundCheck, UsersRound } from "lucide-react-native";
 import { forwardRef, useState } from "react";
-import { StyleSheet, type TextInput, View } from "react-native";
+import { StyleSheet, type TextInputInstance, View } from "react-native";
 import { useFormatter, useTranslations } from "use-intl";
 import { confirmAction } from "@/features/me/confirm";
 import { MemberCardView } from "@/features/people/member-card";
@@ -378,7 +378,7 @@ function CancelLink({ linkId }: { linkId: string }) {
 
 /** Search form + results for claiming a child or parent (FamilySearch). */
 export const FamilySearchForm = forwardRef<
-  TextInput,
+  TextInputInstance,
   { direction: "child" | "parent" }
 >(function FamilySearchForm({ direction }, ref) {
   const t = useTranslations("family");

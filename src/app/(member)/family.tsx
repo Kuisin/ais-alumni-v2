@@ -1,6 +1,10 @@
 import { Stack } from "expo-router";
 import { useRef, useState } from "react";
-import { type ScrollView, type TextInput, View } from "react-native";
+import {
+  type ScrollViewInstance,
+  type TextInputInstance,
+  View,
+} from "react-native";
 import { useTranslations } from "use-intl";
 import { useFamily } from "@/features/family/api";
 import {
@@ -23,14 +27,14 @@ export default function FamilyScreen() {
   const t = useTranslations("family");
   const query = useFamily();
   const [refreshing, setRefreshing] = useState(false);
-  const scroll = useRef<ScrollView>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
   const offsets = useRef<Record<"child" | "parent", number>>({
     child: 0,
     parent: 0,
   });
   const inputs = {
-    child: useRef<TextInput>(null),
-    parent: useRef<TextInput>(null),
+    child: useRef<TextInputInstance>(null),
+    parent: useRef<TextInputInstance>(null),
   };
 
   const onRefresh = async () => {

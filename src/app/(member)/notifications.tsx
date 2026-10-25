@@ -139,7 +139,7 @@ export default function NotificationsScreen() {
                   onPress={() => void list.fetchNextPage()}
                 />
               </View>
-            ) : null
+            ) : undefined
           }
           onEndReachedThreshold={0.5}
           onEndReached={() => {

@@ -1,6 +1,6 @@
 import type { EmailCodeSent, OtpError } from "@contract/onboarding";
 import { useRef, useState } from "react";
-import { StyleSheet, type TextInput, View } from "react-native";
+import { StyleSheet, type TextInputInstance, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { OnboardingShell } from "@/features/onboarding/shell";
 import { ApiError, api } from "@/lib/api";
@@ -33,7 +33,7 @@ export default function OnboardingEmailScreen() {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const codeRef = useRef<TextInput>(null);
+  const codeRef = useRef<TextInputInstance>(null);
 
   const message = (e: unknown) => {
     const c = e instanceof ApiError ? e.code : "generic";

@@ -180,6 +180,18 @@
       "detail": "If you've changed school or job, update your history so classmates can find you.",
       "cta": "Update history"
     },
+    "ONBOARDING_REMINDER": {
+      "title": "Your registration isn’t finished",
+      "body": "Your AIS Alumni membership application hasn’t been sent yet.",
+      "detail": "Fill in what the committee needs to confirm you belong to the AIS community (your relationship to AIS and your years there) and send the application. Once approved, you can use the directory, events and chat.",
+      "cta": "Continue application"
+    },
+    "NEEDS_INFO_REMINDER": {
+      "title": "We’re waiting for more information",
+      "body": "The committee hasn’t received the extra information it asked for about your application yet.",
+      "detail": "Check what the committee asked for, add it and send the application again. We’ll continue the review as soon as it arrives.",
+      "cta": "Open application"
+    },
     "VERIFICATION_SUBMITTED_ADMIN": {
       "title": "New membership application",
       "body": "{name} applied for membership.",

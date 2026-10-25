@@ -141,7 +141,9 @@ function InfoBody({
           {t("info.noMatch")}
         </Text>
       }
-      ListFooterComponent={info.member ? <MemberSettings info={info} /> : null}
+      ListFooterComponent={
+        info.member ? <MemberSettings info={info} /> : undefined
+      }
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       contentContainerStyle={styles.content}

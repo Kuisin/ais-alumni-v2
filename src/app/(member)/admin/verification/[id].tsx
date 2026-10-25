@@ -6,6 +6,7 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -42,7 +43,7 @@ export default function VerificationDetailScreen() {
   const locale = useLocale() as Locale;
   const query = useVerificationDetail(id);
   const wide = useWindowDimensions().width >= WIDE;
-  const scroller = useRef<ScrollView>(null);
+  const scroller = useRef<ScrollViewInstance>(null);
   // Where the decision card is: its column's offset + its own.
   const columnsY = useRef(0);
   const decisionY = useRef(0);

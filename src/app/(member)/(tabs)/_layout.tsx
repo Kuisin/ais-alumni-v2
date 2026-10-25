@@ -9,8 +9,6 @@ import {
 import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
-import { ProfileButton } from "@/features/me/profile-button";
-import { InboxBell } from "@/features/notifications/inbox-bell";
 import { useMe } from "@/lib/auth";
 import { colors, font } from "@/ui/theme";
 
@@ -25,8 +23,9 @@ const WEB_TAB_BAR = 68;
 const WEB_TAB_BAR_PADDING = 6;
 
 /**
- * The bottom tab bar: the website's places, with マイページ as the photo at
- * the top left of every tab (it carries the follow-request count).
+ * The bottom tab bar on Android and the web (iOS: _layout.ios.tsx): the
+ * website's places. Each tab is a group with its own stack, which draws the
+ * header with マイページ's photo at the top left (features/tabs/tab-stack).
  */
 export default function TabLayout() {
   const t = useTranslations("common.nav");
@@ -48,32 +47,26 @@ export default function TabLayout() {
               },
             }
           : null),
-        headerTitleStyle: {
-          color: colors.text,
-          fontWeight: font.weight.semibold,
-        },
-        headerStyle: { backgroundColor: colors.surface },
+        headerShown: false,
         sceneStyle: { backgroundColor: colors.background },
-        headerLeft: () => <ProfileButton />,
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="(home)"
         options={{
           title: t("dashboard"),
-          headerRight: () => <InboxBell />,
           tabBarIcon: ({ color, size }) => <House color={color} size={size} />,
         }}
       />
       <Tabs.Screen
-        name="directory"
+        name="(directory)"
         options={{
           title: t("directory"),
           tabBarIcon: ({ color, size }) => <Users color={color} size={size} />,
         }}
       />
       <Tabs.Screen
-        name="events"
+        name="(events)"
         options={{
           title: t("events"),
           tabBarIcon: ({ color, size }) => (
@@ -82,7 +75,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="news"
+        name="(news)"
         options={{
           title: t("news"),
           tabBarBadge: badge(badges.news + badges.messages),
@@ -92,7 +85,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="chat"
+        name="(chat)"
         options={{
           title: t("chat"),
           tabBarBadge: badge(badges.chat),

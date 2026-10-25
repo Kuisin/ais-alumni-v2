@@ -4,7 +4,8 @@ The AIS Alumni app, one Expo Router codebase for iOS, Android and the web
 — and its own backend: the JSON API under `/api/mobile/v1` is Expo API
 routes here (`src/app/api/mobile/v1/**/index+api.ts`, server code in
 `src/server/`), deployed with the web app on Vercel (`web.output:
-"server"`, `api/index.ts`). It shares the database with the website in
+"static"` with expo-router's `apiRoutes`, `api/index.ts`; SDK 58's
+`"server"` would render pages per request instead). It shares the database with the website in
 [Kuisin/ais-alumni-app](https://github.com/Kuisin/ais-alumni-app) ("the
 server"/"the website" below). The website's server routes are here too,
 at the same paths, so this project can take over its domain: the job
@@ -58,7 +59,7 @@ schema.
 
 ## Expo has changed — do not trust your training data
 
-This is Expo SDK 57 (React Native 0.86, React 19.2, Expo Router 57). APIs
+This is Expo SDK 58 (React Native 0.88, React 19.3, Expo Router 58). APIs
 you remember may be renamed, moved or removed. Before using an Expo, EAS or
 React Native API, fetch the docs: https://docs.expo.dev/llms.txt (index;
 append `.md` to any docs URL). Router notes that matter here:
@@ -154,8 +155,9 @@ project id in the config Expo Go needs no sign-in (with one, run
   about their account (application result / more information needed,
   results of name, birth date, gender and record requests) and, for staff,
   admin tasks — on LINE if they linked it and follow the Official Account,
-  else by email; bulk mail (ニュース, reminders, unread summaries) is always
-  email (`src/server/lib/notify/catalog.ts`, `route.ts`).
+  else by email; bulk mail (ニュース, reminders, unread summaries, the weekly
+  "finish your registration" reminder — `src/server/lib/jobs/onboarding-reminders.ts`,
+  at most 8 times) is always email (`src/server/lib/notify/catalog.ts`, `route.ts`).
   News, お知らせ and chat notifications carry their content (news: the
   post's title and a summary; chat: the message's text; the 20:00 chat
   email: per chat the unread count and latest message), shortened per
@@ -217,9 +219,20 @@ project id in the config Expo Go needs no sign-in (with one, run
 
 **App**
 
-- Screens: tabs in `src/app/(member)/(tabs)/<tab>.tsx`; pushed screens in
-  `src/app/(member)/<feature>/…`. Set titles with
-  `<Stack.Screen options={{ title }} />`. Keep `src/lib/site-paths.ts` in step.
+- Screens: tabs in `src/app/(member)/(tabs)/(<tab>)/<tab>.tsx`, each group
+  with its own stack (`_layout.tsx` → `features/tabs/tab-stack.tsx`, which
+  draws the header); pushed screens in `src/app/(member)/<feature>/…`. Set
+  titles and header buttons with `<Stack.Screen options={{ … }} />`. Keep
+  `src/lib/site-paths.ts` in step.
+- The tab bar: iOS uses the system's (`(tabs)/_layout.ios.tsx`, native
+  tabs — in the sidebar where there's room, e.g. the iPhone Duo's vertical
+  bar); Android and the web the JS one (`(tabs)/_layout.tsx`). Declare a
+  new tab in both.
+- iPhone Duo and other wide windows: `Screen` / `ScreenView` keep clear of
+  a bar at the side (left/right safe area) and cap pages at
+  `CONTENT_MAX_WIDTH`; a list with details uses `Panes` (`src/ui/panes.tsx`:
+  list and detail side by side, split at the fold) — the chat tab does,
+  selecting with `?room=`. Lay out by width, never by orientation or device.
 - Feature code in `src/features/<feature>/` (components, `api.ts` hooks).
   Shared primitives in `src/ui` (`Text`, `Button`, `Card`, `ListRow`,
   `Screen`, `QueryState`, `Markdown`, …) — use them; always `Text` from
@@ -265,8 +278,8 @@ cards are one pressable (match `.*title.*`); the header back button has id
 
 **Development build** (native modules, push notifications, LINE
 sign-in): `npx expo run:ios` (needs CocoaPods). `plugins/` fixes the
-generated project for Xcode 27 (the UIScene life cycle iOS 27 requires) and
-for folders whose path has spaces. Then `pnpm start:dev-client` and open the
+generated project for the LINE SDK's plugin on SDK 58's template, Xcode
+27's script sandbox and folders whose path has spaces. Then `pnpm start:dev-client` and open the
 app from its icon, or pick the server in its launcher. Maestro against it:
 add `APP_ID=net.kailab.aisalumni` and
 `APP_URL="aisalumni://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"`.
@@ -290,6 +303,12 @@ failing on development-build bundles.
 profiles — this repo's own server. First time:
 `npx eas-cli@latest init` (adds the project id), then
 `npx eas-cli@latest build --profile preview --platform all`.
+iOS builds use EAS's Xcode 27.1 image (`ios.image` per profile): built
+with the iOS 27.1 SDK the app fills the iPhone Duo's inner display (older
+SDKs leave a margin there) and the App Store marks it optimized for it.
+That display ignores the portrait lock and is iPad-wide (see "App" above).
+Its sidebar, the fold (`react-native-reserved-regions`) and Device Hub's
+iPhone Duo simulator need Xcode 27.1.
 LINE sign-in needs the `aisalumni://` scheme, so it works in
 development / preview / production builds, not in Expo Go against a
 deployed server (Expo Go works with email codes, or with a local server).

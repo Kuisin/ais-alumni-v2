@@ -148,7 +148,7 @@ export default function AdminNewsScreen() {
                   onPress={() => void list.fetchNextPage()}
                 />
               </View>
-            ) : null
+            ) : undefined
           }
           refreshControl={
             <RefreshControl

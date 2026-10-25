@@ -16,7 +16,7 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  type TextInput,
+  type TextInputInstance,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -300,7 +300,7 @@ function EmailCodeForm() {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const codeRef = useRef<TextInput>(null);
+  const codeRef = useRef<TextInputInstance>(null);
 
   const message = (e: unknown) => {
     const c = e instanceof ApiError ? e.code : "generic";

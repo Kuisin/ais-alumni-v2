@@ -1,6 +1,6 @@
 /**
  * When a scheduled task is due. Times are JST (UTC+9, no daylight saving).
- * The single cron call comes every minute; a daily / yearly task runs once
+ * The single cron call comes every minute; a daily / weekly / yearly task runs once
  * its latest slot has passed and it hasn't run since (src/lib/jobs/index.ts),
  * so a missed call is caught up on the next one.
  */
@@ -8,11 +8,15 @@
 export type Schedule =
   | { every: "minute" }
   | { daily: string } // "HH:MM" JST
+  | { weekly: string } // "mon HH:MM" JST (sun … sat)
   | { yearly: string }; // "MM-DD HH:MM" JST
 
 export const EVERY_MINUTE: Schedule = { every: "minute" };
 export const daily = (at: string): Schedule => ({ daily: at });
+export const weekly = (at: string): Schedule => ({ weekly: at });
 export const yearly = (at: string): Schedule => ({ yearly: at });
+
+const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
 const JST = 9 * 60 * 60 * 1000;
 const DAY = 24 * 60 * 60 * 1000;
@@ -34,6 +38,16 @@ export function lastSlot(schedule: Schedule, now: Date): Date {
     const [h, m] = hm(schedule.daily);
     let slot = Date.UTC(y, j.getUTCMonth(), j.getUTCDate(), h, m) - JST;
     if (slot > now.getTime()) slot -= DAY;
+    return new Date(slot);
+  }
+  if ("weekly" in schedule) {
+    const w = /^([a-z]{3}) (\d{2}:\d{2})$/.exec(schedule.weekly);
+    const day = w ? WEEKDAYS.indexOf(w[1]) : -1;
+    if (!w || day < 0) throw new Error(`bad weekday ${schedule.weekly}`);
+    const [h, m] = hm(w[2]);
+    const back = (j.getUTCDay() - day + 7) % 7;
+    let slot = Date.UTC(y, j.getUTCMonth(), j.getUTCDate() - back, h, m) - JST;
+    if (slot > now.getTime()) slot -= 7 * DAY;
     return new Date(slot);
   }
   const d = /^(\d{2})-(\d{2}) (\d{2}:\d{2})$/.exec(schedule.yearly);
