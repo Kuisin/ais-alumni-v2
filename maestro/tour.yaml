@@ -4,16 +4,16 @@ appId: ${APP_ID}
 ---
 - openLink: ${APP_URL}/--/home
 - extendedWaitUntil:
-    visible: "(Home|ホーム), tab.*"
+    visible: "(Home|ホーム)(, tab.*)?"
     timeout: 30000
 - takeScreenshot: 01-home
-- tapOn: "(Directory|名簿), tab.*"
+- tapOn: "(Directory|名簿)(, tab.*)?"
 - takeScreenshot: 02-directory
-- tapOn: "(Events|イベント), tab.*"
+- tapOn: "(Events|イベント)(, tab.*)?"
 - takeScreenshot: 03-events
-- tapOn: "(News|ニュース), tab.*"
+- tapOn: "(News|ニュース)(, tab.*)?"
 - takeScreenshot: 04-news
-- tapOn: "(Chat|チャット), tab.*"
+- tapOn: "(Chat|チャット)(, tab.*)?"
 - takeScreenshot: 05-chat
 - tapOn: "(Me|マイページ).*"
 - takeScreenshot: 06-me

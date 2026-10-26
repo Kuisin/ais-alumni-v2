@@ -9,6 +9,14 @@ appId: ${APP_ID}
 - tapOn:
     text: "Open"
     optional: true
+# A development build opens its menu on first launch.
+- tapOn:
+    text: "Close"
+    optional: true
+# First launch: the notifications intro comes before sign-in.
+- tapOn:
+    text: "(Not now|あとで)"
+    optional: true
 - extendedWaitUntil:
     visible: "(Email me a sign-in code|ログイン用コードをメールで受け取る)"
     timeout: 60000

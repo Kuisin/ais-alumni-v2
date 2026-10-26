@@ -8,9 +8,14 @@ import {
 } from "react-native-reserved-regions";
 import { colors } from "./theme";
 
-/** From this width the list and the detail sit side by side. */
-export const PANES_MIN_WIDTH = 720;
-const LIST_WIDTH = { min: 320, max: 420, share: 0.38 };
+/**
+ * From this width the list and the detail sit side by side. The iPhone
+ * Duo open leaves about 580 pt beside its tab sidebar, so the panes start
+ * below that; a portrait iPhone (≤ 440 pt) and the folded Duo stay single.
+ */
+export const PANES_MIN_WIDTH = 560;
+/** The list's share, kept between min and max; the detail gets the rest. */
+const LIST_WIDTH = { min: 260, max: 400, share: 0.4 };
 
 /**
  * A list with its detail beside it where there is room: the iPhone Duo
