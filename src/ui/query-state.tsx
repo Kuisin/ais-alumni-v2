@@ -13,8 +13,12 @@ export function QueryState<T>({
   query: UseQueryResult<T>;
   children: (data: T) => ReactNode;
 }) {
-  if (query.data !== undefined) return <>{children(query.data)}</>;
+  if (query.data != null) return <>{children(query.data)}</>;
   if (query.isError)
     return <ErrorState error={query.error} onRetry={() => query.refetch()} />;
+  // No endpoint answers null: if it ever comes, offer a retry rather than
+  // handing the screen nothing.
+  if (query.data === null)
+    return <ErrorState error={null} onRetry={() => query.refetch()} />;
   return <Loading />;
 }
