@@ -1,0 +1,26 @@
+# iPhone Duo open (inner display): the tabs are in the sidebar and the chat
+# tab shows the list and the selected talk side by side (src/ui/panes.tsx).
+# Maestro 2.12 maps the screen to the outer display: it can't tap on the
+# inner one and sees most of the detail pane as off screen. So this selects
+# talks by link (?room= — what tapping a row sets), asserts what it can see
+# and leaves screenshots of the pane (and maestro/duo.sh the inner display's).
+appId: ${APP_ID}
+---
+- openLink: aisalumni://chat
+- extendedWaitUntil:
+    visible: "Emily Tanaka.*"
+    timeout: 30000
+# Nothing selected yet: the detail pane asks for a talk.
+- assertVisible: "(Choose a talk|トークを選んでください)"
+- takeScreenshot: duo-open-1-list
+- openLink: aisalumni://chat?room=demo-chat-emily
+# The pane has the talk now: no more "Choose a talk", list still beside it.
+- extendedWaitUntil:
+    notVisible: "(Choose a talk|トークを選んでください)"
+    timeout: 20000
+- assertVisible: "Class 3.*"
+- assertVisible: "Former stude.*"
+- takeScreenshot: duo-open-2-emily
+- openLink: aisalumni://chat?room=demo-chat-class3
+- assertVisible: "Emily Tanaka.*"
+- takeScreenshot: duo-open-3-class3

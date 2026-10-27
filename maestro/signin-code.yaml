@@ -1,0 +1,11 @@
+# Email sign-in with a known code (the App Review demo account), both steps.
+appId: ${APP_ID}
+---
+- runFlow:
+    file: signin-request.yaml
+    env:
+      EMAIL: ${EMAIL}
+- runFlow:
+    file: signin-verify.yaml
+    env:
+      CODE: ${CODE}
