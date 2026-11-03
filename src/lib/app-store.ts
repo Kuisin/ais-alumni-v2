@@ -6,7 +6,7 @@
 export const APP_STORE_ID = "6817619381";
 
 /** The App Store page; the server's APP_STORE_URL overrides it in /config. */
-export const APP_STORE_URL = `https://apps.apple.com/jp/app/id${APP_STORE_ID}`;
+export const APP_STORE_URL = `https://apps.apple.com/jp/app/ais-alumni/id${APP_STORE_ID}`;
 
 /**
  * Safari's Smart App Banner (`<meta name="apple-itunes-app">`): 「開く」 when
