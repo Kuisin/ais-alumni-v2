@@ -35,6 +35,7 @@ export function Landing() {
   const t = useTranslations("home");
   const tc = useTranslations("common");
   const tl = useTranslations("landing");
+  const ti = useTranslations("mobile.install");
   const router = useRouter();
   const { locale, setGuestLocale } = useAuth();
   const signIn = () => router.push("/sign-in");
@@ -188,6 +189,15 @@ export function Landing() {
           >
             <Text variant="small" tone="brand" style={styles.underline}>
               {tc("nav.support")}
+            </Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="link"
+            onPress={() => router.push("/install")}
+            style={styles.link}
+          >
+            <Text variant="small" tone="brand" style={styles.underline}>
+              {ti("button")}
             </Text>
           </Pressable>
         </View>

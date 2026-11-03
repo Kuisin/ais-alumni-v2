@@ -214,32 +214,27 @@
     "hint": "Showing saved data"
   },
   "install": {
-    "title": "Beta test the app",
+    "title": "Get the app",
     "button": "Install the app",
-    "intro": "We're getting the AIS Alumni iPhone app ready for the App Store. Before it's released, we're looking for testers to try the beta and tell us what they find. You join the beta through Apple's TestFlight app (free).",
-    "stepsTitle": "Join the beta (iPhone)",
+    "stepsTitle": "Install and set up (iPhone)",
     "steps": [
-      "Install “TestFlight” from the App Store.",
-      "Tap “Join the beta in TestFlight” below.",
-      "When TestFlight opens, tap “Accept”, then “Install”.",
-      "Open “AIS Alumni” on your Home Screen, sign in the same way as on the web (email code or LINE), and use it as you normally would.",
-      "Tell us about bugs or anything awkward with “Send Beta Feedback” in TestFlight, or Contact us in the app."
+      "Tap “Get it on the App Store” above, then “Get” in the App Store.",
+      "Open “AIS同窓会” from your home screen.",
+      "Sign in the same way as on the web (an email code or LINE), or with “Sign in with Apple”.",
+      "Turn notifications on to get chats and news right away (you can change it later in Settings → App notifications)."
     ],
-    "getTestflight": "Get TestFlight (App Store)",
-    "openTestflight": "Join the beta in TestFlight",
-    "openAppStore": "Open in the App Store",
-    "storeIntro": "The AIS Alumni iPhone app is on the App Store.",
-    "notReady": "The beta isn't open yet. You'll be able to join from here when it starts.",
-    "lineNote": "TestFlight may not open from LINE's in-app browser. Choose “Open in Safari” from the menu at the bottom right (or top right), then try again.",
+    "openAppStore": "Get it on the App Store",
+    "storeIntro": "The AIS Alumni iPhone app is now on the App Store. Use your existing account: sign in the same way as on the web.",
+    "lineNote": "The App Store may not open from in-app browsers such as LINE's. If so, choose “Open in Safari” from the menu at the bottom right (or top right), then try again.",
     "notes": [
-      "A beta is still in development, so it may have bugs. New beta versions arrive through the TestFlight app.",
-      "Once the app is on the App Store, you'll be able to install it straight from this page.",
-      "On Android? Open this page on your Android phone to see how to add it to your home screen."
+      "If you used the beta (TestFlight), install the app from the App Store too. From then on it updates from the App Store automatically.",
+      "The website keeps working as before.",
+      "On Android, open this page on your phone to see how to add the web app to your home screen."
     ],
     "prompt": {
-      "title": "Try the app's beta",
-      "body": "Join the beta test before the App Store release and tell us what you think.",
-      "open": "How to join",
+      "title": "The iPhone app is here",
+      "body": "It's on the App Store: notifications arrive right away, and it opens fast.",
+      "open": "Get the app",
       "later": "Later"
     },
     "promptAndroid": {
@@ -314,6 +309,18 @@
           "Nothing to update: you get the latest every time you open it."
         ]
       ]
+    },
+    "appName": "AIS Alumni",
+    "appMeta": "For iPhone · Free · On the App Store",
+    "inApp": "You installed this app from the App Store. If you like it, please rate or review it there.",
+    "rateAppStore": "Write a review on the App Store",
+    "qrAlt": "QR code that opens the app's App Store page",
+    "qrHint": "Scan it with your iPhone's camera to open the app's App Store page.",
+    "openApp": {
+      "title": "Open in the app",
+      "body": "Have the AIS Alumni app? Open this page in it.",
+      "open": "Open",
+      "get": "Get"
     }
   },
   "moved": {
@@ -321,6 +328,6 @@
     "body": "The AIS Alumni website has moved to a new address: ais-alumni.kai-lab.net. Your account and data are the same; if you aren't signed in, sign in the same way as before (email code or LINE).",
     "open": "Open the new site",
     "bookmark": "Please update any bookmarks or Home Screen shortcuts to the new address.",
-    "app": "You can also join the iPhone app's beta"
+    "app": "The iPhone app is on the App Store"
   }
 }

@@ -6,6 +6,7 @@ import { Linking, Platform, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { api } from "@/lib/api";
+import { APP_STORE_URL } from "@/lib/app-store";
 import { Button, colors, space, Text } from "@/ui";
 
 /** -1, 0 or 1, comparing "1.2.10" and "1.3" part by part. */
@@ -43,7 +44,10 @@ export function useUpdateRequired(): UpdateRequired | undefined {
   if (!min || !version || compareVersions(version, min) >= 0) return undefined;
   const store = config.data?.storeUrl;
   return {
-    url: (Platform.OS === "ios" ? store?.ios : store?.android) ?? null,
+    url:
+      Platform.OS === "ios"
+        ? (store?.ios ?? APP_STORE_URL)
+        : (store?.android ?? null),
     retry: () => void config.refetch(),
     checking: config.isFetching,
   };

@@ -1,5 +1,6 @@
 import type { AppConfig } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
+import { Image } from "expo-image";
 import { Stack } from "expo-router";
 import {
   ArrowLeftRight,
@@ -23,11 +24,10 @@ import {
 } from "@/features/install/pwa";
 import { Chips } from "@/features/people/choices";
 import { api } from "@/lib/api";
+import { APP_STORE_URL } from "@/lib/app-store";
 import { useAuth } from "@/lib/auth";
 import { usePush } from "@/lib/push";
 import { Button, Card, colors, Loading, Screen, space, Text } from "@/ui";
-
-const TESTFLIGHT_APP = "https://apps.apple.com/app/testflight/id899247664";
 
 /** One icon per benefit (mobile.install.benefits.items, in order). */
 const BENEFIT_ICONS = [BellRing, Zap, MessageCircleReply, Smartphone, QrCode];
@@ -80,7 +80,11 @@ export default function InstallScreen() {
               onChange={(v) => setDevice(v as InstallDevice)}
             />
           ) : null}
-          {device === "android" ? <AndroidInstall /> : <IosInstall />}
+          {device === "android" ? (
+            <AndroidInstall />
+          ) : (
+            <IosInstall qr={detected === "other"} />
+          )}
           {/* The guess can be wrong (a browser hiding what it runs on). */}
           {Platform.OS === "web" && detected !== "other" ? (
             <Button
@@ -263,63 +267,86 @@ function WebNotifications() {
 }
 
 /**
- * iPhone: once the app has an App Store link (config.storeUrl.ios) that's
- * the button; until then the steps to install it through TestFlight with
- * the committee's public link (config.install.testflightUrl, TESTFLIGHT_URL
- * on the server).
+ * iPhone: the app on the App Store (config.storeUrl.ios; APP_STORE_URL
+ * until /config answers), the steps after installing it and, on a computer,
+ * a QR code to open the App Store page on the phone (public/app-store-qr.svg,
+ * the same link).
  */
-function IosInstall() {
+function IosInstall({ qr }: { qr: boolean }) {
   const t = useTranslations("mobile.install");
   const config = useQuery({
     queryKey: ["config"],
     queryFn: () => api<AppConfig>("/config"),
     staleTime: 5 * 60_000,
   });
-  const store = config.data?.storeUrl?.ios ?? null;
-  const testflight = config.data?.install?.testflightUrl ?? null;
+  const store = config.data?.storeUrl?.ios ?? APP_STORE_URL;
   const steps = t.raw("steps") as string[];
   const notes = t.raw("notes") as string[];
   const benefits = t.raw("benefits.items") as [string, string][];
-  const whatImproves = (
-    <Card style={styles.card}>
-      <Text variant="subheading" accessibilityRole="header">
-        {t("benefits.title")}
-      </Text>
-      {benefits.map(([title, body], i) => {
-        const Icon = BENEFIT_ICONS[i] ?? Smartphone;
-        return (
-          <View key={title} style={styles.step}>
-            <Icon size={20} color={colors.brand700} aria-hidden />
-            <View style={styles.flex}>
-              <Text weight="semibold">{title}</Text>
-              <Text variant="small" tone="muted">
-                {body}
-              </Text>
-            </View>
-          </View>
-        );
-      })}
-    </Card>
-  );
+  // In the app itself it's already installed.
+  const inApp = Platform.OS === "ios";
 
   return (
     <>
-      {config.data === undefined ? (
-        <Loading inline />
-      ) : store ? (
-        <>
-          <Text>{t("storeIntro")}</Text>
-          <Button
-            label={t("openAppStore")}
-            icon={(c) => <Download size={18} color={c} aria-hidden />}
-            onPress={() => open(store)}
+      <View style={styles.hero}>
+        <Image
+          source={require("@/assets/images/icon.png")}
+          style={styles.appIcon}
+          accessibilityIgnoresInvertColors
+          aria-hidden
+        />
+        <View style={styles.flex}>
+          <Text variant="subheading">{t("appName")}</Text>
+          <Text variant="small" tone="muted">
+            {t("appMeta")}
+          </Text>
+        </View>
+      </View>
+      <Text>{inApp ? t("inApp") : t("storeIntro")}</Text>
+      <Button
+        label={inApp ? t("rateAppStore") : t("openAppStore")}
+        icon={(c) =>
+          inApp ? (
+            <ExternalLink size={18} color={c} aria-hidden />
+          ) : (
+            <Download size={18} color={c} aria-hidden />
+          )
+        }
+        onPress={() => open(inApp ? `${store}?action=write-review` : store)}
+      />
+      {qr ? (
+        <Card style={styles.qrCard}>
+          <Image
+            source={{ uri: "/app-store-qr.svg" }}
+            style={styles.qr}
+            accessibilityLabel={t("qrAlt")}
           />
-          {whatImproves}
-        </>
-      ) : (
+          <Text variant="small" tone="muted" center>
+            {t("qrHint")}
+          </Text>
+        </Card>
+      ) : null}
+      <Card style={styles.card}>
+        <Text variant="subheading" accessibilityRole="header">
+          {t("benefits.title")}
+        </Text>
+        {benefits.map(([title, body], i) => {
+          const Icon = BENEFIT_ICONS[i] ?? Smartphone;
+          return (
+            <View key={title} style={styles.step}>
+              <Icon size={20} color={colors.brand700} aria-hidden />
+              <View style={styles.flex}>
+                <Text weight="semibold">{title}</Text>
+                <Text variant="small" tone="muted">
+                  {body}
+                </Text>
+              </View>
+            </View>
+          );
+        })}
+      </Card>
+      {inApp ? null : (
         <>
-          <Text>{t("intro")}</Text>
-          {whatImproves}
           <Card style={styles.card}>
             <Text variant="subheading" accessibilityRole="header">
               {t("stepsTitle")}
@@ -329,32 +356,9 @@ function IosInstall() {
                 <Text weight="semibold" tone="brand" style={styles.number}>
                   {i + 1}
                 </Text>
-                <View style={styles.flex}>
-                  <Text>{step}</Text>
-                  {i === 0 ? (
-                    <Button
-                      variant="secondary"
-                      compact
-                      label={t("getTestflight")}
-                      icon={(c) => (
-                        <ExternalLink size={16} color={c} aria-hidden />
-                      )}
-                      onPress={() => open(TESTFLIGHT_APP)}
-                      style={styles.inline}
-                    />
-                  ) : null}
-                </View>
+                <Text style={styles.flex}>{step}</Text>
               </View>
             ))}
-            {testflight ? (
-              <Button
-                label={t("openTestflight")}
-                icon={(c) => <Download size={18} color={c} aria-hidden />}
-                onPress={() => open(testflight)}
-              />
-            ) : (
-              <Text tone="muted">{t("notReady")}</Text>
-            )}
           </Card>
           <Text variant="small" tone="muted">
             {t("lineNote")}
@@ -381,7 +385,10 @@ const styles = StyleSheet.create({
   card: { gap: space.lg },
   step: { flexDirection: "row", gap: space.md },
   number: { width: 20 },
-  inline: { alignSelf: "flex-start", marginTop: space.sm },
+  hero: { flexDirection: "row", alignItems: "center", gap: space.md },
+  appIcon: { width: 64, height: 64, borderRadius: 14 },
+  qrCard: { gap: space.lg, alignItems: "center" },
+  qr: { width: 176, height: 176 },
   note: { flexDirection: "row", gap: space.sm },
   switch: { alignSelf: "center" },
 });

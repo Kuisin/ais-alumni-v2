@@ -1,7 +1,20 @@
 # App Store submission (iOS)
 
 The app: **AIS同窓会 / AIS Alumni**, bundle id `net.kailab.aisalumni`,
-EAS project `@kaisei0807s/ais-alumni`. Release builds talk to
+EAS project `@kaisei0807s/ais-alumni`.
+
+**Released**: https://apps.apple.com/jp/app/id6817619381 (Apple ID
+`6817619381`, eas.json `ascAppId`). The app and the web app use it from
+`src/lib/app-store.ts`: /install, the update screen, Safari's Smart App
+Banner and 「アプリで開く」 in other iPhone browsers (`src/app/+html.tsx`,
+`src/features/install`), the web manifest's `related_applications`, and
+the QR code `public/app-store-qr.svg`. `APP_STORE_URL` (Vercel env) is no
+longer needed; set it only to send `/config` somewhere else.
+
+New versions: bump `version` in app.config.ts, build and submit
+(`npx eas-cli build -p ios --profile production --auto-submit`), then
+release it in App Store Connect. To make older apps update, set
+`MIN_APP_VERSION` once the new version is live. Release builds talk to
 `https://ais-alumni.kai-lab.net` (eas.json `production`), i.e. this repo's
 `main` — merge the release PR first so production has every endpoint.
 

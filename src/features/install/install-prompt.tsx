@@ -1,10 +1,13 @@
+import { Image } from "expo-image";
 import { usePathname, useRouter } from "expo-router";
-import { Smartphone } from "lucide-react-native";
+import { ExternalLink } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Linking, Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
+import { APP_STORE_URL } from "@/lib/app-store";
 import { Button, colors, radius, space, Text } from "@/ui";
+import { isIosSafari, openInApp } from "./open-app";
 import { installDevice, usePwaInstall } from "./pwa";
 
 const LATER_KEY = "ais.installPromptLater";
@@ -12,30 +15,44 @@ const LATER_KEY = "ais.installPromptLater";
 const LATER_MS = 14 * 86_400_000;
 
 /**
- * 「アプリ版が使えます」 on the web app: a popup at the bottom that leads to
- * /install (how to get the app). Web only — the app itself never shows it,
- * nor does the web app once it's on the home screen. On Android it offers
- * adding the web app to the home screen instead of the iPhone app.
- * 「あとで」 hides it for two weeks (localStorage).
+ * The web app's popup at the bottom about the app, by browser:
+ *  - Safari on an iPhone: none — Safari shows its own Smart App Banner
+ *    (src/app/+html.tsx) with 「開く」 / 「入手」.
+ *  - Other browsers on an iPhone (Chrome, LINE's in-app browser…):
+ *    「アプリで開く」 — this page in the app (open-app.ts), or the App Store.
+ *  - Android: adding the web app to the home screen (/install).
+ *  - Anything else (a computer): the app is on the App Store (/install).
+ * Web only — the app itself never shows it, nor does the web app once it's
+ * on the home screen. 「あとで」 hides it for two weeks (localStorage).
  */
 export function InstallPrompt() {
   if (Platform.OS !== "web") return null;
   return <WebInstallPrompt />;
 }
 
+type Kind = "openApp" | "android" | "store";
+
 function WebInstallPrompt() {
-  const tIos = useTranslations("mobile.install.prompt");
-  const tAndroid = useTranslations("mobile.install.promptAndroid");
+  const t = useTranslations("mobile.install");
   const { installed } = usePwaInstall();
   const router = useRouter();
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
   // Decided after mount: the server render has no localStorage.
   const [show, setShow] = useState(false);
-  const [android, setAndroid] = useState(false);
+  const [kind, setKind] = useState<Kind | null>(null);
 
   useEffect(() => {
-    setAndroid(installDevice() === "android");
+    const device = installDevice();
+    setKind(
+      device === "android"
+        ? "android"
+        : device === "ios"
+          ? isIosSafari()
+            ? null
+            : "openApp"
+          : "store",
+    );
     try {
       const until = Number(globalThis.localStorage?.getItem(LATER_KEY) ?? 0);
       setShow(!(until > Date.now()));
@@ -56,15 +73,21 @@ function WebInstallPrompt() {
     }
   };
 
-  // Not over the install page itself, admin mode or an open chat (its
-  // composer sits where the popup would).
+  // Not over the install page itself, admin mode, donations (web only) or
+  // an open chat (its composer sits where the popup would).
   const hidden =
     pathname === "/install" ||
     pathname === "/moved" ||
+    pathname.startsWith("/donate") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/chat/");
-  if (!show || hidden || installed) return null;
-  const t = android ? tAndroid : tIos;
+  if (!show || hidden || installed || kind === null) return null;
+  const ns =
+    kind === "openApp"
+      ? "openApp"
+      : kind === "android"
+        ? "promptAndroid"
+        : "prompt";
   return (
     <View
       pointerEvents="box-none"
@@ -72,27 +95,55 @@ function WebInstallPrompt() {
     >
       <View style={styles.card} accessibilityRole="alert">
         <View style={styles.head}>
-          <Smartphone size={20} color={colors.brand700} aria-hidden />
+          <Image
+            source={require("@/assets/images/icon.png")}
+            style={styles.icon}
+            accessibilityIgnoresInvertColors
+            aria-hidden
+          />
           <View style={styles.flex}>
-            <Text weight="semibold">{t("title")}</Text>
+            <Text weight="semibold">{t(`${ns}.title`)}</Text>
             <Text variant="small" tone="muted">
-              {t("body")}
+              {t(`${ns}.body`)}
             </Text>
           </View>
         </View>
         <View style={styles.buttons}>
-          <Button
-            compact
-            label={t("open")}
-            onPress={() => {
-              later();
-              router.push("/install");
-            }}
-          />
+          {kind === "openApp" ? (
+            <>
+              <Button
+                compact
+                label={t("openApp.open")}
+                icon={(c) => <ExternalLink size={16} color={c} aria-hidden />}
+                onPress={() => {
+                  const { pathname: path, search } = window.location;
+                  openInApp(path + search);
+                }}
+              />
+              <Button
+                variant="secondary"
+                compact
+                label={t("openApp.get")}
+                onPress={() => {
+                  later();
+                  void Linking.openURL(APP_STORE_URL).catch(() => {});
+                }}
+              />
+            </>
+          ) : (
+            <Button
+              compact
+              label={t(`${ns}.open`)}
+              onPress={() => {
+                later();
+                router.push("/install");
+              }}
+            />
+          )}
           <Button
             variant="ghost"
             compact
-            label={tIos("later")}
+            label={t("prompt.later")}
             onPress={later}
           />
         </View>
@@ -125,5 +176,6 @@ const styles = StyleSheet.create({
     boxShadow: "0 4px 16px rgba(15, 23, 42, 0.15)",
   },
   head: { flexDirection: "row", alignItems: "center", gap: space.md },
-  buttons: { flexDirection: "row", gap: space.sm },
+  icon: { width: 40, height: 40, borderRadius: 9 },
+  buttons: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
 });

@@ -180,15 +180,23 @@ project id in the config Expo Go needs no sign-in (with one, run
   live key. STRIPE_PORTAL_LOGIN_URL (optional) links monthly donors to
   Stripe's Customer Portal.
 - **Installing the app** (`src/app/install.tsx`, `src/features/install`):
-  the web app shows 「アプリ版が使えます」 (web only; 「あとで」 hides it for
-  two weeks) leading to /install, which shows what fits the phone it's
-  opened on (`pwa.ts`; a choice on anything else). iPhone: the App Store
-  link once `APP_STORE_URL` is set on the server, until then the steps to
-  install through TestFlight with the external group's public link
-  (`TESTFLIGHT_URL`, `https://testflight.apple.com/join/…`). Android: there
-  is no store app — the web app is installed to the home screen (Chrome's
+  the iPhone app is on the App Store — its id and link are
+  `src/lib/app-store.ts` (`APP_STORE_URL` on the server overrides the link
+  in `/config`). /install shows what fits the phone it's opened on
+  (`pwa.ts`; a choice on anything else). iPhone: the App Store button, the
+  first steps and, on a computer, a QR code (`public/app-store-qr.svg`, the
+  same link — regenerate it if the link changes). Android: there is no
+  store app — the web app is installed to the home screen (Chrome's
   "Install app"; `public/manifest.webmanifest`, linked by
-  `src/app/+html.tsx`) and gets notifications as above.
+  `src/app/+html.tsx`) and gets notifications as above. The web app's
+  popup at the bottom (`install-prompt.tsx`, web only; 「あとで」 hides it
+  for two weeks): in Safari on an iPhone none, since `+html.tsx` adds
+  Safari's Smart App Banner (`apple-itunes-app`, with the page as
+  `app-argument`, so 「開く」 opens the same screen); in other iPhone
+  browsers (Chrome, LINE's…) 「アプリで開く」, which opens the page through
+  the app's scheme (`aisalumni://<path>`, `open-app.ts` — universal links
+  don't open from the same site) or the App Store; on Android adding to the
+  home screen; elsewhere the App Store, through /install.
 - **Strings** (`src/lib/i18n.tsx`): the website's `messages/<locale>/*.json`
   (synced) through use-intl (next-intl's core), so both say the same thing.
   App-only strings: `messages/<locale>/mobile.json` (also kept in the
@@ -321,5 +329,5 @@ the APNs key (paid Apple Developer account) and the FCM v1 service account
 
 Forcing an update: set `MIN_APP_VERSION` (e.g. `1.1.0`) on the server
 (Vercel env) and installed apps older than it show 「アプリを更新してください」
-instead of the app (`src/features/update`); `APP_STORE_URL` (the app's App
-Store link, once it has one) gives iOS its "update" button.
+instead of the app (`src/features/update`), whose button opens the App
+Store page (`src/lib/app-store.ts`, or `APP_STORE_URL` on the server).

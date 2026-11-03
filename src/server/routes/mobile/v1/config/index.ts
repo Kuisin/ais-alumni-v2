@@ -1,9 +1,11 @@
 import type { AppConfig } from "@contract/core";
+import { APP_STORE_URL } from "@/lib/app-store";
 import { donationsReady, portalLoginUrl } from "@/server/lib/donations";
 import { publicRoute } from "@/server/lib/mobile/http";
 import { ssoReady } from "@/server/lib/sso";
 
-/** TESTFLIGHT_URL: the external testing group's public link. */
+/** TESTFLIGHT_URL: the external testing group's public link (older apps
+ *  and web pages offered it before the App Store release). */
 function testflightUrl(): string | null {
   const url = process.env.TESTFLIGHT_URL?.trim();
   return url && /^https:\/\/testflight\.apple\.com\/join\/\w+$/.test(url)
@@ -28,7 +30,8 @@ export const GET = publicRoute(
     install: { testflightUrl: testflightUrl() },
     minAppVersion: process.env.MIN_APP_VERSION?.trim() || null,
     storeUrl: {
-      ios: process.env.APP_STORE_URL?.trim() || null,
+      // The app is on the App Store; APP_STORE_URL can override the link.
+      ios: process.env.APP_STORE_URL?.trim() || APP_STORE_URL,
       android:
         "https://play.google.com/store/apps/details?id=net.kailab.aisalumni",
     },
