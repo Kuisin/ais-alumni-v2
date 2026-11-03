@@ -314,8 +314,6 @@
     "appMeta": "For iPhone · Free · On the App Store",
     "inApp": "You installed this app from the App Store. If you like it, please rate or review it there.",
     "rateAppStore": "Write a review on the App Store",
-    "qrAlt": "QR code that opens the app's App Store page",
-    "qrHint": "Scan it with your iPhone's camera to open the app's App Store page.",
     "openApp": {
       "title": "Open in the app",
       "body": "Have the AIS Alumni app? Open this page in it.",

@@ -7,8 +7,8 @@ EAS project `@kaisei0807s/ais-alumni`.
 `6817619381`, eas.json `ascAppId`). The app and the web app use it from
 `src/lib/app-store.ts`: /install, the update screen, Safari's Smart App
 Banner and 「アプリで開く」 in other iPhone browsers (`src/app/+html.tsx`,
-`src/features/install`), the web manifest's `related_applications`, and
-the QR code `public/app-store-qr.svg`. `APP_STORE_URL` (Vercel env) is no
+`src/features/install`) and the web manifest's
+`related_applications`. `APP_STORE_URL` (Vercel env) is no
 longer needed; set it only to send `/config` somewhere else.
 
 New versions: bump `version` in app.config.ts, build and submit

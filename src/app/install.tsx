@@ -80,11 +80,7 @@ export default function InstallScreen() {
               onChange={(v) => setDevice(v as InstallDevice)}
             />
           ) : null}
-          {device === "android" ? (
-            <AndroidInstall />
-          ) : (
-            <IosInstall qr={detected === "other"} />
-          )}
+          {device === "android" ? <AndroidInstall /> : <IosInstall />}
           {/* The guess can be wrong (a browser hiding what it runs on). */}
           {Platform.OS === "web" && detected !== "other" ? (
             <Button
@@ -268,11 +264,9 @@ function WebNotifications() {
 
 /**
  * iPhone: the app on the App Store (config.storeUrl.ios; APP_STORE_URL
- * until /config answers), the steps after installing it and, on a computer,
- * a QR code to open the App Store page on the phone (public/app-store-qr.svg,
- * the same link).
+ * until /config answers) and the steps after installing it.
  */
-function IosInstall({ qr }: { qr: boolean }) {
+function IosInstall() {
   const t = useTranslations("mobile.install");
   const config = useQuery({
     queryKey: ["config"],
@@ -314,18 +308,6 @@ function IosInstall({ qr }: { qr: boolean }) {
         }
         onPress={() => open(inApp ? `${store}?action=write-review` : store)}
       />
-      {qr ? (
-        <Card style={styles.qrCard}>
-          <Image
-            source={{ uri: "/app-store-qr.svg" }}
-            style={styles.qr}
-            accessibilityLabel={t("qrAlt")}
-          />
-          <Text variant="small" tone="muted" center>
-            {t("qrHint")}
-          </Text>
-        </Card>
-      ) : null}
       <Card style={styles.card}>
         <Text variant="subheading" accessibilityRole="header">
           {t("benefits.title")}
@@ -387,8 +369,6 @@ const styles = StyleSheet.create({
   number: { width: 20 },
   hero: { flexDirection: "row", alignItems: "center", gap: space.md },
   appIcon: { width: 64, height: 64, borderRadius: 14 },
-  qrCard: { gap: space.lg, alignItems: "center" },
-  qr: { width: 176, height: 176 },
   note: { flexDirection: "row", gap: space.sm },
   switch: { alignSelf: "center" },
 });

@@ -311,8 +311,6 @@
     "appMeta": "iPhone 版・無料・App Store で公開中",
     "inApp": "このアプリは App Store からインストールされています。よろしければ App Store で評価やレビューをお寄せください。",
     "rateAppStore": "App Store でレビューを書く",
-    "qrAlt": "App Store のアプリのページを開く QR コード",
-    "qrHint": "iPhone のカメラで読み取ると、App Store のアプリのページが開きます。",
     "openApp": {
       "title": "アプリで開く",
       "body": "AIS同窓会アプリをお持ちなら、このページをアプリで開けます。",

@@ -183,9 +183,8 @@ project id in the config Expo Go needs no sign-in (with one, run
   the iPhone app is on the App Store — its id and link are
   `src/lib/app-store.ts` (`APP_STORE_URL` on the server overrides the link
   in `/config`). /install shows what fits the phone it's opened on
-  (`pwa.ts`; a choice on anything else). iPhone: the App Store button, the
-  first steps and, on a computer, a QR code (`public/app-store-qr.svg`, the
-  same link — regenerate it if the link changes). Android: there is no
+  (`pwa.ts`; a choice on anything else). iPhone: the App Store button and the
+  first steps. Android: there is no
   store app — the web app is installed to the home screen (Chrome's
   "Install app"; `public/manifest.webmanifest`, linked by
   `src/app/+html.tsx`) and gets notifications as above. The web app's
