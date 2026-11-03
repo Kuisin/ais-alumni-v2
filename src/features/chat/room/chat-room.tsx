@@ -22,7 +22,14 @@ import {
   RefreshCw,
   Trash2,
 } from "lucide-react-native";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -32,6 +39,7 @@ import {
   Pressable,
   StyleSheet,
   View,
+  type ViewStyle,
 } from "react-native";
 import {
   SafeAreaView,
@@ -126,7 +134,10 @@ function ChatRoomView({ id, pane = false }: { id: string; pane?: boolean }) {
           }}
         />
       )}
-      <SafeAreaView edges={["left", "right"]} style={styles.screen}>
+      {/* Full screen: clear of a bar at the side (the iPhone Duo's). In the
+          pane the chat tab's ScreenView already is, and a second one would
+          inset it again. */}
+      <SideSafe pane={pane} style={styles.screen}>
         <QueryState query={query}>
           {(data) => (
             <Room
@@ -137,8 +148,26 @@ function ChatRoomView({ id, pane = false }: { id: string; pane?: boolean }) {
             />
           )}
         </QueryState>
-      </SafeAreaView>
+      </SideSafe>
     </>
+  );
+}
+
+function SideSafe({
+  pane,
+  style,
+  children,
+}: {
+  pane: boolean;
+  style: ViewStyle;
+  children: ReactNode;
+}) {
+  return pane ? (
+    <View style={style}>{children}</View>
+  ) : (
+    <SafeAreaView edges={["left", "right"]} style={style}>
+      {children}
+    </SafeAreaView>
   );
 }
 

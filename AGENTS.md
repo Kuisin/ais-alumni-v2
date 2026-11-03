@@ -180,15 +180,22 @@ project id in the config Expo Go needs no sign-in (with one, run
   live key. STRIPE_PORTAL_LOGIN_URL (optional) links monthly donors to
   Stripe's Customer Portal.
 - **Installing the app** (`src/app/install.tsx`, `src/features/install`):
-  the web app shows 「アプリ版が使えます」 (web only; 「あとで」 hides it for
-  two weeks) leading to /install, which shows what fits the phone it's
-  opened on (`pwa.ts`; a choice on anything else). iPhone: the App Store
-  link once `APP_STORE_URL` is set on the server, until then the steps to
-  install through TestFlight with the external group's public link
-  (`TESTFLIGHT_URL`, `https://testflight.apple.com/join/…`). Android: there
-  is no store app — the web app is installed to the home screen (Chrome's
+  the iPhone app is on the App Store — its id and link are
+  `src/lib/app-store.ts` (`APP_STORE_URL` on the server overrides the link
+  in `/config`). /install shows what fits the phone it's opened on
+  (`pwa.ts`; a choice on anything else). iPhone: the App Store button and the
+  first steps. Android: there is no
+  store app — the web app is installed to the home screen (Chrome's
   "Install app"; `public/manifest.webmanifest`, linked by
-  `src/app/+html.tsx`) and gets notifications as above.
+  `src/app/+html.tsx`) and gets notifications as above. The web app's
+  popup at the bottom (`install-prompt.tsx`, web only; 「あとで」 hides it
+  for two weeks): in Safari on an iPhone none, since `+html.tsx` adds
+  Safari's Smart App Banner (`apple-itunes-app`, with the page as
+  `app-argument`, so 「開く」 opens the same screen); in other iPhone
+  browsers (Chrome, LINE's…) 「アプリで開く」, which opens the page through
+  the app's scheme (`aisalumni://<path>`, `open-app.ts` — universal links
+  don't open from the same site) or the App Store; on Android adding to the
+  home screen; elsewhere the App Store, through /install.
 - **Strings** (`src/lib/i18n.tsx`): the website's `messages/<locale>/*.json`
   (synced) through use-intl (next-intl's core), so both say the same thing.
   App-only strings: `messages/<locale>/mobile.json` (also kept in the
@@ -233,6 +240,17 @@ project id in the config Expo Go needs no sign-in (with one, run
   `CONTENT_MAX_WIDTH`; a list with details uses `Panes` (`src/ui/panes.tsx`:
   list and detail side by side, split at the fold) — the chat tab does,
   selecting with `?room=`. Lay out by width, never by orientation or device.
+  The Duo's three states (`src/ui/fold.tsx`): closed (outer display, the
+  system bar at its right edge — a right safe-area inset), open flat (no
+  fold) and half open, where the fold is a reserved region — top to bottom
+  in the book pose, across in the table pose. Nothing interactive across
+  it: bottom sheets go in `SheetPlacement` (`sheetWidth`; past a book fold,
+  below a table one, clear of the side bar), full-screen centred messages
+  in `FoldCenter` (`Loading`, `ErrorState` already are); lists may scroll
+  under it. System sheets (`presentationStyle="pageSheet"`) are placed by
+  iOS — give their `SafeAreaView` all four edges. The regions lag the
+  hinge by about a second: `patches/react-native-reserved-regions…` asks
+  again after it settles, or a fold could linger after opening flat.
 - Feature code in `src/features/<feature>/` (components, `api.ts` hooks).
   Shared primitives in `src/ui` (`Text`, `Button`, `Card`, `ListRow`,
   `Screen`, `QueryState`, `Markdown`, …) — use them; always `Text` from
@@ -321,5 +339,5 @@ the APNs key (paid Apple Developer account) and the FCM v1 service account
 
 Forcing an update: set `MIN_APP_VERSION` (e.g. `1.1.0`) on the server
 (Vercel env) and installed apps older than it show 「アプリを更新してください」
-instead of the app (`src/features/update`); `APP_STORE_URL` (the app's App
-Store link, once it has one) gives iOS its "update" button.
+instead of the app (`src/features/update`), whose button opens the App
+Store page (`src/lib/app-store.ts`, or `APP_STORE_URL` on the server).

@@ -1,0 +1,9 @@
+# After folding the Duo with a talk in the pane: it goes on full screen
+# (OpenFullScreen in src/features/chat/chat-list.tsx).
+appId: ${APP_ID}
+---
+- extendedWaitUntil:
+    visible: ".*Class dinner after the reunion.*"
+    timeout: 20000
+- assertNotVisible: "Emily Tanaka.*"
+- takeScreenshot: duo-folded-room

@@ -1,0 +1,32 @@
+# iPhone Duo folded (outer display): the chat tab is a list; a talk opens
+# full screen over it. Run by maestro/duo.sh with the demo account signed in.
+appId: ${APP_ID}
+---
+- launchApp:
+    stopApp: true
+- openLink: ${APP_URL}
+- tapOn:
+    text: "Close"
+    optional: true
+- extendedWaitUntil:
+    visible: "(Chat|チャット)(, tab.*)?"
+    timeout: 60000
+- tapOn: "(Chat|チャット)(, tab.*)?"
+- extendedWaitUntil:
+    visible: "Emily Tanaka.*"
+    timeout: 30000
+# One column: no detail pane.
+- assertNotVisible: "(Choose a talk|トークを選んでください)"
+- takeScreenshot: duo-closed-1-list
+- tapOn: "Emily Tanaka.*"
+- extendedWaitUntil:
+    visible: ".*sit together.*"
+    timeout: 20000
+# Full screen: the list isn't beside it.
+- assertNotVisible: "Class 3.*"
+- takeScreenshot: duo-closed-2-room
+- tapOn:
+    id: "BackButton"
+- extendedWaitUntil:
+    visible: "Class 3.*"
+    timeout: 10000

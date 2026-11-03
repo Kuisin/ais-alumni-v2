@@ -13,10 +13,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { colors, radius, space, Text, TOUCH } from "@/ui";
+import { SheetPlacement, sheetWidth } from "@/ui/fold";
 
 /**
  * A bottom sheet (menus, confirmations, filters): slides up over a dimmed
- * screen; tapping outside, the ✕ or the system back closes it.
+ * screen; tapping outside, the ✕ or the system back closes it. On the
+ * iPhone Duo it keeps off the side bar and the fold (SheetPlacement).
  */
 export function Sheet({
   visible,
@@ -62,53 +64,55 @@ export function Sheet({
           accessibilityRole="button"
           accessibilityLabel={tc("close")}
         />
-        <Animated.View
-          accessibilityViewIsModal
-          style={[
-            styles.sheet,
-            { paddingBottom: Math.max(insets.bottom, space.lg) },
-            {
-              transform: [
-                {
-                  translateY: slide.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [320, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <View style={styles.header}>
-            <Text
-              variant="subheading"
-              accessibilityRole="header"
-              style={styles.title}
-              numberOfLines={2}
-            >
-              {title ?? ""}
-            </Text>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={tc("close")}
-              onPress={onClose}
-              hitSlop={8}
-              style={({ pressed }) => [
-                styles.close,
-                pressed ? styles.pressed : null,
-              ]}
-            >
-              <X size={22} color={colors.slate600} aria-hidden />
-            </Pressable>
-          </View>
-          <ScrollView
-            style={styles.body}
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
+        <SheetPlacement>
+          <Animated.View
+            accessibilityViewIsModal
+            style={[
+              styles.sheet,
+              { paddingBottom: Math.max(insets.bottom, space.lg) },
+              {
+                transform: [
+                  {
+                    translateY: slide.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [320, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
           >
-            {children}
-          </ScrollView>
-        </Animated.View>
+            <View style={styles.header}>
+              <Text
+                variant="subheading"
+                accessibilityRole="header"
+                style={styles.title}
+                numberOfLines={2}
+              >
+                {title ?? ""}
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={tc("close")}
+                onPress={onClose}
+                hitSlop={8}
+                style={({ pressed }) => [
+                  styles.close,
+                  pressed ? styles.pressed : null,
+                ]}
+              >
+                <X size={22} color={colors.slate600} aria-hidden />
+              </Pressable>
+            </View>
+            <ScrollView
+              style={styles.body}
+              contentContainerStyle={styles.content}
+              keyboardShouldPersistTaps="handled"
+            >
+              {children}
+            </ScrollView>
+          </Animated.View>
+        </SheetPlacement>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -125,6 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: `${colors.slate900}66`,
   },
   sheet: {
+    ...sheetWidth,
     maxHeight: "88%",
     backgroundColor: colors.surface,
     borderTopLeftRadius: radius.lg + 4,

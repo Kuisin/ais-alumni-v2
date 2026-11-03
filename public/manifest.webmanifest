@@ -11,6 +11,14 @@
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "categories": ["social", "education"],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/jp/app/ais-alumni/id6817619381",
+      "id": "6817619381"
+    }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",

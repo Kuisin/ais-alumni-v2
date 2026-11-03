@@ -14,3 +14,5 @@ minimumReleaseAgeExclude:
   - expo-document-picker@57.0.3
   - expo-router@57.0.24
   - expo-task-manager@57.0.21
+patchedDependencies:
+  react-native-reserved-regions@0.2.0: patches/react-native-reserved-regions@0.2.0.patch

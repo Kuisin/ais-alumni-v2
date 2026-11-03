@@ -7,5 +7,5 @@ appId: ${APP_ID}
     index: 1
 - inputText: ${CODE}
 - extendedWaitUntil:
-    visible: "(Home|ホーム), tab.*"
+    visible: "(Home|ホーム)(, tab.*)?"
     timeout: 30000

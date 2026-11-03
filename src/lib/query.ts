@@ -21,6 +21,12 @@ import { ApiError } from "./api";
  * — see PERSISTED below for what is kept. Cleared on sign-out.
  */
 
+/**
+ * Bump to drop what devices have kept (e.g. 2: caches that held null from a
+ * non-JSON response — the iOS app crashed on launch with them).
+ */
+const CACHE_VERSION = 2;
+
 /** Kept on the device this long (and in memory at least as long). */
 const KEEP_MS = 3 * 24 * 60 * 60_000;
 export const queryClient = new QueryClient({
@@ -71,6 +77,8 @@ function persisted(query: Query): boolean {
   const [root, sub] = query.queryKey as unknown[];
   if (typeof root !== "string" || !PERSISTED.has(root)) return false;
   if (root === "chat" && sub === "direct") return false;
+  // Never keep a missing answer: screens expect data.
+  if (query.state.data == null) return false;
   return defaultShouldDehydrateQuery(query);
 }
 
@@ -83,8 +91,9 @@ export const queryPersister = createAsyncStoragePersister({
 export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
   persister: queryPersister,
   maxAge: KEEP_MS,
-  // A new app version starts from an empty cache (response shapes may change).
-  buster: Constants.expoConfig?.version ?? "dev",
+  // A new app version starts from an empty cache (response shapes may
+  // change); so does a new CACHE_VERSION.
+  buster: `${Constants.expoConfig?.version ?? "dev"}-${CACHE_VERSION}`,
   dehydrateOptions: { shouldDehydrateQuery: persisted },
 };
 

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, radius, space, Text, TOUCH } from "@/ui";
+import { SheetPlacement, sheetWidth } from "@/ui/fold";
 
 export type SheetAction = {
   key: string;
@@ -63,59 +64,64 @@ export function MessageSheet({
           accessibilityRole="button"
           accessibilityLabel={cancelLabel}
         />
-        <View
-          style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 12) }]}
-          accessibilityViewIsModal
-        >
-          {content ?? (
-            <>
-              <View style={styles.head}>
-                <Text variant="small" weight="semibold" numberOfLines={1}>
-                  {title}
-                </Text>
-                {preview ? (
-                  <Text variant="small" tone="subtle" numberOfLines={2}>
-                    {preview}
-                  </Text>
-                ) : null}
-              </View>
-              {top}
-              {actions.map((a) => {
-                const color = a.destructive ? colors.red700 : colors.slate900;
-                return (
-                  <Pressable
-                    key={a.key}
-                    accessibilityRole="button"
-                    accessibilityLabel={a.label}
-                    onPress={a.onPress}
-                    style={({ pressed }) => [
-                      styles.action,
-                      pressed ? styles.pressed : null,
-                    ]}
-                  >
-                    {a.icon(color)}
-                    <Text weight="medium" style={{ color }}>
-                      {a.label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </>
-          )}
-          <Pressable
-            accessibilityRole="button"
-            onPress={onClose}
-            style={({ pressed }) => [
-              styles.action,
-              styles.cancel,
-              pressed ? styles.pressed : null,
+        <SheetPlacement>
+          <View
+            style={[
+              styles.sheet,
+              { paddingBottom: Math.max(insets.bottom, 12) },
             ]}
+            accessibilityViewIsModal
           >
-            <Text weight="semibold" tone="brand" center style={styles.flex}>
-              {cancelLabel}
-            </Text>
-          </Pressable>
-        </View>
+            {content ?? (
+              <>
+                <View style={styles.head}>
+                  <Text variant="small" weight="semibold" numberOfLines={1}>
+                    {title}
+                  </Text>
+                  {preview ? (
+                    <Text variant="small" tone="subtle" numberOfLines={2}>
+                      {preview}
+                    </Text>
+                  ) : null}
+                </View>
+                {top}
+                {actions.map((a) => {
+                  const color = a.destructive ? colors.red700 : colors.slate900;
+                  return (
+                    <Pressable
+                      key={a.key}
+                      accessibilityRole="button"
+                      accessibilityLabel={a.label}
+                      onPress={a.onPress}
+                      style={({ pressed }) => [
+                        styles.action,
+                        pressed ? styles.pressed : null,
+                      ]}
+                    >
+                      {a.icon(color)}
+                      <Text weight="medium" style={{ color }}>
+                        {a.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </>
+            )}
+            <Pressable
+              accessibilityRole="button"
+              onPress={onClose}
+              style={({ pressed }) => [
+                styles.action,
+                styles.cancel,
+                pressed ? styles.pressed : null,
+              ]}
+            >
+              <Text weight="semibold" tone="brand" center style={styles.flex}>
+                {cancelLabel}
+              </Text>
+            </Pressable>
+          </View>
+        </SheetPlacement>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -128,6 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(15, 23, 42, 0.4)",
   },
   sheet: {
+    ...sheetWidth,
     backgroundColor: colors.surface,
     borderTopLeftRadius: radius.lg + 4,
     borderTopRightRadius: radius.lg + 4,

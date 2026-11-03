@@ -81,8 +81,24 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
     reportReachable(false);
     throw new ApiError(0, "network");
   }
+  const text = await res.text().catch(() => null);
+  let data: unknown = null;
+  let parsed = false;
+  try {
+    data = text ? JSON.parse(text) : null;
+    parsed = text !== null && text !== "";
+  } catch {
+    // Not JSON: see below.
+  }
+  // Every endpoint answers JSON. A successful response that isn't (a Wi-Fi
+  // or carrier sign-in page, a proxy's or a deploy's HTML) never came from
+  // the API: treat it as no connection, never as data (screens would get
+  // null and it would be kept in the device cache).
+  if (res.ok && !parsed) {
+    reportReachable(false);
+    throw new ApiError(0, "network");
+  }
   reportReachable(true);
-  const data = (await res.json().catch(() => null)) as unknown;
   if (!res.ok) {
     const body =
       data && typeof data === "object" && "error" in data

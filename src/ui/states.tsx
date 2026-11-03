@@ -3,14 +3,19 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ApiError } from "@/lib/api";
 import { Button } from "./button";
+import { FoldCenter } from "./fold";
 import { Text } from "./text";
 import { colors, space } from "./theme";
 
 export function Loading({ inline = false }: { inline?: boolean }) {
-  return (
-    <View style={inline ? styles.inline : styles.fill}>
+  return inline ? (
+    <View style={styles.inline}>
       <ActivityIndicator color={colors.brand700} />
     </View>
+  ) : (
+    <FoldCenter style={styles.fill}>
+      <ActivityIndicator color={colors.brand700} />
+    </FoldCenter>
   );
 }
 
@@ -35,14 +40,14 @@ export function ErrorState({
             : t("generic")
       : t("generic");
   return (
-    <View style={styles.fill}>
+    <FoldCenter style={styles.fill}>
       <Text tone="muted" center>
         {message}
       </Text>
       {onRetry ? (
         <Button label={t("retry")} variant="secondary" onPress={onRetry} />
       ) : null}
-    </View>
+    </FoldCenter>
   );
 }
 
@@ -74,10 +79,9 @@ export function EmptyState({
 }
 
 const styles = StyleSheet.create({
+  // In FoldCenter: centred, and off the iPhone Duo's fold.
   fill: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     gap: space.lg,
     padding: space.xl,
   },
