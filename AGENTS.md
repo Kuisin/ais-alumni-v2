@@ -240,6 +240,17 @@ project id in the config Expo Go needs no sign-in (with one, run
   `CONTENT_MAX_WIDTH`; a list with details uses `Panes` (`src/ui/panes.tsx`:
   list and detail side by side, split at the fold) — the chat tab does,
   selecting with `?room=`. Lay out by width, never by orientation or device.
+  The Duo's three states (`src/ui/fold.tsx`): closed (outer display, the
+  system bar at its right edge — a right safe-area inset), open flat (no
+  fold) and half open, where the fold is a reserved region — top to bottom
+  in the book pose, across in the table pose. Nothing interactive across
+  it: bottom sheets go in `SheetPlacement` (`sheetWidth`; past a book fold,
+  below a table one, clear of the side bar), full-screen centred messages
+  in `FoldCenter` (`Loading`, `ErrorState` already are); lists may scroll
+  under it. System sheets (`presentationStyle="pageSheet"`) are placed by
+  iOS — give their `SafeAreaView` all four edges. The regions lag the
+  hinge by about a second: `patches/react-native-reserved-regions…` asks
+  again after it settles, or a fold could linger after opening flat.
 - Feature code in `src/features/<feature>/` (components, `api.ts` hooks).
   Shared primitives in `src/ui` (`Text`, `Button`, `Card`, `ListRow`,
   `Screen`, `QueryState`, `Markdown`, …) — use them; always `Text` from

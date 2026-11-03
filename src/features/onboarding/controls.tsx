@@ -202,7 +202,7 @@ export function Select({
         transparent={Platform.OS === "web"}
         onRequestClose={() => setOpen(false)}
       >
-        <SafeAreaView style={styles.sheet} edges={["top", "bottom"]}>
+        <SafeAreaView style={styles.sheet}>
           <View style={styles.sheetHead}>
             <Text
               variant="subheading"

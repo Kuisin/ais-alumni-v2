@@ -302,7 +302,7 @@ function WhoPicker({
       presentationStyle="pageSheet"
       onRequestClose={onClose}
     >
-      <SafeAreaView style={styles.picker} edges={["top", "bottom"]}>
+      <SafeAreaView style={styles.picker}>
         <View style={styles.pickerHead}>
           <Text variant="subheading" style={styles.flex}>
             {title}

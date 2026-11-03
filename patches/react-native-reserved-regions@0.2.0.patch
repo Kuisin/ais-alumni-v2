@@ -1,0 +1,17 @@
+diff --git a/ios/ReservedRegionsView.mm b/ios/ReservedRegionsView.mm
+index 04b38972d2cf73c56a128c977e121b1b8533d5e9..1e7032e2383e183aea5e08a8f8256c726c6b6df6 100644
+--- a/ios/ReservedRegionsView.mm	
++++ b/ios/ReservedRegionsView.mm
+@@ -30,6 +30,12 @@ using namespace facebook::react;
+       UIHingeInteraction *hingeInteraction =
+           [[UIHingeInteraction alloc] initWithUpdateHandler:^(UIHingeInteraction *, UIHingeInteractionUpdate *) {
+             [weakSelf setNeedsLayout];
++            // The regions lag the hinge by about a second: the update that
++            // reports the device flat can still read the fold as active, and
++            // nothing else asks again. Ask once more after they've settled.
++            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
++              [weakSelf setNeedsLayout];
++            });
+           }];
+       [self addInteraction:hingeInteraction];
+     }

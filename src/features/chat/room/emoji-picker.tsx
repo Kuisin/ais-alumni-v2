@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useLocale, useTranslations } from "use-intl";
 import { colors, font, radius, space, Text, TOUCH } from "@/ui";
+import { useSheetArea } from "@/ui/fold";
 import data from "./emoji-data.json";
 
 /**
@@ -66,7 +67,13 @@ export function EmojiPicker({
 }) {
   const t = useTranslations("chat.reactions");
   const locale = useLocale() as Locale;
-  const { width, height } = useWindowDimensions();
+  const window = useWindowDimensions();
+  // The sheet's room (on the iPhone Duo: one side of the fold, or below it).
+  const room = useSheetArea();
+  const width = room.width || window.width;
+  const height = Math.round(
+    Math.min(window.height * 0.6, room.height ? room.height * 0.85 : Infinity),
+  );
   const all = useMemo(groups, []);
   const [group, setGroup] = useState<GroupKey>("smileys");
   const [query, setQuery] = useState("");
@@ -83,7 +90,7 @@ export function EmojiPicker({
     return out;
   }, [all, group, q]);
 
-  // The sheet spans the screen (less its and the grid's padding).
+  // The sheet's width, less its and the grid's padding.
   const columns = Math.max(
     6,
     Math.floor((width - space.sm * 2 - space.xs * 2) / CELL),
@@ -100,7 +107,7 @@ export function EmojiPicker({
   );
 
   return (
-    <View style={{ height: Math.round(height * 0.6) }}>
+    <View style={{ height }}>
       <View style={styles.top}>
         <Pressable
           accessibilityRole="button"

@@ -2,12 +2,13 @@ import type { AppConfig } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Download } from "lucide-react-native";
-import { Linking, Platform, StyleSheet, View } from "react-native";
+import { Linking, Platform, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { api } from "@/lib/api";
 import { APP_STORE_URL } from "@/lib/app-store";
 import { Button, colors, space, Text } from "@/ui";
+import { FoldCenter } from "@/ui/fold";
 
 /** -1, 0 or 1, comparing "1.2.10" and "1.3" part by part. */
 export function compareVersions(a: string, b: string): number {
@@ -57,8 +58,8 @@ export function useUpdateRequired(): UpdateRequired | undefined {
 export function UpdateRequired({ url, retry, checking }: UpdateRequired) {
   const t = useTranslations("mobile.update");
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.body}>
+    <SafeAreaView style={styles.safe} edges={["bottom"]}>
+      <FoldCenter safeArea style={styles.body}>
         <Download size={40} color={colors.slate400} aria-hidden />
         <Text variant="subheading" center accessibilityRole="header">
           {t("title")}
@@ -78,7 +79,7 @@ export function UpdateRequired({ url, retry, checking }: UpdateRequired) {
           loading={checking}
           onPress={retry}
         />
-      </View>
+      </FoldCenter>
     </SafeAreaView>
   );
 }
@@ -86,9 +87,7 @@ export function UpdateRequired({ url, retry, checking }: UpdateRequired) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   body: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     gap: space.lg,
     padding: space.xl,
   },

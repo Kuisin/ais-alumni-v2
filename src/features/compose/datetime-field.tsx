@@ -7,6 +7,7 @@ import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import { useLocale, useTranslations } from "use-intl";
 import { formatDateTime, TIME_ZONE } from "@/lib/format";
 import { Button, colors, radius, space, Text, TOUCH } from "@/ui";
+import { SheetPlacement, sheetWidth } from "@/ui/fold";
 import { fromJstLocal, nextHour, toJstLocal } from "./jst";
 
 export type DateTimeFieldProps = {
@@ -117,37 +118,39 @@ export function DateTimeField({
           onRequestClose={() => setDraft(null)}
         >
           <View style={styles.backdrop}>
-            <View style={styles.sheet}>
-              <Text variant="subheading" accessibilityRole="header">
-                {label}
-              </Text>
-              <DateTimePicker
-                value={draft}
-                mode="datetime"
-                display="inline"
-                minimumDate={min}
-                timeZoneName={TIME_ZONE}
-                locale={locale === "ja" ? "ja-JP" : "en-US"}
-                accentColor={colors.brand700}
-                onChange={(_, d) => d && setDraft(d)}
-              />
-              <View style={styles.actions}>
-                <Button
-                  variant="secondary"
-                  label={t("cancel")}
-                  onPress={() => setDraft(null)}
-                  style={styles.flex}
+            <SheetPlacement>
+              <View style={styles.sheet}>
+                <Text variant="subheading" accessibilityRole="header">
+                  {label}
+                </Text>
+                <DateTimePicker
+                  value={draft}
+                  mode="datetime"
+                  display="inline"
+                  minimumDate={min}
+                  timeZoneName={TIME_ZONE}
+                  locale={locale === "ja" ? "ja-JP" : "en-US"}
+                  accentColor={colors.brand700}
+                  onChange={(_, d) => d && setDraft(d)}
                 />
-                <Button
-                  label={t("done")}
-                  onPress={() => {
-                    onChange(toJstLocal(draft));
-                    setDraft(null);
-                  }}
-                  style={styles.flex}
-                />
+                <View style={styles.actions}>
+                  <Button
+                    variant="secondary"
+                    label={t("cancel")}
+                    onPress={() => setDraft(null)}
+                    style={styles.flex}
+                  />
+                  <Button
+                    label={t("done")}
+                    onPress={() => {
+                      onChange(toJstLocal(draft));
+                      setDraft(null);
+                    }}
+                    style={styles.flex}
+                  />
+                </View>
               </View>
-            </View>
+            </SheetPlacement>
           </View>
         </Modal>
       ) : null}
@@ -185,6 +188,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   sheet: {
+    ...sheetWidth,
     backgroundColor: colors.white,
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
