@@ -4,9 +4,9 @@ import { FoldArea, useFoldArea } from "./fold";
 import { colors } from "./theme";
 
 /**
- * From this width the list and the detail sit side by side. The iPhone
- * Duo open leaves about 580 pt beside its tab sidebar, so the panes start
- * below that; a portrait iPhone (≤ 440 pt) and the folded Duo stay single.
+ * From this width the list and the detail sit side by side: the iPhone Duo
+ * open (669 pt, or 951 less its side bar); a portrait iPhone (≤ 440 pt)
+ * and the folded Duo (466 pt) stay single.
  */
 export const PANES_MIN_WIDTH = 560;
 /** The list's share, kept between min and max; the detail gets the rest. */

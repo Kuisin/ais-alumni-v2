@@ -6,10 +6,11 @@ import { colors } from "@/ui/theme";
 const badge = (n: number) => (n > 0 ? (n > 99 ? "99+" : String(n)) : null);
 
 /**
- * iOS: the system's tab bar (Android and the web: _layout.tsx). Where there
- * is room — the iPhone Duo open, landscape — the tabs move into the sidebar
- * at the screen's edge (iOS 27). Each tab's own stack draws its header
- * (features/tabs/tab-stack).
+ * iOS: the system's tab bar (Android and the web: _layout.tsx). Always a
+ * tab bar, never the sidebar: on the iPhone Duo the system turns it into
+ * the vertical bar at the screen's right edge — folded and open alike —
+ * where a sidebar would take half the open display. Each tab's own stack
+ * draws its header (features/tabs/tab-stack).
  */
 export default function TabLayout() {
   const t = useTranslations("common.nav");
@@ -18,7 +19,7 @@ export default function TabLayout() {
   const chat = badge(badges.chat);
   return (
     <NativeTabs
-      preferredPlacement="sidebar"
+      sidebarAdaptable={false}
       tintColor={colors.brand700}
       badgeBackgroundColor={colors.red600}
     >

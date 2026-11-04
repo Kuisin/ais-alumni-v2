@@ -1,4 +1,4 @@
-# iPhone Duo open (inner display): the tabs are in the sidebar and the chat
+# iPhone Duo open (inner display): the tabs are in the vertical bar and the chat
 # tab shows the list and the selected talk side by side (src/ui/panes.tsx).
 # Maestro 2.12 maps the screen to the outer display: it can't tap on the
 # inner one and sees most of the detail pane as off screen. So this selects

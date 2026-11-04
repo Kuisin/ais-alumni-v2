@@ -5,6 +5,7 @@ import {
   type ScrollViewInstance,
   type ScrollViewProps,
   StyleSheet,
+  View,
   type ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -66,8 +67,10 @@ export function Screen({
       }
       {...props}
     >
-      <SafeAreaView edges={SIDES} style={[styles.content, contentStyle]}>
-        {children}
+      {/* The side bar first, across the full width (its inset is the part
+          of it over the page), then the column centred in what's left. */}
+      <SafeAreaView edges={SIDES} style={styles.sides}>
+        <View style={[styles.content, contentStyle]}>{children}</View>
       </SafeAreaView>
     </ScrollView>
   );
@@ -91,6 +94,7 @@ export function ScreenView({
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   container: { flexGrow: 1 },
+  sides: { flexGrow: 1 },
   content: {
     width: "100%",
     maxWidth: CONTENT_MAX_WIDTH + 2 * space.lg,
