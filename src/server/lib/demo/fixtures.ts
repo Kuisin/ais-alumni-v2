@@ -21,7 +21,7 @@ import type {
   SendMessageResult,
   StartDirectResult,
 } from "@contract/chat";
-import type { Locale, Me } from "@contract/core";
+import type { Locale, Me, MyAccess } from "@contract/core";
 import type {
   EventDetail,
   EventList,
@@ -648,6 +648,23 @@ type Handler = (ctx: {
 const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
   me: { GET: () => demoMe() },
   "me/export": { GET: () => exportData() },
+  // 利用できる機能: the demo member is a graduate with no position, under
+  // the default 1:1 rules (src/server/lib/direct-policy.ts).
+  "me/access": {
+    GET: () =>
+      ({
+        types: ["GRADUATE"],
+        positions: [],
+        minor: false,
+        directory: true,
+        directRules: {
+          CURRENT_STUDENT: "NOBODY",
+          FORMER_STUDENT: "ANYONE",
+          CURRENT_PARENT: "NOBODY",
+          FORMER_PARENT: "SAME_ROLE",
+        },
+      }) satisfies MyAccess,
+  },
   home: {
     GET: () => home(),
     // no-ops: nothing to dismiss / link
