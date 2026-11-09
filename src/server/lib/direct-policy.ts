@@ -8,9 +8,9 @@ import { DirectChatRule, RoleKey } from "@/server/generated/prisma/enums";
  *  - 在校生保護者: no 1:1 talks
  *  - 卒業生保護者: only with other 卒業生保護者
  * 教職員 are fixed here, not by admins: a current teacher (現職) talks 1:1
- * only with former teachers (元教職員), and a former teacher only with
- * current ones — never with students, parents, graduates or a teacher of
- * the same kind.
+ * with other current teachers and with former teachers (元教職員); a former
+ * teacher only with current ones — never with students, parents,
+ * graduates, or between two former teachers.
  * The usual rules (mutual followers, no block) apply on top.
  */
 
@@ -75,7 +75,7 @@ function sideAllows(
  * May these two members have a 1:1 talk? Both sides' types must allow it;
  * a member with several types gets the strictest combination (e.g. a
  * graduate who is also a current parent has no 1:1 talks). If either is a
- * teacher, the two must be one current and one former teacher.
+ * teacher, both must be teachers, at least one of them current.
  */
 export function directAllowed(
   a: DirectParty,
@@ -84,7 +84,8 @@ export function directAllowed(
 ): boolean {
   if (isTeacher(a) || isTeacher(b)) {
     if (!isTeacher(a) || !isTeacher(b)) return false;
-    if (a.currentTeacher === b.currentTeacher) return false;
+    // Two former teachers: no. Current with current or former: yes.
+    if (!a.currentTeacher && !b.currentTeacher) return false;
   }
   return (
     sideAllows(a.roles, b.roles, rules) && sideAllows(b.roles, a.roles, rules)
