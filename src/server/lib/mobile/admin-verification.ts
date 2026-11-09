@@ -587,9 +587,18 @@ async function answersView(
       ? t("preview.graduated", { year: st.graduationOrLeaveYear ?? "" })
       : t("preview.left", { year: st.graduationOrLeaveYear ?? "" });
   };
+  // The form asks the end year only of those who left early: for a
+  // student who stayed, it's the class's graduation year (or 在学中).
   const years = (s: Obj) => {
     const from = str(s.joinedYear);
-    return from ? `${from}–${str(s.leftYear) ?? ""}` : null;
+    if (!from) return null;
+    const to = str(s.leftYear);
+    if (to) return `${from}–${to}`;
+    if (typeof s.cohortNumber !== "number") return `${from}–`;
+    const end = elementaryEndFor(s.cohortNumber);
+    return studentStatus(end, null).current
+      ? `${from}–${ta("detail.stillEnrolled")}`
+      : `${from}–${end}`;
   };
 
   const sections: VerificationAnswerSection[] = [

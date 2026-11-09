@@ -76,7 +76,8 @@
     "linkExpiry": "Links are valid for 15 minutes. Pull down to refresh for new links.",
     "deleteAfter": "deleted after {date}",
     "status": "Status",
-    "oldFormat": "This application was sent with the earlier form; see the applicant's profile for details."
+    "oldFormat": "This application was sent with the earlier form; see the applicant's profile for details.",
+    "stillEnrolled": "present"
   },
   "roster": {
     "title": "Roster",
