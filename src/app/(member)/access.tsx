@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   card: { gap: space.md },
   line: { flexDirection: "row", gap: space.md, alignItems: "flex-start" },
-  lineLabel: { width: 48, paddingTop: 2 },
+  lineLabel: { minWidth: 72, paddingTop: 2 },
   badges: { flex: 1, flexDirection: "row", flexWrap: "wrap", gap: space.xs },
   first: { gap: space.xs, alignItems: "flex-start" },
   mark: { flexDirection: "row", gap: space.xs, alignItems: "center" },
