@@ -105,7 +105,11 @@ export type Me = {
   };
   /** Supabase Realtime (signal-only broadcast channels); null = poll */
   realtime: { url: string; key: string; topics: string[] } | null;
-  features: { messages: boolean };
+  features: {
+    messages: boolean;
+    /** 会員名簿 is open to them (false: a former teacher; absent: older server) */
+    directory?: boolean;
+  };
 };
 
 // ---- Sign-in ----

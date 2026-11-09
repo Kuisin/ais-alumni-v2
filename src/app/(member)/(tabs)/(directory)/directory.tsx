@@ -35,6 +35,26 @@ import {
  * and each photo — is decided by the server (searchDirectory, photoFor).
  */
 export default function DirectoryTab() {
+  const me = useMe();
+  // Former teachers don't browse the members (the server refuses too).
+  if (me.features?.directory === false) return <DirectoryUnavailable />;
+  return <DirectoryList />;
+}
+
+function DirectoryUnavailable() {
+  const t = useTranslations("mobile.directoryUnavailable");
+  return (
+    <ScreenView style={styles.unavailable}>
+      <EmptyState
+        icon={<Users size={32} color={colors.slate400} />}
+        title={t("title")}
+        hint={t("body")}
+      />
+    </ScreenView>
+  );
+}
+
+function DirectoryList() {
   const t = useTranslations("directory");
   const tm = useTranslations("mobile.errors");
   const router = useRouter();
@@ -194,6 +214,7 @@ function Gap() {
 }
 
 const styles = StyleSheet.create({
+  unavailable: { padding: space.lg },
   content: { padding: space.lg, paddingBottom: space.xxl },
   header: { gap: space.md, marginBottom: space.md },
   results: {

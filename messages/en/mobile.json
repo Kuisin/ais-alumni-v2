@@ -327,5 +327,9 @@
     "open": "Open the new site",
     "bookmark": "Please update any bookmarks or Home Screen shortcuts to the new address.",
     "app": "The iPhone app is on the App Store"
+  },
+  "directoryUnavailable": {
+    "title": "The directory isn't available",
+    "body": "As a former teacher, you can read the news and talk 1:1 with current teachers."
   }
 }

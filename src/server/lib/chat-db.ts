@@ -7,12 +7,14 @@ import {
   RoleKey,
 } from "@/server/generated/prisma/enums";
 import { getTranslatorFor } from "@/server/i18n/translator";
+import { isCurrentTeacher } from "@/server/lib/authz";
 import { AVATAR_SELECT } from "@/server/lib/avatar";
 import { desiredGroups, directKey, isAdult } from "@/server/lib/chat";
 import { chatGroupName } from "@/server/lib/chat-labels";
 import { db } from "@/server/lib/db";
 import {
   canHaveDirect,
+  type DirectParty,
   type DirectRules,
   directAllowed,
   mergeDirectRules,
@@ -339,22 +341,25 @@ export async function loadDirectRules(): Promise<DirectRules> {
   );
 }
 
-async function rolesOf(userId: string): Promise<RoleKey[]> {
+async function partyOf(userId: string): Promise<DirectParty> {
   const rows = await db.userRole.findMany({
     where: { userId },
-    select: { role: true },
+    select: { role: true, teacherStatus: true },
   });
-  return rows.map((r) => r.role);
+  return {
+    roles: rows.map((r) => r.role),
+    currentTeacher: isCurrentTeacher(rows),
+  };
 }
 
 /** The member's type allows 1:1 talks at all (the 新しいトーク button). */
 export async function directChatAvailable(userId: string): Promise<boolean> {
   if (!DIRECT_CHAT_ENABLED) return false;
-  const [roles, rules] = await Promise.all([
-    rolesOf(userId),
+  const [party, rules] = await Promise.all([
+    partyOf(userId),
     loadDirectRules(),
   ]);
-  return canHaveDirect(roles, rules);
+  return canHaveDirect(party, rules);
 }
 
 /**
@@ -367,8 +372,8 @@ export async function directRestricted(
   bId: string,
 ): Promise<boolean> {
   const [a, b, rules] = await Promise.all([
-    rolesOf(aId),
-    rolesOf(bId),
+    partyOf(aId),
+    partyOf(bId),
     loadDirectRules(),
   ]);
   return !directAllowed(a, b, rules);
@@ -467,11 +472,8 @@ export async function openDirectChat(
  * member types allow.
  */
 export async function directChatCandidates(meId: string) {
-  const [myRoles, rules] = await Promise.all([
-    rolesOf(meId),
-    loadDirectRules(),
-  ]);
-  if (!canHaveDirect(myRoles, rules)) return [];
+  const [me, rules] = await Promise.all([partyOf(meId), loadDirectRules()]);
+  if (!canHaveDirect(me, rules)) return [];
   const mine = await db.follow.findMany({
     where: { followerId: meId, status: FollowStatus.ACCEPTED },
     select: { followeeId: true },
@@ -504,13 +506,16 @@ export async function directChatCandidates(meId: string) {
       nameRomaji: true,
       nameKanji: true,
       ...AVATAR_SELECT,
-      roles: { select: { role: true } },
+      roles: { select: { role: true, teacherStatus: true } },
     },
   });
   return people.filter((p) =>
     directAllowed(
-      myRoles,
-      p.roles.map((r) => r.role),
+      me,
+      {
+        roles: p.roles.map((r) => r.role),
+        currentTeacher: isCurrentTeacher(p.roles),
+      },
       rules,
     ),
   );

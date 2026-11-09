@@ -156,7 +156,7 @@
     "title": "Chat",
     "intro": "Who can chat one-to-one, and reports sent from chats.",
     "rulesTitle": "One-to-one chats by member type",
-    "rulesIntro": "Members also need to follow each other. A member with several types gets the strictest setting. Changes apply to existing chats too.",
+    "rulesIntro": "Members also need to follow each other. A member with several types gets the strictest setting. Changes apply to existing chats too. Teachers are fixed: current teachers talk 1:1 only with former teachers, and former teachers only with current ones.",
     "rules": {
       "ANYONE": "Allowed",
       "SAME_ROLE": "Only with the same member type",
