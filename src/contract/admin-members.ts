@@ -3,6 +3,8 @@
  * Committee admins only. Pure types only (see core.ts): change additively.
  */
 
+import type { ParentRegistration } from "./admin";
+
 /** ISO 8601 timestamp. */
 type IsoDate = string;
 type Choice = { value: string; label: string };
@@ -64,6 +66,8 @@ export type AdminMemberRow = {
   createdAt: IsoDate;
   /** a test account (テストアカウント); absent from older servers */
   isTest?: boolean;
+  /** a student a parent registered (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
 };
 
 export type AdminMemberList = {
@@ -186,6 +190,8 @@ export type AdminMemberDetail = {
   isTest?: boolean;
   state: AccountStateKey;
   stateLabel: string;
+  /** a student a parent registered (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
   roleLabels: string[];
   line: { status: LineStatus; displayName: string | null };
   /** native app devices, latest used first; absent from older servers */

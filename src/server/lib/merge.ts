@@ -52,6 +52,11 @@ export async function mergeUsers(
       where: { userId: fromId },
       data: { userId: toId },
     });
+    // 本人確認の「やりとり」: messages they wrote keep their author.
+    await tx.verificationMessage.updateMany({
+      where: { authorId: fromId },
+      data: { authorId: toId },
+    });
 
     // Roles: keep the target's record when both have the same role.
     const toRoles = new Set(to.roles.map((r) => r.role));

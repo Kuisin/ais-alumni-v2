@@ -26,6 +26,10 @@ import {
   notifyParentOutcomes,
 } from "@/server/lib/verification/decision-notify";
 import { deleteAfterFrom } from "@/server/lib/verification/evidence";
+import {
+  addAdminMessageInTx,
+  notifyChildNeedsInfo,
+} from "@/server/lib/verification/messages";
 import { ROSTER_MATCH_THRESHOLD } from "@/server/lib/verification/roster";
 import { notifyVoucher } from "@/server/lib/verification/vouch";
 
@@ -136,6 +140,11 @@ export async function decideVerificationAction(
       });
       if (moved.count !== 1) throw new ConflictError();
 
+      // 「追加情報が必要」: the note opens (or continues) the application's
+      // 「やりとり」, where the applicant can answer (reviewNote is kept too).
+      if (decision === "NEEDS_INFO" && note)
+        await addAdminMessageInTx(tx, requestId, me.id, note);
+
       // Evidence is kept 30 days after a final decision (§6.3). NEEDS_INFO is
       // not final: the applicant may still replace files.
       if (decision !== "NEEDS_INFO") {
@@ -209,6 +218,15 @@ export async function decideVerificationAction(
   if (!request.user.managedById)
     await notifyDecision(request.user, requestId, decision, note || null);
   await notifyParentOutcomes(parents);
+  // A question about a parent-registered child always reaches the parent
+  // managing it — also one who is a member already (no application of their
+  // own to move) — unless their own application just followed the child.
+  if (
+    decision === "NEEDS_INFO" &&
+    request.user.managedById &&
+    !parents.some((p) => p.parentId === request.user.managedById)
+  )
+    await notifyChildNeedsInfo(requestId, note || null);
   // An approved student whose link a parent asked for while the student was
   // still in review: now they can confirm it.
   if (decision === "APPROVE") await notifyWaitingParentLinks(request.userId);

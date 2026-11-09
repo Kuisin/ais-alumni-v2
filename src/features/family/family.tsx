@@ -6,9 +6,21 @@ import type {
 } from "@contract/family";
 import type { MemberCard } from "@contract/people";
 import { useRouter } from "expo-router";
-import { Search, Send, UserRoundCheck, UsersRound } from "lucide-react-native";
+import {
+  ChevronRight,
+  MessageCircle,
+  Search,
+  Send,
+  UserRoundCheck,
+  UsersRound,
+} from "lucide-react-native";
 import { forwardRef, useState } from "react";
-import { StyleSheet, type TextInputInstance, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  type TextInputInstance,
+  View,
+} from "react-native";
 import { useFormatter, useTranslations } from "use-intl";
 import { confirmAction } from "@/features/me/confirm";
 import { MemberCardView } from "@/features/people/member-card";
@@ -17,12 +29,14 @@ import { TIME_ZONE } from "@/lib/format";
 import {
   Badge,
   Button,
+  CountDot,
   colors,
   EmptyState,
   radius,
   space,
   Text,
   TextField,
+  TOUCH,
 } from "@/ui";
 import {
   errorCode,
@@ -136,12 +150,56 @@ export function ManagedCard({ managed }: { managed: ManagedChild[] }) {
               label={t(`state.${m.state}`)}
             />
           </View>
+          {m.application ? (
+            <ApplicationRow application={m.application} />
+          ) : null}
           {m.state === "active" ? (
             <HandoverPanel childId={m.member.id} pending={m.handover} />
           ) : null}
         </View>
       ))}
     </SectionCard>
+  );
+}
+
+/**
+ * 「申請についての質問」: the committee's messages about the child's
+ * application (the child has no sign-in, so the parent answers), with an
+ * unread dot.
+ */
+function ApplicationRow({
+  application: a,
+}: {
+  application: NonNullable<ManagedChild["application"]>;
+}) {
+  const t = useTranslations("mobile.applicationMessages");
+  const router = useRouter();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={
+        a.unread > 0
+          ? `${t("familyRow")}、${t("unread", { count: a.unread })}`
+          : t("familyRow")
+      }
+      onPress={() =>
+        router.push({
+          pathname: "/family-application/[id]",
+          params: { id: a.requestId },
+        })
+      }
+      style={({ pressed }) => [
+        styles.appRow,
+        pressed ? styles.appRowPressed : null,
+      ]}
+    >
+      <MessageCircle size={18} color={colors.brand700} aria-hidden />
+      <Text variant="small" weight="semibold" tone="brand" style={styles.flex}>
+        {t("familyRow")}
+      </Text>
+      {a.unread > 0 ? <CountDot count={a.unread} /> : null}
+      <ChevronRight size={16} color={colors.slate400} aria-hidden />
+    </Pressable>
   );
 }
 
@@ -546,6 +604,16 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", marginTop: space.xs },
   actions: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
   managed: { gap: space.sm },
+  appRow: {
+    minHeight: TOUCH,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: space.sm,
+    paddingHorizontal: space.md,
+    borderRadius: radius.md,
+    backgroundColor: colors.brand50,
+  },
+  appRowPressed: { backgroundColor: colors.brand100 },
   panel: {
     gap: space.sm,
     borderRadius: radius.md,

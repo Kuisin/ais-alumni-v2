@@ -600,5 +600,38 @@
       "deleteConfirm": "Delete this test account?",
       "deleteMessage": "The account and its data are deleted. This can't be undone."
     }
+  },
+  "applicationMessages": {
+    "title": "Messages",
+    "description": "Exchange messages with the committee about your membership application.",
+    "childTitle": "About {name}'s application",
+    "childDescription": "{name} can't sign in on their own, so please answer the committee's messages as their parent.",
+    "needsInfo": "Awaiting reply",
+    "committee": "Alumni committee",
+    "you": "You",
+    "emptyApplicant": "No messages from the committee yet.",
+    "replyLabel": "Reply to the committee",
+    "replyHint": "The committee is notified of your reply.",
+    "needsInfoHint": "Replying puts your application back in review. To correct your application, resubmit it with the form below.",
+    "childNeedsInfoHint": "Replying puts {name}'s application back in review.",
+    "send": "Send",
+    "sending": "Sending…",
+    "error": "Couldn't send. Please try again later.",
+    "closed": "This application has been decided, so replies are closed.",
+    "familyRow": "Questions about the application",
+    "unread": "{count} unread",
+    "replied": "Replied",
+    "adminDescription": "Messages with the applicant. Sending one notifies them (the application's status doesn't change).",
+    "adminDescriptionManaged": "This child can't sign in, so messages go to the parent who manages the account ({name}), who answers them.",
+    "emptyAdmin": "No messages yet. Choosing “Ask for more information” posts that message here too.",
+    "adminLabel": "Message to the applicant",
+    "adminHint": "The applicant is notified; the app, LINE and email show the message.",
+    "closedAdmin": "Messages can't be sent once an application is decided."
+  },
+  "parentRegistered": {
+    "by": "Registered by parent: {name}",
+    "managed": "Parent manages",
+    "handedOver": "Handed over",
+    "a11y": "Account registered by their parent {name} ({state}). Open the parent's member page"
   }
 }

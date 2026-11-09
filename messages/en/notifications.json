@@ -18,6 +18,24 @@
       "detail": "Read the note, update your application form and send it again.",
       "cta": "Update application"
     },
+    "VERIFICATION_MESSAGE": {
+      "title": "Message from the committee",
+      "body": "The committee sent you a message about your membership application.",
+      "detail": "Read it on the application status screen in the app and reply there.",
+      "cta": "View message"
+    },
+    "VERIFICATION_CHILD_MESSAGE": {
+      "title": "Message about your child's application",
+      "body": "The committee sent a message about {name}'s membership application.",
+      "detail": "Read it in the app and reply there.",
+      "cta": "View message"
+    },
+    "VERIFICATION_CHILD_NEEDS_INFO": {
+      "title": "A question about your child's application",
+      "body": "The committee has a question about {name}'s membership application.",
+      "detail": "Read the committee's message in the app and reply there.",
+      "cta": "Review"
+    },
     "SECURITY_METHOD_ADDED": {
       "title": "A sign-in method was added",
       "body": "{method} sign-in was added to your account.",
@@ -203,6 +221,12 @@
       "body": "{name} applied for membership.",
       "detail": "Review the application in admin mode.",
       "cta": "Review"
+    },
+    "VERIFICATION_REPLY_ADMIN": {
+      "title": "An applicant replied",
+      "body": "{name} replied in the messages on their application.",
+      "detail": "Open the admin page to read the reply.",
+      "cta": "Review application"
     },
     "NEWS_APPROVAL_ADMIN": {
       "title": "News post awaiting approval",

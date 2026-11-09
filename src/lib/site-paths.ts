@@ -55,6 +55,10 @@ const PATTERNS: Rule[] = [
   { re: /^\/app\/follows$/, to: () => "/follows", keep: ["tab"] },
   { re: /^\/app\/settings$/, to: () => "/settings" },
   { re: /^\/app\/family$/, to: () => "/family" },
+  {
+    re: /^\/app\/family\/application\/ID$/,
+    to: (m) => `/family-application/${m[1]}`,
+  },
   { re: /^\/app\/invite$/, to: () => "/invite" },
   { re: /^\/app\/vouch\/ID$/, to: (m) => `/vouch/${m[1]}` },
   // Registration: /onboarding opens the step the account is on.

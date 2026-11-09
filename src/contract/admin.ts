@@ -109,6 +109,28 @@ export type ParentChildStatus = {
   asked: "child" | "manager" | null;
 };
 
+/**
+ * A student account a parent registered at sign-up (the applicant had no
+ * sign-in of their own). `managed`: the parent still manages it
+ * (保護者が管理中); false: handed over to the student (本人に引き継ぎ済み).
+ */
+export type ParentRegistration = {
+  parentId: string;
+  parentName: string;
+  managed: boolean;
+};
+
+/** A message in an application's 「やりとり」 (committee view). */
+export type VerificationMessage = {
+  id: string;
+  /** from the committee (else the applicant / managing parent) */
+  fromAdmin: boolean;
+  /** who wrote it (null: account deleted) */
+  author: string | null;
+  body: string;
+  createdAt: string;
+};
+
 /** One application in the queue (oldest first). */
 export type VerificationQueueItem = {
   id: string;
@@ -118,6 +140,10 @@ export type VerificationQueueItem = {
   roles: string[];
   /** a child registered by a parent: the parent's name */
   registeredBy: string | null;
+  /** registered by a parent (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
+  /** 「返信あり」: the applicant's message is the latest in 「やりとり」 */
+  replied?: boolean;
   /** a parent: "名前（26期）、…" (adminVerify.queue.children) */
   children: string | null;
   submittedAt: string;
@@ -246,6 +272,17 @@ export type VerificationDetail = {
   schoolEmailVerified: boolean;
   minor: boolean;
   parentConfirmed: boolean;
+  /** registered by a parent (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
+  /** 「やりとり」, oldest first; absent: older server */
+  messages?: VerificationMessage[];
+  /** open (PENDING / NEEDS_INFO): the committee can send a message */
+  canMessage?: boolean;
+  /**
+   * a parent-managed child: messages reach this parent (the child has no
+   * sign-in); null: the applicant themself
+   */
+  messagesTo?: string | null;
   lastDecision: {
     decidedAt: string | null;
     reviewer: string | null;
@@ -315,6 +352,14 @@ export type VerificationActionResult = {
 };
 
 export type VerificationDecision = "APPROVE" | "REJECT" | "NEEDS_INFO";
+
+/**
+ * POST /admin/verification/[id]/messages { body } — a message in
+ * 「やりとり」 without changing the application's status (PENDING /
+ * NEEDS_INFO only; conflict otherwise). Result: VerificationActionResult
+ * (errors.body → adminVerify.errors.<code>).
+ */
+export type VerificationMessageBody = { body: string };
 // ---- Change requests (氏名・生年月日・性別, 在籍情報; committee admins) ----
 
 /** ?tab= of the review lists. */

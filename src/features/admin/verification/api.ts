@@ -94,6 +94,19 @@ export function useDecideVerification(id: string) {
   });
 }
 
+/** 「やりとり」: a message to the applicant, the status unchanged. */
+export function useSendVerificationMessage(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: string) =>
+      api<VerificationActionResult>(`/admin/verification/${enc(id)}/messages`, {
+        body: { body },
+      }),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: verificationKeys.all }),
+  });
+}
+
 export function useAddVoucher(id: string) {
   const queryClient = useQueryClient();
   return useMutation({

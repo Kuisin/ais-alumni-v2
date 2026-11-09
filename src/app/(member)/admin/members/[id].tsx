@@ -14,6 +14,7 @@ import { MergeCard } from "@/features/admin/members/merge-card";
 import { PositionsCard } from "@/features/admin/members/positions-card";
 import { ProfileCard } from "@/features/admin/members/profile-card";
 import { RolesCard } from "@/features/admin/members/roles-card";
+import { ParentRegisteredBadge } from "@/features/admin/parent-registration";
 import { AdminCard, Facts, Notice } from "@/features/admin/parts";
 import { SanctionsCard } from "@/features/sanction/admin-card";
 import { useAuth } from "@/lib/auth";
@@ -91,6 +92,9 @@ function Header({ m }: { m: AdminMemberDetail }) {
           platforms={[...new Set(m.devices?.map((d) => d.platform))]}
         />
       </View>
+      {m.registeredByParent ? (
+        <ParentRegisteredBadge registration={m.registeredByParent} />
+      ) : null}
     </View>
   );
 }

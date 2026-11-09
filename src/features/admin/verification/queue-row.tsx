@@ -6,11 +6,13 @@ import {
   GraduationCap,
   ListChecks,
   MailPlus,
+  MessageCircle,
   ShieldCheck,
   UserCheck,
 } from "lucide-react-native";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { ParentRegisteredBadge } from "@/features/admin/parent-registration";
 import { colors, space, Text } from "@/ui";
 import { Chips, Signal } from "./parts";
 
@@ -34,12 +36,23 @@ export function QueueRow({
   const ti = useTranslations("adminVerify.invite");
   const tp = useTranslations("mobile.verifyParents");
   const tr = useTranslations("roles");
+  const tm = useTranslations("mobile.applicationMessages");
+  const tpr = useTranslations("mobile.parentRegistered");
   const roles = r.roles.map((role) => tr(`role.${role}`)).join(" · ");
   const v = r.vouches;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${r.name}, ${r.submittedDate}`}
+      accessibilityLabel={[
+        r.name,
+        r.registeredByParent
+          ? tpr("by", { name: r.registeredByParent.parentName })
+          : null,
+        r.replied ? tm("replied") : null,
+        r.submittedDate,
+      ]
+        .filter(Boolean)
+        .join(", ")}
       onPress={onPress}
       style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
     >
@@ -54,7 +67,9 @@ export function QueueRow({
                 </Text>
               ) : null}
             </Text>
-            {r.registeredBy ? (
+            {r.registeredByParent ? (
+              <ParentRegisteredBadge registration={r.registeredByParent} />
+            ) : r.registeredBy ? (
               <Text variant="small" tone="muted">
                 {t("queue.registeredBy", { name: r.registeredBy })}
               </Text>
@@ -65,6 +80,9 @@ export function QueueRow({
               </Text>
             ) : null}
           </View>
+          {r.replied ? (
+            <Signal tone="red" icon={MessageCircle} label={tm("replied")} />
+          ) : null}
           <Text variant="caption" tone="subtle">
             {r.submittedDate}
             <Text variant="caption" weight="medium" tone="muted">

@@ -149,6 +149,7 @@ model User {
   accounts             Account[]
   verification         VerificationRequest?  @relation("applicant")
   reviewed             VerificationRequest[] @relation("reviewer")
+  verificationMessages VerificationMessage[] @relation("verificationMessages")
   followsOut           Follow[]              @relation("follower")
   followsIn            Follow[]              @relation("followee")
   blocksOut            Block[]               @relation("blocker")
@@ -354,10 +355,32 @@ model VerificationRequest {
   /// Added: parent-only application. Not reviewed by admins; approved when
   /// a linked child is approved and the link confirmed (parent-onboarding.ts).
   followsChildren Boolean                @default(false)
+  /// Added: when the applicant (or, for a parent-managed child, the managing
+  /// parent) last read the committee's messages (unread marker).
+  applicantReadAt DateTime?
   evidence        VerificationEvidence[]
   vouches         Vouch[]
+  messages        VerificationMessage[]
 
   @@index([status, submittedAt])
+}
+
+/// Added: 「やりとり」 — messages between the committee and the applicant
+/// (or the parent managing a child's account) about one application
+/// (src/server/lib/verification/messages.ts).
+model VerificationMessage {
+  id        String              @id @default(cuid())
+  requestId String
+  request   VerificationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?               @relation("verificationMessages", fields: [authorId], references: [id], onDelete: SetNull)
+  /// from the committee (else the applicant / managing parent)
+  fromAdmin Boolean
+  body      String
+  createdAt DateTime            @default(now())
+
+  @@index([requestId, createdAt])
+  @@index([authorId])
 }
 
 model VerificationEvidence {

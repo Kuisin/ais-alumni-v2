@@ -12,9 +12,11 @@ import {
   View,
 } from "react-native";
 import { useLocale, useTranslations } from "use-intl";
+import { ParentRegisteredBadge } from "@/features/admin/parent-registration";
 import { Notice } from "@/features/admin/parts";
 import { useVerificationDetail } from "@/features/admin/verification/api";
 import { DecisionCard } from "@/features/admin/verification/decision";
+import { MessagesCard } from "@/features/admin/verification/messages";
 import {
   AccountCard,
   AisRecordCard,
@@ -36,7 +38,8 @@ const WIDE = 1024;
 /**
  * 本人確認: one application (the website's /app/admin/verification/[id]) —
  * the account, invitation, answers, roster match, vouchers and evidence
- * files, and the decision. Phones get the decision last, with a jump to it.
+ * files, the decision and 「やりとり」 with the applicant (or the parent
+ * who registered them). Phones get the decision last, with a jump to it.
  */
 export default function VerificationDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -72,6 +75,7 @@ export default function VerificationDetailScreen() {
               }}
             >
               <DecisionCard d={d} />
+              <MessagesCard d={d} />
               <AisRecordCard d={d} />
             </View>
           );
@@ -103,6 +107,11 @@ export default function VerificationDetailScreen() {
                       date: formatDateTime(d.submittedAt, locale),
                     })}
                   </Text>
+                  {d.registeredByParent ? (
+                    <ParentRegisteredBadge
+                      registration={d.registeredByParent}
+                    />
+                  ) : null}
                 </View>
                 <Badge
                   label={t(`status.${d.status}`)}

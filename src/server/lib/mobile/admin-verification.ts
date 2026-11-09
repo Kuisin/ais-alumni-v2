@@ -44,6 +44,16 @@ import { isCurrentTeacher, studentStatus } from "@/server/lib/school";
 import type { CurrentUser } from "@/server/lib/session";
 import { signedFileUrl } from "@/server/lib/storage";
 import { matchStudentRoster } from "@/server/lib/verification/match";
+import {
+  isOpen,
+  MESSAGE_MAX,
+  notifyAdminMessage,
+  repliedLast,
+} from "@/server/lib/verification/messages";
+import {
+  MANAGED_BY_SELECT,
+  parentRegistrations,
+} from "@/server/lib/verification/registered-by";
 import { ROSTER_MATCH_THRESHOLD } from "@/server/lib/verification/roster";
 import { findMembersByName } from "@/server/lib/verification/vouch";
 
@@ -182,6 +192,7 @@ export async function verificationQueue(
       take: PAGE_SIZE,
       select: {
         id: true,
+        userId: true,
         status: true,
         submittedAt: true,
         rosterScore: true,
@@ -192,7 +203,7 @@ export async function verificationQueue(
             nameRomaji: true,
             nameKanji: true,
             dateOfBirth: true,
-            managedBy: { select: { nameRomaji: true, nameKanji: true } },
+            managedBy: MANAGED_BY_SELECT,
             roles: { select: { role: true, schoolEmailVerified: true } },
             parentLinks: {
               orderBy: { createdAt: "asc" },
@@ -221,6 +232,12 @@ export async function verificationQueue(
           },
         },
         vouches: { select: { answer: true } },
+        // 「返信あり」: who wrote last in 「やりとり」
+        messages: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { fromAdmin: true },
+        },
         _count: { select: { evidence: true } },
         evidence: { where: { kind: "DIPLOMA" }, select: { id: true } },
       },
@@ -248,6 +265,14 @@ export async function verificationQueue(
       : countOf(status);
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const now = new Date();
+  const registered = await parentRegistrations(
+    requests.map((r) => ({
+      userId: r.userId,
+      managedBy: r.user.managedBy,
+      answers: r.answers,
+    })),
+    locale,
+  );
 
   return {
     tab: (parents
@@ -276,6 +301,8 @@ export async function verificationQueue(
         registeredBy: r.user.managedBy
           ? displayName(r.user.managedBy, locale)
           : null,
+        registeredByParent: registered.get(r.userId) ?? null,
+        replied: repliedLast(r.messages[0]),
         children: r.user.parentLinks.length
           ? r.user.parentLinks
               .map((l) => {
@@ -359,9 +386,20 @@ export async function verificationDetail(
             },
           },
           ...INVITE_OF_USER_SELECT,
+          managedBy: MANAGED_BY_SELECT,
         },
       },
       reviewer: { select: { nameRomaji: true, nameKanji: true } },
+      messages: {
+        orderBy: { createdAt: "asc" },
+        select: {
+          id: true,
+          fromAdmin: true,
+          body: true,
+          createdAt: true,
+          author: { select: { nameRomaji: true, nameKanji: true } },
+        },
+      },
       evidence: { orderBy: { createdAt: "asc" } },
       vouches: {
         orderBy: { askedAt: "asc" },
@@ -385,35 +423,50 @@ export async function verificationDetail(
       r.role === RoleKey.CURRENT_PARENT || r.role === RoleKey.FORMER_PARENT,
   );
 
-  const [rosterRow, next, duplicates, children, answers] = await Promise.all([
-    request.rosterRowId
-      ? db.rosterEntry.findUnique({ where: { id: request.rosterRowId } })
-      : null,
-    // Decided: offer the next application in the queue (oldest first).
-    open
-      ? null
-      : db.verificationRequest.findFirst({
-          // The next one of the same kind (a parent: the 保護者 tab).
-          where: {
-            status: VerificationStatus.PENDING,
-            followsChildren: request.followsChildren,
-            id: { not: request.id },
+  const [rosterRow, next, duplicates, children, answers, registered] =
+    await Promise.all([
+      request.rosterRowId
+        ? db.rosterEntry.findUnique({ where: { id: request.rosterRowId } })
+        : null,
+      // Decided: offer the next application in the queue (oldest first).
+      open
+        ? null
+        : db.verificationRequest.findFirst({
+            // The next one of the same kind (a parent: the 保護者 tab).
+            where: {
+              status: VerificationStatus.PENDING,
+              followsChildren: request.followsChildren,
+              id: { not: request.id },
+            },
+            orderBy: [{ submittedAt: "asc" }, { id: "asc" }],
+            select: { id: true },
+          }),
+      findManagedMatches(
+        {
+          names: [
+            applicant.nameRomaji,
+            applicant.nameKanji,
+            applicant.nameAtAis,
+          ],
+          dateOfBirth: applicant.dateOfBirth,
+        },
+        applicant.id,
+      ),
+      isParent || request.followsChildren
+        ? childrenReview(applicant.id, locale)
+        : null,
+      answersView(request.answers, locale),
+      parentRegistrations(
+        [
+          {
+            userId: applicant.id,
+            managedBy: applicant.managedBy,
+            answers: request.answers,
           },
-          orderBy: [{ submittedAt: "asc" }, { id: "asc" }],
-          select: { id: true },
-        }),
-    findManagedMatches(
-      {
-        names: [applicant.nameRomaji, applicant.nameKanji, applicant.nameAtAis],
-        dateOfBirth: applicant.dateOfBirth,
-      },
-      applicant.id,
-    ),
-    isParent || request.followsChildren
-      ? childrenReview(applicant.id, locale)
-      : null,
-    answersView(request.answers, locale),
-  ]);
+        ],
+        locale,
+      ),
+    ]);
 
   return {
     id: request.id,
@@ -428,6 +481,18 @@ export async function verificationDetail(
     schoolEmailVerified: Boolean(teacher?.schoolEmailVerified),
     minor,
     parentConfirmed: applicant.childLinks.some((l) => l.confirmedAt),
+    registeredByParent: registered.get(applicant.id) ?? null,
+    messages: request.messages.map((m) => ({
+      id: m.id,
+      fromAdmin: m.fromAdmin,
+      author: m.author ? displayName(m.author, locale) : null,
+      body: m.body,
+      createdAt: m.createdAt.toISOString(),
+    })),
+    canMessage: isOpen(request.status),
+    messagesTo: applicant.managedBy
+      ? displayName(applicant.managedBy, locale)
+      : null,
     lastDecision:
       request.reviewNote || request.decidedAt
         ? {
@@ -866,6 +931,39 @@ export async function decideVerification(
     }),
   );
   return result ?? { ok: false, message: "generic" };
+}
+
+/**
+ * 「やりとり」: a committee message without changing the status (open
+ * applications only); the applicant — or the parent managing a child's
+ * account — hears with the text.
+ */
+export async function sendVerificationMessage(
+  user: CurrentUser,
+  id: string,
+  rawBody: string,
+): Promise<VerificationActionResult> {
+  adminOnly(user);
+  const body = rawBody.trim();
+  if (!body)
+    return {
+      ok: false,
+      message: "validation",
+      errors: { body: "messageRequired" },
+    };
+  if (body.length > MESSAGE_MAX) return { ok: false, message: "validation" };
+  const request = await db.verificationRequest.findUnique({
+    where: { id },
+    select: { status: true },
+  });
+  if (!request) return { ok: false, message: "notFound" };
+  if (!isOpen(request.status)) return { ok: false, message: "conflict" };
+  const message = await db.verificationMessage.create({
+    data: { requestId: id, authorId: user.id, fromAdmin: true, body },
+    select: { id: true },
+  });
+  await notifyAdminMessage(id, message.id, body);
+  return { ok: true, message: "saved" };
 }
 
 export async function addVoucher(
