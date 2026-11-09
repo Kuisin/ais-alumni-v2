@@ -548,5 +548,57 @@
       "active": "In force",
       "acknowledged": "Acknowledged ({date})"
     }
+  },
+  "verifyParents": {
+    "tab": "Parents",
+    "description": "Parent-only applications. Normally approved automatically once a child's application is approved and the link confirmed. If a child doesn't confirm, you can decide here.",
+    "emptyHint": "No parent applications waiting.",
+    "needsInfo": "Waiting for reply",
+    "stage": {
+      "childReview": "Child in review",
+      "childToConfirm": "Child to confirm",
+      "confirmed": "Confirmed",
+      "childRejected": "Child rejected"
+    },
+    "asked": {
+      "child": "The child was asked to confirm",
+      "manager": "The parent managing the child's account was asked to confirm"
+    },
+    "detailTitle": "Parent-only application",
+    "detailBody": "This application is approved automatically once a child's application is approved and the link confirmed. If a child doesn't confirm, or can't yet, you can approve or reject it here. Approving also confirms the links to children who are already approved."
+  },
+  "testAccounts": {
+    "title": "Test accounts",
+    "description": "Make member accounts that need no review, to try the live app as a parent, current student, graduate or teacher (admins only). Test accounts are left out of the directory, searches, candidate lists, automatic group chats, statistics and bulk sends. Only admins and other test accounts see them.",
+    "create": {
+      "title": "New test account",
+      "type": "Type",
+      "email": "Email",
+      "emailHint": "Sign-in is by a code sent to this address. With Gmail, vary the part after \"+\" (e.g. name+parent@gmail.com) to make several test accounts with one inbox.",
+      "name": "Name (romaji)",
+      "nameHint": "As \"Last, First\" (e.g. Test, Parent)",
+      "submit": "Create",
+      "done": "Created. Sign in with {email}."
+    },
+    "types": {
+      "PARENT": "Parent",
+      "CURRENT_STUDENT": "Current student",
+      "GRADUATE": "Graduate",
+      "CURRENT_TEACHER": "Current teacher",
+      "FORMER_TEACHER": "Former teacher"
+    },
+    "errors": {
+      "emailTaken": "An account with this email already exists.",
+      "invalid": "Check the email and the name."
+    },
+    "list": {
+      "title": "Created",
+      "none": "No test accounts yet.",
+      "typeUnknown": "Type changed",
+      "createdAt": "Created {date}",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this test account?",
+      "deleteMessage": "The account and its data are deleted. This can't be undone."
+    }
   }
 }

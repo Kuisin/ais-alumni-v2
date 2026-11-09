@@ -266,6 +266,7 @@ function MemberRow({ m, onPress }: { m: AdminMemberRow; onPress: () => void }) {
           {name}
         </Text>
         {m.isAdmin ? <Badge tone="brand" label={t("badge.admin")} /> : null}
+        {m.isTest ? <Badge tone="amber" label={t("badge.test")} /> : null}
       </View>
       {m.otherName ? (
         <Text variant="small" tone="muted">

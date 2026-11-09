@@ -67,6 +67,8 @@ import * as adminSupport from "./mobile/v1/admin/support";
 import * as adminSupportRequest from "./mobile/v1/admin/support/[id]";
 import * as adminTeachers from "./mobile/v1/admin/teachers";
 import * as adminTeacher from "./mobile/v1/admin/teachers/[id]";
+import * as adminTestAccounts from "./mobile/v1/admin/test-accounts";
+import * as adminTestAccount from "./mobile/v1/admin/test-accounts/[id]";
 import * as adminVerification from "./mobile/v1/admin/verification";
 import * as adminVerificationDetail from "./mobile/v1/admin/verification/[id]";
 import * as adminVerificationDecision from "./mobile/v1/admin/verification/[id]/decision";
@@ -217,6 +219,8 @@ export const ROUTES: [string, RouteModule][] = [
   ["admin/roster/import", adminRosterImport as unknown as RouteModule],
   ["admin/teachers", adminTeachers as unknown as RouteModule],
   ["admin/teachers/[id]", adminTeacher as unknown as RouteModule],
+  ["admin/test-accounts", adminTestAccounts as unknown as RouteModule],
+  ["admin/test-accounts/[id]", adminTestAccount as unknown as RouteModule],
   ["admin/verification", adminVerification as unknown as RouteModule],
   [
     "admin/verification/[id]",

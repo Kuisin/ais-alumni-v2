@@ -82,7 +82,8 @@
     "nameRequests": "Name, birth date & gender",
     "support": "Support requests",
     "line": "LINE menu",
-    "chat": "Chat"
+    "chat": "Chat",
+    "testAccounts": "Test accounts"
   },
   "notFoundTitle": "Page not found",
   "goHome": "Go to home",

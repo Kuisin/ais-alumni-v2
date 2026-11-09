@@ -62,6 +62,8 @@ export type AdminMemberRow = {
    */
   app?: AppPlatform[];
   createdAt: IsoDate;
+  /** a test account (テストアカウント); absent from older servers */
+  isTest?: boolean;
 };
 
 export type AdminMemberList = {
@@ -180,6 +182,8 @@ export type AdminMemberDetail = {
   isAdmin: boolean;
   /** the signed-in admin themself */
   isSelf: boolean;
+  /** a test account (テストアカウント); absent from older servers */
+  isTest?: boolean;
   state: AccountStateKey;
   stateLabel: string;
   roleLabels: string[];
@@ -339,3 +343,34 @@ export type AdminSanctionApply = {
   endsAt: IsoDate | null;
 };
 // errors: invalid (400), not_self (400: one's own account), not_found (404)
+
+// ---- テストアカウント (GET / POST /admin/test-accounts, DELETE /admin/test-accounts/[id]) ----
+
+export type TestAccountType =
+  | "PARENT"
+  | "CURRENT_STUDENT"
+  | "GRADUATE"
+  | "CURRENT_TEACHER"
+  | "FORMER_TEACHER";
+
+export type TestAccount = {
+  id: string;
+  name: string;
+  email: string | null;
+  /** null: its roles were changed since */
+  type: TestAccountType | null;
+  createdAt: IsoDate;
+};
+
+/** GET /admin/test-accounts */
+export type TestAccountList = { accounts: TestAccount[] };
+
+/** POST /admin/test-accounts → TestAccount */
+export type TestAccountCreate = {
+  type: TestAccountType;
+  /** sign-in address (an email code is sent to it as usual) */
+  email: string;
+  /** romaji, "Last, First" (e.g. "Test, Parent") */
+  name: string;
+};
+// errors: invalid (400), email_taken (409)

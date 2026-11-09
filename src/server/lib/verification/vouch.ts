@@ -5,6 +5,7 @@ import { db } from "@/server/lib/db";
 import { displayName } from "@/server/lib/format";
 import { toKatakana } from "@/server/lib/names";
 import { NOTIFY_USER_SELECT, notify } from "@/server/lib/notify";
+import { REAL_MEMBERS } from "@/server/lib/test-hidden";
 import {
   bestNameSimilarity,
   isCjk,
@@ -90,6 +91,8 @@ export async function findMembersByName(
     excludeUserIds?: string[];
     threshold?: number;
     limit?: number;
+    /** admins: test accounts too (applicants never find them) */
+    includeTest?: boolean;
   },
 ): Promise<MemberMatch[]> {
   const or = prefilter(name);
@@ -101,6 +104,7 @@ export async function findMembersByName(
         ? { notIn: opts.excludeUserIds }
         : undefined,
       OR: or,
+      ...(opts.includeTest ? {} : REAL_MEMBERS),
       ...(opts.teacherOnly
         ? { roles: { some: { role: RoleKey.TEACHER } } }
         : {}),

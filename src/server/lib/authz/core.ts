@@ -20,6 +20,8 @@ export type Viewer = {
   familyId: string | null;
   /** roles with 卒業生 / 元在校生 split (src/lib/audience.ts) */
   audiences?: readonly AudienceKey[];
+  /** a test account (User.isTest): sees other test accounts in lists */
+  isTest?: boolean;
 };
 
 export type Target = {

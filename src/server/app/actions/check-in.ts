@@ -9,6 +9,7 @@ import { tokenFromScan, verifyTicket } from "@/server/lib/event-tickets";
 import { toKatakana } from "@/server/lib/names";
 import { inAudience } from "@/server/lib/news-visibility";
 import { actionActive } from "@/server/lib/session";
+import { hideTestAccounts } from "@/server/lib/test-hidden";
 
 export type CheckInResult =
   | {
@@ -165,6 +166,7 @@ export async function searchCheckInAction(
   const rows = await db.user.findMany({
     where: {
       state: AccountState.ACTIVE,
+      ...hideTestAccounts(staff),
       OR: [
         { nameRomaji: { contains: term, mode: "insensitive" } },
         { nameKanji: { contains: term } },

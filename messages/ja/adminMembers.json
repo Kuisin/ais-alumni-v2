@@ -39,7 +39,8 @@
   "badge": {
     "admin": "管理者",
     "appIos": "iOSアプリ",
-    "appAndroid": "Androidアプリ"
+    "appAndroid": "Androidアプリ",
+    "test": "テスト"
   },
   "line": {
     "notLinked": "未連携",

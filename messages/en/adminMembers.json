@@ -39,7 +39,8 @@
   "badge": {
     "admin": "Admin",
     "appIos": "iOS app",
-    "appAndroid": "Android app"
+    "appAndroid": "Android app",
+    "test": "Test"
   },
   "line": {
     "notLinked": "Not linked",

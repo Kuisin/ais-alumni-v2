@@ -115,7 +115,9 @@
     "user": {
       "merge": {
         "line_email": "LINEとメールのアカウントを自動統合"
-      }
+      },
+      "test_account_created": "テストアカウントを作成",
+      "test_account_deleted": "テストアカウントを削除"
     },
     "family": {
       "linked": "家族をつなげた",

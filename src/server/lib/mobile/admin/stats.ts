@@ -11,7 +11,10 @@ import { db } from "@/server/lib/db";
 export async function loadAdminStats(): Promise<AdminStats> {
   const t = await getTranslations("adminStats");
   const tr = await getTranslations("roles");
-  const active = { user: { state: AccountState.ACTIVE } } as const;
+  // Real members only: test accounts (User.isTest) are left out.
+  const active = {
+    user: { state: AccountState.ACTIVE, isTest: false },
+  } as const;
   const former = { role: RoleKey.FORMER_STUDENT, ...active } as const;
 
   const [
@@ -24,7 +27,11 @@ export async function loadAdminStats(): Promise<AdminStats> {
     lineFollowing,
     byGraduated,
   ] = await Promise.all([
-    db.user.groupBy({ by: ["state"], _count: { _all: true } }),
+    db.user.groupBy({
+      by: ["state"],
+      where: { isTest: false },
+      _count: { _all: true },
+    }),
     db.userRole.groupBy({
       by: ["role"],
       where: active,
@@ -41,13 +48,18 @@ export async function loadAdminStats(): Promise<AdminStats> {
       where: former,
       _count: { _all: true },
     }),
-    db.user.count({ where: { state: AccountState.ACTIVE } }),
+    db.user.count({ where: { state: AccountState.ACTIVE, isTest: false } }),
     db.user.count({
-      where: { state: AccountState.ACTIVE, lineUserId: { not: null } },
+      where: {
+        state: AccountState.ACTIVE,
+        isTest: false,
+        lineUserId: { not: null },
+      },
     }),
     db.user.count({
       where: {
         state: AccountState.ACTIVE,
+        isTest: false,
         lineUserId: { not: null },
         lineFollowing: true,
       },

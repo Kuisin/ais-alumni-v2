@@ -68,6 +68,8 @@ export async function findRegisteredChildren(
       dateOfBirth: dob,
       state: { in: [AccountState.ACTIVE, AccountState.PENDING_REVIEW] },
       roles: { some: { role: { in: STUDENT_ROLES } } },
+      // Applicants never find test accounts (User.isTest).
+      isTest: false,
     },
     select: {
       id: true,
@@ -351,7 +353,11 @@ export async function saveParentChildren(
   return toConfirm;
 }
 
-/** Ask registered children to confirm the parent's link (best-effort). */
+/**
+ * Ask registered children to confirm the parent's link (best-effort). A
+ * student whose own application is still open can't confirm yet: they're
+ * asked when it's approved (notifyWaitingParentLinks), once.
+ */
 export async function notifyChildConfirmations(
   parent: CurrentUser,
   linkIds: readonly string[],
@@ -364,6 +370,7 @@ export async function notifyChildConfirmations(
           child: {
             select: {
               ...NOTIFY_USER_SELECT,
+              state: true,
               managedBy: { select: NOTIFY_USER_SELECT },
             },
           },
@@ -372,15 +379,66 @@ export async function notifyChildConfirmations(
       // A managed child can't sign in: ask the parent who manages it.
       const to = link?.child?.managedBy ?? link?.child;
       if (!to) continue;
+      if (!link?.child?.managedBy && link?.child?.state !== AccountState.ACTIVE)
+        continue;
       await notify(to, {
         kind: "FAMILY_LINK_REQUEST_AS_CHILD",
         refId: linkId,
+        dedupe: true,
         path: "/app/family",
         params: (locale) => ({ name: displayName(parent, locale) }),
       });
     } catch (e) {
       console.error("[parent-onboarding] notification failed", e);
     }
+  }
+}
+
+/**
+ * A student just approved: parents who asked to be linked while the
+ * student's own application was open (and so couldn't confirm) are waiting.
+ * Ask now that they can — the child, or the parent managing the child's
+ * account (not the one asking) — unless they were already asked about that
+ * link (same kind and refId as notifyChildConfirmations, deduped).
+ */
+export async function notifyWaitingParentLinks(childId: string): Promise<void> {
+  try {
+    const child = await db.user.findUnique({
+      where: { id: childId },
+      select: { state: true, managedById: true },
+    });
+    if (child?.state !== AccountState.ACTIVE) return;
+    const links = await db.familyLink.findMany({
+      where: {
+        childId,
+        confirmedAt: null,
+        initiatedBy: FamilyLinkInitiator.PARENT,
+        ...(child.managedById ? { parentId: { not: child.managedById } } : {}),
+      },
+      select: {
+        id: true,
+        parent: { select: NOTIFY_USER_SELECT },
+        child: {
+          select: {
+            ...NOTIFY_USER_SELECT,
+            managedBy: { select: NOTIFY_USER_SELECT },
+          },
+        },
+      },
+    });
+    for (const l of links) {
+      const to = l.child?.managedBy ?? l.child;
+      if (!to) continue;
+      await notify(to, {
+        kind: "FAMILY_LINK_REQUEST_AS_CHILD",
+        refId: l.id,
+        dedupe: true,
+        path: "/app/family",
+        params: (locale) => ({ name: displayName(l.parent, locale) }),
+      });
+    }
+  } catch (e) {
+    console.error("[parent-onboarding] waiting link notice failed", e);
   }
 }
 

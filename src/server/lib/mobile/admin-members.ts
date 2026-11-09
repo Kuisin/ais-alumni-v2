@@ -167,6 +167,7 @@ export async function adminMemberList(
         primaryEmail: true,
         state: true,
         isAdmin: true,
+        isTest: true,
         lineUserId: true,
         lineFollowing: true,
         createdAt: true,
@@ -193,6 +194,7 @@ export async function adminMemberList(
       state: u.state,
       stateLabel: tr(`state.${u.state}`),
       isAdmin: u.isAdmin,
+      isTest: u.isTest,
       roles: u.roles.map(roleLabel),
       line: lineStatus(u),
       app: APP_PLATFORMS.filter((p) =>
@@ -438,6 +440,7 @@ export async function adminMemberDetail(
     emailVerified: Boolean(user.emailVerifiedAt),
     isAdmin: user.isAdmin,
     isSelf: user.id === admin.id,
+    isTest: user.isTest,
     state: user.state as AccountStateKey,
     stateLabel: tr(`state.${user.state}`),
     roleLabels: roles.map((r) => tr(roleLabelKey(r))),

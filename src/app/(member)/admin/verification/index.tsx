@@ -22,7 +22,7 @@ import {
   TextField,
 } from "@/ui";
 
-const TABS: VerificationTab[] = ["pending", "needsInfo"];
+const TABS: VerificationTab[] = ["pending", "needsInfo", "parents"];
 
 /**
  * 本人確認 queue (the website's /app/admin/verification): open
@@ -32,10 +32,15 @@ const TABS: VerificationTab[] = ["pending", "needsInfo"];
 export default function VerificationQueueScreen() {
   const params = useLocalSearchParams<{ tab?: string }>();
   const t = useTranslations("adminVerify");
+  const tp = useTranslations("mobile.verifyParents");
   const router = useRouter();
   const [tab, setTab] = useState<VerificationTab>(
-    params.tab === "needsInfo" ? "needsInfo" : "pending",
+    params.tab === "needsInfo" || params.tab === "parents"
+      ? params.tab
+      : "pending",
   );
+  const tabLabel = (key: VerificationTab) =>
+    key === "parents" ? tp("tab") : t(`queue.tabs.${key}`);
   const [draft, setDraft] = useState("");
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
@@ -61,7 +66,7 @@ export default function VerificationQueueScreen() {
     <Screen refreshing={refreshing} onRefresh={refresh}>
       <Stack.Screen options={{ title: t("queue.title") }} />
       <Text variant="small" tone="muted">
-        {t("queue.description")}
+        {tab === "parents" ? tp("description") : t("queue.description")}
       </Text>
 
       <View
@@ -77,7 +82,7 @@ export default function VerificationQueueScreen() {
               key={key}
               accessibilityRole="tab"
               accessibilityState={{ selected: on }}
-              accessibilityLabel={`${t(`queue.tabs.${key}`)} ${n}`}
+              accessibilityLabel={`${tabLabel(key)} ${n}`}
               onPress={() => choose(key)}
               style={({ pressed }) => [
                 styles.tab,
@@ -90,7 +95,7 @@ export default function VerificationQueueScreen() {
                 weight="semibold"
                 style={{ color: on ? colors.white : colors.slate700 }}
               >
-                {t(`queue.tabs.${key}`)}
+                {tabLabel(key)}
               </Text>
               <CountDot count={n} />
             </Pressable>
@@ -131,9 +136,11 @@ export default function VerificationQueueScreen() {
           icon={<ListChecks size={32} color={colors.slate400} />}
           title={t("queue.empty")}
           hint={
-            data.tab === "pending"
-              ? t("queue.emptyHint")
-              : t("queue.emptyNeedsInfoHint")
+            data.tab === "parents"
+              ? tp("emptyHint")
+              : data.tab === "pending"
+                ? t("queue.emptyHint")
+                : t("queue.emptyNeedsInfoHint")
           }
         />
       ) : (

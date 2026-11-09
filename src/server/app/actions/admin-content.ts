@@ -47,6 +47,7 @@ import {
   type CurrentUser,
 } from "@/server/lib/session";
 import { deletePrivate, putPrivate } from "@/server/lib/storage";
+import { hideTestAccounts, realOrPicked } from "@/server/lib/test-hidden";
 
 /**
  * Admin editors for events and news (§10.3, §10.4). Every action re-checks
@@ -795,7 +796,12 @@ export async function previewNewsAudienceAction(
   const audience = scopedAudience(editor.scope, parsed.data);
   if (!audience) return null;
   const count = await db.user.count({
-    where: { state: "ACTIVE", ...audienceUserWhere(audience) },
+    where: {
+      state: "ACTIVE",
+      ...audienceUserWhere(audience),
+      // As sent: test accounts only when picked by name.
+      AND: [realOrPicked(audience.userIds)],
+    },
   });
   return { count };
 }
@@ -814,6 +820,7 @@ export async function searchAudienceMembersAction(
   const rows = await db.user.findMany({
     where: {
       state: "ACTIVE",
+      ...hideTestAccounts(editor.user),
       OR: [
         { nameRomaji: { contains: term, mode: "insensitive" } },
         { nameKanji: { contains: term } },

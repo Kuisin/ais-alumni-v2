@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { useLocale, useTranslations } from "use-intl";
+import { Notice } from "@/features/admin/parts";
 import { useVerificationDetail } from "@/features/admin/verification/api";
 import { DecisionCard } from "@/features/admin/verification/decision";
 import {
@@ -40,6 +41,7 @@ const WIDE = 1024;
 export default function VerificationDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const t = useTranslations("adminVerify");
+  const tp = useTranslations("mobile.verifyParents");
   const locale = useLocale() as Locale;
   const query = useVerificationDetail(id);
   const wide = useWindowDimensions().width >= WIDE;
@@ -149,6 +151,14 @@ export default function VerificationDetailScreen() {
                 <Text variant="small" tone="muted">
                   {t("detail.minorNote")}
                 </Text>
+              ) : null}
+              {d.followsChildren ? (
+                <Notice tone="info">
+                  <Text variant="small" weight="semibold">
+                    {tp("detailTitle")}
+                  </Text>
+                  <Text variant="small">{tp("detailBody")}</Text>
+                </Notice>
               ) : null}
 
               <View

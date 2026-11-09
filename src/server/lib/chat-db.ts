@@ -29,6 +29,7 @@ import {
 import { displayName } from "@/server/lib/format";
 import { NOTIFY_USER_SELECT, notifyBatch } from "@/server/lib/notify";
 import { clip } from "@/server/lib/notify/render";
+import { hideTestAccounts } from "@/server/lib/test-hidden";
 
 type Client = Prisma.TransactionClient | typeof db;
 
@@ -49,6 +50,7 @@ export async function syncChatMembership(
     select: {
       state: true,
       isAdmin: true,
+      isTest: true,
       dateOfBirth: true,
       managedById: true,
       positions: {
@@ -80,8 +82,15 @@ export async function syncChatMembership(
     where: { userId, group: { kind: { not: ChatGroupKind.DIRECT } } },
     select: { groupId: true, group: { select: { key: true } } },
   });
-  // Parent-managed child accounts can't sign in: no chats for them.
-  if (!user || user.state !== AccountState.ACTIVE || user.managedById) {
+  // Parent-managed child accounts can't sign in: no chats for them. Test
+  // accounts (User.isTest) stay out of the automatic groups too, so real
+  // members never see them there; they try 1:1 talks with each other.
+  if (
+    !user ||
+    user.state !== AccountState.ACTIVE ||
+    user.managedById ||
+    user.isTest
+  ) {
     if (!current.length) return false;
     await client.chatMember.deleteMany({
       where: { userId, groupId: { in: current.map((m) => m.groupId) } },
@@ -472,7 +481,14 @@ export async function openDirectChat(
  * member types allow.
  */
 export async function directChatCandidates(meId: string) {
-  const [me, rules] = await Promise.all([partyOf(meId), loadDirectRules()]);
+  const [me, rules, viewer] = await Promise.all([
+    partyOf(meId),
+    loadDirectRules(),
+    db.user.findUnique({
+      where: { id: meId },
+      select: { isAdmin: true, isTest: true },
+    }),
+  ]);
   if (!canHaveDirect(me, rules)) return [];
   const mine = await db.follow.findMany({
     where: { followerId: meId, status: FollowStatus.ACCEPTED },
@@ -500,6 +516,7 @@ export async function directChatCandidates(meId: string) {
       },
       state: AccountState.ACTIVE,
       managedById: null,
+      ...hideTestAccounts(viewer),
     },
     orderBy: { nameRomaji: "asc" },
     select: {

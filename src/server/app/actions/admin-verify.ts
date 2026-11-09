@@ -9,10 +9,12 @@ import {
 import { audit } from "@/server/lib/audit";
 import { syncChatMembership } from "@/server/lib/chat-db";
 import { db } from "@/server/lib/db";
+import { confirmLinkInTx } from "@/server/lib/family";
 import { mergeUsers } from "@/server/lib/merge";
 import { NOTIFY_USER_SELECT } from "@/server/lib/notify";
 import {
   findManagedMatches,
+  notifyWaitingParentLinks,
   type ParentOutcome,
   settleAfterChildDecision,
   settleManagedChildren,
@@ -156,6 +158,20 @@ export async function decideVerificationAction(
       // §8: for minors, this admin approval also serves as the admin
       // confirmation — no separate step is required, so nothing extra is stored.
 
+      // A parent-only application decided by an admin (the child didn't
+      // confirm, or can't yet): approving also confirms the links to
+      // children who are already approved, as their own approval would.
+      if (request.followsChildren && decision === "APPROVE") {
+        const links = await tx.familyLink.findMany({
+          where: {
+            parentId: request.userId,
+            confirmedAt: null,
+            child: { is: { state: AccountState.ACTIVE } },
+          },
+          select: { id: true, parentId: true, childId: true },
+        });
+        for (const l of links) await confirmLinkInTx(tx, l, "ADMIN", decidedAt);
+      }
       // Older parent applications: their children had none of their own.
       await settleManagedChildren(tx, request.userId, decision, decidedAt);
       // Parents follow their children's approval (they aren't reviewed).
@@ -193,6 +209,9 @@ export async function decideVerificationAction(
   if (!request.user.managedById)
     await notifyDecision(request.user, requestId, decision, note || null);
   await notifyParentOutcomes(parents);
+  // An approved student whose link a parent asked for while the student was
+  // still in review: now they can confirm it.
+  if (decision === "APPROVE") await notifyWaitingParentLinks(request.userId);
 
   revalidate(requestId);
   return { ok: true, message: "saved" };

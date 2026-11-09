@@ -130,6 +130,11 @@ model User {
   familyId              String?
   family                Family?              @relation(fields: [familyId], references: [id], onDelete: SetNull)
   deactivatedAt         DateTime?
+  /// Added: a test account made by an admin (管理モード → テストアカウント,
+  /// src/server/lib/test-accounts.ts): ACTIVE without an application, left
+  /// out of the directory, member searches, statistics and bulk sends —
+  /// except for admins and other test accounts.
+  isTest                Boolean              @default(false)
   // Added: a child account created by a parent during sign-up. It has no
   // sign-in of its own; the parent manages it until the child takes it over.
   managedById           String?

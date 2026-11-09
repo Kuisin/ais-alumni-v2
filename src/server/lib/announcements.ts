@@ -6,6 +6,7 @@ import { MESSAGES_ENABLED } from "@/server/lib/features";
 import { audienceUserWhere, specFromPost } from "@/server/lib/news-audience";
 import { visibleNews } from "@/server/lib/news-visibility";
 import type { CurrentUser } from "@/server/lib/session";
+import { realOrPicked } from "@/server/lib/test-hidden";
 
 /**
  * Announcements in the app (§10.4): committee news posts and messages
@@ -189,12 +190,13 @@ export async function newsReadStats(
     _count: { _all: true },
   });
   for (const p of posts) {
+    const spec = specFromPost({ ...p, audience: p.audience ?? null });
     const audience = await db.user.count({
       where: {
         state: AccountState.ACTIVE,
-        ...audienceUserWhere(
-          specFromPost({ ...p, audience: p.audience ?? null }),
-        ),
+        ...audienceUserWhere(spec),
+        // As sent: test accounts only when picked by name.
+        AND: [realOrPicked(spec.userIds)],
       },
     });
     out.set(p.id, {

@@ -1,5 +1,7 @@
 import type {
   AdminDetailRow,
+  ParentChildStage,
+  ParentChildStatus,
   VerificationActionResult,
   VerificationAnswerSection,
   VerificationChildCard,
@@ -14,7 +16,11 @@ import {
   decideVerificationAction,
   mergeManagedIntoApplicantAction,
 } from "@/server/app/actions/admin-verify";
-import { RoleKey, VerificationStatus } from "@/server/generated/prisma/enums";
+import {
+  AccountState,
+  RoleKey,
+  VerificationStatus,
+} from "@/server/generated/prisma/enums";
 import { roleLabelKey } from "@/server/lib/audience";
 import { isMinor } from "@/server/lib/authz/core";
 import {
@@ -82,6 +88,58 @@ function formatAge(date: Date, locale: Locale, now: Date = new Date()): string {
 }
 
 // ---------------------------------------------------------------------------
+// Parent-only applications (followsChildren): where each child stands
+
+const OPEN_REQUEST: VerificationStatus[] = [
+  VerificationStatus.PENDING,
+  VerificationStatus.NEEDS_INFO,
+];
+
+/** What childStage() needs of a family link. */
+export const PARENT_LINK_CHILD_SELECT = {
+  state: true,
+  managedById: true,
+  verification: { select: { status: true } },
+} as const;
+
+type StageLink = {
+  confirmedAt: Date | null;
+  child: {
+    state: AccountState;
+    managedById: string | null;
+    verification: { status: VerificationStatus } | null;
+  } | null;
+};
+
+/**
+ * A parent's link to a child, as the committee needs to know it: the
+ * child's own application is still open, the child (or the parent managing
+ * the child's account) has to confirm, confirmed, or the child was rejected.
+ */
+export function childStage(l: StageLink): {
+  stage: ParentChildStage | null;
+  asked: "child" | "manager" | null;
+} {
+  const c = l.child;
+  if (!c) return { stage: null, asked: null };
+  if (c.state === AccountState.REJECTED)
+    return { stage: "childRejected", asked: null };
+  if (l.confirmedAt) return { stage: "confirmed", asked: null };
+  if (
+    c.state === AccountState.PENDING_REVIEW ||
+    c.state === AccountState.NEEDS_INFO ||
+    (c.verification && OPEN_REQUEST.includes(c.verification.status))
+  )
+    return { stage: "childReview", asked: null };
+  if (c.state === AccountState.ACTIVE)
+    return {
+      stage: "childToConfirm",
+      asked: c.managedById ? "manager" : "child",
+    };
+  return { stage: null, asked: null };
+}
+
+// ---------------------------------------------------------------------------
 // Queue
 
 export async function verificationQueue(
@@ -90,16 +148,20 @@ export async function verificationQueue(
   locale: Locale,
 ): Promise<VerificationQueue> {
   adminOnly(user);
+  // 保護者: parent-only applications, which normally follow their
+  // children's approval — listed so none is left waiting unseen.
+  const parents = params.tab === "parents";
   const status =
     params.tab === "needsInfo"
       ? VerificationStatus.NEEDS_INFO
       : VerificationStatus.PENDING;
   const page = pageParam(params.page);
   const q = (params.q ?? "").trim().slice(0, 60);
-  // Parents alone aren't reviewed: they follow their children's approval.
+  // Parents alone aren't in the review tabs: they follow their children.
   const where = {
-    status,
-    followsChildren: false,
+    ...(parents
+      ? { status: { in: OPEN_REQUEST }, followsChildren: true }
+      : { status, followsChildren: false }),
     ...(q
       ? {
           user: {
@@ -112,7 +174,7 @@ export async function verificationQueue(
       : {}),
   };
 
-  const [requests, counts] = await Promise.all([
+  const [requests, counts, parentCount] = await Promise.all([
     db.verificationRequest.findMany({
       where,
       orderBy: [{ submittedAt: "asc" }, { id: "asc" }],
@@ -120,6 +182,7 @@ export async function verificationQueue(
       take: PAGE_SIZE,
       select: {
         id: true,
+        status: true,
         submittedAt: true,
         rosterScore: true,
         answers: true,
@@ -132,10 +195,15 @@ export async function verificationQueue(
             managedBy: { select: { nameRomaji: true, nameKanji: true } },
             roles: { select: { role: true, schoolEmailVerified: true } },
             parentLinks: {
+              orderBy: { createdAt: "asc" },
               select: {
                 childName: true,
+                confirmedAt: true,
                 child: {
                   select: {
+                    ...PARENT_LINK_CHILD_SELECT,
+                    nameRomaji: true,
+                    nameKanji: true,
                     roles: {
                       where: { cohortId: { not: null } },
                       select: { cohort: { select: { number: true } } },
@@ -167,25 +235,33 @@ export async function verificationQueue(
       },
       _count: { _all: true },
     }),
+    db.verificationRequest.count({
+      where: { status: { in: OPEN_REQUEST }, followsChildren: true },
+    }),
   ]);
   const countOf = (s: VerificationStatus) =>
     counts.find((c) => c.status === s)?._count._all ?? 0;
   const total = q
     ? await db.verificationRequest.count({ where })
-    : countOf(status);
+    : parents
+      ? parentCount
+      : countOf(status);
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const now = new Date();
 
   return {
-    tab: (status === VerificationStatus.NEEDS_INFO
-      ? "needsInfo"
-      : "pending") satisfies VerificationTab,
+    tab: (parents
+      ? "parents"
+      : status === VerificationStatus.NEEDS_INFO
+        ? "needsInfo"
+        : "pending") satisfies VerificationTab,
     q,
     page,
     pages,
     counts: {
       pending: countOf(VerificationStatus.PENDING),
       needsInfo: countOf(VerificationStatus.NEEDS_INFO),
+      parents: parentCount,
     },
     items: requests.map((r) => {
       const roles = r.user.roles.map((x) => x.role);
@@ -236,6 +312,19 @@ export async function verificationQueue(
         schoolEmail: r.user.roles.some((x) => x.schoolEmailVerified),
         minor,
         parentConfirmed: r.user.childLinks.length > 0,
+        status: r.status,
+        ...(parents
+          ? {
+              childStatus: r.user.parentLinks.map(
+                (l): ParentChildStatus => ({
+                  name: l.child
+                    ? displayName(l.child, locale)
+                    : (l.childName ?? "—"),
+                  ...childStage(l),
+                }),
+              ),
+            }
+          : {}),
       };
     }),
   };
@@ -304,9 +393,10 @@ export async function verificationDetail(
     open
       ? null
       : db.verificationRequest.findFirst({
+          // The next one of the same kind (a parent: the 保護者 tab).
           where: {
             status: VerificationStatus.PENDING,
-            followsChildren: false,
+            followsChildren: request.followsChildren,
             id: { not: request.id },
           },
           orderBy: [{ submittedAt: "asc" }, { id: "asc" }],
@@ -319,7 +409,9 @@ export async function verificationDetail(
       },
       applicant.id,
     ),
-    isParent ? childrenReview(applicant.id, locale) : null,
+    isParent || request.followsChildren
+      ? childrenReview(applicant.id, locale)
+      : null,
     answersView(request.answers, locale),
   ]);
 
@@ -332,6 +424,7 @@ export async function verificationDetail(
     open,
     canAddVoucher: open || request.status === VerificationStatus.NEEDS_INFO,
     nextId: next?.id ?? null,
+    followsChildren: request.followsChildren,
     schoolEmailVerified: Boolean(teacher?.schoolEmailVerified),
     minor,
     parentConfirmed: applicant.childLinks.some((l) => l.confirmedAt),
@@ -452,8 +545,7 @@ async function childrenReview(
       child: {
         select: {
           id: true,
-          state: true,
-          managedById: true,
+          ...PARENT_LINK_CHILD_SELECT,
           nameRomaji: true,
           nameKanji: true,
           dateOfBirth: true,
@@ -505,6 +597,7 @@ async function childrenReview(
             : c
               ? "childToConfirm"
               : null,
+        ...childStage(l),
         details: c
           ? {
               dateOfBirth: c.dateOfBirth?.toISOString() ?? null,
@@ -735,6 +828,8 @@ export async function voucherCandidates(
   const found = await findMembersByName(q, {
     threshold: 0.5,
     limit: 10,
+    // Admins see test accounts in member lists.
+    includeTest: true,
     excludeUserIds: [
       request.userId,
       ...request.vouches.map((v) => v.voucherId),

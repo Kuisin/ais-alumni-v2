@@ -87,7 +87,27 @@ export type RosterDeleteResult = {
 // ---- 本人確認 (the website's /app/admin/verification) — committee admins ----
 
 /** GET /admin/verification?tab=&q=&page= — which queue. */
-export type VerificationTab = "pending" | "needsInfo";
+export type VerificationTab = "pending" | "needsInfo" | "parents";
+
+/**
+ * Where a parent-only application's child stands (mobile.verifyParents.stage.<stage>):
+ * the child's own application is open; the child (or the parent managing
+ * the child's account) still has to confirm the link; confirmed; or the
+ * child was rejected.
+ */
+export type ParentChildStage =
+  | "childReview"
+  | "childToConfirm"
+  | "confirmed"
+  | "childRejected";
+
+export type ParentChildStatus = {
+  name: string;
+  /** null: nothing to say (no account, deactivated…) */
+  stage: ParentChildStage | null;
+  /** childToConfirm: who was asked — the child, or the parent managing it */
+  asked: "child" | "manager" | null;
+};
 
 /** One application in the queue (oldest first). */
 export type VerificationQueueItem = {
@@ -124,6 +144,10 @@ export type VerificationQueueItem = {
   minor: boolean;
   /** a minor with a confirmed parent link */
   parentConfirmed: boolean;
+  /** tab "parents": each child and where it stands (absent: older server) */
+  childStatus?: ParentChildStatus[];
+  /** VerificationStatus (tab "parents" lists PENDING and NEEDS_INFO) */
+  status?: string;
 };
 
 export type VerificationQueue = {
@@ -158,6 +182,10 @@ export type VerificationChildCard = {
   source: "nameOnly" | "created" | "registered";
   /** adminVerify.children.link.<link>; null = nothing to show */
   link: "confirmed" | "onApproval" | "childToConfirm" | null;
+  /** where the child stands (parent-only applications); absent: older server */
+  stage?: ParentChildStage | null;
+  /** stage childToConfirm: who was asked to confirm */
+  asked?: "child" | "manager" | null;
   /** null when there's no child account (name only) */
   details: {
     dateOfBirth: string | null;
@@ -209,6 +237,12 @@ export type VerificationDetail = {
   canAddVoucher: boolean;
   /** decided: the next pending application (oldest first) */
   nextId: string | null;
+  /**
+   * A parent-only application: normally approved with a child; an admin
+   * may decide it here (approval also confirms links to approved
+   * children). Absent: older server.
+   */
+  followsChildren?: boolean;
   schoolEmailVerified: boolean;
   minor: boolean;
   parentConfirmed: boolean;

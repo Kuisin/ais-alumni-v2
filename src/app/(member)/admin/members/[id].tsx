@@ -77,6 +77,7 @@ function Header({ m }: { m: AdminMemberDetail }) {
           {m.name ?? t("noName")}
         </Text>
         {m.isAdmin ? <Badge tone="brand" label={t("badge.admin")} /> : null}
+        {m.isTest ? <Badge tone="amber" label={t("badge.test")} /> : null}
       </View>
       {m.otherName ? <Text tone="muted">{m.otherName}</Text> : null}
       {m.email ? (

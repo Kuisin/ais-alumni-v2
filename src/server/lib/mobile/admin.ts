@@ -33,6 +33,42 @@ const NONE: AdminCounts = {
   chat: 0,
 };
 
+/**
+ * Parent-only applications (followsChildren) are approved with a child, so
+ * they don't count — unless nothing will settle them: none of the linked
+ * children has an open application of its own, or they've waited a week.
+ */
+function stuckParentWhere(now: Date) {
+  return {
+    followsChildren: true,
+    OR: [
+      { submittedAt: { lt: new Date(now.getTime() - 7 * 86_400_000) } },
+      {
+        user: {
+          parentLinks: {
+            none: {
+              child: {
+                is: {
+                  verification: {
+                    is: {
+                      status: {
+                        in: [
+                          VerificationStatus.PENDING,
+                          VerificationStatus.NEEDS_INFO,
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    ],
+  };
+}
+
 /** The admin sidebar's badges (src/components/layout/app-shell.tsx). */
 export async function adminHome(user: CurrentUser): Promise<AdminHome> {
   const access = await staffOnly(user);
@@ -41,7 +77,10 @@ export async function adminHome(user: CurrentUser): Promise<AdminHome> {
   const [verification, records, names, births, genders, support, chat] =
     await Promise.all([
       db.verificationRequest.count({
-        where: { status: VerificationStatus.PENDING, followsChildren: false },
+        where: {
+          status: VerificationStatus.PENDING,
+          OR: [{ followsChildren: false }, stuckParentWhere(new Date())],
+        },
       }),
       db.recordChangeRequest.count({ where: pending }),
       db.nameChangeRequest.count({ where: pending }),
