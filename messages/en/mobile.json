@@ -421,6 +421,38 @@
       ]
     },
     "introPublic": "What each member type (students, graduates, parents, teachers…) and position can use in the AIS Alumni app. Sign in to see the rows that apply to you highlighted.",
-    "pending": "You can use these once your registration is approved."
+    "pending": "You can use these once your registration is approved.",
+    "profile": {
+      "title": "Which profile details are shown",
+      "columns": {
+        "field": "Detail",
+        "members": "Approved members",
+        "followers": "Followers you approved",
+        "family": "Family",
+        "admins": "Admins"
+      },
+      "all": "Shown",
+      "none": "Hidden",
+      "chosen": "Only what you choose",
+      "photoMembers": "If you turn on \"show my photo to all members\"",
+      "photoFollowers": "Shown (when you're connected by a follow)",
+      "rows": {
+        "name": "Name and name at AIS",
+        "record": "Type, years and class (teachers: subjects)",
+        "bio": "About me",
+        "stage": "Current stage (university, working…)",
+        "photo": "Photo",
+        "historyMembers": "Education and work (entries shown to members)",
+        "historyFollowers": "Education and work (followers-only entries)",
+        "stageDetail": "Current stage details",
+        "contact": "Email, phone, LINE name, social links, website",
+        "birth": "Date of birth"
+      },
+      "notes": [
+        "Profiles of current students, members under 18 and accounts a parent manages are shown only to family, current teachers and admins.",
+        "In My profile → \"Show to followers\" you choose, per item, which details your approved followers see (all hidden at first).",
+        "You always see everything on your own profile. Gender is never shown."
+      ]
+    }
   }
 }
