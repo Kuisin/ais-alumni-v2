@@ -53,18 +53,23 @@ function ruleFor(
 
 /**
  * 利用できる機能 — public, signed in or not (マイページ links here; the
- * website's landing page too). Approved members see their own type and
- * positions, with their rows highlighted in the tables of what each type
- * and position may use; anyone else sees the tables alone. The server's
+ * website's landing page too). Signed in — approved or still registering —
+ * members see their own type and positions, with their rows highlighted in
+ * the tables of what each type and position may use; signed out, the
+ * tables alone. It waits for the sign-in to load, so a signed-in member
+ * never sees the signed-out version first. The server's
  * rules (authz, direct-policy, permissions) say the same; this only shows
  * them. Admins aren't listed.
  */
 export default function AccessScreen() {
   const t = useTranslations("mobile.access");
-  const { me } = useAuth();
-  const personal = me?.user.state === "ACTIVE";
+  const { status, me } = useAuth();
+  const personal = status === "signedIn";
+  const pending = personal && me?.user.state !== "ACTIVE";
   const access = useQuery({
     queryKey: personal ? ["me", "access"] : ["access"],
+    // "loading": the token or /me isn't known yet.
+    enabled: status === "signedIn" || status === "signedOut",
     queryFn: async (): Promise<MyAccess | PublicAccess> =>
       personal ? api<MyAccess>("/me/access") : api<PublicAccess>("/access"),
   });
@@ -75,6 +80,11 @@ export default function AccessScreen() {
     >
       <Stack.Screen options={{ title: t("title") }} />
       <Text tone="muted">{personal ? t("intro") : t("introPublic")}</Text>
+      {pending ? (
+        <Text variant="small" tone="subtle">
+          {t("pending")}
+        </Text>
+      ) : null}
       <QueryState query={access}>
         {(data) => <AccessTables data={data} />}
       </QueryState>
