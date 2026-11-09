@@ -232,8 +232,8 @@ project id in the config Expo Go needs no sign-in (with one, run
   titles and header buttons with `<Stack.Screen options={{ … }} />`. Keep
   `src/lib/site-paths.ts` in step.
 - The tab bar: iOS uses the system's (`(tabs)/_layout.ios.tsx`, native
-  tabs, never the sidebar (`sidebarAdaptable={false}`) — on the iPhone Duo,
-  closed or open, the system makes it the vertical bar at the right edge);
+  tabs, in the sidebar where there's room — the open iPhone Duo; a plain
+  tab bar there shows no tabs at all, so keep `preferredPlacement="sidebar"`);
   Android and the web the JS one (`(tabs)/_layout.tsx`). Declare a
   new tab in both.
 - iPhone Duo and other wide windows: `Screen` / `ScreenView` keep clear of

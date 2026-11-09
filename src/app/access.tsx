@@ -122,11 +122,11 @@ function AccessTables({ data }: { data: MyAccess | PublicAccess }) {
   );
 
   const typeColumns: TableColumn[] = [
-    { key: "type", label: t("types.columns.type"), width: 150 },
-    { key: "directory", label: t("types.columns.directory"), width: 120 },
-    { key: "direct", label: t("types.columns.direct"), width: 170 },
-    { key: "profile", label: t("types.columns.profile"), width: 210 },
-    { key: "create", label: t("types.columns.create"), width: 190 },
+    { key: "type", label: t("types.columns.type"), width: 120 },
+    { key: "directory", label: t("types.columns.directory"), width: 96 },
+    { key: "direct", label: t("types.columns.direct"), width: 150 },
+    { key: "profile", label: t("types.columns.profile"), width: 180 },
+    { key: "create", label: t("types.columns.create"), width: 160 },
   ];
   const typeRows = TYPES.map((k) => {
     const teacher = k === "TEACHER_CURRENT" || k === "TEACHER_FORMER";
