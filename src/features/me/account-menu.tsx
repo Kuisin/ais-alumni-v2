@@ -5,6 +5,7 @@ import {
   HandCoins,
   HeartHandshake,
   LifeBuoy,
+  ListChecks,
   LogOut,
   MailPlus,
   Settings,
@@ -28,13 +29,15 @@ const icon = (I: typeof Settings) => (
 
 /**
  * The account menu (the website's app shell): マイプロフィール, 家族, フォローリクエスト
- * (with the count waiting), 同窓生を招待, 設定, お問い合わせ, 寄付 (in the
+ * (with the count waiting), 同窓生を招待, 利用できる機能 (what my type and
+ * positions let me use), 設定, お問い合わせ, 寄付 (in the
  * browser, when the server takes donations) and, for
  * staff, 管理モード.
  */
 export function AccountMenu() {
   const tc = useTranslations("common");
   const td = useTranslations("mobile.donate");
+  const ta = useTranslations("mobile.access");
   const router = useRouter();
   const { badges, access } = useMe();
   const config = useQuery({
@@ -77,6 +80,12 @@ export function AccountMenu() {
         leading={icon(MailPlus)}
         title={tc("nav.invite")}
         onPress={() => router.push("/invite")}
+      />
+      <Separator />
+      <ListRow
+        leading={icon(ListChecks)}
+        title={ta("menu")}
+        onPress={() => router.push("/access")}
       />
       <Separator />
       <ListRow

@@ -141,3 +141,42 @@ export type OAuthExchangeRequest = {
 
 /** Result of every sign-in: keep `token` in the keychain. */
 export type SessionResult = { token: string; me: Me };
+
+// ---- GET /me/access (ACTIVE) ----
+
+/** The member types the 利用できる機能 page lists (teachers by status). */
+export type AccessType =
+  | "TEACHER_CURRENT"
+  | "TEACHER_FORMER"
+  | "CURRENT_STUDENT"
+  | "GRADUATE"
+  | "LEFT_STUDENT"
+  | "CURRENT_PARENT"
+  | "FORMER_PARENT";
+
+/** The positions it lists (admins aren't shown). */
+export type AccessPosition =
+  | "ALUMNI_COMMITTEE"
+  | "STUDENT_LEADER"
+  | "TEACHER_REGISTRAR"
+  | "TEACHER_MANAGER";
+
+export type DirectRuleValue = "ANYONE" | "SAME_ROLE" | "NOBODY";
+
+/** 利用できる機能: the member's own types and positions, and the rules. */
+export type MyAccess = {
+  /** the member's types (a former student whose graduation isn't known: both) */
+  types: AccessType[];
+  positions: { key: AccessPosition; cohort: string | null }[];
+  /** under 18, a current student or a parent-managed account */
+  minor: boolean;
+  /** may open 会員名簿 */
+  directory: boolean;
+  /** 1:1 talk rules per non-teacher type, as the committee set them */
+  directRules: {
+    CURRENT_STUDENT: DirectRuleValue;
+    FORMER_STUDENT: DirectRuleValue;
+    CURRENT_PARENT: DirectRuleValue;
+    FORMER_PARENT: DirectRuleValue;
+  };
+};
