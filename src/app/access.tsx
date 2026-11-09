@@ -3,6 +3,7 @@ import type {
   AccessType,
   DirectRuleValue,
   MyAccess,
+  PublicAccess,
 } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
 import { Stack } from "expo-router";
@@ -10,6 +11,7 @@ import { Check, Minus } from "lucide-react-native";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import {
   Badge,
   Card,
@@ -50,16 +52,21 @@ function ruleFor(
 }
 
 /**
- * 利用できる機能 (マイページ): the member's own type and positions, then
- * tables of what each type and position may use, the member's rows
- * highlighted. The server's rules (authz, direct-policy, permissions) say
- * the same; this only shows them. Admins aren't listed.
+ * 利用できる機能 — public, signed in or not (マイページ links here; the
+ * website's landing page too). Approved members see their own type and
+ * positions, with their rows highlighted in the tables of what each type
+ * and position may use; anyone else sees the tables alone. The server's
+ * rules (authz, direct-policy, permissions) say the same; this only shows
+ * them. Admins aren't listed.
  */
 export default function AccessScreen() {
   const t = useTranslations("mobile.access");
+  const { me } = useAuth();
+  const personal = me?.user.state === "ACTIVE";
   const access = useQuery({
-    queryKey: ["me", "access"],
-    queryFn: () => api<MyAccess>("/me/access"),
+    queryKey: personal ? ["me", "access"] : ["access"],
+    queryFn: async (): Promise<MyAccess | PublicAccess> =>
+      personal ? api<MyAccess>("/me/access") : api<PublicAccess>("/access"),
   });
   return (
     <Screen
@@ -67,7 +74,7 @@ export default function AccessScreen() {
       onRefresh={() => void access.refetch()}
     >
       <Stack.Screen options={{ title: t("title") }} />
-      <Text tone="muted">{t("intro")}</Text>
+      <Text tone="muted">{personal ? t("intro") : t("introPublic")}</Text>
       <QueryState query={access}>
         {(data) => <AccessTables data={data} />}
       </QueryState>
@@ -75,12 +82,14 @@ export default function AccessScreen() {
   );
 }
 
-function AccessTables({ data }: { data: MyAccess }) {
+function AccessTables({ data }: { data: MyAccess | PublicAccess }) {
   const t = useTranslations("mobile.access");
   const tr = useTranslations("roles");
   const tp = useTranslations("broadcast.positions");
-  const mine = new Set(data.types);
-  const held = new Map(data.positions.map((p) => [p.key, p.cohort]));
+  // Signed out (or not yet approved): the rules only, nothing highlighted.
+  const own = "types" in data ? data : null;
+  const mine = new Set(own?.types ?? []);
+  const held = new Map((own?.positions ?? []).map((p) => [p.key, p.cohort]));
 
   const typeLabel = (k: AccessType) =>
     k === "TEACHER_CURRENT"
@@ -194,46 +203,48 @@ function AccessTables({ data }: { data: MyAccess }) {
 
   return (
     <>
-      <Card style={styles.card}>
-        <Text variant="subheading" accessibilityRole="header">
-          {t("mine.title")}
-        </Text>
-        <View style={styles.line}>
-          <Text variant="small" tone="muted" style={styles.lineLabel}>
-            {t("mine.types")}
+      {own ? (
+        <Card style={styles.card}>
+          <Text variant="subheading" accessibilityRole="header">
+            {t("mine.title")}
           </Text>
-          <View style={styles.badges}>
-            {data.types.map((k) => (
-              <Badge key={k} label={typeLabel(k)} tone="brand" />
-            ))}
+          <View style={styles.line}>
+            <Text variant="small" tone="muted" style={styles.lineLabel}>
+              {t("mine.types")}
+            </Text>
+            <View style={styles.badges}>
+              {own.types.map((k) => (
+                <Badge key={k} label={typeLabel(k)} tone="brand" />
+              ))}
+            </View>
           </View>
-        </View>
-        <View style={styles.line}>
-          <Text variant="small" tone="muted" style={styles.lineLabel}>
-            {t("mine.positions")}
-          </Text>
-          <View style={styles.badges}>
-            {data.positions.length ? (
-              data.positions.map((p) => (
-                <Badge
-                  key={p.key}
-                  label={p.cohort ? `${tp(p.key)}（${p.cohort}）` : tp(p.key)}
-                  tone="green"
-                />
-              ))
-            ) : (
-              <Text variant="small" tone="subtle">
-                {t("mine.noPositions")}
-              </Text>
-            )}
+          <View style={styles.line}>
+            <Text variant="small" tone="muted" style={styles.lineLabel}>
+              {t("mine.positions")}
+            </Text>
+            <View style={styles.badges}>
+              {own.positions.length ? (
+                own.positions.map((p) => (
+                  <Badge
+                    key={p.key}
+                    label={p.cohort ? `${tp(p.key)}（${p.cohort}）` : tp(p.key)}
+                    tone="green"
+                  />
+                ))
+              ) : (
+                <Text variant="small" tone="subtle">
+                  {t("mine.noPositions")}
+                </Text>
+              )}
+            </View>
           </View>
-        </View>
-        {data.minor ? (
-          <Text variant="small" tone="muted">
-            {t("mine.minor")}
-          </Text>
-        ) : null}
-      </Card>
+          {own.minor ? (
+            <Text variant="small" tone="muted">
+              {t("mine.minor")}
+            </Text>
+          ) : null}
+        </Card>
+      ) : null}
 
       <Section title={t("types.title")}>
         <Table

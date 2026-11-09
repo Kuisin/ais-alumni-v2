@@ -419,6 +419,7 @@
         ["Invites", "Invite fellow alumni with a link"],
         ["Settings", "Notifications, data export, account deletion"]
       ]
-    }
+    },
+    "introPublic": "What each member type (students, graduates, parents, teachers…) and position can use in the AIS Alumni app. Sign in to see the rows that apply to you highlighted."
   }
 }

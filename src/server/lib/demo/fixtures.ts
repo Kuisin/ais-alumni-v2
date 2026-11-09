@@ -648,6 +648,16 @@ type Handler = (ctx: {
 const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
   me: { GET: () => demoMe() },
   "me/export": { GET: () => exportData() },
+  access: {
+    GET: () => ({
+      directRules: {
+        CURRENT_STUDENT: "NOBODY",
+        FORMER_STUDENT: "ANYONE",
+        CURRENT_PARENT: "NOBODY",
+        FORMER_PARENT: "SAME_ROLE",
+      },
+    }),
+  },
   // 利用できる機能: the demo member is a graduate with no position, under
   // the default 1:1 rules (src/server/lib/direct-policy.ts).
   "me/access": {

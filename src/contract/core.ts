@@ -180,3 +180,8 @@ export type MyAccess = {
     FORMER_PARENT: DirectRuleValue;
   };
 };
+
+// ---- GET /access (public) ----
+
+/** 利用できる機能 for anyone, signed in or not: the rules without "me". */
+export type PublicAccess = Pick<MyAccess, "directRules">;
