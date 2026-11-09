@@ -454,5 +454,99 @@
         "You always see everything on your own profile. Gender is never shown."
       ]
     }
+  },
+  "sanction": {
+    "levels": {
+      "WARNING": "Warning",
+      "RESTRICTED": "Posting restricted",
+      "SUSPENDED": "Suspended",
+      "BANNED": "Banned permanently"
+    },
+    "levelLabel": "Sanction",
+    "reason": "Reason",
+    "period": "Period",
+    "until": "Until {date}",
+    "untilLifted": "Until lifted",
+    "appeal": "If you have questions or wish to appeal, please contact us.",
+    "contact": "Contact us",
+    "warning": {
+      "title": "A warning from the committee",
+      "body": "The committee has issued the following warning. Please keep it in mind when using the app.",
+      "ack": "I understand"
+    },
+    "restricted": {
+      "title": "Posting is restricted",
+      "body": "By decision of the committee, {until}you can't send messages, react, comment, post, send follow requests or invitations. You can still read everything as before.",
+      "bodyUntil": "until {date}, ",
+      "bodyIndefinite": "until it is lifted, ",
+      "chat": "You can't send messages while posting is restricted."
+    },
+    "suspended": {
+      "title": "Your account is suspended",
+      "body": "By decision of the committee, you can't use the app {until}.",
+      "bodyUntil": "until {date}",
+      "bodyIndefinite": "until the suspension is lifted"
+    },
+    "banned": {
+      "title": "Your account has been banned",
+      "body": "By decision of the committee, this account can no longer be used."
+    },
+    "screen": {
+      "yourData": "You can still download your data or delete your account."
+    },
+    "errors": {
+      "restricted": "You can't do this while posting is restricted.",
+      "suspended": "You can't do this while your account is suspended.",
+      "banned": "You can't do this because your account has been banned."
+    },
+    "signInBanned": "A new account can't be created with this sign-in. If you think this is a mistake, please contact us.",
+    "admin": {
+      "title": "Sanctions",
+      "description": "Limit what a member can do. The member is notified and sees the reason. Applying and lifting are recorded in the audit log.",
+      "none": "No sanction in force.",
+      "current": "In force",
+      "history": "History",
+      "noHistory": "No sanctions so far.",
+      "level": "Type",
+      "levelHints": {
+        "WARNING": "No limits. The member sees a notice until they acknowledge it.",
+        "RESTRICTED": "Read-only: no messages, reactions, comments, posts, follow requests or invitations.",
+        "SUSPENDED": "No access to the app for the period (only support, data download and account deletion).",
+        "BANNED": "No access, for good. The same email, LINE and Apple ID can't register again."
+      },
+      "reason": "Reason (shown to the member)",
+      "reasonRequired": "Enter a reason.",
+      "duration": "Duration",
+      "durations": {
+        "d7": "7 days",
+        "d30": "30 days",
+        "d90": "90 days",
+        "date": "Choose a date",
+        "none": "Indefinitely"
+      },
+      "endsAt": "Ends",
+      "endsAtRequired": "Choose when it ends.",
+      "endsAtPast": "The end must be in the future.",
+      "apply": "Apply sanction",
+      "applyConfirmTitle": "Apply “{level}”?",
+      "applyConfirm": "The member will be notified. Any sanction in force is lifted.",
+      "banConfirm": "This account can no longer be used, and the same email, LINE and Apple ID can't register again. The member will be notified.",
+      "applied": "Sanction applied.",
+      "lift": "Lift",
+      "liftLabel": "Lift the “{level}” sanction",
+      "liftConfirmTitle": "Lift this sanction?",
+      "liftConfirm": "Lifts “{level}”. The member can use the app as usual right away.",
+      "lifted": "Sanction lifted.",
+      "notSelf": "You can't sanction yourself.",
+      "applyFailed": "The sanction couldn't be applied. Check the form and try again.",
+      "created": "{date} · {name}",
+      "ends": "Until {date}",
+      "indefinite": "Indefinitely",
+      "liftedAt": "Lifted {date}",
+      "liftedBy": "Lifted {date} ({name})",
+      "ended": "Ended",
+      "active": "In force",
+      "acknowledged": "Acknowledged ({date})"
+    }
   }
 }

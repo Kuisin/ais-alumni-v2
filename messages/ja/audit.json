@@ -44,6 +44,8 @@
       "admin_revoked": "管理者権限を解除",
       "deactivated": "アカウントを停止",
       "reactivated": "アカウントを再開",
+      "sanctioned": "処分を適用",
+      "sanction_lifted": "処分を解除",
       "merged": "アカウントを統合",
       "position_granted": "役職を任命",
       "position_removed": "役職を解除",

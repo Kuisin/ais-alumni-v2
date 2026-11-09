@@ -110,6 +110,33 @@ export type Me = {
     /** 会員名簿 is open to them (false: a former teacher; absent: older server) */
     directory?: boolean;
   };
+  /**
+   * The committee's 処分 for this member, while it applies: WARNING until
+   * acknowledged (POST /me/sanction/ack), the others while active. Absent
+   * on older servers; null = none.
+   */
+  sanction?: MySanction | null;
+};
+
+// ---- 処分 (sanctions) ----
+
+/**
+ * WARNING: a notice only; RESTRICTED: read-only (posting answers 403
+ * "restricted"); SUSPENDED (until endsAt) and BANNED (for good): only the
+ * sanction notice, お問い合わせ, data export and account deletion — the
+ * rest answers 403 "suspended" / "banned".
+ */
+export type SanctionLevel = "WARNING" | "RESTRICTED" | "SUSPENDED" | "BANNED";
+
+export type MySanction = {
+  id: string;
+  level: SanctionLevel;
+  /** the committee's reason, as written */
+  reason: string;
+  /** RESTRICTED / SUSPENDED: when it lifts by itself; null = until lifted */
+  endsAt: IsoDate | null;
+  /** WARNING: the member has acknowledged it */
+  acknowledged: boolean;
 };
 
 // ---- Sign-in ----
@@ -129,7 +156,9 @@ export type EmailVerifyRequest = {
   locale: Locale;
   device?: Device;
 };
-// errors: invalid_code_format, invalid, expired, too_many_attempts (400)
+// errors: invalid_code_format, invalid, expired, too_many_attempts (400),
+// banned (403: a new account for a banned identity; also from LINE / Apple
+// sign-in, and as ?error=banned from the LINE browser sign-in)
 
 /** POST /auth/oauth/exchange — the code from aisalumni://auth?code=… */
 export type OAuthExchangeRequest = {

@@ -7,6 +7,7 @@ import {
   ChoiceList,
   SelectField,
 } from "@/features/people/choices";
+import { useSanctionError } from "@/features/sanction/api";
 import { ApiError } from "@/lib/api";
 import { Card, CountDot, colors, radius, space, Text } from "@/ui";
 
@@ -222,9 +223,11 @@ export function ResultNotice({
 export function FailedNotice({ error }: { error: unknown }) {
   const t = useTranslations("mobile.errors");
   const tc = useTranslations("common.errors");
+  const sanctionError = useSanctionError();
   if (!error) return null;
   const text =
-    error instanceof ApiError
+    sanctionError(error) ??
+    (error instanceof ApiError
       ? error.status === 0
         ? t("network")
         : error.status === 403
@@ -232,7 +235,7 @@ export function FailedNotice({ error }: { error: unknown }) {
           : error.status === 404
             ? tc("notFound")
             : t("generic")
-      : t("generic");
+      : t("generic"));
   return <Notice tone="error">{text}</Notice>;
 }
 

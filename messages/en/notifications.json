@@ -48,6 +48,12 @@
       "detail": "You can use the app as before.",
       "cta": "Open the app"
     },
+    "SANCTION_APPLIED": {
+      "title": "A decision about your account",
+      "body": "The committee has applied a sanction to your account: {level}.{until}",
+      "detail": "You can see the reason in the app. If you have questions or wish to appeal, please contact us through the support form.",
+      "cta": "View details"
+    },
     "NAME_REQUEST_APPROVED": {
       "title": "Your name change was approved",
       "body": "Your name has been updated.",
@@ -312,5 +318,12 @@
     "channelDefault": "Notifications"
   },
   "untitledNews": "New post",
-  "digestLine": "• {chat} ({count}): {text}"
+  "digestLine": "• {chat} ({count}): {text}",
+  "sanctionLevels": {
+    "WARNING": "Warning",
+    "RESTRICTED": "Posting restricted",
+    "SUSPENDED": "Suspended",
+    "BANNED": "Banned permanently"
+  },
+  "sanctionUntil": " (until {date})"
 }

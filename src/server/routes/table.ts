@@ -40,6 +40,7 @@ import * as adminMemberPositions from "./mobile/v1/admin/members/[id]/positions"
 import * as adminMemberProfile from "./mobile/v1/admin/members/[id]/profile";
 import * as adminMemberRoles from "./mobile/v1/admin/members/[id]/roles";
 import * as adminMemberRole from "./mobile/v1/admin/members/[id]/roles/[role]";
+import * as adminMemberSanctions from "./mobile/v1/admin/members/[id]/sanctions";
 import * as adminMemberState from "./mobile/v1/admin/members/[id]/state";
 import * as adminNameRequests from "./mobile/v1/admin/name-requests";
 import * as adminNameRequestDecide from "./mobile/v1/admin/name-requests/[id]/decide";
@@ -60,6 +61,7 @@ import * as adminRecordRequests from "./mobile/v1/admin/record-requests";
 import * as adminRecordRequestDecide from "./mobile/v1/admin/record-requests/[id]/decide";
 import * as adminRoster from "./mobile/v1/admin/roster";
 import * as adminRosterImport from "./mobile/v1/admin/roster/import";
+import * as adminSanctionLift from "./mobile/v1/admin/sanctions/[id]/lift";
 import * as adminStats from "./mobile/v1/admin/stats";
 import * as adminSupport from "./mobile/v1/admin/support";
 import * as adminSupportRequest from "./mobile/v1/admin/support/[id]";
@@ -129,6 +131,7 @@ import * as lineLinkStart from "./mobile/v1/line/link/start";
 import * as r29 from "./mobile/v1/me";
 import * as meAccess from "./mobile/v1/me/access";
 import * as meExport from "./mobile/v1/me/export";
+import * as meSanctionAck from "./mobile/v1/me/sanction/ack";
 import * as r30 from "./mobile/v1/members/[id]";
 import * as r31 from "./mobile/v1/members/[id]/block";
 import * as r32 from "./mobile/v1/members/[id]/follow";
@@ -264,6 +267,11 @@ export const ROUTES: [string, RouteModule][] = [
     adminMemberRole as unknown as RouteModule,
   ],
   ["admin/members/[id]/state", adminMemberState as unknown as RouteModule],
+  [
+    "admin/members/[id]/sanctions",
+    adminMemberSanctions as unknown as RouteModule,
+  ],
+  ["admin/sanctions/[id]/lift", adminSanctionLift as unknown as RouteModule],
   ["admin/events", ae0 as unknown as RouteModule],
   ["admin/events/[id]", ae1 as unknown as RouteModule],
   ["admin/events/[id]/approve", ae2 as unknown as RouteModule],
@@ -356,6 +364,7 @@ export const ROUTES: [string, RouteModule][] = [
   ["access", publicAccess as unknown as RouteModule],
   ["me/access", meAccess as unknown as RouteModule],
   ["me/export", meExport as unknown as RouteModule],
+  ["me/sanction/ack", meSanctionAck as unknown as RouteModule],
   ["members/[id]", r30 as unknown as RouteModule],
   ["members/[id]/block", r31 as unknown as RouteModule],
   ["members/[id]/follow", r32 as unknown as RouteModule],

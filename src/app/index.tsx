@@ -2,6 +2,7 @@ import { Redirect, Stack } from "expo-router";
 import { Platform } from "react-native";
 import { useTranslations } from "use-intl";
 import { Landing } from "@/features/public/landing";
+import { blockingSanction } from "@/features/sanction/api";
 import { useAuth } from "@/lib/auth";
 
 /**
@@ -23,6 +24,7 @@ export default function Index() {
       <Redirect href="/sign-in" />
     );
   if (status === "unreachable") return <Redirect href="/offline" />;
+  if (blockingSanction(me)) return <Redirect href="/sanction" />;
   if (me?.user.state !== "ACTIVE") return <Redirect href="/onboarding" />;
   return <Redirect href="/home" />;
 }

@@ -20,6 +20,8 @@ export function Loading({ inline = false }: { inline?: boolean }) {
 }
 
 /** What went wrong, in the member's language, with a retry button. */
+const SANCTION_CODES = new Set(["restricted", "suspended", "banned"]);
+
 export function ErrorState({
   error,
   onRetry,
@@ -29,15 +31,19 @@ export function ErrorState({
 }) {
   const t = useTranslations("mobile.errors");
   const tc = useTranslations("common.errors");
+  const ts = useTranslations("mobile.sanction.errors");
   const message =
     error instanceof ApiError
-      ? error.status === 0
-        ? t("network")
-        : error.status === 404
-          ? tc("notFound")
-          : error.status === 403
-            ? tc("forbidden")
-            : t("generic")
+      ? SANCTION_CODES.has(error.code)
+        ? // 処分: refused while restricted / suspended / banned
+          ts(error.code as "restricted" | "suspended" | "banned")
+        : error.status === 0
+          ? t("network")
+          : error.status === 404
+            ? tc("notFound")
+            : error.status === 403
+              ? tc("forbidden")
+              : t("generic")
       : t("generic");
   return (
     <FoldCenter style={styles.fill}>

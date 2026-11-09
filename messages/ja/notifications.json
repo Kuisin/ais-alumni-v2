@@ -48,6 +48,12 @@
       "detail": "これまでどおりアプリをご利用いただけます。",
       "cta": "アプリを開く"
     },
+    "SANCTION_APPLIED": {
+      "title": "委員会からの処分のお知らせ",
+      "body": "委員会の判断により、アカウントに「{level}」の処分が適用されました。{until}",
+      "detail": "理由はアプリでご確認いただけます。ご不明な点や異議がある場合は、お問い合わせからご連絡ください。",
+      "cta": "内容を確認"
+    },
     "NAME_REQUEST_APPROVED": {
       "title": "氏名の変更が承認されました",
       "body": "申請した氏名に変更しました。",
@@ -312,5 +318,12 @@
     "channelDefault": "お知らせ"
   },
   "untitledNews": "新しいニュース",
-  "digestLine": "・{chat}（{count}件）{text}"
+  "digestLine": "・{chat}（{count}件）{text}",
+  "sanctionLevels": {
+    "WARNING": "警告",
+    "RESTRICTED": "投稿制限",
+    "SUSPENDED": "一時停止",
+    "BANNED": "永久追放"
+  },
+  "sanctionUntil": "（{date}まで）"
 }

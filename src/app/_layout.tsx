@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { InstallPrompt } from "@/features/install/install-prompt";
 import { OfflineIndicator } from "@/features/offline/offline-indicator";
+import { blockingSanction } from "@/features/sanction/api";
 import {
   UpdateRequired,
   useUpdateRequired,
@@ -47,12 +48,14 @@ export default function RootLayout() {
 /**
  * Which part of the app is reachable follows the account (src/lib/auth.tsx):
  * signed out → sign-in; not yet approved → onboarding; ACTIVE members →
- * everything under (member).
+ * everything under (member). A suspended or banned account (処分) sees only
+ * its sanction screen (and the public ones: お問い合わせ…).
  */
 function Root() {
   const { status, me, locale } = useAuth();
   const signedIn = status === "signedIn";
-  const active = signedIn && me?.user.state === "ACTIVE";
+  const blocked = signedIn && blockingSanction(me) !== null;
+  const active = signedIn && !blocked && me?.user.state === "ACTIVE";
   const update = useUpdateRequired();
 
   useEffect(() => {
@@ -95,7 +98,10 @@ function Root() {
             <Stack.Protected guard={status === "unreachable"}>
               <Stack.Screen name="offline" options={{ headerShown: false }} />
             </Stack.Protected>
-            <Stack.Protected guard={signedIn && !active}>
+            <Stack.Protected guard={blocked}>
+              <Stack.Screen name="sanction" options={{ headerShown: false }} />
+            </Stack.Protected>
+            <Stack.Protected guard={signedIn && !blocked && !active}>
               <Stack.Screen
                 name="onboarding"
                 options={{ headerShown: false }}

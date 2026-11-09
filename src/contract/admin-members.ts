@@ -299,3 +299,43 @@ export type AdminMergeResult = AdminResult & {
   /** merged: the kept account (open it) */
   mergedInto?: string;
 };
+
+// ---- 処分 (GET / POST /admin/members/[id]/sanctions, POST /admin/sanctions/[id]/lift) ----
+
+export type AdminSanctionLevel =
+  | "WARNING"
+  | "RESTRICTED"
+  | "SUSPENDED"
+  | "BANNED";
+
+export type AdminSanction = {
+  id: string;
+  level: AdminSanctionLevel;
+  reason: string;
+  endsAt: IsoDate | null;
+  createdAt: IsoDate;
+  /** the admin who applied it (null: account deleted) */
+  createdBy: string | null;
+  acknowledgedAt: IsoDate | null;
+  liftedAt: IsoDate | null;
+  liftedBy: string | null;
+  /** in force now (not lifted, not ended) */
+  active: boolean;
+};
+
+export type AdminSanctions = {
+  /** the active one, if any (also first in `history`) */
+  current: AdminSanction | null;
+  /** newest first */
+  history: AdminSanction[];
+};
+
+/** POST /admin/members/[id]/sanctions → AdminSanctions */
+export type AdminSanctionApply = {
+  level: AdminSanctionLevel;
+  /** 1–1000 characters, shown to the member */
+  reason: string;
+  /** RESTRICTED / SUSPENDED only (ignored otherwise); null = until lifted */
+  endsAt: IsoDate | null;
+};
+// errors: invalid (400), not_self (400: one's own account), not_found (404)

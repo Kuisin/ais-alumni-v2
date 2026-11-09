@@ -1,4 +1,5 @@
 import type { LineLinkOutcome } from "@contract/line";
+import { ApiError } from "@/server/lib/mobile/http";
 import { linkLine, withOutcome } from "@/server/lib/mobile/line-link";
 import {
   APP_REDIRECT,
@@ -48,6 +49,9 @@ export async function GET(request: Request) {
       code: createHandoffCode(userId, flow.challenge),
     });
   } catch (e) {
+    // A banned member's LINE: no new account (src/server/lib/sanctions.ts).
+    if (e instanceof ApiError && e.code === "banned")
+      return back(flow.redirect, { error: "banned" });
     console.error("[oauth] LINE sign-in failed", e);
     return back(flow.redirect, { error: "signin_failed" });
   }

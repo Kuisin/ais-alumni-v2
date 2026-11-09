@@ -68,18 +68,21 @@ export default function SignInScreen() {
   });
   const [busy, setBusy] = useState<null | "line" | "google" | "apple">(null);
 
-  // Web: /auth sends us back here with ?failed=1 when LINE sign-in failed.
+  // Web: /auth sends us back here with ?failed=1 when LINE sign-in failed
+  // (?failed=banned: a banned member's LINE, which can't register again).
   const { failed } = useLocalSearchParams<{ failed?: string }>();
-  const [providerError, setProviderError] = useState(failed === "1");
+  const [providerError, setProviderError] = useState<
+    null | "failed" | "banned"
+  >(failed === "banned" ? "banned" : failed === "1" ? "failed" : null);
 
   const provider = async (p: "line" | "google" | "apple") => {
     setBusy(p);
-    setProviderError(false);
+    setProviderError(null);
     const result = await signInWithProvider(p, {
       lineChannelId: config.data?.lineChannelId,
     }).catch(() => "failed" as const);
     setBusy(null);
-    if (result === "failed") setProviderError(true);
+    if (result === "failed" || result === "banned") setProviderError(result);
   };
 
   const other: Locale = locale === "ja" ? "en" : "ja";
@@ -181,7 +184,9 @@ export default function SignInScreen() {
                 ) : null}
                 {providerError ? (
                   <Text variant="small" tone="danger" accessibilityRole="alert">
-                    {tm("signIn.providerFailed")}
+                    {providerError === "banned"
+                      ? tm("sanction.signInBanned")
+                      : tm("signIn.providerFailed")}
                   </Text>
                 ) : null}
                 {sso?.line ? (
@@ -294,6 +299,7 @@ function InviteBanner() {
 
 function EmailCodeForm() {
   const t = useTranslations("auth.otp");
+  const tm = useTranslations("mobile");
   const { locale, finishSignIn } = useAuth();
   const [state, setState] = useState<Step>({ step: "email" });
   const [email, setEmail] = useState("");
@@ -304,6 +310,8 @@ function EmailCodeForm() {
 
   const message = (e: unknown) => {
     const c = e instanceof ApiError ? e.code : "generic";
+    // A banned member's address: no new account (処分).
+    if (c === "banned") return tm("sanction.signInBanned");
     return t(`errors.${OTP_ERRORS.has(c) ? c : "generic"}`);
   };
 

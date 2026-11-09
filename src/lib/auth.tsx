@@ -19,7 +19,13 @@ import {
   useState,
 } from "react";
 import { Platform } from "react-native";
-import { ApiError, api, setApiSession, setUnauthorizedHandler } from "./api";
+import {
+  ApiError,
+  api,
+  setApiSession,
+  setSanctionedHandler,
+  setUnauthorizedHandler,
+} from "./api";
 import { appleSignIn } from "./apple-sign-in";
 import { API_URL } from "./config";
 import { lineSdkSignIn } from "./line-sdk";
@@ -54,12 +60,24 @@ type Ctx = {
   signInWithProvider: (
     provider: "google" | "line" | "apple",
     options?: { lineChannelId?: string | null },
-  ) => Promise<"ok" | "cancelled" | "failed">;
+  ) => Promise<SignInResult>;
   /** Web: finish a LINE / Google sign-in on return to /auth?code=… */
   completeWebSignIn: (code: string) => Promise<"ok" | "failed">;
   signOut: () => Promise<void>;
   refreshMe: () => Promise<void>;
 };
+
+/**
+ * "banned": the server won't create an account for this identity (it
+ * belonged to a banned member — 処分).
+ */
+export type SignInResult = "ok" | "cancelled" | "failed" | "banned";
+
+/** A failed sign-in request: "banned" when that's why. */
+const failure = (e: unknown) =>
+  e instanceof ApiError && e.code === "banned"
+    ? ("banned" as const)
+    : ("failed" as const);
 
 const AuthContext = createContext<Ctx | null>(null);
 
@@ -121,6 +139,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => setUnauthorizedHandler(null);
   }, [forget]);
 
+  // Suspended / banned while the app is open: /me brings the sanction
+  // screen (src/app/_layout.tsx).
+  useEffect(() => {
+    setSanctionedHandler(
+      () => void queryClient.invalidateQueries({ queryKey: ME_KEY }),
+    );
+    return () => setSanctionedHandler(null);
+  }, [queryClient]);
+
   const meQuery = useQuery({
     queryKey: ME_KEY,
     enabled: Boolean(token),
@@ -175,8 +202,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           });
           await finishSignIn(result);
           return "ok" as const;
-        } catch {
-          return "failed" as const;
+        } catch (e) {
+          return failure(e);
         }
       }
       if (provider === "line" && options?.lineChannelId) {
@@ -193,8 +220,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
             await finishSignIn(result);
             return "ok" as const;
-          } catch {
-            return "failed" as const;
+          } catch (e) {
+            return failure(e);
           }
         }
         // No SDK here (Expo Go, web) or it failed: the browser sign-in.
@@ -217,6 +244,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       if (res.type !== "success") return "cancelled" as const;
       const { queryParams } = Linking.parse(res.url);
+      if (queryParams?.error === "banned") return "banned" as const;
       const code = queryParams?.code;
       if (typeof code !== "string") return "failed" as const;
       try {

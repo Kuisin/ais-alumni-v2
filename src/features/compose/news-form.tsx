@@ -20,6 +20,7 @@ import {
 import { type ReactNode, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { useSanctionError } from "@/features/sanction/api";
 import { Button, colors, radius, space, Text, TextField } from "@/ui";
 import {
   appendFile,
@@ -78,6 +79,7 @@ export function NewsForm({
   const t = useTranslations("adminContent");
   const tc = useTranslations("common");
   const tm = useTranslations("mobile.compose");
+  const sanctionError = useSanctionError();
   const save = useSaveCompose("news");
   const [state, setState] = useState<SaveError | null>(null);
   const [saved, setSaved] = useState(false);
@@ -187,9 +189,10 @@ export function NewsForm({
             ? tc("errors.validation")
             : state.error === "network"
               ? tm("network")
-              : t.has(`errors.${state.error}`)
-                ? t(`errors.${state.error}`)
-                : tc("errors.generic")}
+              : (sanctionError(state.error) ??
+                (t.has(`errors.${state.error}`)
+                  ? t(`errors.${state.error}`)
+                  : tc("errors.generic")))}
         </Notice>
       ) : null}
       {saved && values.id ? (

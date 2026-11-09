@@ -44,6 +44,8 @@
       "admin_revoked": "Removed admin rights",
       "deactivated": "Deactivated account",
       "reactivated": "Reactivated account",
+      "sanctioned": "Applied a sanction",
+      "sanction_lifted": "Lifted a sanction",
       "merged": "Merged accounts",
       "position_granted": "Assigned position",
       "position_removed": "Removed position",

@@ -8,6 +8,7 @@ import { AccountState, Locale } from "@/server/generated/prisma/enums";
 import { resolveUserId } from "@/server/lib/auth/adapter";
 import { db } from "@/server/lib/db";
 import { fetchLineFriendship } from "@/server/lib/line";
+import { refuseBannedIdentity } from "@/server/lib/sanctions";
 
 /**
  * LINE Login for the app (native and web), without Auth.js:
@@ -368,6 +369,8 @@ export async function memberForLine(
   let userId: string;
   if (account) userId = await resolveUserId(account.userId);
   else {
+    // Never a new account for a banned member's LINE (403 "banned").
+    await refuseBannedIdentity({ line: id.sub });
     const user = await db.user.create({
       data: {
         primaryEmail: null,

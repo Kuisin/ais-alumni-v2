@@ -100,6 +100,14 @@ export const NOTIFY_KINDS = {
   },
   ACCOUNT_DEACTIVATED: { category: "account", emoji: "⏸️", alwaysEmail: true },
   ACCOUNT_REACTIVATED: { category: "account", emoji: "▶️" },
+  // 処分 (src/server/lib/sanctions.ts): the level and end date; the reason
+  // goes as the committee note (email and the app only).
+  SANCTION_APPLIED: {
+    category: "account",
+    emoji: "⚠️",
+    line: true,
+    alwaysEmail: true,
+  },
   NAME_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
   NAME_REQUEST_REJECTED: { category: "account", emoji: "📋", line: true },
   BIRTH_DATE_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },

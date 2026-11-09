@@ -15,13 +15,14 @@ import { PositionsCard } from "@/features/admin/members/positions-card";
 import { ProfileCard } from "@/features/admin/members/profile-card";
 import { RolesCard } from "@/features/admin/members/roles-card";
 import { AdminCard, Facts, Notice } from "@/features/admin/parts";
+import { SanctionsCard } from "@/features/sanction/admin-card";
 import { useAuth } from "@/lib/auth";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { Badge, QueryState, Screen, space, Text } from "@/ui";
 
 /**
  * 会員詳細 (the website's /app/admin/members/[id]): overview, profile,
- * 区分, 学歴・職歴, 家族, 役職, account state and admin rights, merging a duplicate and
+ * 区分, 学歴・職歴, 家族, 役職, account state and admin rights, 処分, merging a duplicate and
  * the latest audit entries — one scrolling page of cards on a phone.
  */
 export default function AdminMemberScreen() {
@@ -57,6 +58,7 @@ export default function AdminMemberScreen() {
             <FamilyCard m={m} />
             <PositionsCard m={m} />
             <AccountCard m={m} />
+            <SanctionsCard m={m} />
             <MergeCard m={m} />
             <AuditCard m={m} />
           </Screen>

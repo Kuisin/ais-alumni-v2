@@ -5,6 +5,7 @@ import { resolveUserId } from "@/server/lib/auth/adapter";
 import { normalizeEmail } from "@/server/lib/auth/otp";
 import { db } from "@/server/lib/db";
 import { nameColumns } from "@/server/lib/names";
+import { refuseBannedIdentity } from "@/server/lib/sanctions";
 
 /**
  * Sign in with Apple in the iOS app (App Store guideline 4.8: an app with
@@ -189,6 +190,8 @@ export async function memberForApple(
         select: { id: true },
       })
     : null;
+  // Never a new account for a banned member's Apple ID or address.
+  if (!existing) await refuseBannedIdentity({ apple: id.sub, email: id.email });
   const userId =
     existing?.id ??
     (

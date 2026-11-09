@@ -22,6 +22,16 @@ export function getApiToken(): string | null {
   return session.token;
 }
 
+let onSanctioned: (() => void) | null = null;
+
+/**
+ * Called when the server refuses a request because the account is
+ * suspended or banned (403 "suspended" / "banned"): /me then shows it.
+ */
+export function setSanctionedHandler(handler: (() => void) | null): void {
+  onSanctioned = handler;
+}
+
 /** Called when the server says the session is gone (401). */
 export function setUnauthorizedHandler(handler: (() => void) | null): void {
   onUnauthorized = handler;
@@ -105,6 +115,11 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
         ? (data as ApiErrorBody)
         : null;
     if (res.status === 401 && session.token) onUnauthorized?.();
+    if (
+      res.status === 403 &&
+      (body?.error === "suspended" || body?.error === "banned")
+    )
+      onSanctioned?.();
     throw new ApiError(res.status, body?.error ?? "server_error", body);
   }
   return data as T;
