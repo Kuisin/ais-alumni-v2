@@ -24,6 +24,7 @@ import { MEMBER_FILTER_OPTIONS, roleLabelKey } from "@/server/lib/audience";
 import {
   blockedUserIds,
   canRequestFollow,
+  directoryAllowed,
   getProfileForViewer,
   type ProfileView,
   projectPrivate,
@@ -220,6 +221,7 @@ export async function directoryPage(
   params: Record<string, string>,
   locale: Locale,
 ): Promise<DirectoryPage> {
+  if (!directoryAllowed(user)) throw new ApiError(403, "directory_unavailable");
   const filters = parseDirectoryFilters(params);
   const viewer = toViewer(user);
   const [{ items, nextCursor }, total, c, l] = await Promise.all([

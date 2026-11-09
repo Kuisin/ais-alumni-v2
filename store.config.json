@@ -37,7 +37,7 @@
           "Alumni",
           "Aichi"
         ],
-        "releaseNotes": "最初のリリースです。",
+        "releaseNotes": "・iPhone Duo を開いた時も、タブを閉じた時と同じく右端のバーに表示するようにしました。\n・広い画面での余白を整えました。",
         "promoText": "AIS の卒業生・保護者・教職員をつなぐ同窓会アプリ。",
         "supportUrl": "https://ais-alumni.kai-lab.net/support",
         "marketingUrl": "https://ais-alumni.kai-lab.net",
@@ -57,7 +57,7 @@
           "events",
           "school"
         ],
-        "releaseNotes": "First release.",
+        "releaseNotes": "• On the open iPhone Duo, the tabs stay in the bar at the right edge, as when it's closed.\n• Even margins on wide screens.",
         "promoText": "The alumni network of Aichi International School, in your pocket.",
         "supportUrl": "https://ais-alumni.kai-lab.net/support",
         "marketingUrl": "https://ais-alumni.kai-lab.net",

@@ -232,8 +232,9 @@ project id in the config Expo Go needs no sign-in (with one, run
   titles and header buttons with `<Stack.Screen options={{ … }} />`. Keep
   `src/lib/site-paths.ts` in step.
 - The tab bar: iOS uses the system's (`(tabs)/_layout.ios.tsx`, native
-  tabs — in the sidebar where there's room, e.g. the iPhone Duo's vertical
-  bar); Android and the web the JS one (`(tabs)/_layout.tsx`). Declare a
+  tabs, in the sidebar where there's room — the open iPhone Duo; a plain
+  tab bar there shows no tabs at all, so keep `preferredPlacement="sidebar"`);
+  Android and the web the JS one (`(tabs)/_layout.tsx`). Declare a
   new tab in both.
 - iPhone Duo and other wide windows: `Screen` / `ScreenView` keep clear of
   a bar at the side (left/right safe area) and cap pages at
@@ -325,7 +326,7 @@ iOS builds use EAS's Xcode 27.1 image (`ios.image` per profile): built
 with the iOS 27.1 SDK the app fills the iPhone Duo's inner display (older
 SDKs leave a margin there) and the App Store marks it optimized for it.
 That display ignores the portrait lock and is iPad-wide (see "App" above).
-Its sidebar, the fold (`react-native-reserved-regions`) and Device Hub's
+Its vertical bar, the fold (`react-native-reserved-regions`) and Device Hub's
 iPhone Duo simulator need Xcode 27.1.
 LINE sign-in needs the `aisalumni://` scheme, so it works in
 development / preview / production builds, not in Expo Go against a

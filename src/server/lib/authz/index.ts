@@ -44,6 +44,26 @@ export function isCurrentTeacher(
   );
 }
 
+/**
+ * May open 会員名簿 (the directory list and its filters)? Everyone but a
+ * member whose only type is 元教職員 (a former teacher): they read news and
+ * talk 1:1 with current teachers (direct-policy.ts), without browsing the
+ * members. Admins always may.
+ */
+export function directoryAllowed(user: {
+  isAdmin: boolean;
+  roles: readonly { role: RoleKey; teacherStatus: TeacherStatus | null }[];
+}): boolean {
+  if (user.isAdmin) return true;
+  const formerTeacherOnly =
+    user.roles.length > 0 &&
+    user.roles.every(
+      (r) =>
+        r.role === RoleKey.TEACHER && r.teacherStatus === TeacherStatus.FORMER,
+    );
+  return !formerTeacherOnly;
+}
+
 export const toTarget: (user: UserWithRoles) => Target = (user) => ({
   id: user.id,
   state: user.state,

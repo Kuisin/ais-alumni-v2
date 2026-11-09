@@ -3,6 +3,8 @@
  * add a handler there and a line here). One API bundle for all of them —
  * see src/app/api/mobile/v1/[...path]+api.ts.
  */
+
+import * as publicAccess from "./mobile/v1/access";
 import * as adminHome from "./mobile/v1/admin";
 import * as adminAudit from "./mobile/v1/admin/audit";
 import * as adminChat from "./mobile/v1/admin/chat";
@@ -125,6 +127,7 @@ import * as inv2 from "./mobile/v1/invites/[id]/revoke";
 import * as lineLink from "./mobile/v1/line/link";
 import * as lineLinkStart from "./mobile/v1/line/link/start";
 import * as r29 from "./mobile/v1/me";
+import * as meAccess from "./mobile/v1/me/access";
 import * as meExport from "./mobile/v1/me/export";
 import * as r30 from "./mobile/v1/members/[id]";
 import * as r31 from "./mobile/v1/members/[id]/block";
@@ -350,6 +353,8 @@ export const ROUTES: [string, RouteModule][] = [
   ["line/link", lineLink as unknown as RouteModule],
   ["line/link/start", lineLinkStart as unknown as RouteModule],
   ["me", r29 as unknown as RouteModule],
+  ["access", publicAccess as unknown as RouteModule],
+  ["me/access", meAccess as unknown as RouteModule],
   ["me/export", meExport as unknown as RouteModule],
   ["members/[id]", r30 as unknown as RouteModule],
   ["members/[id]/block", r31 as unknown as RouteModule],

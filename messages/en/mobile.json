@@ -327,5 +327,100 @@
     "open": "Open the new site",
     "bookmark": "Please update any bookmarks or Home Screen shortcuts to the new address.",
     "app": "The iPhone app is on the App Store"
+  },
+  "directoryUnavailable": {
+    "title": "The directory isn't available",
+    "body": "As a former teacher, you can read the news and talk 1:1 with current teachers."
+  },
+  "access": {
+    "title": "What you can use",
+    "menu": "What you can use",
+    "intro": "Your member type and positions, and what each lets you use. The rows that apply to you are highlighted.",
+    "you": "You",
+    "mine": {
+      "title": "Your type and positions",
+      "types": "Type",
+      "positions": "Positions",
+      "noPositions": "No positions",
+      "minor": "Because you're under 18 (or a current student, or an account a parent manages), your profile is shown only to your family, current teachers and admins."
+    },
+    "types": {
+      "title": "By member type",
+      "caption": "Scroll sideways to see more",
+      "columns": {
+        "type": "Type",
+        "directory": "Directory",
+        "direct": "1:1 talks",
+        "profile": "Who sees your profile",
+        "create": "Post news and events"
+      },
+      "yes": "Yes",
+      "no": "No",
+      "direct": {
+        "TEACHER_CURRENT": "Teachers (current and former)",
+        "TEACHER_FORMER": "Current teachers only",
+        "ANYONE": "Members other than teachers",
+        "SAME_ROLE": "Members of the same type only",
+        "NOBODY": "Not available"
+      },
+      "profile": {
+        "minor": "Family, current teachers and admins only",
+        "member": "Approved members (contact details only to those you approve)"
+      },
+      "create": {
+        "teacher": "Yes (current teachers always included)",
+        "position": "Only with a position"
+      },
+      "notes": [
+        "You can start a 1:1 talk only with members who follow you and whom you follow.",
+        "If you're more than one type, the strictest setting applies.",
+        "The committee may change the 1:1 settings (except for teachers). This table shows the current ones."
+      ]
+    },
+    "positionsTable": {
+      "title": "By position",
+      "columns": {
+        "position": "Position",
+        "who": "Who can hold it",
+        "can": "What it lets you do"
+      },
+      "who": {
+        "ALUMNI_COMMITTEE": "Students, graduates, former students and parents",
+        "STUDENT_LEADER": "Students, graduates and former students",
+        "TEACHER_REGISTRAR": "Any type",
+        "TEACHER_MANAGER": "Current teachers"
+      },
+      "can": {
+        "ALUMNI_COMMITTEE": "Post news and events for all members (published once another committee member or an admin approves)",
+        "STUDENT_LEADER": "Post news and events for your own class",
+        "TEACHER_REGISTRAR": "Register teachers (current or former)",
+        "TEACHER_MANAGER": "Nothing extra at the moment"
+      },
+      "note": "The committee appoints positions. You can edit only the news and events you created."
+    },
+    "everyone": {
+      "title": "For every member type",
+      "columns": {
+        "feature": "Feature",
+        "detail": "What it is"
+      },
+      "rows": [
+        [
+          "News",
+          "Read the news meant for you; answer confirmations, polls and scheduling"
+        ],
+        ["Events", "See events meant for you, RSVP, show your QR ticket"],
+        ["Group talks", "Joined automatically by type and class"],
+        [
+          "Follows",
+          "Follow members; share contact details with those you approve"
+        ],
+        ["Family", "Link parents' and children's accounts"],
+        ["Invites", "Invite fellow alumni with a link"],
+        ["Settings", "Notifications, data export, account deletion"]
+      ]
+    },
+    "introPublic": "What each member type (students, graduates, parents, teachers…) and position can use in the AIS Alumni app. Sign in to see the rows that apply to you highlighted.",
+    "pending": "You can use these once your registration is approved."
   }
 }

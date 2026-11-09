@@ -1,6 +1,7 @@
 import type { Me, StaffAccess } from "@contract/core";
 import { AccountState, FollowStatus } from "@/server/generated/prisma/enums";
 import { unreadCounts } from "@/server/lib/announcements";
+import { directoryAllowed } from "@/server/lib/authz";
 import { defaultAvatar, storedAvatarUrl } from "@/server/lib/avatar";
 import { getStaffAccess } from "@/server/lib/broadcasts";
 import { chatUnreadTotal } from "@/server/lib/chat-db";
@@ -67,6 +68,6 @@ export async function meFor(user: CurrentUser): Promise<Me> {
           ],
         }
       : null,
-    features: { messages: MESSAGES_ENABLED },
+    features: { messages: MESSAGES_ENABLED, directory: directoryAllowed(user) },
   };
 }

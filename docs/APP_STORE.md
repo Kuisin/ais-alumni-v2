@@ -11,10 +11,22 @@ Banner and 「アプリで開く」 in other iPhone browsers (`src/app/+html.tsx
 `related_applications`. `APP_STORE_URL` (Vercel env) is no
 longer needed; set it only to send `/config` somewhere else.
 
-New versions: bump `version` in app.config.ts, build and submit
-(`npx eas-cli build -p ios --profile production --auto-submit`), then
-release it in App Store Connect. To make older apps update, set
-`MIN_APP_VERSION` once the new version is live. Release builds talk to
+## Releasing a new version
+
+1. Bump `version` in app.config.ts (the build number counts up by itself)
+   and write "What's New" in `store.config.json` (`apple.info.<locale>.
+   releaseNotes`, ja and en-US).
+2. Merge the release PR first if the app needs new server code, then build
+   and upload: `npx eas-cli build -p ios --profile production --auto-submit`.
+3. `pnpm release:ios --wait` creates the version in App Store Connect,
+   attaches the build once Apple has processed it and sets What's New;
+   check the output, then `pnpm release:ios --submit` sends it to App
+   Review. It's released as soon as it's approved (`--manual-release`
+   to release by hand). `scripts/app-store-release.mjs` uses an App Store
+   Connect API key (role App Manager): `ASC_KEY_ID`, `ASC_ISSUER_ID` and
+   `ASC_KEY_PATH` (the .p8, kept outside the repo) in `.env.local`.
+4. To make older apps update, set `MIN_APP_VERSION` once the new version
+   is live. Release builds talk to
 `https://ais-alumni.kai-lab.net` (eas.json `production`), i.e. this repo's
 `main` — merge the release PR first so production has every endpoint.
 
