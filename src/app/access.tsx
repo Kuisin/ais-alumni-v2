@@ -208,6 +208,44 @@ function AccessTables({ data }: { data: MyAccess | PublicAccess }) {
     };
   });
 
+  // Who sees each profile detail (authz privateAccess, photoVisible,
+  // visibleHistory; the birth date only the member and admins).
+  type Seen = "all" | "none" | "chosen" | "photoMembers" | "photoFollowers";
+  const PROFILE: [string, Seen, Seen, Seen, Seen][] = [
+    ["name", "all", "all", "all", "all"],
+    ["record", "all", "all", "all", "all"],
+    ["bio", "all", "all", "all", "all"],
+    ["stage", "all", "all", "all", "all"],
+    ["historyMembers", "all", "all", "all", "all"],
+    ["photo", "photoMembers", "photoFollowers", "all", "all"],
+    ["historyFollowers", "none", "all", "all", "all"],
+    ["stageDetail", "none", "chosen", "all", "all"],
+    ["contact", "none", "chosen", "all", "all"],
+    ["birth", "none", "none", "none", "all"],
+  ];
+  const seen = (v: Seen) => {
+    const label = t(`profile.${v}`);
+    return v === "none" ? no(label) : yes(label);
+  };
+  const profileColumns: TableColumn[] = [
+    { key: "field", label: t("profile.columns.field"), width: 170 },
+    { key: "members", label: t("profile.columns.members"), width: 130 },
+    { key: "followers", label: t("profile.columns.followers"), width: 140 },
+    { key: "family", label: t("profile.columns.family"), width: 80 },
+    { key: "admins", label: t("profile.columns.admins"), width: 80 },
+  ];
+  const profileRows = PROFILE.map(([field, ...cols]) => ({
+    key: field,
+    label: [
+      t(`profile.rows.${field}`),
+      ...cols.map(
+        (v, i) => `${profileColumns[i + 1]?.label}: ${t(`profile.${v}`)}`,
+      ),
+    ].join(", "),
+    cells: [t(`profile.rows.${field}`), ...cols.map(seen)],
+  }));
+  const profileNotes = t.raw("profile.notes") as string[];
+
   const everyone = t.raw("everyone.rows") as [string, string][];
   const notes = t.raw("types.notes") as string[];
 
@@ -279,6 +317,20 @@ function AccessTables({ data }: { data: MyAccess | PublicAccess }) {
         <Text variant="small" tone="subtle">
           {t("positionsTable.note")}
         </Text>
+      </Section>
+
+      <Section title={t("profile.title")}>
+        <Table columns={profileColumns} rows={profileRows} />
+        {profileNotes.map((n) => (
+          <View key={n} style={styles.note}>
+            <Text variant="small" tone="subtle" aria-hidden>
+              •
+            </Text>
+            <Text variant="small" tone="subtle" style={styles.flex}>
+              {n}
+            </Text>
+          </View>
+        ))}
       </Section>
 
       <Section title={t("everyone.title")}>

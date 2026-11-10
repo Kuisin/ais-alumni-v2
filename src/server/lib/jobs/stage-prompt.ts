@@ -20,6 +20,7 @@ const BATCH = 200;
 
 const WHERE = {
   state: AccountState.ACTIVE,
+  isTest: false,
   roles: { some: { role: RoleKey.FORMER_STUDENT } },
 };
 

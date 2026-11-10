@@ -31,6 +31,7 @@ export function toViewer(user: UserWithRoles): Viewer {
     currentTeacher: isCurrentTeacher(user.roles),
     familyId: user.familyId,
     audiences: audiencesOfMember(user.roles),
+    isTest: user.isTest,
   };
 }
 

@@ -8,10 +8,11 @@ import {
 
 /**
  * Upload one evidence file (multipart/form-data: file, kind = DIPLOMA |
- * OTHER). Errors: type, size (verify.evidence.errors.<code>). It's attached
+ * OTHER). Errors: type (with format and a localized message), size
+ * (verify.evidence.errors.<code>). It's attached
  * to the application when the form is sent.
  */
-export const POST = mobileRoute(async ({ request }) => {
+export const POST = mobileRoute(async ({ request, locale }) => {
   const user = await inState(...APPLICANT_STATES);
   // The web FormData (React Native's global type has no get()).
   let form: { get(name: string): unknown };
@@ -24,7 +25,7 @@ export const POST = mobileRoute(async ({ request }) => {
   if (!(file instanceof File)) throw invalid();
   try {
     return {
-      item: await uploadEvidence(user, file, form.get("kind")),
+      item: await uploadEvidence(user, file, form.get("kind"), locale),
     } satisfies EvidenceUploaded;
   } catch (e) {
     if (e instanceof ApiError) throw e;

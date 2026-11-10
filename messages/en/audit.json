@@ -44,6 +44,8 @@
       "admin_revoked": "Removed admin rights",
       "deactivated": "Deactivated account",
       "reactivated": "Reactivated account",
+      "sanctioned": "Applied a sanction",
+      "sanction_lifted": "Lifted a sanction",
       "merged": "Merged accounts",
       "position_granted": "Assigned position",
       "position_removed": "Removed position",
@@ -113,7 +115,9 @@
     "user": {
       "merge": {
         "line_email": "Auto-merged LINE and email accounts"
-      }
+      },
+      "test_account_created": "Created a test account",
+      "test_account_deleted": "Deleted a test account"
     },
     "family": {
       "linked": "Linked family",

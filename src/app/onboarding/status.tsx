@@ -1,10 +1,12 @@
 import type { HomeSetup } from "@contract/home";
 import type { OnboardingStatus } from "@contract/onboarding";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { messageKeys } from "@/features/application-messages/api";
+import { ApplicationThreads } from "@/features/application-messages/thread-card";
 import { SetupChecklist } from "@/features/home/setup-checklist";
 import { PushPrompt } from "@/features/notifications/push-prompt";
 import { ONBOARDING_KEY } from "@/features/onboarding/api";
@@ -33,13 +35,15 @@ const CHILD_TONE = {
 /**
  * Where PENDING_REVIEW / REJECTED / DEACTIVATED accounts land (the
  * website's /app/onboarding/status): the state, dates, the committee's
- * note, a parent's children, 「はじめの設定」 and LINE while waiting. The
+ * note, a parent's children, 「やりとり」 with the committee (also about
+ * the children a parent registered), 「はじめの設定」 and LINE while waiting. The
  * app switches to the member tabs by itself once approved (/me).
  */
 export default function OnboardingStatusScreen() {
   const t = useTranslations("onboarding.status");
   const tr = useTranslations("roles.state");
   const { locale, refreshMe } = useAuth();
+  const queryClient = useQueryClient();
   const q = useQuery({
     queryKey: KEY,
     queryFn: () => api<OnboardingStatus>("/onboarding/status"),
@@ -48,7 +52,8 @@ export default function OnboardingStatusScreen() {
   const reload = useCallback(() => {
     void refreshMe();
     void refetch();
-  }, [refreshMe, refetch]);
+    void queryClient.invalidateQueries({ queryKey: messageKeys.all });
+  }, [refreshMe, refetch, queryClient]);
   // Back in the app: the application may have been decided.
   useFocusEffect(reload);
 
@@ -162,6 +167,8 @@ export default function OnboardingStatusScreen() {
                 </Text>
               ) : null}
             </Card>
+
+            <ApplicationThreads onResumed={reload} />
 
             {s.line ? (
               <Card style={styles.card}>

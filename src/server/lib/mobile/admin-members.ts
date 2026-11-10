@@ -51,6 +51,10 @@ import { type Locale, notFound } from "@/server/lib/mobile/http";
 import { toKatakana } from "@/server/lib/names";
 import { positionEligible } from "@/server/lib/permissions";
 import type { CurrentUser } from "@/server/lib/session";
+import {
+  MANAGED_BY_SELECT,
+  parentRegistrations,
+} from "@/server/lib/verification/registered-by";
 
 /**
  * 管理モード → 会員 for the app: the website's admin member list and detail
@@ -167,6 +171,7 @@ export async function adminMemberList(
         primaryEmail: true,
         state: true,
         isAdmin: true,
+        isTest: true,
         lineUserId: true,
         lineFollowing: true,
         createdAt: true,
@@ -177,12 +182,22 @@ export async function adminMemberList(
           where: appSessionWhere(),
           select: { platform: true },
         },
+        managedBy: MANAGED_BY_SELECT,
+        verification: { select: { answers: true } },
       },
     }),
     db.user.count({ where }),
   ]);
   const hasMore = users.length > PAGE_SIZE;
   const page = users.slice(0, PAGE_SIZE);
+  const registered = await parentRegistrations(
+    page.map((u) => ({
+      userId: u.id,
+      managedBy: u.managedBy,
+      answers: u.verification?.answers ?? null,
+    })),
+    locale,
+  );
   return {
     total,
     items: page.map((u) => ({
@@ -193,12 +208,14 @@ export async function adminMemberList(
       state: u.state,
       stateLabel: tr(`state.${u.state}`),
       isAdmin: u.isAdmin,
+      isTest: u.isTest,
       roles: u.roles.map(roleLabel),
       line: lineStatus(u),
       app: APP_PLATFORMS.filter((p) =>
         u.mobileSessions.some((s) => s.platform === p),
       ),
       createdAt: u.createdAt.toISOString(),
+      registeredByParent: registered.get(u.id) ?? null,
     })),
     nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
     filters: {
@@ -229,7 +246,12 @@ export async function adminMemberDetail(
 ): Promise<AdminMemberDetail> {
   const user = await db.user.findUnique({
     where: { id },
-    include: { roles: true, accounts: { select: { provider: true } } },
+    include: {
+      roles: true,
+      accounts: { select: { provider: true } },
+      managedBy: MANAGED_BY_SELECT,
+      verification: { select: { answers: true } },
+    },
   });
   if (!user) throw notFound();
   const [tr, tp, ta] = await Promise.all([
@@ -430,6 +452,16 @@ export async function adminMemberDetail(
     });
 
   const dateOnly = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : "");
+  const registered = await parentRegistrations(
+    [
+      {
+        userId: user.id,
+        managedBy: user.managedBy,
+        answers: user.verification?.answers ?? null,
+      },
+    ],
+    locale,
+  );
   return {
     id: user.id,
     name: named(user) ? displayName(user, locale) : null,
@@ -438,8 +470,10 @@ export async function adminMemberDetail(
     emailVerified: Boolean(user.emailVerifiedAt),
     isAdmin: user.isAdmin,
     isSelf: user.id === admin.id,
+    isTest: user.isTest,
     state: user.state as AccountStateKey,
     stateLabel: tr(`state.${user.state}`),
+    registeredByParent: registered.get(user.id) ?? null,
     roleLabels: roles.map((r) => tr(roleLabelKey(r))),
     line: { status: lineStatus(user), displayName: user.lineDisplayName },
     devices,

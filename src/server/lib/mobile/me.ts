@@ -10,6 +10,7 @@ import { MESSAGES_ENABLED } from "@/server/lib/features";
 import { displayName, otherNames } from "@/server/lib/format";
 import { inboxUnread } from "@/server/lib/mobile/notifications";
 import { channelTopic, realtimePublic } from "@/server/lib/realtime";
+import { mySanction, requestSanction } from "@/server/lib/sanctions";
 import type { CurrentUser } from "@/server/lib/session";
 import { homePathFor } from "@/server/lib/state-machine";
 
@@ -42,7 +43,11 @@ export async function meFor(user: CurrentUser): Promise<Me> {
         inboxUnread(user.id),
       ])
     : [NO_ACCESS, { news: 0, messages: 0 }, 0, 0, [], 0];
-  const pub = active ? realtimePublic() : null;
+  const sanction = mySanction(await requestSanction(user.id));
+  // Suspended / banned: nothing to listen to.
+  const blocked =
+    sanction?.level === "SUSPENDED" || sanction?.level === "BANNED";
+  const pub = active && !blocked ? realtimePublic() : null;
   return {
     user: {
       id: user.id,
@@ -69,5 +74,6 @@ export async function meFor(user: CurrentUser): Promise<Me> {
         }
       : null,
     features: { messages: MESSAGES_ENABLED, directory: directoryAllowed(user) },
+    sanction,
   };
 }

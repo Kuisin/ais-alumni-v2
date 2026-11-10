@@ -12,6 +12,7 @@ import {
   View,
 } from "react-native";
 import { useTranslations } from "use-intl";
+import { useSanctionError } from "@/features/sanction/api";
 import { isApiError } from "@/lib/api";
 import { Avatar, colors, font, space, Text, TOUCH } from "@/ui";
 import { applyMention, mentionQuery } from "../mentions";
@@ -54,6 +55,7 @@ export function Composer({
   const [caretAfterPick, setCaretAfterPick] = useState<number | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const sanctionError = useSanctionError();
 
   const q =
     selection.start === selection.end
@@ -101,7 +103,10 @@ export function Composer({
       setSelection({ start: 0, end: 0 });
     } catch (e) {
       const code = isApiError(e) ? e.code : "generic";
-      setError(t(`errors.${SEND_ERRORS.has(code) ? code : "generic"}`));
+      setError(
+        sanctionError(e) ??
+          t(`errors.${SEND_ERRORS.has(code) ? code : "generic"}`),
+      );
     } finally {
       setSending(false);
     }

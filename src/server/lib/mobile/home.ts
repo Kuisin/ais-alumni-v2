@@ -119,9 +119,16 @@ export async function homeFor(
       db.familyLink.findMany({
         where: {
           confirmedAt: null,
+          // As canConfirm (src/server/lib/family.ts): also a parent's
+          // request for a child whose account I manage (not my own link).
           OR: [
             { initiatedBy: FamilyLinkInitiator.PARENT, childId: user.id },
             { initiatedBy: FamilyLinkInitiator.CHILD, parentId: user.id },
+            {
+              initiatedBy: FamilyLinkInitiator.PARENT,
+              child: { is: { managedById: user.id } },
+              parentId: { not: user.id },
+            },
           ],
         },
         select: {

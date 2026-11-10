@@ -274,6 +274,7 @@ export function ChildrenCard({ d }: { d: VerificationDetail }) {
 
 function ChildBox({ c }: { c: VerificationChildCard }) {
   const t = useTranslations("adminVerify.children");
+  const tp = useTranslations("mobile.verifyParents");
   const locale = useLocale() as Locale;
   const memberLink = useMemberLink();
   const x = c.details;
@@ -305,7 +306,24 @@ function ChildBox({ c }: { c: VerificationChildCard }) {
             tone={c.link === "confirmed" ? "green" : "amber"}
           />
         ) : null}
+        {c.stage && c.stage !== "confirmed" ? (
+          <Badge
+            label={tp(`stage.${c.stage}`)}
+            tone={
+              c.stage === "childRejected"
+                ? "red"
+                : c.stage === "childReview"
+                  ? "brand"
+                  : "amber"
+            }
+          />
+        ) : null}
       </View>
+      {c.asked ? (
+        <Text variant="small" tone="muted">
+          {tp(`asked.${c.asked}`)}
+        </Text>
+      ) : null}
       {x ? (
         <Rows
           rows={[

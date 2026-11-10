@@ -130,6 +130,11 @@ model User {
   familyId              String?
   family                Family?              @relation(fields: [familyId], references: [id], onDelete: SetNull)
   deactivatedAt         DateTime?
+  /// Added: a test account made by an admin (管理モード → テストアカウント,
+  /// src/server/lib/test-accounts.ts): ACTIVE without an application, left
+  /// out of the directory, member searches, statistics and bulk sends —
+  /// except for admins and other test accounts.
+  isTest                Boolean              @default(false)
   // Added: a child account created by a parent during sign-up. It has no
   // sign-in of its own; the parent manages it until the child takes it over.
   managedById           String?
@@ -144,6 +149,7 @@ model User {
   accounts             Account[]
   verification         VerificationRequest?  @relation("applicant")
   reviewed             VerificationRequest[] @relation("reviewer")
+  verificationMessages VerificationMessage[] @relation("verificationMessages")
   followsOut           Follow[]              @relation("follower")
   followsIn            Follow[]              @relation("followee")
   blocksOut            Block[]               @relation("blocker")
@@ -190,6 +196,9 @@ model User {
   work                 WorkEntry[]
   mobileSessions       MobileSession[]
   pushDevices          PushDevice[]
+  sanctions            Sanction[]            @relation("sanctioned")
+  sanctionsGiven       Sanction[]            @relation("sanctionCreator")
+  sanctionsLifted      Sanction[]            @relation("sanctionLifter")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -346,27 +355,59 @@ model VerificationRequest {
   /// Added: parent-only application. Not reviewed by admins; approved when
   /// a linked child is approved and the link confirmed (parent-onboarding.ts).
   followsChildren Boolean                @default(false)
+  /// Added: when the applicant (or, for a parent-managed child, the managing
+  /// parent) last read the committee's messages (unread marker).
+  applicantReadAt DateTime?
   evidence        VerificationEvidence[]
   vouches         Vouch[]
+  messages        VerificationMessage[]
 
   @@index([status, submittedAt])
 }
 
-model VerificationEvidence {
-  id          String              @id @default(cuid())
+/// Added: 「やりとり」 — messages between the committee and the applicant
+/// (or the parent managing a child's account) about one application
+/// (src/server/lib/verification/messages.ts).
+model VerificationMessage {
+  id          String                 @id @default(cuid())
   requestId   String
-  request     VerificationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  request     VerificationRequest    @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  authorId    String?
+  author      User?                  @relation("verificationMessages", fields: [authorId], references: [id], onDelete: SetNull)
+  /// from the committee (else the applicant / managing parent)
+  fromAdmin   Boolean
+  /// may be empty when the message only carries attachments
+  body        String
+  createdAt   DateTime               @default(now())
+  /// Added: photos / PDFs sent with the message (VerificationEvidence rows
+  /// with messageId set: same private storage and 30-day rule, but not the
+  /// application's evidence)
+  attachments VerificationEvidence[]
+
+  @@index([requestId, createdAt])
+  @@index([authorId])
+}
+
+model VerificationEvidence {
+  id          String               @id @default(cuid())
+  requestId   String
+  request     VerificationRequest  @relation(fields: [requestId], references: [id], onDelete: Cascade)
   storageKey  String
   fileName    String
   mimeType    String
   size        Int
   // Added: 卒業証書 (DIPLOMA) or any other supporting document
-  kind        EvidenceKind        @default(OTHER)
+  kind        EvidenceKind         @default(OTHER)
   // null while the request is undecided; set to decidedAt + 30 days (§6.3)
   deleteAfter DateTime?
-  createdAt   DateTime            @default(now())
+  createdAt   DateTime             @default(now())
+  /// Added: set for a 「やりとり」 message's attachment — then it isn't one
+  /// of the application's evidence files (never listed or counted as one)
+  messageId   String?
+  message     VerificationMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([deleteAfter])
+  @@index([messageId])
 }
 
 enum VouchAnswer {
@@ -667,6 +708,60 @@ model AuditLog {
 
   @@index([createdAt])
   @@index([targetType, targetId])
+}
+
+// Added: 処分 — what the committee decided about a member's conduct
+// (src/server/lib/sanctions.ts). WARNING: a notice until acknowledged;
+// RESTRICTED: read-only; SUSPENDED: no access until endsAt; BANNED: no
+// access, for good, and the identities can't register again.
+enum SanctionLevel {
+  WARNING
+  RESTRICTED
+  SUSPENDED
+  BANNED
+}
+
+// Added: one per decision. Active while not lifted and endsAt is null or in
+// the future (no job: it lifts by itself); one active per member at a time.
+model Sanction {
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation("sanctioned", fields: [userId], references: [id], onDelete: Cascade)
+  level          SanctionLevel
+  reason         String
+  /// RESTRICTED / SUSPENDED only; null = until lifted
+  endsAt         DateTime?
+  createdById    String?
+  createdBy      User?         @relation("sanctionCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt      DateTime      @default(now())
+  /// WARNING: the member tapped 「確認しました」
+  acknowledgedAt DateTime?
+  liftedAt       DateTime?
+  liftedById     String?
+  liftedBy       User?         @relation("sanctionLifter", fields: [liftedById], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}
+
+enum BannedIdentityKind {
+  EMAIL
+  LINE
+  APPLE
+}
+
+// Added: sign-in identities of BANNED members (email normalized lowercase,
+// LINE user id, Apple's `sub`). No new account is created for them
+// (src/server/lib/sanctions.ts refuseBannedIdentity). Not tied to the
+// User row, so it outlives the account's deletion.
+model BannedIdentity {
+  id        String             @id @default(cuid())
+  kind      BannedIdentityKind
+  value     String
+  /// the banned member (no relation: kept after the account is deleted)
+  userId    String?
+  createdAt DateTime           @default(now())
+
+  @@unique([kind, value])
 }
 
 enum ChangeRequestStatus {

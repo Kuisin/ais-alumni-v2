@@ -17,6 +17,7 @@ import {
 } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useTranslations } from "use-intl";
+import { useSanctionError } from "@/features/sanction/api";
 import { ApiError, api } from "@/lib/api";
 import { ME_KEY } from "@/lib/auth";
 
@@ -204,9 +205,12 @@ const HUB_ERRORS = new Set(["closed", "invalid", "commentsOff", "forbidden"]);
 export function useHubErrorMessage(): (error: unknown) => string {
   const t = useTranslations("news.hub.errors");
   const tm = useTranslations("mobile.errors");
+  const sanctionError = useSanctionError();
   return (error) => {
     if (error instanceof ApiError) {
       if (error.status === 0) return tm("network");
+      const sanction = sanctionError(error);
+      if (sanction) return sanction;
       if (HUB_ERRORS.has(error.code)) return t(error.code);
       if (error.status === 403 || error.status === 404) return t("forbidden");
     }

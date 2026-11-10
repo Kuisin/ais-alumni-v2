@@ -29,6 +29,18 @@ export type ManagedChild = {
   state: "active" | "pending" | "other";
   /** the handover link waiting for the child, if any */
   handover: { email: string; expiresAt: string } | null;
+  /**
+   * 「申請についての質問」: the child's application has messages from the
+   * committee or asks for more information (GET /onboarding/messages/[requestId]);
+   * absent: older server
+   */
+  application?: {
+    requestId: string;
+    /** committee messages not read yet */
+    unread: number;
+    /** still open (a reply can be sent) */
+    open: boolean;
+  } | null;
 };
 
 /** A link row (「家族のリンク」). */

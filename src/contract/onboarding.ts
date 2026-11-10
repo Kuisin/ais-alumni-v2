@@ -127,6 +127,82 @@ export type RegisteredChild = {
   cohort: string | null;
 };
 
+// ---- 「やりとり」: messages with the committee about an application ----
+// GET /onboarding/messages, GET /onboarding/messages/[id],
+// POST /onboarding/messages/[id] {body, attachments?: {key, fileName}[]}
+// (body may be empty with attachments; up to 3), POST …/[id]/read.
+// Any signed-in account: the applicant's own application, or one of a child
+// account they manage (also once they're a member themselves).
+
+export type ApplicationMessage = {
+  id: string;
+  /** from the committee (shown as the committee, not by name) */
+  fromAdmin: boolean;
+  /** written by the signed-in account */
+  mine: boolean;
+  /** the applicant's or managing parent's name; null for the committee */
+  author: string | null;
+  /** may be empty when the message only carries attachments */
+  body: string;
+  createdAt: IsoDate;
+  /** photos / PDFs sent with it; absent: older server */
+  attachments?: ApplicationAttachment[];
+};
+
+/** A 「やりとり」 attachment (deleted with the evidence, 30 days after the decision). */
+export type ApplicationAttachment = {
+  id: string;
+  fileName: string;
+  /** image/jpeg | image/png | application/pdf */
+  mimeType: string;
+  size: number;
+  /** signed /api/files URL (relative; valid 15 minutes) */
+  url: string;
+};
+
+/**
+ * POST /onboarding/messages/[id]/attachments (multipart: file) — one file
+ * for the next reply (errors 400 type / size, 409 closed); send its key
+ * with the reply. DELETE …/attachments?key= removes one not sent.
+ */
+export type ApplicationAttachmentUploaded = {
+  item: {
+    key: string;
+    fileName: string;
+    mimeType: "image/jpeg" | "image/png" | "application/pdf";
+    size: number;
+  };
+};
+
+export type ApplicationThread = {
+  requestId: string;
+  /** "child": the application of a child account I manage */
+  subject: "self" | "child";
+  /** subject "child": the child's name */
+  childName: string | null;
+  /** VerificationStatus: PENDING | NEEDS_INFO | APPROVED | REJECTED */
+  status: string;
+  /** still open (PENDING / NEEDS_INFO): a reply can be sent */
+  canReply: boolean;
+  /** committee messages since the thread was last read */
+  unread: number;
+  /** oldest first */
+  messages: ApplicationMessage[];
+};
+
+/** Threads with messages, or asking for more information (NEEDS_INFO). */
+export type ApplicationThreads = { threads: ApplicationThread[] };
+
+/** POST /onboarding/messages/[id] — errors: 400 invalid, 409 closed. */
+export type ApplicationReplySent = {
+  thread: ApplicationThread;
+  /**
+   * the reply put a NEEDS_INFO application back in review (the account is
+   * PENDING_REVIEW again: refresh /me)
+   */
+  resumed: boolean;
+};
+
 // ---- /handover/[token] (public) ----
 
 export type HandoverInfo =

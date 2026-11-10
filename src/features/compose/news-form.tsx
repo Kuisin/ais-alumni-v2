@@ -20,6 +20,8 @@ import {
 import { type ReactNode, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { useSanctionError } from "@/features/sanction/api";
+import { toUploadable, UploadImageError } from "@/lib/upload-image";
 import { Button, colors, radius, space, Text, TextField } from "@/ui";
 import {
   appendFile,
@@ -77,7 +79,9 @@ export function NewsForm({
 }) {
   const t = useTranslations("adminContent");
   const tc = useTranslations("common");
+  const tu = useTranslations("mobile.upload");
   const tm = useTranslations("mobile.compose");
+  const sanctionError = useSanctionError();
   const save = useSaveCompose("news");
   const [state, setState] = useState<SaveError | null>(null);
   const [saved, setSaved] = useState(false);
@@ -122,27 +126,48 @@ export function NewsForm({
     setCoverError(null);
     const r = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      quality: 0.85,
+      // iOS: a JPEG rather than the HEIC original (converted below anyway).
+      preferredAssetRepresentationMode:
+        ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Compatible,
+      quality: 1,
       allowsMultipleSelection: false,
     });
     if (r.canceled || !r.assets[0]) return;
     const a = r.assets[0];
-    const type = a.mimeType ?? "image/jpeg";
+    const name = a.fileName ?? "cover.jpg";
+    // Any image the device reads → a JPEG (PNG stays PNG), ≤ 2400 px.
+    let f: Awaited<ReturnType<typeof toUploadable>>;
+    try {
+      f = await toUploadable({
+        uri: a.uri,
+        name,
+        mimeType: a.mimeType ?? null,
+        size: a.fileSize ?? null,
+        file: a.file,
+      });
+    } catch (e) {
+      setCoverError(
+        e instanceof UploadImageError
+          ? tu("errors.decode", { name })
+          : t("errors.coverType"),
+      );
+      return;
+    }
+    const type = f.mimeType ?? "";
     if (type !== "image/jpeg" && type !== "image/png") {
       setCoverError(t("errors.coverType"));
       return;
     }
-    if (a.fileSize && a.fileSize > options.limits.coverMaxBytes) {
+    if (f.size && f.size > options.limits.coverMaxBytes) {
       setCoverError(t("errors.coverSize"));
       return;
     }
-    const ext = type === "image/png" ? "png" : "jpg";
     setCover({
-      uri: a.uri,
-      name: a.fileName ?? `cover.${ext}`,
+      uri: f.uri,
+      name: f.name,
       type,
-      size: a.fileSize,
-      file: a.file,
+      size: f.size ?? undefined,
+      file: f.file,
     });
     setRemoveCover(false);
   };
@@ -187,9 +212,10 @@ export function NewsForm({
             ? tc("errors.validation")
             : state.error === "network"
               ? tm("network")
-              : t.has(`errors.${state.error}`)
-                ? t(`errors.${state.error}`)
-                : tc("errors.generic")}
+              : (sanctionError(state.error) ??
+                (t.has(`errors.${state.error}`)
+                  ? t(`errors.${state.error}`)
+                  : tc("errors.generic")))}
         </Notice>
       ) : null}
       {saved && values.id ? (

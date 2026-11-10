@@ -1,10 +1,12 @@
 import { AccountState, OtpPurpose } from "@/server/generated/prisma/enums";
 import { db } from "@/server/lib/db";
+import { refuseBannedIdentity } from "@/server/lib/sanctions";
 import { normalizeEmail, OTP_MAX_ATTEMPTS, verifyOtp } from "./otp";
 
 /**
  * Email sign-in (§4.1): check the 6-digit code and return the member,
- * creating the account on first sign-in. Shared by the Auth.js email-otp
+ * creating the account on first sign-in — never for an address of a banned
+ * member (403 "banned", src/server/lib/sanctions.ts). Shared by the Auth.js email-otp
  * provider (src/auth.ts) and the native app (api/mobile/v1/auth/email).
  */
 export async function userForSignInCode(params: {
@@ -24,6 +26,7 @@ export async function userForSignInCode(params: {
     select: { id: true, primaryEmail: true },
   });
   if (existing) return existing;
+  await refuseBannedIdentity({ email });
   return db.user.create({
     data: {
       primaryEmail: email,

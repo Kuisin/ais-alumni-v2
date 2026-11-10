@@ -6,6 +6,12 @@ import { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
+import {
+  appendPicked,
+  type PickedFile,
+  toUploadable,
+  UploadImageError,
+} from "@/lib/upload-image";
 import { Button, colors, radius, space, Text } from "@/ui";
 import {
   EVIDENCE_MAX_BYTES,
@@ -20,33 +26,13 @@ type Status =
   | { kind: "uploading"; name: string }
   | {
       kind: "error";
-      code: "type" | "size" | "count" | "forbidden" | "generic";
+      code: "type" | "size" | "count" | "forbidden" | "generic" | "decode";
       name?: string;
     }
   | { kind: "done"; name: string };
 
 /** A picked file, whichever picker it came from. */
-type Picked = {
-  uri: string;
-  name: string;
-  mimeType: string | null;
-  size: number | null;
-  /** web: the browser's File */
-  file?: File;
-};
-
-const EXT_TYPES: Record<string, string> = {
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  png: "image/png",
-  pdf: "application/pdf",
-};
-
-function typeOf(p: Picked): string {
-  if (p.mimeType) return p.mimeType;
-  const ext = p.name.split(".").pop()?.toLowerCase() ?? "";
-  return EXT_TYPES[ext] ?? "";
-}
+type Picked = PickedFile;
 
 function formatSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
@@ -54,8 +40,10 @@ function formatSize(bytes: number): string {
 }
 
 /**
- * Evidence files (§6.3): JPG/PNG/PDF, ≤10 MB each, ≤3 files — a photo
- * from the library or a file (PDF). Each is uploaded right away
+ * Evidence files (§6.3): photos or PDFs, ≤10 MB each, ≤3 files — a photo
+ * from the library or a file. Photos in any format the device reads (HEIC,
+ * WebP…) are sent as JPEG (src/lib/upload-image.ts); the server takes
+ * JPG/PNG/PDF only. Each is uploaded right away
  * (POST /onboarding/verify/evidence) and attached when the application is
  * sent; removing a not-yet-sent one deletes it on the server.
  */
@@ -80,12 +68,25 @@ export function EvidenceUploader({
 }) {
   const t = useTranslations("verify");
   const tm = useTranslations("mobile.verify");
+  const tu = useTranslations("mobile.upload");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const busy = status.kind === "uploading";
   const remaining = max - items.length;
 
-  async function uploadOne(p: Picked): Promise<EvidenceItem | null> {
-    const type = typeOf(p);
+  async function uploadOne(picked: Picked): Promise<EvidenceItem | null> {
+    setStatus({ kind: "uploading", name: picked.name });
+    let p: Picked;
+    try {
+      p = await toUploadable(picked);
+    } catch (e) {
+      setStatus({
+        kind: "error",
+        code: e instanceof UploadImageError ? "decode" : "generic",
+        name: picked.name,
+      });
+      return null;
+    }
+    const type = p.mimeType ?? "";
     if (!(EVIDENCE_TYPES as readonly string[]).includes(type)) {
       setStatus({ kind: "error", code: "type", name: p.name });
       return null;
@@ -94,16 +95,8 @@ export function EvidenceUploader({
       setStatus({ kind: "error", code: "size", name: p.name });
       return null;
     }
-    setStatus({ kind: "uploading", name: p.name });
     const fd = new FormData();
-    if (p.file) fd.append("file", p.file, p.name);
-    // React Native uploads a local file from its uri.
-    else
-      fd.append("file", {
-        uri: p.uri,
-        name: p.name,
-        type,
-      } as unknown as Blob);
+    appendPicked(fd, "file", p);
     fd.append("kind", kind);
     try {
       const r = await api<EvidenceUploaded>("/onboarding/verify/evidence", {
@@ -149,8 +142,10 @@ export function EvidenceUploader({
       mediaTypes: ["images"],
       allowsMultipleSelection: max > 1,
       selectionLimit: remaining,
-      // JPEG, and small enough for the upload limit.
-      quality: 0.8,
+      // iOS: a JPEG rather than the HEIC original (converted below anyway).
+      preferredAssetRepresentationMode:
+        ImagePicker.UIImagePickerPreferredAssetRepresentationMode.Compatible,
+      quality: 1,
     });
     if (r.canceled) return;
     await add(
@@ -166,7 +161,8 @@ export function EvidenceUploader({
 
   async function pickFile() {
     const r = await DocumentPicker.getDocumentAsync({
-      type: [...EVIDENCE_TYPES],
+      // Any image (converted before upload) or a PDF.
+      type: ["image/*", "application/pdf"],
       multiple: max > 1,
       copyToCacheDirectory: true,
     });
@@ -266,7 +262,11 @@ export function EvidenceUploader({
           </Text>
         ) : status.kind === "error" ? (
           <Text variant="small" tone="danger">
-            {t(`evidence.errors.${status.code}`, { name: status.name ?? "" })}
+            {status.code === "decode"
+              ? tu("errors.decode", { name: status.name ?? "" })
+              : t(`evidence.errors.${status.code}`, {
+                  name: status.name ?? "",
+                })}
           </Text>
         ) : null}
       </View>

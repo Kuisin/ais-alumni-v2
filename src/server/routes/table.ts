@@ -40,6 +40,7 @@ import * as adminMemberPositions from "./mobile/v1/admin/members/[id]/positions"
 import * as adminMemberProfile from "./mobile/v1/admin/members/[id]/profile";
 import * as adminMemberRoles from "./mobile/v1/admin/members/[id]/roles";
 import * as adminMemberRole from "./mobile/v1/admin/members/[id]/roles/[role]";
+import * as adminMemberSanctions from "./mobile/v1/admin/members/[id]/sanctions";
 import * as adminMemberState from "./mobile/v1/admin/members/[id]/state";
 import * as adminNameRequests from "./mobile/v1/admin/name-requests";
 import * as adminNameRequestDecide from "./mobile/v1/admin/name-requests/[id]/decide";
@@ -60,15 +61,20 @@ import * as adminRecordRequests from "./mobile/v1/admin/record-requests";
 import * as adminRecordRequestDecide from "./mobile/v1/admin/record-requests/[id]/decide";
 import * as adminRoster from "./mobile/v1/admin/roster";
 import * as adminRosterImport from "./mobile/v1/admin/roster/import";
+import * as adminSanctionLift from "./mobile/v1/admin/sanctions/[id]/lift";
 import * as adminStats from "./mobile/v1/admin/stats";
 import * as adminSupport from "./mobile/v1/admin/support";
 import * as adminSupportRequest from "./mobile/v1/admin/support/[id]";
 import * as adminTeachers from "./mobile/v1/admin/teachers";
 import * as adminTeacher from "./mobile/v1/admin/teachers/[id]";
+import * as adminTestAccounts from "./mobile/v1/admin/test-accounts";
+import * as adminTestAccount from "./mobile/v1/admin/test-accounts/[id]";
 import * as adminVerification from "./mobile/v1/admin/verification";
 import * as adminVerificationDetail from "./mobile/v1/admin/verification/[id]";
 import * as adminVerificationDecision from "./mobile/v1/admin/verification/[id]/decision";
 import * as adminVerificationMerge from "./mobile/v1/admin/verification/[id]/merge";
+import * as adminVerificationMessages from "./mobile/v1/admin/verification/[id]/messages";
+import * as adminVerificationAttachments from "./mobile/v1/admin/verification/[id]/messages/attachments";
 import * as adminVerificationVouchers from "./mobile/v1/admin/verification/[id]/vouchers";
 import * as authAppleNative from "./mobile/v1/auth/apple/native";
 import * as r0 from "./mobile/v1/auth/email/request";
@@ -129,6 +135,7 @@ import * as lineLinkStart from "./mobile/v1/line/link/start";
 import * as r29 from "./mobile/v1/me";
 import * as meAccess from "./mobile/v1/me/access";
 import * as meExport from "./mobile/v1/me/export";
+import * as meSanctionAck from "./mobile/v1/me/sanction/ack";
 import * as r30 from "./mobile/v1/members/[id]";
 import * as r31 from "./mobile/v1/members/[id]/block";
 import * as r32 from "./mobile/v1/members/[id]/follow";
@@ -149,6 +156,10 @@ import * as obEmailRequest from "./mobile/v1/onboarding/email/request";
 import * as obEmailVerify from "./mobile/v1/onboarding/email/verify";
 import * as obLine from "./mobile/v1/onboarding/line";
 import * as obLineSkip from "./mobile/v1/onboarding/line/skip";
+import * as obMessages from "./mobile/v1/onboarding/messages";
+import * as obMessage from "./mobile/v1/onboarding/messages/[id]";
+import * as obMessageAttachments from "./mobile/v1/onboarding/messages/[id]/attachments";
+import * as obMessageRead from "./mobile/v1/onboarding/messages/[id]/read";
 import * as obStatus from "./mobile/v1/onboarding/status";
 import * as obVerify from "./mobile/v1/onboarding/verify";
 import * as obChildSearch from "./mobile/v1/onboarding/verify/children/search";
@@ -214,6 +225,8 @@ export const ROUTES: [string, RouteModule][] = [
   ["admin/roster/import", adminRosterImport as unknown as RouteModule],
   ["admin/teachers", adminTeachers as unknown as RouteModule],
   ["admin/teachers/[id]", adminTeacher as unknown as RouteModule],
+  ["admin/test-accounts", adminTestAccounts as unknown as RouteModule],
+  ["admin/test-accounts/[id]", adminTestAccount as unknown as RouteModule],
   ["admin/verification", adminVerification as unknown as RouteModule],
   [
     "admin/verification/[id]",
@@ -230,6 +243,14 @@ export const ROUTES: [string, RouteModule][] = [
   [
     "admin/verification/[id]/vouchers",
     adminVerificationVouchers as unknown as RouteModule,
+  ],
+  [
+    "admin/verification/[id]/messages",
+    adminVerificationMessages as unknown as RouteModule,
+  ],
+  [
+    "admin/verification/[id]/messages/attachments",
+    adminVerificationAttachments as unknown as RouteModule,
   ],
   ["admin/members", adminMembers as unknown as RouteModule],
   ["admin/members/[id]", adminMember as unknown as RouteModule],
@@ -264,6 +285,11 @@ export const ROUTES: [string, RouteModule][] = [
     adminMemberRole as unknown as RouteModule,
   ],
   ["admin/members/[id]/state", adminMemberState as unknown as RouteModule],
+  [
+    "admin/members/[id]/sanctions",
+    adminMemberSanctions as unknown as RouteModule,
+  ],
+  ["admin/sanctions/[id]/lift", adminSanctionLift as unknown as RouteModule],
   ["admin/events", ae0 as unknown as RouteModule],
   ["admin/events/[id]", ae1 as unknown as RouteModule],
   ["admin/events/[id]/approve", ae2 as unknown as RouteModule],
@@ -356,6 +382,7 @@ export const ROUTES: [string, RouteModule][] = [
   ["access", publicAccess as unknown as RouteModule],
   ["me/access", meAccess as unknown as RouteModule],
   ["me/export", meExport as unknown as RouteModule],
+  ["me/sanction/ack", meSanctionAck as unknown as RouteModule],
   ["members/[id]", r30 as unknown as RouteModule],
   ["members/[id]/block", r31 as unknown as RouteModule],
   ["members/[id]/follow", r32 as unknown as RouteModule],
@@ -376,6 +403,13 @@ export const ROUTES: [string, RouteModule][] = [
   ["onboarding/email/verify", obEmailVerify as unknown as RouteModule],
   ["onboarding/line", obLine as unknown as RouteModule],
   ["onboarding/line/skip", obLineSkip as unknown as RouteModule],
+  ["onboarding/messages", obMessages as unknown as RouteModule],
+  ["onboarding/messages/[id]", obMessage as unknown as RouteModule],
+  [
+    "onboarding/messages/[id]/attachments",
+    obMessageAttachments as unknown as RouteModule,
+  ],
+  ["onboarding/messages/[id]/read", obMessageRead as unknown as RouteModule],
   ["onboarding/status", obStatus as unknown as RouteModule],
   ["onboarding/verify", obVerify as unknown as RouteModule],
   [

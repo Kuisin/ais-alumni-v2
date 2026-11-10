@@ -1,17 +1,28 @@
 import type { VerificationQueueItem } from "@contract/admin";
 import {
+  Baby,
   ChevronRight,
   FileText,
   GraduationCap,
   ListChecks,
   MailPlus,
+  MessageCircle,
   ShieldCheck,
   UserCheck,
 } from "lucide-react-native";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { ParentRegisteredBadge } from "@/features/admin/parent-registration";
 import { colors, space, Text } from "@/ui";
 import { Chips, Signal } from "./parts";
+
+const STAGE_TONE = {
+  childReview: "blue",
+  childToConfirm: "amber",
+  confirmed: "green",
+  childRejected: "red",
+  none: "dim",
+} as const;
 
 /** One application in the queue: who, when, and the review signals. */
 export function QueueRow({
@@ -23,13 +34,25 @@ export function QueueRow({
 }) {
   const t = useTranslations("adminVerify");
   const ti = useTranslations("adminVerify.invite");
+  const tp = useTranslations("mobile.verifyParents");
   const tr = useTranslations("roles");
+  const tm = useTranslations("mobile.applicationMessages");
+  const tpr = useTranslations("mobile.parentRegistered");
   const roles = r.roles.map((role) => tr(`role.${role}`)).join(" · ");
   const v = r.vouches;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${r.name}, ${r.submittedDate}`}
+      accessibilityLabel={[
+        r.name,
+        r.registeredByParent
+          ? tpr("by", { name: r.registeredByParent.parentName })
+          : null,
+        r.replied ? tm("replied") : null,
+        r.submittedDate,
+      ]
+        .filter(Boolean)
+        .join(", ")}
       onPress={onPress}
       style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
     >
@@ -44,17 +67,22 @@ export function QueueRow({
                 </Text>
               ) : null}
             </Text>
-            {r.registeredBy ? (
+            {r.registeredByParent ? (
+              <ParentRegisteredBadge registration={r.registeredByParent} />
+            ) : r.registeredBy ? (
               <Text variant="small" tone="muted">
                 {t("queue.registeredBy", { name: r.registeredBy })}
               </Text>
             ) : null}
-            {r.children ? (
+            {r.children && !r.childStatus ? (
               <Text variant="small" tone="muted">
                 {t("queue.children", { names: r.children })}
               </Text>
             ) : null}
           </View>
+          {r.replied ? (
+            <Signal tone="red" icon={MessageCircle} label={tm("replied")} />
+          ) : null}
           <Text variant="caption" tone="subtle">
             {r.submittedDate}
             <Text variant="caption" weight="medium" tone="muted">
@@ -62,75 +90,118 @@ export function QueueRow({
             </Text>
           </Text>
         </View>
-        <Chips>
-          {r.invite ? (
+        {r.childStatus ? (
+          // 保護者 tab: each child and where it stands
+          <Chips>
+            {r.status === "NEEDS_INFO" ? (
+              <Signal tone="amber" label={tp("needsInfo")} />
+            ) : null}
+            {r.childStatus.map((c, i) => (
+              <Signal
+                // biome-ignore lint/suspicious/noArrayIndexKey: names can repeat
+                key={i}
+                tone={STAGE_TONE[c.stage ?? "none"]}
+                icon={Baby}
+                label={
+                  c.stage ? `${c.name} · ${tp(`stage.${c.stage}`)}` : c.name
+                }
+              />
+            ))}
+          </Chips>
+        ) : null}
+        {r.childStatus
+          ?.filter((c) => c.asked)
+          .map((c, i) => (
+            <Text
+              // biome-ignore lint/suspicious/noArrayIndexKey: names can repeat
+              key={i}
+              variant="caption"
+              tone="muted"
+            >
+              {`${c.name}: ${tp(`asked.${c.asked}`)}`}
+            </Text>
+          ))}
+        {r.childStatus ? null : (
+          <Chips>
+            {r.invite ? (
+              <Signal
+                tone={r.invite.mismatch ? "amber" : "green"}
+                icon={MailPlus}
+                label={
+                  r.invite.grade
+                    ? ti("badgeGrade")
+                    : `${t("badges.invited")} · ${ti("badgeIndividual")}`
+                }
+              />
+            ) : null}
             <Signal
-              tone={r.invite.mismatch ? "amber" : "green"}
-              icon={MailPlus}
+              tone={
+                r.rosterScore === null
+                  ? "dim"
+                  : r.rosterMatch
+                    ? "green"
+                    : "amber"
+              }
+              icon={ListChecks}
               label={
-                r.invite.grade
-                  ? ti("badgeGrade")
-                  : `${t("badges.invited")} · ${ti("badgeIndividual")}`
+                r.rosterScore === null
+                  ? t("badges.noRoster")
+                  : r.rosterMatch
+                    ? t("badges.rosterMatch", { score: r.rosterScore })
+                    : t("badges.roster", { score: r.rosterScore })
               }
             />
-          ) : null}
-          <Signal
-            tone={
-              r.rosterScore === null ? "dim" : r.rosterMatch ? "green" : "amber"
-            }
-            icon={ListChecks}
-            label={
-              r.rosterScore === null
-                ? t("badges.noRoster")
-                : r.rosterMatch
-                  ? t("badges.rosterMatch", { score: r.rosterScore })
-                  : t("badges.roster", { score: r.rosterScore })
-            }
-          />
-          <Signal
-            tone={
-              v.no > 0 ? "red" : v.yes > 0 ? "green" : v.total ? "amber" : "dim"
-            }
-            icon={UserCheck}
-            label={
-              v.total
-                ? t("badges.vouchCounts", {
-                    yes: v.yes,
-                    no: v.no,
-                    unsure: v.unsure,
-                    pending: v.pending,
-                  })
-                : t("badges.noVouches")
-            }
-          />
-          {r.diploma ? (
             <Signal
-              tone="green"
-              icon={GraduationCap}
-              label={t("badges.diploma")}
+              tone={
+                v.no > 0
+                  ? "red"
+                  : v.yes > 0
+                    ? "green"
+                    : v.total
+                      ? "amber"
+                      : "dim"
+              }
+              icon={UserCheck}
+              label={
+                v.total
+                  ? t("badges.vouchCounts", {
+                      yes: v.yes,
+                      no: v.no,
+                      unsure: v.unsure,
+                      pending: v.pending,
+                    })
+                  : t("badges.noVouches")
+              }
             />
-          ) : null}
-          <Signal
-            tone={r.evidence > 0 ? "blue" : "dim"}
-            icon={FileText}
-            label={t("badges.evidence", { count: r.evidence })}
-          />
-          {r.schoolEmail ? (
+            {r.diploma ? (
+              <Signal
+                tone="green"
+                icon={GraduationCap}
+                label={t("badges.diploma")}
+              />
+            ) : null}
             <Signal
-              tone="green"
-              icon={ShieldCheck}
-              label={t("badges.schoolEmail")}
+              tone={r.evidence > 0 ? "blue" : "dim"}
+              icon={FileText}
+              label={t("badges.evidence", { count: r.evidence })}
             />
-          ) : null}
-          {r.minor ? <Signal tone="amber" label={t("badges.minor")} /> : null}
-          {r.minor ? (
-            r.parentConfirmed ? (
-              <Signal tone="green" label={t("badges.parentConfirmed")} />
-            ) : (
-              <Signal tone="red" label={t("badges.parentUnconfirmed")} />
-            )
-          ) : null}
-        </Chips>
+            {r.schoolEmail ? (
+              <Signal
+                tone="green"
+                icon={ShieldCheck}
+                label={t("badges.schoolEmail")}
+              />
+            ) : null}
+            {r.minor ? <Signal tone="amber" label={t("badges.minor")} /> : null}
+            {r.minor ? (
+              r.parentConfirmed ? (
+                <Signal tone="green" label={t("badges.parentConfirmed")} />
+              ) : (
+                <Signal tone="red" label={t("badges.parentUnconfirmed")} />
+              )
+            ) : null}
+          </Chips>
+        )}
       </View>
       <ChevronRight size={18} color={colors.slate400} aria-hidden />
     </Pressable>

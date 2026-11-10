@@ -26,6 +26,7 @@ import {
   LineDot,
   StateBadge,
 } from "@/features/admin/members/badges";
+import { ParentRegisteredBadge } from "@/features/admin/parent-registration";
 import { Picker } from "@/features/admin/parts";
 import { Chips } from "@/features/people/choices";
 import { useAuth } from "@/lib/auth";
@@ -266,6 +267,7 @@ function MemberRow({ m, onPress }: { m: AdminMemberRow; onPress: () => void }) {
           {name}
         </Text>
         {m.isAdmin ? <Badge tone="brand" label={t("badge.admin")} /> : null}
+        {m.isTest ? <Badge tone="amber" label={t("badge.test")} /> : null}
       </View>
       {m.otherName ? (
         <Text variant="small" tone="muted">
@@ -282,6 +284,9 @@ function MemberRow({ m, onPress }: { m: AdminMemberRow; onPress: () => void }) {
         ))}
         <AppBadges platforms={m.app} />
       </View>
+      {m.registeredByParent ? (
+        <ParentRegisteredBadge registration={m.registeredByParent} />
+      ) : null}
       <View style={styles.meta}>
         <LineDot status={m.line} />
         <Text variant="caption" tone="subtle">

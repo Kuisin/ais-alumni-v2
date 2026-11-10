@@ -9,10 +9,12 @@ import {
 import { audit } from "@/server/lib/audit";
 import { syncChatMembership } from "@/server/lib/chat-db";
 import { db } from "@/server/lib/db";
+import { confirmLinkInTx } from "@/server/lib/family";
 import { mergeUsers } from "@/server/lib/merge";
 import { NOTIFY_USER_SELECT } from "@/server/lib/notify";
 import {
   findManagedMatches,
+  notifyWaitingParentLinks,
   type ParentOutcome,
   settleAfterChildDecision,
   settleManagedChildren,
@@ -24,6 +26,10 @@ import {
   notifyParentOutcomes,
 } from "@/server/lib/verification/decision-notify";
 import { deleteAfterFrom } from "@/server/lib/verification/evidence";
+import {
+  addAdminMessageInTx,
+  notifyChildNeedsInfo,
+} from "@/server/lib/verification/messages";
 import { ROSTER_MATCH_THRESHOLD } from "@/server/lib/verification/roster";
 import { notifyVoucher } from "@/server/lib/verification/vouch";
 
@@ -134,6 +140,11 @@ export async function decideVerificationAction(
       });
       if (moved.count !== 1) throw new ConflictError();
 
+      // 「追加情報が必要」: the note opens (or continues) the application's
+      // 「やりとり」, where the applicant can answer (reviewNote is kept too).
+      if (decision === "NEEDS_INFO" && note)
+        await addAdminMessageInTx(tx, requestId, me.id, note);
+
       // Evidence is kept 30 days after a final decision (§6.3). NEEDS_INFO is
       // not final: the applicant may still replace files.
       if (decision !== "NEEDS_INFO") {
@@ -156,6 +167,20 @@ export async function decideVerificationAction(
       // §8: for minors, this admin approval also serves as the admin
       // confirmation — no separate step is required, so nothing extra is stored.
 
+      // A parent-only application decided by an admin (the child didn't
+      // confirm, or can't yet): approving also confirms the links to
+      // children who are already approved, as their own approval would.
+      if (request.followsChildren && decision === "APPROVE") {
+        const links = await tx.familyLink.findMany({
+          where: {
+            parentId: request.userId,
+            confirmedAt: null,
+            child: { is: { state: AccountState.ACTIVE } },
+          },
+          select: { id: true, parentId: true, childId: true },
+        });
+        for (const l of links) await confirmLinkInTx(tx, l, "ADMIN", decidedAt);
+      }
       // Older parent applications: their children had none of their own.
       await settleManagedChildren(tx, request.userId, decision, decidedAt);
       // Parents follow their children's approval (they aren't reviewed).
@@ -193,6 +218,18 @@ export async function decideVerificationAction(
   if (!request.user.managedById)
     await notifyDecision(request.user, requestId, decision, note || null);
   await notifyParentOutcomes(parents);
+  // A question about a parent-registered child always reaches the parent
+  // managing it — also one who is a member already (no application of their
+  // own to move) — unless their own application just followed the child.
+  if (
+    decision === "NEEDS_INFO" &&
+    request.user.managedById &&
+    !parents.some((p) => p.parentId === request.user.managedById)
+  )
+    await notifyChildNeedsInfo(requestId, note || null);
+  // An approved student whose link a parent asked for while the student was
+  // still in review: now they can confirm it.
+  if (decision === "APPROVE") await notifyWaitingParentLinks(request.userId);
 
   revalidate(requestId);
   return { ok: true, message: "saved" };

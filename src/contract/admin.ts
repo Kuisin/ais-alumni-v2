@@ -87,7 +87,77 @@ export type RosterDeleteResult = {
 // ---- 本人確認 (the website's /app/admin/verification) — committee admins ----
 
 /** GET /admin/verification?tab=&q=&page= — which queue. */
-export type VerificationTab = "pending" | "needsInfo";
+export type VerificationTab = "pending" | "needsInfo" | "parents";
+
+/**
+ * Where a parent-only application's child stands (mobile.verifyParents.stage.<stage>):
+ * the child's own application is open; the child (or the parent managing
+ * the child's account) still has to confirm the link; confirmed; or the
+ * child was rejected.
+ */
+export type ParentChildStage =
+  | "childReview"
+  | "childToConfirm"
+  | "confirmed"
+  | "childRejected";
+
+export type ParentChildStatus = {
+  name: string;
+  /** null: nothing to say (no account, deactivated…) */
+  stage: ParentChildStage | null;
+  /** childToConfirm: who was asked — the child, or the parent managing it */
+  asked: "child" | "manager" | null;
+};
+
+/**
+ * A student account a parent registered at sign-up (the applicant had no
+ * sign-in of their own). `managed`: the parent still manages it
+ * (保護者が管理中); false: handed over to the student (本人に引き継ぎ済み).
+ */
+export type ParentRegistration = {
+  parentId: string;
+  parentName: string;
+  managed: boolean;
+};
+
+/** A message in an application's 「やりとり」 (committee view). */
+export type VerificationMessage = {
+  id: string;
+  /** from the committee (else the applicant / managing parent) */
+  fromAdmin: boolean;
+  /** who wrote it (null: account deleted) */
+  author: string | null;
+  /** may be empty when the message only carries attachments */
+  body: string;
+  createdAt: string;
+  /** photos / PDFs sent with it; absent: older server */
+  attachments?: VerificationMessageAttachment[];
+};
+
+/** A 「やりとり」 attachment (deleted with the evidence, 30 days after the decision). */
+export type VerificationMessageAttachment = {
+  id: string;
+  fileName: string;
+  /** image/jpeg | image/png | application/pdf */
+  mimeType: string;
+  size: number;
+  /** signed /api/files URL (relative; valid 15 minutes) */
+  url: string;
+};
+
+/**
+ * POST /admin/verification/[id]/messages/attachments (multipart: file) —
+ * one file for the committee's next message; errors 400 type / size,
+ * 409 closed. Send its key with the message.
+ */
+export type MessageAttachmentUploaded = {
+  item: {
+    key: string;
+    fileName: string;
+    mimeType: "image/jpeg" | "image/png" | "application/pdf";
+    size: number;
+  };
+};
 
 /** One application in the queue (oldest first). */
 export type VerificationQueueItem = {
@@ -98,6 +168,10 @@ export type VerificationQueueItem = {
   roles: string[];
   /** a child registered by a parent: the parent's name */
   registeredBy: string | null;
+  /** registered by a parent (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
+  /** 「返信あり」: the applicant's message is the latest in 「やりとり」 */
+  replied?: boolean;
   /** a parent: "名前（26期）、…" (adminVerify.queue.children) */
   children: string | null;
   submittedAt: string;
@@ -124,6 +198,10 @@ export type VerificationQueueItem = {
   minor: boolean;
   /** a minor with a confirmed parent link */
   parentConfirmed: boolean;
+  /** tab "parents": each child and where it stands (absent: older server) */
+  childStatus?: ParentChildStatus[];
+  /** VerificationStatus (tab "parents" lists PENDING and NEEDS_INFO) */
+  status?: string;
 };
 
 export type VerificationQueue = {
@@ -158,6 +236,10 @@ export type VerificationChildCard = {
   source: "nameOnly" | "created" | "registered";
   /** adminVerify.children.link.<link>; null = nothing to show */
   link: "confirmed" | "onApproval" | "childToConfirm" | null;
+  /** where the child stands (parent-only applications); absent: older server */
+  stage?: ParentChildStage | null;
+  /** stage childToConfirm: who was asked to confirm */
+  asked?: "child" | "manager" | null;
   /** null when there's no child account (name only) */
   details: {
     dateOfBirth: string | null;
@@ -209,9 +291,26 @@ export type VerificationDetail = {
   canAddVoucher: boolean;
   /** decided: the next pending application (oldest first) */
   nextId: string | null;
+  /**
+   * A parent-only application: normally approved with a child; an admin
+   * may decide it here (approval also confirms links to approved
+   * children). Absent: older server.
+   */
+  followsChildren?: boolean;
   schoolEmailVerified: boolean;
   minor: boolean;
   parentConfirmed: boolean;
+  /** registered by a parent (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
+  /** 「やりとり」, oldest first; absent: older server */
+  messages?: VerificationMessage[];
+  /** open (PENDING / NEEDS_INFO): the committee can send a message */
+  canMessage?: boolean;
+  /**
+   * a parent-managed child: messages reach this parent (the child has no
+   * sign-in); null: the applicant themself
+   */
+  messagesTo?: string | null;
   lastDecision: {
     decidedAt: string | null;
     reviewer: string | null;
@@ -281,6 +380,18 @@ export type VerificationActionResult = {
 };
 
 export type VerificationDecision = "APPROVE" | "REJECT" | "NEEDS_INFO";
+
+/**
+ * POST /admin/verification/[id]/messages { body, attachments? } — a message
+ * in 「やりとり」 without changing the application's status (PENDING /
+ * NEEDS_INFO only; conflict otherwise). Result: VerificationActionResult
+ * (errors.body → adminVerify.errors.<code>). The body may be empty with
+ * attachments (up to 3, uploaded first).
+ */
+export type VerificationMessageBody = {
+  body: string;
+  attachments?: { key: string; fileName: string }[];
+};
 // ---- Change requests (氏名・生年月日・性別, 在籍情報; committee admins) ----
 
 /** ?tab= of the review lists. */

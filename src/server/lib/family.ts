@@ -21,6 +21,7 @@ import { displayName } from "@/server/lib/format";
 import { toKatakana } from "@/server/lib/names";
 import { NOTIFY_USER_SELECT, notify } from "@/server/lib/notify";
 import type { CurrentUser } from "@/server/lib/session";
+import { hideTestAccounts } from "@/server/lib/test-hidden";
 import { isCjk } from "@/server/lib/verification/roster";
 
 /** Families and parent/child links (§8). */
@@ -174,6 +175,7 @@ export async function searchFamilyCandidates(
       AND: [
         { state: AccountState.ACTIVE },
         { id: { notIn: [me.id, ...blocked] } },
+        hideTestAccounts(me),
         { roles: { some: { role: { in: [...wanted] } } } },
         ...tokens.map((token) => ({
           OR: [

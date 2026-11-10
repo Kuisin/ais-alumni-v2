@@ -18,6 +18,24 @@
       "detail": "メモを確認し、申請フォームを修正して再送信してください。",
       "cta": "申請を修正"
     },
+    "VERIFICATION_MESSAGE": {
+      "title": "委員会からのメッセージ",
+      "body": "会員登録の申請について、委員会からメッセージが届きました。",
+      "detail": "アプリの申請状況の画面からご確認のうえ、返信してください。",
+      "cta": "メッセージを見る"
+    },
+    "VERIFICATION_CHILD_MESSAGE": {
+      "title": "お子さまの申請についてのメッセージ",
+      "body": "{name}さんの会員登録の申請について、委員会からメッセージが届きました。",
+      "detail": "アプリでメッセージを確認し、返信してください。",
+      "cta": "メッセージを見る"
+    },
+    "VERIFICATION_CHILD_NEEDS_INFO": {
+      "title": "お子さまの申請について確認があります",
+      "body": "{name}さんの会員登録の申請について、委員会から確認のお願いがあります。",
+      "detail": "アプリで委員会からのメッセージを確認し、返信してください。",
+      "cta": "確認する"
+    },
     "SECURITY_METHOD_ADDED": {
       "title": "ログイン方法が追加されました",
       "body": "アカウントに「{method}」のログインが追加されました。",
@@ -47,6 +65,12 @@
       "body": "アカウントが再び利用できるようになりました。",
       "detail": "これまでどおりアプリをご利用いただけます。",
       "cta": "アプリを開く"
+    },
+    "SANCTION_APPLIED": {
+      "title": "委員会からの処分のお知らせ",
+      "body": "委員会の判断により、アカウントに「{level}」の処分が適用されました。{until}",
+      "detail": "理由はアプリでご確認いただけます。ご不明な点や異議がある場合は、お問い合わせからご連絡ください。",
+      "cta": "内容を確認"
     },
     "NAME_REQUEST_APPROVED": {
       "title": "氏名の変更が承認されました",
@@ -198,6 +222,12 @@
       "detail": "管理画面で申請内容を確認してください。",
       "cta": "申請を確認"
     },
+    "VERIFICATION_REPLY_ADMIN": {
+      "title": "申請者から返信があります",
+      "body": "{name}さんの申請の「やりとり」に返信がありました。",
+      "detail": "管理画面で返信を確認してください。",
+      "cta": "申請を確認"
+    },
     "NEWS_APPROVAL_ADMIN": {
       "title": "ニュースの承認依頼があります",
       "body": "{name}さんのニュース「{title}」が承認待ちです。",
@@ -312,5 +342,12 @@
     "channelDefault": "お知らせ"
   },
   "untitledNews": "新しいニュース",
-  "digestLine": "・{chat}（{count}件）{text}"
+  "digestLine": "・{chat}（{count}件）{text}",
+  "sanctionLevels": {
+    "WARNING": "警告",
+    "RESTRICTED": "投稿制限",
+    "SUSPENDED": "一時停止",
+    "BANNED": "永久追放"
+  },
+  "sanctionUntil": "（{date}まで）"
 }

@@ -9,6 +9,7 @@ import { HomeSection, MessagesBanner, TodoList } from "@/features/home/parts";
 import { SetupChecklist } from "@/features/home/setup-checklist";
 import { NewsCard } from "@/features/news/news-card";
 import { PushPrompt } from "@/features/notifications/push-prompt";
+import { SanctionNotice } from "@/features/sanction/home-notice";
 import { useAuth, useMe } from "@/lib/auth";
 import { EmptyState, ErrorState, Loading, Screen, Text } from "@/ui";
 
@@ -35,6 +36,8 @@ export default function HomeScreen() {
       <Text variant="heading" accessibilityRole="header">
         {t("greeting", { name: me.user.name })}
       </Text>
+      {/* 処分: a warning to acknowledge, or posting restricted */}
+      {me.sanction ? <SanctionNotice sanction={me.sanction} /> : null}
       {query.data ? (
         <HomeBody home={query.data} />
       ) : query.isError ? (

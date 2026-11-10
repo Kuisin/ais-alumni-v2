@@ -7,8 +7,9 @@
  *    on LINE (the official account name shows); email subjects get
  *    「【AIS同窓会】」.
  *  - body: one sentence, who / what.
- *  - content (news, お知らせ, chat): what it's about — a news post's title
- *    and summary, a message's text — sent only to members who may read it,
+ *  - content (news, お知らせ, chat, 本人確認の「やりとり」): what it's about —
+ *    a news post's title and summary, a message's text — sent only to
+ *    members who may read it,
  *    shortened per channel (render.ts CONTENT_MAX). Other kinds carry none:
  *    committee notes and account details stay in the email / app.
  *  - push / LINE: title + body (a push shows the content instead of the
@@ -83,6 +84,28 @@ export const NOTIFY_KINDS = {
     line: true,
     alwaysEmail: true,
   },
+  // 本人確認の「やりとり」 (src/server/lib/verification/messages.ts): the
+  // committee's message goes as content — the member asked for it, about
+  // their own application — to the applicant, or to the parent managing a
+  // child's account (CHILD_*; also when the parent is a member already).
+  VERIFICATION_MESSAGE: {
+    category: "account",
+    emoji: "💬",
+    line: true,
+    alwaysEmail: true,
+  },
+  VERIFICATION_CHILD_MESSAGE: {
+    category: "account",
+    emoji: "💬",
+    line: true,
+    alwaysEmail: true,
+  },
+  VERIFICATION_CHILD_NEEDS_INFO: {
+    category: "account",
+    emoji: "📝",
+    line: true,
+    alwaysEmail: true,
+  },
   SECURITY_METHOD_ADDED: {
     category: "account",
     emoji: "🔐",
@@ -100,6 +123,14 @@ export const NOTIFY_KINDS = {
   },
   ACCOUNT_DEACTIVATED: { category: "account", emoji: "⏸️", alwaysEmail: true },
   ACCOUNT_REACTIVATED: { category: "account", emoji: "▶️" },
+  // 処分 (src/server/lib/sanctions.ts): the level and end date; the reason
+  // goes as the committee note (email and the app only).
+  SANCTION_APPLIED: {
+    category: "account",
+    emoji: "⚠️",
+    line: true,
+    alwaysEmail: true,
+  },
   NAME_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
   NAME_REQUEST_REJECTED: { category: "account", emoji: "📋", line: true },
   BIRTH_DATE_REQUEST_APPROVED: { category: "account", emoji: "✅", line: true },
@@ -146,6 +177,14 @@ export const NOTIFY_KINDS = {
   VERIFICATION_SUBMITTED_ADMIN: {
     category: "admin",
     emoji: "🆕",
+    line: true,
+    alwaysEmail: true,
+  },
+  // An applicant answered in 「やりとり」: once per turn (deduped per the
+  // committee's last message), with the reply's text.
+  VERIFICATION_REPLY_ADMIN: {
+    category: "admin",
+    emoji: "💬",
     line: true,
     alwaysEmail: true,
   },

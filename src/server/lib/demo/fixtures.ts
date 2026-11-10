@@ -53,7 +53,11 @@ import type {
   PushState,
   PushTestResult,
 } from "@contract/notifications";
-import type { SupportDefaults, SupportSent } from "@contract/onboarding";
+import type {
+  ApplicationThreads,
+  SupportDefaults,
+  SupportSent,
+} from "@contract/onboarding";
 import type {
   AcceptResult,
   DirectoryOptions,
@@ -1010,6 +1014,16 @@ const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
 
   // Family and invites
   family: { GET: () => family() },
+  // 「やりとり」: the demo member is approved and manages no child account.
+  "onboarding/messages": {
+    GET: () => ({ threads: [] }) satisfies ApplicationThreads,
+  },
+  // No thread to attach to: an upload is refused ({ ok }, no item — the
+  // app shows its generic error), removing one does nothing.
+  "onboarding/messages/[id]/attachments": {
+    POST: () => ({ ok: false }),
+    DELETE: () => OK satisfies Ok,
+  },
   "family/search": { GET: () => ({ items: [] }) satisfies FamilySearch },
   "family/links": {
     POST: () =>

@@ -8,6 +8,7 @@ import { CalendarClock, MapPin, Type, Users } from "lucide-react-native";
 import { type ReactNode, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { useSanctionError } from "@/features/sanction/api";
 import { Button, space, Text, TextField } from "@/ui";
 import { type SaveError, saveError, useSaveCompose } from "./api";
 import { AudiencePicker, EVERYONE } from "./audience-picker";
@@ -50,6 +51,7 @@ export function EventForm({
   const t = useTranslations("adminContent");
   const tc = useTranslations("common");
   const tm = useTranslations("mobile.compose");
+  const sanctionError = useSanctionError();
   const save = useSaveCompose("events");
   const [state, setState] = useState<SaveError | null>(null);
   const [saved, setSaved] = useState(false);
@@ -98,9 +100,10 @@ export function EventForm({
             ? tc("errors.validation")
             : state.error === "network"
               ? tm("network")
-              : t.has(`errors.${state.error}`)
-                ? t(`errors.${state.error}`)
-                : tc("errors.generic")}
+              : (sanctionError(state.error) ??
+                (t.has(`errors.${state.error}`)
+                  ? t(`errors.${state.error}`)
+                  : tc("errors.generic")))}
         </Notice>
       ) : null}
       {saved && values.id ? (

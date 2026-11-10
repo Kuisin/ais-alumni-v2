@@ -7,6 +7,7 @@ import {
   CalendarDays,
   ChartColumn,
   FilePen,
+  FlaskConical,
   IdCard,
   Layers,
   LifeBuoy,
@@ -111,6 +112,13 @@ export const ADMIN_NAV: AdminNavItem[] = [
     icon: UserCheck,
     ...ADMIN_PAGES.teachers,
     allowed: (a) => a.teachers,
+  },
+  {
+    group: "people",
+    label: "adminNav.testAccounts",
+    icon: FlaskConical,
+    ...ADMIN_PAGES.testAccounts,
+    allowed: admin,
   },
   {
     group: "people",

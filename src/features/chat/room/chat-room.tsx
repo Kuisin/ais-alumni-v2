@@ -46,6 +46,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { useLocale, useTranslations } from "use-intl";
+import { useSanctionError } from "@/features/sanction/api";
 import { isApiError } from "@/lib/api";
 import { useMe } from "@/lib/auth";
 import { useRealtimeLive } from "@/lib/realtime";
@@ -252,7 +253,10 @@ function Room({
   const tm = useTranslations("mobile");
   const tr = useTranslations("chat.reactions");
   const locale = useLocale() as Locale;
-  const meUser = useMe().user;
+  const myAccount = useMe();
+  const meUser = myAccount.user;
+  // 処分 (投稿制限): read-only — no sending or reacting.
+  const restricted = myAccount.sanction?.level === "RESTRICTED";
   const me = meUser.id;
   const focused = useIsFocused();
   const headerHeight = useHeaderHeight();
@@ -271,7 +275,7 @@ function Room({
   const [picking, setPicking] = useState(false);
   const keyboard = useKeyboardShown();
 
-  const canPost = room.member && !room.stopped;
+  const canPost = room.member && !room.stopped && !restricted;
   const others = room.members.filter((m) => m.id !== me);
   const namesById = useMemo(
     () => new Map(room.members.map((m) => [m.id, m.name])),
@@ -348,20 +352,22 @@ function Room({
   }, []);
 
   // Reactions: anyone who can read the talk, except in a stopped 1:1 talk.
-  const canReact = !room.stopped;
+  const canReact = !room.stopped && !restricted;
   const react = state.react;
+  const sanctionError = useSanctionError();
   const onReact = useCallback(
     (messageId: string, emoji: string) => {
       react(messageId, emoji).catch((e: unknown) => {
         const code = isApiError(e) ? e.code : "";
         showError(
-          REACTION_ERRORS.includes(code as ToggleReactionError)
-            ? tr(`errors.${code as "too_many" | "invalid" | "unavailable"}`)
-            : tr("errors.generic"),
+          sanctionError(e) ??
+            (REACTION_ERRORS.includes(code as ToggleReactionError)
+              ? tr(`errors.${code as "too_many" | "invalid" | "unavailable"}`)
+              : tr("errors.generic")),
         );
       });
     },
-    [react, tr],
+    [react, tr, sanctionError],
   );
   // Tapping 既読 under an own message: who has read it (newest first).
   const onShowReaders = useCallback(
@@ -512,11 +518,13 @@ function Room({
       ) : (
         <View style={[styles.notice, { paddingBottom: bottom + space.xs }]}>
           <Text variant="small" tone="muted" center>
-            {room.stopped === "restricted"
-              ? t("restrictedNotice")
-              : room.stopped
-                ? t("blockedNotice")
-                : t("adminView")}
+            {restricted && room.member
+              ? tm("sanction.restricted.chat")
+              : room.stopped === "restricted"
+                ? t("restrictedNotice")
+                : room.stopped
+                  ? t("blockedNotice")
+                  : t("adminView")}
           </Text>
         </View>
       )}

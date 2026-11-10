@@ -421,6 +421,233 @@
       ]
     },
     "introPublic": "What each member type (students, graduates, parents, teachers…) and position can use in the AIS Alumni app. Sign in to see the rows that apply to you highlighted.",
-    "pending": "You can use these once your registration is approved."
+    "pending": "You can use these once your registration is approved.",
+    "profile": {
+      "title": "Which profile details are shown",
+      "columns": {
+        "field": "Detail",
+        "members": "Approved members",
+        "followers": "Followers you approved",
+        "family": "Family",
+        "admins": "Admins"
+      },
+      "all": "Shown",
+      "none": "Hidden",
+      "chosen": "Only what you choose",
+      "photoMembers": "If you turn on \"show my photo to all members\"",
+      "photoFollowers": "Shown (when you're connected by a follow)",
+      "rows": {
+        "name": "Name and name at AIS",
+        "record": "Type, years and class (teachers: subjects)",
+        "bio": "About me",
+        "stage": "Current stage (university, working…)",
+        "photo": "Photo",
+        "historyMembers": "Education and work (entries shown to members)",
+        "historyFollowers": "Education and work (followers-only entries)",
+        "stageDetail": "Current stage details",
+        "contact": "Email, phone, LINE name, social links, website",
+        "birth": "Date of birth"
+      },
+      "notes": [
+        "Profiles of current students, members under 18 and accounts a parent manages are shown only to family, current teachers and admins.",
+        "In My profile → \"Show to followers\" you choose, per item, which details your approved followers see (all hidden at first).",
+        "You always see everything on your own profile. Gender is never shown."
+      ]
+    }
+  },
+  "sanction": {
+    "levels": {
+      "WARNING": "Warning",
+      "RESTRICTED": "Posting restricted",
+      "SUSPENDED": "Suspended",
+      "BANNED": "Banned permanently"
+    },
+    "levelLabel": "Sanction",
+    "reason": "Reason",
+    "period": "Period",
+    "until": "Until {date}",
+    "untilLifted": "Until lifted",
+    "appeal": "If you have questions or wish to appeal, please contact us.",
+    "contact": "Contact us",
+    "warning": {
+      "title": "A warning from the committee",
+      "body": "The committee has issued the following warning. Please keep it in mind when using the app.",
+      "ack": "I understand"
+    },
+    "restricted": {
+      "title": "Posting is restricted",
+      "body": "By decision of the committee, {until}you can't send messages, react, comment, post, send follow requests or invitations. You can still read everything as before.",
+      "bodyUntil": "until {date}, ",
+      "bodyIndefinite": "until it is lifted, ",
+      "chat": "You can't send messages while posting is restricted."
+    },
+    "suspended": {
+      "title": "Your account is suspended",
+      "body": "By decision of the committee, you can't use the app {until}.",
+      "bodyUntil": "until {date}",
+      "bodyIndefinite": "until the suspension is lifted"
+    },
+    "banned": {
+      "title": "Your account has been banned",
+      "body": "By decision of the committee, this account can no longer be used."
+    },
+    "screen": {
+      "yourData": "You can still download your data or delete your account."
+    },
+    "errors": {
+      "restricted": "You can't do this while posting is restricted.",
+      "suspended": "You can't do this while your account is suspended.",
+      "banned": "You can't do this because your account has been banned."
+    },
+    "signInBanned": "A new account can't be created with this sign-in. If you think this is a mistake, please contact us.",
+    "admin": {
+      "title": "Sanctions",
+      "description": "Limit what a member can do. The member is notified and sees the reason. Applying and lifting are recorded in the audit log.",
+      "none": "No sanction in force.",
+      "current": "In force",
+      "history": "History",
+      "noHistory": "No sanctions so far.",
+      "level": "Type",
+      "levelHints": {
+        "WARNING": "No limits. The member sees a notice until they acknowledge it.",
+        "RESTRICTED": "Read-only: no messages, reactions, comments, posts, follow requests or invitations.",
+        "SUSPENDED": "No access to the app for the period (only support, data download and account deletion).",
+        "BANNED": "No access, for good. The same email, LINE and Apple ID can't register again."
+      },
+      "reason": "Reason (shown to the member)",
+      "reasonRequired": "Enter a reason.",
+      "duration": "Duration",
+      "durations": {
+        "d7": "7 days",
+        "d30": "30 days",
+        "d90": "90 days",
+        "date": "Choose a date",
+        "none": "Indefinitely"
+      },
+      "endsAt": "Ends",
+      "endsAtRequired": "Choose when it ends.",
+      "endsAtPast": "The end must be in the future.",
+      "apply": "Apply sanction",
+      "applyConfirmTitle": "Apply “{level}”?",
+      "applyConfirm": "The member will be notified. Any sanction in force is lifted.",
+      "banConfirm": "This account can no longer be used, and the same email, LINE and Apple ID can't register again. The member will be notified.",
+      "applied": "Sanction applied.",
+      "lift": "Lift",
+      "liftLabel": "Lift the “{level}” sanction",
+      "liftConfirmTitle": "Lift this sanction?",
+      "liftConfirm": "Lifts “{level}”. The member can use the app as usual right away.",
+      "lifted": "Sanction lifted.",
+      "notSelf": "You can't sanction yourself.",
+      "applyFailed": "The sanction couldn't be applied. Check the form and try again.",
+      "created": "{date} · {name}",
+      "ends": "Until {date}",
+      "indefinite": "Indefinitely",
+      "liftedAt": "Lifted {date}",
+      "liftedBy": "Lifted {date} ({name})",
+      "ended": "Ended",
+      "active": "In force",
+      "acknowledged": "Acknowledged ({date})"
+    }
+  },
+  "verifyParents": {
+    "tab": "Parents",
+    "description": "Parent-only applications. Normally approved automatically once a child's application is approved and the link confirmed. If a child doesn't confirm, you can decide here.",
+    "emptyHint": "No parent applications waiting.",
+    "needsInfo": "Waiting for reply",
+    "stage": {
+      "childReview": "Child in review",
+      "childToConfirm": "Child to confirm",
+      "confirmed": "Confirmed",
+      "childRejected": "Child rejected"
+    },
+    "asked": {
+      "child": "The child was asked to confirm",
+      "manager": "The parent managing the child's account was asked to confirm"
+    },
+    "detailTitle": "Parent-only application",
+    "detailBody": "This application is approved automatically once a child's application is approved and the link confirmed. If a child doesn't confirm, or can't yet, you can approve or reject it here. Approving also confirms the links to children who are already approved."
+  },
+  "testAccounts": {
+    "title": "Test accounts",
+    "description": "Make member accounts that need no review, to try the live app as a parent, current student, graduate or teacher (admins only). Test accounts are left out of the directory, searches, candidate lists, automatic group chats, statistics and bulk sends. Only admins and other test accounts see them.",
+    "create": {
+      "title": "New test account",
+      "type": "Type",
+      "email": "Email",
+      "emailHint": "Sign-in is by a code sent to this address. With Gmail, vary the part after \"+\" (e.g. name+parent@gmail.com) to make several test accounts with one inbox.",
+      "name": "Name (romaji)",
+      "nameHint": "As \"Last, First\" (e.g. Test, Parent)",
+      "submit": "Create",
+      "done": "Created. Sign in with {email}."
+    },
+    "types": {
+      "PARENT": "Parent",
+      "CURRENT_STUDENT": "Current student",
+      "GRADUATE": "Graduate",
+      "CURRENT_TEACHER": "Current teacher",
+      "FORMER_TEACHER": "Former teacher"
+    },
+    "errors": {
+      "emailTaken": "An account with this email already exists.",
+      "invalid": "Check the email and the name."
+    },
+    "list": {
+      "title": "Created",
+      "none": "No test accounts yet.",
+      "typeUnknown": "Type changed",
+      "createdAt": "Created {date}",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this test account?",
+      "deleteMessage": "The account and its data are deleted. This can't be undone."
+    }
+  },
+  "applicationMessages": {
+    "title": "Messages",
+    "description": "Exchange messages with the committee about your membership application.",
+    "childTitle": "About {name}'s application",
+    "childDescription": "{name} can't sign in on their own, so please answer the committee's messages as their parent.",
+    "needsInfo": "Awaiting reply",
+    "committee": "Alumni committee",
+    "you": "You",
+    "emptyApplicant": "No messages from the committee yet.",
+    "replyLabel": "Reply to the committee",
+    "replyHint": "The committee is notified of your reply.",
+    "needsInfoHint": "Replying puts your application back in review. To correct your application, resubmit it with the form below.",
+    "childNeedsInfoHint": "Replying puts {name}'s application back in review.",
+    "send": "Send",
+    "sending": "Sending…",
+    "error": "Couldn't send. Please try again later.",
+    "closed": "This application has been decided, so replies are closed.",
+    "familyRow": "Questions about the application",
+    "unread": "{count} unread",
+    "replied": "Replied",
+    "adminDescription": "Messages with the applicant. Sending one notifies them (the application's status doesn't change).",
+    "adminDescriptionManaged": "This child can't sign in, so messages go to the parent who manages the account ({name}), who answers them.",
+    "emptyAdmin": "No messages yet. Choosing “Ask for more information” posts that message here too.",
+    "adminLabel": "Message to the applicant",
+    "adminHint": "The applicant is notified; the app, LINE and email show the message.",
+    "closedAdmin": "Messages can't be sent once an application is decided.",
+    "attach": "Attach a photo or PDF",
+    "attachHint": "You can attach up to {max} photos (straight from your album) or PDFs.",
+    "attachRemove": "Remove {name}",
+    "attachments": "Attachments",
+    "preparing": "Preparing {name}…",
+    "attachErrors": {
+      "type": "{name}: choose a photo or a PDF.",
+      "size": "{name}: files must be 10 MB or smaller.",
+      "count": "You can attach up to {max} files.",
+      "generic": "Couldn't attach the file. Please try again."
+    }
+  },
+  "parentRegistered": {
+    "by": "Registered by parent: {name}",
+    "managed": "Parent manages",
+    "handedOver": "Handed over",
+    "a11y": "Account registered by their parent {name} ({state}). Open the parent's member page"
+  },
+  "upload": {
+    "errors": {
+      "decode": "{name}: this browser can't read this image. If it's an iPhone photo (HEIC), choose another photo, take a screenshot of it and choose that, or send it from your iPhone (the app or Safari)."
+    }
   }
 }

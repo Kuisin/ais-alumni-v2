@@ -105,6 +105,8 @@ export const AnnounceSchema = z.object({
  */
 export const ANNOUNCE_RECIPIENTS = {
   state: "ACTIVE",
+  // Never to test accounts (User.isTest).
+  isTest: false,
   deactivatedAt: null,
   lineUserId: { not: null },
   lineFollowing: true,

@@ -44,6 +44,8 @@
       "admin_revoked": "管理者権限を解除",
       "deactivated": "アカウントを停止",
       "reactivated": "アカウントを再開",
+      "sanctioned": "処分を適用",
+      "sanction_lifted": "処分を解除",
       "merged": "アカウントを統合",
       "position_granted": "役職を任命",
       "position_removed": "役職を解除",
@@ -113,7 +115,9 @@
     "user": {
       "merge": {
         "line_email": "LINEとメールのアカウントを自動統合"
-      }
+      },
+      "test_account_created": "テストアカウントを作成",
+      "test_account_deleted": "テストアカウントを削除"
     },
     "family": {
       "linked": "家族をつなげた",

@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import type { ScrollViewInstance } from "react-native";
 import { useTranslations } from "use-intl";
+import { ApplicationThreads } from "@/features/application-messages/thread-card";
 import { ONBOARDING_KEY } from "@/features/onboarding/api";
 import { Notice } from "@/features/onboarding/controls";
 import { OnboardingShell } from "@/features/onboarding/shell";
@@ -19,7 +20,9 @@ import { QueryState } from "@/ui";
 /**
  * The application (the website's /app/onboarding/verify): first
  * submission, or a resubmission when the committee asked for more
- * (NEEDS_INFO). An invitation opened on this device prefills the type and
+ * (NEEDS_INFO) — or, instead, a reply in 「やりとり」 with the committee,
+ * which puts the application back in review. An invitation opened on this
+ * device prefills the type and
  * 学年 and is used up by the application.
  */
 export default function OnboardingVerifyScreen() {
@@ -56,6 +59,10 @@ export default function OnboardingVerifyScreen() {
               <Notice tone="warning" title={t("needsInfo.title")}>
                 {form.reviewNote ?? undefined}
               </Notice>
+            ) : null}
+            {form.needsInfo ? (
+              // A reply moves the account to the status screen (/me).
+              <ApplicationThreads onResumed={() => void refreshMe()} />
             ) : null}
             <VerifyForm
               data={form}

@@ -1,5 +1,8 @@
 import type {
   AdminDetailRow,
+  MessageAttachmentUploaded,
+  ParentChildStage,
+  ParentChildStatus,
   VerificationActionResult,
   VerificationAnswerSection,
   VerificationChildCard,
@@ -14,7 +17,11 @@ import {
   decideVerificationAction,
   mergeManagedIntoApplicantAction,
 } from "@/server/app/actions/admin-verify";
-import { RoleKey, VerificationStatus } from "@/server/generated/prisma/enums";
+import {
+  AccountState,
+  RoleKey,
+  VerificationStatus,
+} from "@/server/generated/prisma/enums";
 import { roleLabelKey } from "@/server/lib/audience";
 import { isMinor } from "@/server/lib/authz/core";
 import {
@@ -31,14 +38,33 @@ import {
   inviteOfUser,
 } from "@/server/lib/invites";
 import { adminOnly } from "@/server/lib/mobile/admin";
-import { type Locale, notFound } from "@/server/lib/mobile/http";
+import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import { composeKanji, composeRomaji } from "@/server/lib/names";
 import { findManagedMatches } from "@/server/lib/parent-onboarding";
 import { isCurrentTeacher, studentStatus } from "@/server/lib/school";
 import type { CurrentUser } from "@/server/lib/session";
 import { signedFileUrl } from "@/server/lib/storage";
+import {
+  type AttachmentRef,
+  type AttachmentRow,
+  attachmentsNote,
+  attachmentView,
+  checkAttachments,
+  saveAttachments,
+} from "@/server/lib/verification/attachments";
 import { matchStudentRoster } from "@/server/lib/verification/match";
+import {
+  isOpen,
+  MESSAGE_MAX,
+  notifyAdminMessage,
+  repliedLast,
+} from "@/server/lib/verification/messages";
+import {
+  MANAGED_BY_SELECT,
+  parentRegistrations,
+} from "@/server/lib/verification/registered-by";
 import { ROSTER_MATCH_THRESHOLD } from "@/server/lib/verification/roster";
+import { storeUpload } from "@/server/lib/verification/uploads";
 import { findMembersByName } from "@/server/lib/verification/vouch";
 
 /**
@@ -82,6 +108,58 @@ function formatAge(date: Date, locale: Locale, now: Date = new Date()): string {
 }
 
 // ---------------------------------------------------------------------------
+// Parent-only applications (followsChildren): where each child stands
+
+const OPEN_REQUEST: VerificationStatus[] = [
+  VerificationStatus.PENDING,
+  VerificationStatus.NEEDS_INFO,
+];
+
+/** What childStage() needs of a family link. */
+export const PARENT_LINK_CHILD_SELECT = {
+  state: true,
+  managedById: true,
+  verification: { select: { status: true } },
+} as const;
+
+type StageLink = {
+  confirmedAt: Date | null;
+  child: {
+    state: AccountState;
+    managedById: string | null;
+    verification: { status: VerificationStatus } | null;
+  } | null;
+};
+
+/**
+ * A parent's link to a child, as the committee needs to know it: the
+ * child's own application is still open, the child (or the parent managing
+ * the child's account) has to confirm, confirmed, or the child was rejected.
+ */
+export function childStage(l: StageLink): {
+  stage: ParentChildStage | null;
+  asked: "child" | "manager" | null;
+} {
+  const c = l.child;
+  if (!c) return { stage: null, asked: null };
+  if (c.state === AccountState.REJECTED)
+    return { stage: "childRejected", asked: null };
+  if (l.confirmedAt) return { stage: "confirmed", asked: null };
+  if (
+    c.state === AccountState.PENDING_REVIEW ||
+    c.state === AccountState.NEEDS_INFO ||
+    (c.verification && OPEN_REQUEST.includes(c.verification.status))
+  )
+    return { stage: "childReview", asked: null };
+  if (c.state === AccountState.ACTIVE)
+    return {
+      stage: "childToConfirm",
+      asked: c.managedById ? "manager" : "child",
+    };
+  return { stage: null, asked: null };
+}
+
+// ---------------------------------------------------------------------------
 // Queue
 
 export async function verificationQueue(
@@ -90,16 +168,20 @@ export async function verificationQueue(
   locale: Locale,
 ): Promise<VerificationQueue> {
   adminOnly(user);
+  // 保護者: parent-only applications, which normally follow their
+  // children's approval — listed so none is left waiting unseen.
+  const parents = params.tab === "parents";
   const status =
     params.tab === "needsInfo"
       ? VerificationStatus.NEEDS_INFO
       : VerificationStatus.PENDING;
   const page = pageParam(params.page);
   const q = (params.q ?? "").trim().slice(0, 60);
-  // Parents alone aren't reviewed: they follow their children's approval.
+  // Parents alone aren't in the review tabs: they follow their children.
   const where = {
-    status,
-    followsChildren: false,
+    ...(parents
+      ? { status: { in: OPEN_REQUEST }, followsChildren: true }
+      : { status, followsChildren: false }),
     ...(q
       ? {
           user: {
@@ -112,7 +194,7 @@ export async function verificationQueue(
       : {}),
   };
 
-  const [requests, counts] = await Promise.all([
+  const [requests, counts, parentCount] = await Promise.all([
     db.verificationRequest.findMany({
       where,
       orderBy: [{ submittedAt: "asc" }, { id: "asc" }],
@@ -120,6 +202,8 @@ export async function verificationQueue(
       take: PAGE_SIZE,
       select: {
         id: true,
+        userId: true,
+        status: true,
         submittedAt: true,
         rosterScore: true,
         answers: true,
@@ -129,13 +213,18 @@ export async function verificationQueue(
             nameRomaji: true,
             nameKanji: true,
             dateOfBirth: true,
-            managedBy: { select: { nameRomaji: true, nameKanji: true } },
+            managedBy: MANAGED_BY_SELECT,
             roles: { select: { role: true, schoolEmailVerified: true } },
             parentLinks: {
+              orderBy: { createdAt: "asc" },
               select: {
                 childName: true,
+                confirmedAt: true,
                 child: {
                   select: {
+                    ...PARENT_LINK_CHILD_SELECT,
+                    nameRomaji: true,
+                    nameKanji: true,
                     roles: {
                       where: { cohortId: { not: null } },
                       select: { cohort: { select: { number: true } } },
@@ -153,8 +242,18 @@ export async function verificationQueue(
           },
         },
         vouches: { select: { answer: true } },
-        _count: { select: { evidence: true } },
-        evidence: { where: { kind: "DIPLOMA" }, select: { id: true } },
+        // 「返信あり」: who wrote last in 「やりとり」
+        messages: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { fromAdmin: true },
+        },
+        // The application's files (not 「やりとり」 attachments).
+        _count: { select: { evidence: { where: { messageId: null } } } },
+        evidence: {
+          where: { kind: "DIPLOMA", messageId: null },
+          select: { id: true },
+        },
       },
     }),
     db.verificationRequest.groupBy({
@@ -167,25 +266,41 @@ export async function verificationQueue(
       },
       _count: { _all: true },
     }),
+    db.verificationRequest.count({
+      where: { status: { in: OPEN_REQUEST }, followsChildren: true },
+    }),
   ]);
   const countOf = (s: VerificationStatus) =>
     counts.find((c) => c.status === s)?._count._all ?? 0;
   const total = q
     ? await db.verificationRequest.count({ where })
-    : countOf(status);
+    : parents
+      ? parentCount
+      : countOf(status);
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const now = new Date();
+  const registered = await parentRegistrations(
+    requests.map((r) => ({
+      userId: r.userId,
+      managedBy: r.user.managedBy,
+      answers: r.answers,
+    })),
+    locale,
+  );
 
   return {
-    tab: (status === VerificationStatus.NEEDS_INFO
-      ? "needsInfo"
-      : "pending") satisfies VerificationTab,
+    tab: (parents
+      ? "parents"
+      : status === VerificationStatus.NEEDS_INFO
+        ? "needsInfo"
+        : "pending") satisfies VerificationTab,
     q,
     page,
     pages,
     counts: {
       pending: countOf(VerificationStatus.PENDING),
       needsInfo: countOf(VerificationStatus.NEEDS_INFO),
+      parents: parentCount,
     },
     items: requests.map((r) => {
       const roles = r.user.roles.map((x) => x.role);
@@ -200,6 +315,8 @@ export async function verificationQueue(
         registeredBy: r.user.managedBy
           ? displayName(r.user.managedBy, locale)
           : null,
+        registeredByParent: registered.get(r.userId) ?? null,
+        replied: repliedLast(r.messages[0]),
         children: r.user.parentLinks.length
           ? r.user.parentLinks
               .map((l) => {
@@ -236,6 +353,19 @@ export async function verificationQueue(
         schoolEmail: r.user.roles.some((x) => x.schoolEmailVerified),
         minor,
         parentConfirmed: r.user.childLinks.length > 0,
+        status: r.status,
+        ...(parents
+          ? {
+              childStatus: r.user.parentLinks.map(
+                (l): ParentChildStatus => ({
+                  name: l.child
+                    ? displayName(l.child, locale)
+                    : (l.childName ?? "—"),
+                  ...childStage(l),
+                }),
+              ),
+            }
+          : {}),
       };
     }),
   };
@@ -270,10 +400,22 @@ export async function verificationDetail(
             },
           },
           ...INVITE_OF_USER_SELECT,
+          managedBy: MANAGED_BY_SELECT,
         },
       },
       reviewer: { select: { nameRomaji: true, nameKanji: true } },
-      evidence: { orderBy: { createdAt: "asc" } },
+      messages: {
+        orderBy: { createdAt: "asc" },
+        select: {
+          id: true,
+          fromAdmin: true,
+          body: true,
+          createdAt: true,
+          author: { select: { nameRomaji: true, nameKanji: true } },
+          attachments: { orderBy: { createdAt: "asc" } },
+        },
+      },
+      evidence: { where: { messageId: null }, orderBy: { createdAt: "asc" } },
       vouches: {
         orderBy: { askedAt: "asc" },
         include: {
@@ -296,32 +438,50 @@ export async function verificationDetail(
       r.role === RoleKey.CURRENT_PARENT || r.role === RoleKey.FORMER_PARENT,
   );
 
-  const [rosterRow, next, duplicates, children, answers] = await Promise.all([
-    request.rosterRowId
-      ? db.rosterEntry.findUnique({ where: { id: request.rosterRowId } })
-      : null,
-    // Decided: offer the next application in the queue (oldest first).
-    open
-      ? null
-      : db.verificationRequest.findFirst({
-          where: {
-            status: VerificationStatus.PENDING,
-            followsChildren: false,
-            id: { not: request.id },
+  const [rosterRow, next, duplicates, children, answers, registered] =
+    await Promise.all([
+      request.rosterRowId
+        ? db.rosterEntry.findUnique({ where: { id: request.rosterRowId } })
+        : null,
+      // Decided: offer the next application in the queue (oldest first).
+      open
+        ? null
+        : db.verificationRequest.findFirst({
+            // The next one of the same kind (a parent: the 保護者 tab).
+            where: {
+              status: VerificationStatus.PENDING,
+              followsChildren: request.followsChildren,
+              id: { not: request.id },
+            },
+            orderBy: [{ submittedAt: "asc" }, { id: "asc" }],
+            select: { id: true },
+          }),
+      findManagedMatches(
+        {
+          names: [
+            applicant.nameRomaji,
+            applicant.nameKanji,
+            applicant.nameAtAis,
+          ],
+          dateOfBirth: applicant.dateOfBirth,
+        },
+        applicant.id,
+      ),
+      isParent || request.followsChildren
+        ? childrenReview(applicant.id, locale)
+        : null,
+      answersView(request.answers, locale),
+      parentRegistrations(
+        [
+          {
+            userId: applicant.id,
+            managedBy: applicant.managedBy,
+            answers: request.answers,
           },
-          orderBy: [{ submittedAt: "asc" }, { id: "asc" }],
-          select: { id: true },
-        }),
-    findManagedMatches(
-      {
-        names: [applicant.nameRomaji, applicant.nameKanji, applicant.nameAtAis],
-        dateOfBirth: applicant.dateOfBirth,
-      },
-      applicant.id,
-    ),
-    isParent ? childrenReview(applicant.id, locale) : null,
-    answersView(request.answers, locale),
-  ]);
+        ],
+        locale,
+      ),
+    ]);
 
   return {
     id: request.id,
@@ -332,9 +492,23 @@ export async function verificationDetail(
     open,
     canAddVoucher: open || request.status === VerificationStatus.NEEDS_INFO,
     nextId: next?.id ?? null,
+    followsChildren: request.followsChildren,
     schoolEmailVerified: Boolean(teacher?.schoolEmailVerified),
     minor,
     parentConfirmed: applicant.childLinks.some((l) => l.confirmedAt),
+    registeredByParent: registered.get(applicant.id) ?? null,
+    messages: request.messages.map((m) => ({
+      id: m.id,
+      fromAdmin: m.fromAdmin,
+      author: m.author ? displayName(m.author, locale) : null,
+      body: m.body,
+      createdAt: m.createdAt.toISOString(),
+      attachments: m.attachments.map(attachmentView),
+    })),
+    canMessage: isOpen(request.status),
+    messagesTo: applicant.managedBy
+      ? displayName(applicant.managedBy, locale)
+      : null,
     lastDecision:
       request.reviewNote || request.decidedAt
         ? {
@@ -452,8 +626,7 @@ async function childrenReview(
       child: {
         select: {
           id: true,
-          state: true,
-          managedById: true,
+          ...PARENT_LINK_CHILD_SELECT,
           nameRomaji: true,
           nameKanji: true,
           dateOfBirth: true,
@@ -505,6 +678,7 @@ async function childrenReview(
             : c
               ? "childToConfirm"
               : null,
+        ...childStage(l),
         details: c
           ? {
               dateOfBirth: c.dateOfBirth?.toISOString() ?? null,
@@ -587,9 +761,18 @@ async function answersView(
       ? t("preview.graduated", { year: st.graduationOrLeaveYear ?? "" })
       : t("preview.left", { year: st.graduationOrLeaveYear ?? "" });
   };
+  // The form asks the end year only of those who left early: for a
+  // student who stayed, it's the class's graduation year (or 在学中).
   const years = (s: Obj) => {
     const from = str(s.joinedYear);
-    return from ? `${from}–${str(s.leftYear) ?? ""}` : null;
+    if (!from) return null;
+    const to = str(s.leftYear);
+    if (to) return `${from}–${to}`;
+    if (typeof s.cohortNumber !== "number") return `${from}–`;
+    const end = elementaryEndFor(s.cohortNumber);
+    return studentStatus(end, null).current
+      ? `${from}–${ta("detail.stillEnrolled")}`
+      : `${from}–${end}`;
   };
 
   const sections: VerificationAnswerSection[] = [
@@ -726,6 +909,8 @@ export async function voucherCandidates(
   const found = await findMembersByName(q, {
     threshold: 0.5,
     limit: 10,
+    // Admins see test accounts in member lists.
+    includeTest: true,
     excludeUserIds: [
       request.userId,
       ...request.vouches.map((v) => v.voucherId),
@@ -762,6 +947,67 @@ export async function decideVerification(
     }),
   );
   return result ?? { ok: false, message: "generic" };
+}
+
+/**
+ * 「やりとり」: a committee message without changing the status (open
+ * applications only); the applicant — or the parent managing a child's
+ * account — hears with the text.
+ */
+export async function sendVerificationMessage(
+  user: CurrentUser,
+  id: string,
+  rawBody: string,
+  attachments: AttachmentRef[] = [],
+): Promise<VerificationActionResult> {
+  adminOnly(user);
+  const body = rawBody.trim();
+  if (!body && !attachments.length)
+    return {
+      ok: false,
+      message: "validation",
+      errors: { body: "messageRequired" },
+    };
+  if (body.length > MESSAGE_MAX) return { ok: false, message: "validation" };
+  const request = await db.verificationRequest.findUnique({
+    where: { id },
+    select: { status: true },
+  });
+  if (!request) return { ok: false, message: "notFound" };
+  if (!isOpen(request.status)) return { ok: false, message: "conflict" };
+  let files: AttachmentRow[];
+  try {
+    files = await checkAttachments(user.id, attachments);
+  } catch {
+    return { ok: false, message: "validation" };
+  }
+  const message = await db.$transaction(async (tx) => {
+    const m = await tx.verificationMessage.create({
+      data: { requestId: id, authorId: user.id, fromAdmin: true, body },
+      select: { id: true },
+    });
+    await saveAttachments(tx, id, m.id, files);
+    return m;
+  });
+  await notifyAdminMessage(id, message.id, body || attachmentsNote(files));
+  return { ok: true, message: "saved" };
+}
+
+/** An attachment for the committee's next message (multipart: file). */
+export async function uploadAdminAttachment(
+  user: CurrentUser,
+  id: string,
+  file: File,
+  locale: Locale,
+): Promise<MessageAttachmentUploaded> {
+  adminOnly(user);
+  const request = await db.verificationRequest.findUnique({
+    where: { id },
+    select: { status: true },
+  });
+  if (!request) throw notFound();
+  if (!isOpen(request.status)) throw new ApiError(409, "closed");
+  return { item: await storeUpload(user.id, file, locale) };
 }
 
 export async function addVoucher(

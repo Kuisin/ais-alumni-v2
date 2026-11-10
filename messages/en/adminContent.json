@@ -31,7 +31,7 @@
     "targetRoles": "Who can see this",
     "targetRolesHint": "Select none to show it to all members.",
     "cover": "Upload image",
-    "coverHint": "JPG or PNG, up to 4 MB.",
+    "coverHint": "An image (photos from your album are fine), up to 4 MB.",
     "currentCover": "Current cover image",
     "removeCover": "Remove the current image",
     "pinned": "Pin to the top of the news feed"
@@ -46,7 +46,7 @@
     "titleRequired": "Enter a title in Japanese or English.",
     "endBeforeStart": "The end must be after the start.",
     "deadlineAfterStart": "The RSVP deadline must be before the start.",
-    "coverType": "Only JPG or PNG images can be uploaded.",
+    "coverType": "Please choose an image; this one couldn't be read.",
     "coverSize": "The image must be 4 MB or smaller.",
     "forbidden": "You don't have permission to do that.",
     "notFound": "This item no longer exists.",
@@ -305,12 +305,12 @@
       "hint": "Members answer ○ / △ / × for each date."
     },
     "files": {
-      "hint": "PDF, JPG or PNG, up to 10 MB each, {max} files. Members open them through temporary links.",
+      "hint": "PDFs or images (photos from your album are fine), up to 10 MB each, {max} files. Members open them through temporary links.",
       "add": "Add files",
       "remove": "Remove {name}",
       "uploading": "Uploading: {name}",
       "errors": {
-        "type": "Only PDF, JPG and PNG files can be attached.",
+        "type": "Only PDFs and images can be attached.",
         "size": "Files must be 10 MB or smaller.",
         "count": "Up to {max} files.",
         "generic": "The upload failed. Please try again.",

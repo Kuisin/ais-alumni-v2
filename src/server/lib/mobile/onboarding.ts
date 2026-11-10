@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import type {
   ChildWaitState,
   EmailCodeSent,
@@ -28,7 +27,7 @@ import {
   teacherFields,
 } from "@/server/lib/member-status";
 import { mergeUsers } from "@/server/lib/merge";
-import { ApiError } from "@/server/lib/mobile/http";
+import { ApiError, type Locale } from "@/server/lib/mobile/http";
 import { namePartsOf } from "@/server/lib/names";
 import { notifyMany } from "@/server/lib/notify";
 import { activeAdmins } from "@/server/lib/notify/staff";
@@ -47,20 +46,17 @@ import { setupProgress } from "@/server/lib/setup";
 import { loadSetupChecklist } from "@/server/lib/setup-db";
 import { ssoReady } from "@/server/lib/sso";
 import { assertTransition } from "@/server/lib/state-machine";
-import { deletePrivate, putPrivate } from "@/server/lib/storage";
+import { deletePrivate } from "@/server/lib/storage";
 import { notifyParentOutcomes } from "@/server/lib/verification/decision-notify";
 import {
   evidenceAcceptable,
   isEvidenceType,
   isOwnEvidenceKey,
-  safeFileName,
-  sniffMatches,
   statEvidence,
 } from "@/server/lib/verification/evidence";
 import { computeRosterMatch } from "@/server/lib/verification/match";
 import {
   answersToFormState,
-  EVIDENCE_MAX_BYTES,
   type EvidenceItem,
   emptyChild,
   emptyFormState,
@@ -70,6 +66,7 @@ import {
   type VerifyFormState,
   verificationSchema,
 } from "@/server/lib/verification/schema";
+import { storeUpload } from "@/server/lib/verification/uploads";
 import { createVouchesForRequest } from "@/server/lib/verification/vouch";
 
 /**
@@ -350,7 +347,10 @@ export async function verifyFormFor(
 ): Promise<VerifyForm> {
   const request = await db.verificationRequest.findUnique({
     where: { userId: user.id },
-    include: { evidence: { orderBy: { createdAt: "asc" } } },
+    // 「やりとり」 attachments (messageId) aren't the application's files.
+    include: {
+      evidence: { where: { messageId: null }, orderBy: { createdAt: "asc" } },
+    },
   });
   const evidence: EvidenceItem[] = (request?.evidence ?? []).map((e) => ({
     kind: e.kind,
@@ -423,8 +423,28 @@ export async function submitVerification(
 
   const existing = await db.verificationRequest.findUnique({
     where: { userId: user.id },
-    select: { id: true, evidence: { select: { id: true, storageKey: true } } },
+    select: {
+      id: true,
+      // Not 「やりとり」 attachments: those stay with their message.
+      evidence: {
+        where: { messageId: null },
+        select: { id: true, storageKey: true },
+      },
+    },
   });
+  // A file already sent with a message can't become evidence too (two rows
+  // would share — and each delete — one stored object).
+  const asAttachment = new Set(
+    (
+      await db.verificationEvidence.findMany({
+        where: {
+          storageKey: { in: data.evidence.map((e) => e.key) },
+          messageId: { not: null },
+        },
+        select: { storageKey: true },
+      })
+    ).map((e) => e.storageKey),
+  );
 
   // Evidence: keys must be under this user's prefix and actually stored.
   const keptKeys = new Set(existing?.evidence.map((e) => e.storageKey) ?? []);
@@ -434,7 +454,7 @@ export async function submitVerification(
   for (const item of data.evidence) {
     if (seen.has(item.key)) continue;
     seen.add(item.key);
-    if (!isOwnEvidenceKey(user.id, item.key))
+    if (!isOwnEvidenceKey(user.id, item.key) || asAttachment.has(item.key))
       throw submitError("evidence", { evidence: "evidenceInvalid" });
     if (keptKeys.has(item.key)) {
       keptKinds.set(item.key, item.kind);
@@ -694,26 +714,10 @@ export async function uploadEvidence(
   user: CurrentUser,
   file: File,
   kind: unknown,
+  locale: Locale,
 ): Promise<EvidenceItem> {
-  if (!isEvidenceType(file.type)) throw new ApiError(400, "type");
-  if (file.size <= 0 || file.size > EVIDENCE_MAX_BYTES)
-    throw new ApiError(400, "size");
-  const buf = Buffer.from(await file.arrayBuffer());
-  if (!sniffMatches(buf.subarray(0, 8), file.type))
-    throw new ApiError(400, "type");
-  const name = file.name || "file";
-  const key = await putPrivate(
-    `evidence/${user.id}/${randomUUID()}-${safeFileName(name)}`,
-    buf,
-    file.type,
-  );
-  return {
-    kind: kind === "DIPLOMA" ? "DIPLOMA" : "OTHER",
-    key,
-    fileName: name.slice(0, 200),
-    mimeType: file.type,
-    size: file.size,
-  };
+  const stored = await storeUpload(user.id, file, locale);
+  return { kind: kind === "DIPLOMA" ? "DIPLOMA" : "OTHER", ...stored };
 }
 
 /** Remove an uploaded-but-not-yet-submitted file. */

@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ApiError } from "@/lib/api";
+import { toUploadable, UploadImageError } from "@/lib/upload-image";
 import { Button, colors, radius, space, Text, TextField, TOUCH } from "@/ui";
 import { type PickedFile, uploadAttachment } from "./api";
 import { DateTimeField } from "./datetime-field";
@@ -320,7 +321,13 @@ function ScheduleEditor({
   );
 }
 
-type UploadError = "type" | "size" | "count" | "generic" | "forbidden";
+type UploadError =
+  | "type"
+  | "size"
+  | "count"
+  | "generic"
+  | "forbidden"
+  | "decode";
 
 /** Attachments: uploaded as soon as they're picked, saved with the post. */
 export function AttachmentFields({
@@ -335,17 +342,48 @@ export function AttachmentFields({
   error: string | null;
 }) {
   const t = useTranslations("adminContent.hub.files");
+  const tu = useTranslations("mobile.upload");
   const { maxAttachments, attachmentMaxBytes, attachmentTypes } =
     options.limits;
   const [busy, setBusy] = useState<string | null>(null);
   const [failed, setFailed] = useState<UploadError | null>(null);
+  const [failedName, setFailedName] = useState("");
 
-  async function uploadOne(f: PickedFile): Promise<AttachmentItem | null> {
+  async function uploadOne(picked: PickedFile): Promise<AttachmentItem | null> {
+    setBusy(picked.name);
+    setFailedName(picked.name);
+    // Images in any format the device reads → JPEG (PNG stays PNG).
+    let f: PickedFile;
+    try {
+      const u = await toUploadable({
+        uri: picked.uri,
+        name: picked.name,
+        mimeType: picked.type || null,
+        size: picked.size ?? null,
+        file:
+          typeof File !== "undefined" && picked.file instanceof File
+            ? picked.file
+            : undefined,
+      });
+      f = {
+        uri: u.uri,
+        name: u.name,
+        type: u.mimeType ?? "",
+        size: u.size ?? undefined,
+        file: u.file ?? picked.file,
+      };
+    } catch (e) {
+      setFailed(e instanceof UploadImageError ? "decode" : "generic");
+      setBusy(null);
+      return null;
+    }
     if (!attachmentTypes.includes(f.type)) {
+      setBusy(null);
       setFailed("type");
       return null;
     }
     if (f.size !== undefined && (f.size <= 0 || f.size > attachmentMaxBytes)) {
+      setBusy(null);
       setFailed("size");
       return null;
     }
@@ -371,7 +409,10 @@ export function AttachmentFields({
   async function pick() {
     setFailed(null);
     const r = await DocumentPicker.getDocumentAsync({
-      type: attachmentTypes,
+      // Any image (converted before upload) when images are accepted.
+      type: attachmentTypes.some((x) => x.startsWith("image/"))
+        ? ["image/*", ...attachmentTypes.filter((x) => !x.startsWith("image/"))]
+        : attachmentTypes,
       multiple: true,
       copyToCacheDirectory: true,
     });
@@ -422,7 +463,9 @@ export function AttachmentFields({
         ) : null}
         {failed ? (
           <Text variant="small" tone="danger" accessibilityRole="alert">
-            {t(`errors.${failed}`, { max: maxAttachments })}
+            {failed === "decode"
+              ? tu("errors.decode", { name: failedName })
+              : t(`errors.${failed}`, { max: maxAttachments })}
           </Text>
         ) : null}
         <FieldError>{error}</FieldError>

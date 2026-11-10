@@ -33,7 +33,8 @@ export async function loadAdminDestinations(
   const rows = await db.userRole.findMany({
     where: {
       role: RoleKey.FORMER_STUDENT,
-      user: { state: AccountState.ACTIVE },
+      // Real members only (test accounts are left out of statistics).
+      user: { state: AccountState.ACTIVE, isTest: false },
       ...(cohortId ? { cohortId } : {}),
     },
     select: {

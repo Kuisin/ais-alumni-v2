@@ -22,6 +22,11 @@ export const ADMIN_PAGES = {
   chat: { webPath: "/app/admin/chat", href: "/admin/chat" },
   members: { webPath: "/app/admin/members", href: "/admin/members" },
   teachers: { webPath: "/app/admin/teachers", href: "/admin/teachers" },
+  // App only (the website has no such page).
+  testAccounts: {
+    webPath: "/app/admin/test-accounts",
+    href: "/admin/test-accounts",
+  },
   cohorts: { webPath: "/app/admin/cohorts", href: "/admin/cohorts" },
   notify: { webPath: "/app/admin/notify", href: "/admin/notify" },
   events: { webPath: "/app/admin/events", href: "/admin/events" },

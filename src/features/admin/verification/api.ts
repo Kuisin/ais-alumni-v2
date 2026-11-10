@@ -2,6 +2,7 @@ import type {
   VerificationActionResult,
   VerificationDecision,
   VerificationDetail,
+  VerificationMessageBody,
   VerificationQueue,
   VerificationTab,
   VoucherCandidate,
@@ -14,6 +15,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ADMIN_KEY } from "@/features/admin/api";
+import { uploadAttachmentTo } from "@/features/application-messages/api";
+import type { AttachConfig } from "@/features/application-messages/attachments";
 import { api } from "@/lib/api";
 import { ME_KEY } from "@/lib/auth";
 
@@ -94,6 +97,19 @@ export function useDecideVerification(id: string) {
   });
 }
 
+/** 「やりとり」: a message to the applicant, the status unchanged. */
+export function useSendVerificationMessage(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ body, attachments }: VerificationMessageBody) =>
+      api<VerificationActionResult>(`/admin/verification/${enc(id)}/messages`, {
+        body: attachments?.length ? { body, attachments } : { body },
+      }),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: verificationKeys.all }),
+  });
+}
+
 export function useAddVoucher(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -114,4 +130,15 @@ export function useMergeManaged(id: string) {
       }),
     onSettled: () => refresh(queryClient),
   });
+}
+
+/** Attachments for the committee's next message in 「やりとり」. */
+export function adminAttachments(id: string): AttachConfig {
+  const path = `/admin/verification/${enc(id)}/messages/attachments`;
+  return {
+    upload: (f) => uploadAttachmentTo(path, f),
+    discard: (key) => {
+      void api(`${path}?key=${enc(key)}`, { method: "DELETE" }).catch(() => {});
+    },
+  };
 }

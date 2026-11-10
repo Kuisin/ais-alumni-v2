@@ -18,6 +18,7 @@ import {
 } from "@/server/lib/authz";
 import { db } from "@/server/lib/db";
 import { toKatakana } from "@/server/lib/names";
+import { REAL_MEMBERS } from "@/server/lib/test-hidden";
 
 /**
  * Member directory (§10.1). Only public-tier columns are ever selected here;
@@ -194,6 +195,8 @@ export function buildDirectoryWhere(
   const and: Prisma.UserWhereInput[] = [{ state: AccountState.ACTIVE }];
 
   if (ctx.blockedIds.length) and.push({ id: { notIn: ctx.blockedIds } });
+  // Test accounts: only admins and other test accounts see them.
+  if (!ctx.viewer.isAdmin && !ctx.viewer.isTest) and.push(REAL_MEMBERS);
 
   for (const token of nameTokens(f.q)) {
     and.push({

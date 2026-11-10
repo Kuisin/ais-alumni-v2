@@ -81,6 +81,8 @@ export async function recipientsWhere(
   const blocked = await blockedUserIds(senderId);
   const base: Prisma.UserWhereInput = {
     state: AccountState.ACTIVE,
+    // Never to test accounts (User.isTest).
+    isTest: false,
     ...(blocked.length ? { id: { notIn: blocked } } : {}),
   };
   if (audience.scope === "ALL") {

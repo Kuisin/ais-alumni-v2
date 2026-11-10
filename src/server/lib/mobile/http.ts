@@ -2,6 +2,7 @@ import type { ApiErrorBody } from "@contract/core";
 import { z } from "zod";
 import { AccountState } from "@/server/generated/prisma/enums";
 import { bearerToken } from "@/server/lib/mobile/tokens";
+import { enforceSanction } from "@/server/lib/sanctions";
 import {
   AuthError,
   type CurrentUser,
@@ -70,6 +71,9 @@ export function mobileRoute<P = Record<string, never>>(
         if (!user) throw new ApiError(401, "unauthenticated");
         if (access === "active" && user.state !== AccountState.ACTIVE)
           throw new ApiError(403, "inactive", { state: user.state });
+        // 処分: SUSPENDED / BANNED reach only their account; RESTRICTED
+        // can't post (src/server/lib/sanctions.ts).
+        await enforceSanction(request, user.id);
         // Server-made text follows the member's language (設定 → 言語).
         setRequestLocale(user.locale === "en" ? "en" : "ja");
         const result = await handler({

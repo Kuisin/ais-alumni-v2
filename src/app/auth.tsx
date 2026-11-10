@@ -11,7 +11,10 @@ import { Loading } from "@/ui";
  * receive aisalumni://auth in their sign-in browser instead.
  */
 export default function AuthReturn() {
-  const { code } = useLocalSearchParams<{ code?: string }>();
+  const { code, error } = useLocalSearchParams<{
+    code?: string;
+    error?: string;
+  }>();
   const { completeWebSignIn } = useAuth();
   const router = useRouter();
   const started = useRef(false);
@@ -20,13 +23,16 @@ export default function AuthReturn() {
     if (Platform.OS !== "web" || started.current) return;
     started.current = true;
     if (!code) {
-      router.replace("/sign-in?failed=1");
+      // A banned member's LINE: no new account (処分).
+      router.replace(
+        error === "banned" ? "/sign-in?failed=banned" : "/sign-in?failed=1",
+      );
       return;
     }
     void completeWebSignIn(code).then((r) =>
       router.replace(r === "ok" ? "/" : "/sign-in?failed=1"),
     );
-  }, [code, completeWebSignIn, router]);
+  }, [code, error, completeWebSignIn, router]);
 
   if (Platform.OS !== "web") return <Redirect href="/" />;
   return <Loading />;

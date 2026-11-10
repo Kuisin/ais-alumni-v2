@@ -14,6 +14,7 @@ import {
   notifyBatch,
 } from "@/server/lib/notify";
 import { refreshUsers } from "@/server/lib/realtime";
+import { realOrPicked } from "@/server/lib/test-hidden";
 
 export const NEWS_PAGE_SIZE = 10;
 export const EVENTS_PAGE_SIZE = 20;
@@ -83,12 +84,13 @@ export function newsStatus(
 export async function targetedRecipients(
   target: Targeted & { audience?: unknown },
 ): Promise<NotifyUser[]> {
+  const spec = specFromPost({ audience: target.audience ?? null, ...target });
   return db.user.findMany({
     where: {
       state: AccountState.ACTIVE,
-      ...audienceUserWhere(
-        specFromPost({ audience: target.audience ?? null, ...target }),
-      ),
+      ...audienceUserWhere(spec),
+      // Test accounts only when picked by name.
+      AND: [realOrPicked(spec.userIds)],
     },
     select: NOTIFY_USER_SELECT,
   });

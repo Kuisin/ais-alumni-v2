@@ -49,6 +49,7 @@ import {
 } from "@/server/lib/invites";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import { labelsFor, memberCard } from "@/server/lib/mobile/people";
+import { managedThreadSummaries } from "@/server/lib/mobile/verification-messages";
 import { settleParentFromChildren } from "@/server/lib/parent-onboarding";
 import type { CurrentUser } from "@/server/lib/session";
 import { syncMemberStatus } from "@/server/lib/status-sync";
@@ -98,12 +99,14 @@ export async function familyPage(
   const roles = me.roles.map((r) => r.role);
   const canClaimChild = canClaim(roles, "child");
   const canClaimParent = canClaim(roles, "parent");
-  const [{ members, links, managed }, c, l, cohorts] = await Promise.all([
-    loadFamily(me),
-    loadConnections(me.id),
-    labelsFor(locale),
-    canClaimChild ? loadCohortChoices(locale) : Promise.resolve([]),
-  ]);
+  const [{ members, links, managed }, c, l, cohorts, threads] =
+    await Promise.all([
+      loadFamily(me),
+      loadConnections(me.id),
+      labelsFor(locale),
+      canClaimChild ? loadCohortChoices(locale) : Promise.resolve([]),
+      managedThreadSummaries(me.id),
+    ]);
   const toConfirm = links.filter((x) => canConfirm(me.id, x));
   const others = links.filter((x) => !canConfirm(me.id, x));
   return {
@@ -136,6 +139,7 @@ export async function familyPage(
         handover: h
           ? { email: h.email, expiresAt: h.expiresAt.toISOString() }
           : null,
+        application: threads.get(m.id) ?? null,
       };
     }),
     members: members.map((m) => memberCard(c, l, m)),

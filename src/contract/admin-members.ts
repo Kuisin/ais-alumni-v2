@@ -3,6 +3,8 @@
  * Committee admins only. Pure types only (see core.ts): change additively.
  */
 
+import type { ParentRegistration } from "./admin";
+
 /** ISO 8601 timestamp. */
 type IsoDate = string;
 type Choice = { value: string; label: string };
@@ -62,6 +64,10 @@ export type AdminMemberRow = {
    */
   app?: AppPlatform[];
   createdAt: IsoDate;
+  /** a test account (テストアカウント); absent from older servers */
+  isTest?: boolean;
+  /** a student a parent registered (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
 };
 
 export type AdminMemberList = {
@@ -180,8 +186,12 @@ export type AdminMemberDetail = {
   isAdmin: boolean;
   /** the signed-in admin themself */
   isSelf: boolean;
+  /** a test account (テストアカウント); absent from older servers */
+  isTest?: boolean;
   state: AccountStateKey;
   stateLabel: string;
+  /** a student a parent registered (also after handover); absent: older server */
+  registeredByParent?: ParentRegistration | null;
   roleLabels: string[];
   line: { status: LineStatus; displayName: string | null };
   /** native app devices, latest used first; absent from older servers */
@@ -299,3 +309,74 @@ export type AdminMergeResult = AdminResult & {
   /** merged: the kept account (open it) */
   mergedInto?: string;
 };
+
+// ---- 処分 (GET / POST /admin/members/[id]/sanctions, POST /admin/sanctions/[id]/lift) ----
+
+export type AdminSanctionLevel =
+  | "WARNING"
+  | "RESTRICTED"
+  | "SUSPENDED"
+  | "BANNED";
+
+export type AdminSanction = {
+  id: string;
+  level: AdminSanctionLevel;
+  reason: string;
+  endsAt: IsoDate | null;
+  createdAt: IsoDate;
+  /** the admin who applied it (null: account deleted) */
+  createdBy: string | null;
+  acknowledgedAt: IsoDate | null;
+  liftedAt: IsoDate | null;
+  liftedBy: string | null;
+  /** in force now (not lifted, not ended) */
+  active: boolean;
+};
+
+export type AdminSanctions = {
+  /** the active one, if any (also first in `history`) */
+  current: AdminSanction | null;
+  /** newest first */
+  history: AdminSanction[];
+};
+
+/** POST /admin/members/[id]/sanctions → AdminSanctions */
+export type AdminSanctionApply = {
+  level: AdminSanctionLevel;
+  /** 1–1000 characters, shown to the member */
+  reason: string;
+  /** RESTRICTED / SUSPENDED only (ignored otherwise); null = until lifted */
+  endsAt: IsoDate | null;
+};
+// errors: invalid (400), not_self (400: one's own account), not_found (404)
+
+// ---- テストアカウント (GET / POST /admin/test-accounts, DELETE /admin/test-accounts/[id]) ----
+
+export type TestAccountType =
+  | "PARENT"
+  | "CURRENT_STUDENT"
+  | "GRADUATE"
+  | "CURRENT_TEACHER"
+  | "FORMER_TEACHER";
+
+export type TestAccount = {
+  id: string;
+  name: string;
+  email: string | null;
+  /** null: its roles were changed since */
+  type: TestAccountType | null;
+  createdAt: IsoDate;
+};
+
+/** GET /admin/test-accounts */
+export type TestAccountList = { accounts: TestAccount[] };
+
+/** POST /admin/test-accounts → TestAccount */
+export type TestAccountCreate = {
+  type: TestAccountType;
+  /** sign-in address (an email code is sent to it as usual) */
+  email: string;
+  /** romaji, "Last, First" (e.g. "Test, Parent") */
+  name: string;
+};
+// errors: invalid (400), email_taken (409)
