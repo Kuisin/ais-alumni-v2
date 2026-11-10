@@ -626,12 +626,28 @@
     "emptyAdmin": "No messages yet. Choosing “Ask for more information” posts that message here too.",
     "adminLabel": "Message to the applicant",
     "adminHint": "The applicant is notified; the app, LINE and email show the message.",
-    "closedAdmin": "Messages can't be sent once an application is decided."
+    "closedAdmin": "Messages can't be sent once an application is decided.",
+    "attach": "Attach a photo or PDF",
+    "attachHint": "You can attach up to {max} photos (straight from your album) or PDFs.",
+    "attachRemove": "Remove {name}",
+    "attachments": "Attachments",
+    "preparing": "Preparing {name}…",
+    "attachErrors": {
+      "type": "{name}: choose a photo or a PDF.",
+      "size": "{name}: files must be 10 MB or smaller.",
+      "count": "You can attach up to {max} files.",
+      "generic": "Couldn't attach the file. Please try again."
+    }
   },
   "parentRegistered": {
     "by": "Registered by parent: {name}",
     "managed": "Parent manages",
     "handedOver": "Handed over",
     "a11y": "Account registered by their parent {name} ({state}). Open the parent's member page"
+  },
+  "upload": {
+    "errors": {
+      "decode": "{name}: this browser can't read this image. If it's an iPhone photo (HEIC), choose another photo, take a screenshot of it and choose that, or send it from your iPhone (the app or Safari)."
+    }
   }
 }

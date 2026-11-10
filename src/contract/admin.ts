@@ -127,8 +127,36 @@ export type VerificationMessage = {
   fromAdmin: boolean;
   /** who wrote it (null: account deleted) */
   author: string | null;
+  /** may be empty when the message only carries attachments */
   body: string;
   createdAt: string;
+  /** photos / PDFs sent with it; absent: older server */
+  attachments?: VerificationMessageAttachment[];
+};
+
+/** A 「やりとり」 attachment (deleted with the evidence, 30 days after the decision). */
+export type VerificationMessageAttachment = {
+  id: string;
+  fileName: string;
+  /** image/jpeg | image/png | application/pdf */
+  mimeType: string;
+  size: number;
+  /** signed /api/files URL (relative; valid 15 minutes) */
+  url: string;
+};
+
+/**
+ * POST /admin/verification/[id]/messages/attachments (multipart: file) —
+ * one file for the committee's next message; errors 400 type / size,
+ * 409 closed. Send its key with the message.
+ */
+export type MessageAttachmentUploaded = {
+  item: {
+    key: string;
+    fileName: string;
+    mimeType: "image/jpeg" | "image/png" | "application/pdf";
+    size: number;
+  };
 };
 
 /** One application in the queue (oldest first). */
@@ -354,12 +382,16 @@ export type VerificationActionResult = {
 export type VerificationDecision = "APPROVE" | "REJECT" | "NEEDS_INFO";
 
 /**
- * POST /admin/verification/[id]/messages { body } — a message in
- * 「やりとり」 without changing the application's status (PENDING /
+ * POST /admin/verification/[id]/messages { body, attachments? } — a message
+ * in 「やりとり」 without changing the application's status (PENDING /
  * NEEDS_INFO only; conflict otherwise). Result: VerificationActionResult
- * (errors.body → adminVerify.errors.<code>).
+ * (errors.body → adminVerify.errors.<code>). The body may be empty with
+ * attachments (up to 3, uploaded first).
  */
-export type VerificationMessageBody = { body: string };
+export type VerificationMessageBody = {
+  body: string;
+  attachments?: { key: string; fileName: string }[];
+};
 // ---- Change requests (氏名・生年月日・性別, 在籍情報; committee admins) ----
 
 /** ?tab= of the review lists. */

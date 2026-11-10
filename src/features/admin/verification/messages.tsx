@@ -1,6 +1,6 @@
 import type { VerificationDetail } from "@contract/admin";
 import { MessageCircle } from "lucide-react-native";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { useTranslations } from "use-intl";
 import {
@@ -8,7 +8,7 @@ import {
   MessageBubbles,
 } from "@/features/application-messages/thread";
 import { Text } from "@/ui";
-import { useSendVerificationMessage } from "./api";
+import { adminAttachments, useSendVerificationMessage } from "./api";
 import { DetailCard } from "./parts";
 
 /**
@@ -22,6 +22,7 @@ export function MessagesCard({ d }: { d: VerificationDetail }) {
   const ta = useTranslations("adminVerify");
   const send = useSendVerificationMessage(d.id);
   const [error, setError] = useState<string | null>(null);
+  const attach = useMemo(() => adminAttachments(d.id), [d.id]);
   // Older servers: no thread.
   if (!d.messages) return null;
   const messages = d.messages;
@@ -42,6 +43,7 @@ export function MessagesCard({ d }: { d: VerificationDetail }) {
             : (m.author ?? d.name),
           body: m.body,
           createdAt: m.createdAt,
+          attachments: m.attachments,
         }))}
         empty={t("emptyAdmin")}
       />
@@ -52,10 +54,11 @@ export function MessagesCard({ d }: { d: VerificationDetail }) {
             hint={t("adminHint")}
             sending={send.isPending}
             error={error}
-            onSend={async (body) => {
+            attach={attach}
+            onSend={async (body, attachments) => {
               setError(null);
               try {
-                const r = await send.mutateAsync(body);
+                const r = await send.mutateAsync({ body, attachments });
                 if (r.ok) return true;
                 setError(
                   r.errors?.body

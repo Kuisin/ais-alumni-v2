@@ -38,7 +38,7 @@
     "bio": "Visible to all members.",
     "privateTier": "Your contact details and links are visible only to you, your family and the committee (admins). Choose below what followers can see too.",
     "socialUrl": "Enter full addresses starting with https://",
-    "avatar": "JPG or PNG, up to 2 MB. Shown to your family and connections (you can show it to everyone below).",
+    "avatar": "Photos from your album are fine. Shown to your family and connections (you can show it to everyone below).",
     "stageDetail": "Only your family and approved followers can see the details."
   },
   "record": {
@@ -86,7 +86,7 @@
     "invalid": "Please check this field.",
     "fileMissing": "Please choose an image.",
     "fileSize": "The image must be 2 MB or smaller.",
-    "fileType": "Please choose a JPG or PNG image."
+    "fileType": "Please choose an image."
   },
   "requestRecordCorrection": "Request a correction",
   "historyIntro": "Adding your schools and jobs after AIS helps classmates find you.",

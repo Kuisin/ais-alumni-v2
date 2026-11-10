@@ -617,12 +617,28 @@
     "emptyAdmin": "まだメッセージはありません。「追加情報を依頼する」を選ぶと、そのメッセージもここに表示されます。",
     "adminLabel": "申請者へのメッセージ",
     "adminHint": "申請者に通知され、アプリ・LINE・メールにメッセージの内容が表示されます。",
-    "closedAdmin": "審査が終了した申請には、メッセージを送れません。"
+    "closedAdmin": "審査が終了した申請には、メッセージを送れません。",
+    "attach": "写真・PDFを添付",
+    "attachHint": "写真（アルバムからそのまま選べます）やPDFを{max}つまで添付できます。",
+    "attachRemove": "{name} を外す",
+    "attachments": "添付ファイル",
+    "preparing": "{name} を準備中…",
+    "attachErrors": {
+      "type": "{name}：写真またはPDFを選んでください。",
+      "size": "{name}：ファイルサイズは10MB以下にしてください。",
+      "count": "添付できるのは{max}つまでです。",
+      "generic": "添付できませんでした。もう一度お試しください。"
+    }
   },
   "parentRegistered": {
     "by": "保護者が登録：{name}",
     "managed": "保護者が管理中",
     "handedOver": "本人に引き継ぎ済み",
     "a11y": "保護者の{name}さんが登録したアカウント（{state}）。保護者の会員情報を開く"
+  },
+  "upload": {
+    "errors": {
+      "decode": "{name}：この画像はこのブラウザでは読み込めませんでした。iPhoneの写真（HEIC形式）の場合は、別の写真を選ぶか、写真のスクリーンショットを撮ってそれを選ぶか、iPhone（アプリまたはSafari）から送ってください。"
+    }
   }
 }

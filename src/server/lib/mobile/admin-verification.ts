@@ -1,5 +1,6 @@
 import type {
   AdminDetailRow,
+  MessageAttachmentUploaded,
   ParentChildStage,
   ParentChildStatus,
   VerificationActionResult,
@@ -37,12 +38,20 @@ import {
   inviteOfUser,
 } from "@/server/lib/invites";
 import { adminOnly } from "@/server/lib/mobile/admin";
-import { type Locale, notFound } from "@/server/lib/mobile/http";
+import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import { composeKanji, composeRomaji } from "@/server/lib/names";
 import { findManagedMatches } from "@/server/lib/parent-onboarding";
 import { isCurrentTeacher, studentStatus } from "@/server/lib/school";
 import type { CurrentUser } from "@/server/lib/session";
 import { signedFileUrl } from "@/server/lib/storage";
+import {
+  type AttachmentRef,
+  type AttachmentRow,
+  attachmentsNote,
+  attachmentView,
+  checkAttachments,
+  saveAttachments,
+} from "@/server/lib/verification/attachments";
 import { matchStudentRoster } from "@/server/lib/verification/match";
 import {
   isOpen,
@@ -55,6 +64,7 @@ import {
   parentRegistrations,
 } from "@/server/lib/verification/registered-by";
 import { ROSTER_MATCH_THRESHOLD } from "@/server/lib/verification/roster";
+import { storeUpload } from "@/server/lib/verification/uploads";
 import { findMembersByName } from "@/server/lib/verification/vouch";
 
 /**
@@ -238,8 +248,12 @@ export async function verificationQueue(
           take: 1,
           select: { fromAdmin: true },
         },
-        _count: { select: { evidence: true } },
-        evidence: { where: { kind: "DIPLOMA" }, select: { id: true } },
+        // The application's files (not 「やりとり」 attachments).
+        _count: { select: { evidence: { where: { messageId: null } } } },
+        evidence: {
+          where: { kind: "DIPLOMA", messageId: null },
+          select: { id: true },
+        },
       },
     }),
     db.verificationRequest.groupBy({
@@ -398,9 +412,10 @@ export async function verificationDetail(
           body: true,
           createdAt: true,
           author: { select: { nameRomaji: true, nameKanji: true } },
+          attachments: { orderBy: { createdAt: "asc" } },
         },
       },
-      evidence: { orderBy: { createdAt: "asc" } },
+      evidence: { where: { messageId: null }, orderBy: { createdAt: "asc" } },
       vouches: {
         orderBy: { askedAt: "asc" },
         include: {
@@ -488,6 +503,7 @@ export async function verificationDetail(
       author: m.author ? displayName(m.author, locale) : null,
       body: m.body,
       createdAt: m.createdAt.toISOString(),
+      attachments: m.attachments.map(attachmentView),
     })),
     canMessage: isOpen(request.status),
     messagesTo: applicant.managedBy
@@ -942,10 +958,11 @@ export async function sendVerificationMessage(
   user: CurrentUser,
   id: string,
   rawBody: string,
+  attachments: AttachmentRef[] = [],
 ): Promise<VerificationActionResult> {
   adminOnly(user);
   const body = rawBody.trim();
-  if (!body)
+  if (!body && !attachments.length)
     return {
       ok: false,
       message: "validation",
@@ -958,12 +975,39 @@ export async function sendVerificationMessage(
   });
   if (!request) return { ok: false, message: "notFound" };
   if (!isOpen(request.status)) return { ok: false, message: "conflict" };
-  const message = await db.verificationMessage.create({
-    data: { requestId: id, authorId: user.id, fromAdmin: true, body },
-    select: { id: true },
+  let files: AttachmentRow[];
+  try {
+    files = await checkAttachments(user.id, attachments);
+  } catch {
+    return { ok: false, message: "validation" };
+  }
+  const message = await db.$transaction(async (tx) => {
+    const m = await tx.verificationMessage.create({
+      data: { requestId: id, authorId: user.id, fromAdmin: true, body },
+      select: { id: true },
+    });
+    await saveAttachments(tx, id, m.id, files);
+    return m;
   });
-  await notifyAdminMessage(id, message.id, body);
+  await notifyAdminMessage(id, message.id, body || attachmentsNote(files));
   return { ok: true, message: "saved" };
+}
+
+/** An attachment for the committee's next message (multipart: file). */
+export async function uploadAdminAttachment(
+  user: CurrentUser,
+  id: string,
+  file: File,
+  locale: Locale,
+): Promise<MessageAttachmentUploaded> {
+  adminOnly(user);
+  const request = await db.verificationRequest.findUnique({
+    where: { id },
+    select: { status: true },
+  });
+  if (!request) throw notFound();
+  if (!isOpen(request.status)) throw new ApiError(409, "closed");
+  return { item: await storeUpload(user.id, file, locale) };
 }
 
 export async function addVoucher(

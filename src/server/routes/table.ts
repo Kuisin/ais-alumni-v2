@@ -74,6 +74,7 @@ import * as adminVerificationDetail from "./mobile/v1/admin/verification/[id]";
 import * as adminVerificationDecision from "./mobile/v1/admin/verification/[id]/decision";
 import * as adminVerificationMerge from "./mobile/v1/admin/verification/[id]/merge";
 import * as adminVerificationMessages from "./mobile/v1/admin/verification/[id]/messages";
+import * as adminVerificationAttachments from "./mobile/v1/admin/verification/[id]/messages/attachments";
 import * as adminVerificationVouchers from "./mobile/v1/admin/verification/[id]/vouchers";
 import * as authAppleNative from "./mobile/v1/auth/apple/native";
 import * as r0 from "./mobile/v1/auth/email/request";
@@ -157,6 +158,7 @@ import * as obLine from "./mobile/v1/onboarding/line";
 import * as obLineSkip from "./mobile/v1/onboarding/line/skip";
 import * as obMessages from "./mobile/v1/onboarding/messages";
 import * as obMessage from "./mobile/v1/onboarding/messages/[id]";
+import * as obMessageAttachments from "./mobile/v1/onboarding/messages/[id]/attachments";
 import * as obMessageRead from "./mobile/v1/onboarding/messages/[id]/read";
 import * as obStatus from "./mobile/v1/onboarding/status";
 import * as obVerify from "./mobile/v1/onboarding/verify";
@@ -245,6 +247,10 @@ export const ROUTES: [string, RouteModule][] = [
   [
     "admin/verification/[id]/messages",
     adminVerificationMessages as unknown as RouteModule,
+  ],
+  [
+    "admin/verification/[id]/messages/attachments",
+    adminVerificationAttachments as unknown as RouteModule,
   ],
   ["admin/members", adminMembers as unknown as RouteModule],
   ["admin/members/[id]", adminMember as unknown as RouteModule],
@@ -399,6 +405,10 @@ export const ROUTES: [string, RouteModule][] = [
   ["onboarding/line/skip", obLineSkip as unknown as RouteModule],
   ["onboarding/messages", obMessages as unknown as RouteModule],
   ["onboarding/messages/[id]", obMessage as unknown as RouteModule],
+  [
+    "onboarding/messages/[id]/attachments",
+    obMessageAttachments as unknown as RouteModule,
+  ],
   ["onboarding/messages/[id]/read", obMessageRead as unknown as RouteModule],
   ["onboarding/status", obStatus as unknown as RouteModule],
   ["onboarding/verify", obVerify as unknown as RouteModule],

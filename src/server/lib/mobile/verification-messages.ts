@@ -1,4 +1,5 @@
 import type {
+  ApplicationAttachmentUploaded,
   ApplicationReplySent,
   ApplicationThread,
   ApplicationThreads,
@@ -13,11 +14,21 @@ import { displayName } from "@/server/lib/format";
 import { ApiError, type Locale, notFound } from "@/server/lib/mobile/http";
 import type { CurrentUser } from "@/server/lib/session";
 import { assertTransition } from "@/server/lib/state-machine";
+import { deletePrivate } from "@/server/lib/storage";
+import {
+  type AttachmentRef,
+  attachmentsNote,
+  attachmentView,
+  checkAttachments,
+  saveAttachments,
+} from "@/server/lib/verification/attachments";
+import { isOwnEvidenceKey } from "@/server/lib/verification/evidence";
 import {
   isOpen,
   MESSAGE_MAX,
   notifyReplyToAdmins,
 } from "@/server/lib/verification/messages";
+import { storeUpload } from "@/server/lib/verification/uploads";
 
 /**
  * 「やりとり」 for the applicant (src/server/lib/verification/messages.ts):
@@ -53,6 +64,16 @@ const THREAD_SELECT = {
       body: true,
       createdAt: true,
       author: { select: { nameRomaji: true, nameKanji: true } },
+      attachments: {
+        orderBy: { createdAt: "asc" },
+        select: {
+          id: true,
+          storageKey: true,
+          fileName: true,
+          mimeType: true,
+          size: true,
+        },
+      },
     },
   },
 } as const satisfies Prisma.VerificationRequestSelect;
@@ -100,6 +121,7 @@ function threadView(
           : null,
       body: m.body,
       createdAt: m.createdAt.toISOString(),
+      attachments: m.attachments.map(attachmentView),
     })),
   };
 }
@@ -215,17 +237,22 @@ export async function replyToThread(
   id: string,
   rawBody: string,
   locale: Locale,
+  attachments: AttachmentRef[] = [],
 ): Promise<ApplicationReplySent> {
   const body = rawBody.trim();
-  if (!body || body.length > MESSAGE_MAX) throw new ApiError(400, "invalid");
+  if ((!body && !attachments.length) || body.length > MESSAGE_MAX)
+    throw new ApiError(400, "invalid");
   const row = await readable(me, id);
   if (!isOpen(row.status)) throw new ApiError(409, "closed");
+  const files = await checkAttachments(me.id, attachments);
   const now = new Date();
   let resumed = false;
   await db.$transaction(async (tx) => {
-    await tx.verificationMessage.create({
+    const message = await tx.verificationMessage.create({
       data: { requestId: id, authorId: me.id, fromAdmin: false, body },
+      select: { id: true },
     });
+    await saveAttachments(tx, id, message.id, files);
     await tx.verificationRequest.update({
       where: { id },
       data: { applicantReadAt: now },
@@ -256,11 +283,40 @@ export async function replyToThread(
     // parent) the application that followed the child.
     resumed = (row.userId === me.id && accountMoved) || parentResumed;
   });
-  await notifyReplyToAdmins(id, body);
+  await notifyReplyToAdmins(id, body || attachmentsNote(files));
   return {
     thread: threadView(me, await readable(me, id), locale),
     resumed,
   };
+}
+
+/**
+ * A photo / PDF for my next reply in an open thread I can read (stored
+ * under my own prefix; attached when the reply names its key).
+ */
+export async function uploadThreadAttachment(
+  me: CurrentUser,
+  id: string,
+  file: File,
+  locale: Locale,
+): Promise<ApplicationAttachmentUploaded> {
+  const row = await readable(me, id);
+  if (!isOpen(row.status)) throw new ApiError(409, "closed");
+  return { item: await storeUpload(me.id, file, locale) };
+}
+
+/** Remove an upload of mine that no message carries (not sent after all). */
+export async function discardThreadAttachment(
+  me: CurrentUser,
+  key: string,
+): Promise<{ ok: true }> {
+  if (!isOwnEvidenceKey(me.id, key)) return { ok: true };
+  const used = await db.verificationEvidence.findFirst({
+    where: { storageKey: key },
+    select: { id: true },
+  });
+  if (!used) await deletePrivate(key).catch(() => undefined);
+  return { ok: true };
 }
 
 /** 家族: each managed child's thread, for 「申請についての質問」. */

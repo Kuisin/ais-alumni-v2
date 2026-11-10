@@ -113,14 +113,14 @@
   },
   "evidence": {
     "label": "Supporting documents (optional)",
-    "hint": "For example an AIS ID card, report card, diploma or yearbook page. JPG, PNG or PDF, up to 10 MB each, {max} files max. Only the committee can see them, and they are deleted 30 days after the decision.",
+    "hint": "For example an AIS ID card, report card, diploma or yearbook page. Photos from your phone's album (iPhone photos too) can be chosen as they are, or PDFs. Up to 10 MB each, {max} files max. Only the committee can see them, and they are deleted 30 days after the decision.",
     "remove": "Remove {name}",
     "removeShort": "Remove",
     "full": "You have added the maximum number of files.",
     "uploading": "Uploading {name}…",
     "uploaded": "Uploaded {name}.",
     "errors": {
-      "type": "{name}: only JPG, PNG or PDF files can be uploaded.",
+      "type": "{name}: this kind of file can't be sent. Choose a photo (straight from your album) or a PDF.",
       "size": "{name}: files must be 10 MB or smaller.",
       "count": "You can upload up to 3 files in total.",
       "forbidden": "Your session has expired. Please reload the page.",
@@ -245,7 +245,7 @@
     "title": "Diploma",
     "intro": "If you graduated from AIS, upload a photo or scan of your diploma. The committee uses it to confirm you attended, and deletes it 30 days after deciding.",
     "label": "Diploma file",
-    "hint": "JPG, PNG or PDF (up to 10 MB). Make sure your name and graduation year are readable.",
+    "hint": "A photo (straight from your album) or a PDF, up to 10 MB. Make sure your name and graduation year are readable.",
     "unavailable": "I don't have my diploma",
     "unavailableHint": "If so, add any other document that shows you attended (report card, a yearbook photo, …) below."
   },

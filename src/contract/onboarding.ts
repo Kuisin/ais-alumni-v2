@@ -129,7 +129,8 @@ export type RegisteredChild = {
 
 // ---- 「やりとり」: messages with the committee about an application ----
 // GET /onboarding/messages, GET /onboarding/messages/[id],
-// POST /onboarding/messages/[id] {body}, POST /onboarding/messages/[id]/read.
+// POST /onboarding/messages/[id] {body, attachments?: {key, fileName}[]}
+// (body may be empty with attachments; up to 3), POST …/[id]/read.
 // Any signed-in account: the applicant's own application, or one of a child
 // account they manage (also once they're a member themselves).
 
@@ -141,8 +142,36 @@ export type ApplicationMessage = {
   mine: boolean;
   /** the applicant's or managing parent's name; null for the committee */
   author: string | null;
+  /** may be empty when the message only carries attachments */
   body: string;
   createdAt: IsoDate;
+  /** photos / PDFs sent with it; absent: older server */
+  attachments?: ApplicationAttachment[];
+};
+
+/** A 「やりとり」 attachment (deleted with the evidence, 30 days after the decision). */
+export type ApplicationAttachment = {
+  id: string;
+  fileName: string;
+  /** image/jpeg | image/png | application/pdf */
+  mimeType: string;
+  size: number;
+  /** signed /api/files URL (relative; valid 15 minutes) */
+  url: string;
+};
+
+/**
+ * POST /onboarding/messages/[id]/attachments (multipart: file) — one file
+ * for the next reply (errors 400 type / size, 409 closed); send its key
+ * with the reply. DELETE …/attachments?key= removes one not sent.
+ */
+export type ApplicationAttachmentUploaded = {
+  item: {
+    key: string;
+    fileName: string;
+    mimeType: "image/jpeg" | "image/png" | "application/pdf";
+    size: number;
+  };
 };
 
 export type ApplicationThread = {

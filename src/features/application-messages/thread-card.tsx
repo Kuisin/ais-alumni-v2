@@ -1,10 +1,11 @@
 import type { ApplicationThread } from "@contract/onboarding";
 import { MessageCircle } from "lucide-react-native";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Badge, Card, colors, space, Text } from "@/ui";
 import {
+  threadAttachments,
   useApplicationThreads,
   useMarkThreadRead,
   useReplyToThread,
@@ -29,6 +30,10 @@ export function ApplicationThreadCard({
 }) {
   const t = useTranslations("mobile.applicationMessages");
   const reply = useReplyToThread(thread.requestId);
+  const attach = useMemo(
+    () => threadAttachments(thread.requestId),
+    [thread.requestId],
+  );
   const markRead = useMarkThreadRead(thread.requestId);
   const { mutate: read } = markRead;
   const unread = thread.unread;
@@ -66,6 +71,7 @@ export function ApplicationThreadCard({
               : (m.author ?? "—"),
           body: m.body,
           createdAt: m.createdAt,
+          attachments: m.attachments,
         }))}
         empty={t("emptyApplicant")}
       />
@@ -81,9 +87,10 @@ export function ApplicationThreadCard({
           }
           sending={reply.isPending}
           error={reply.isError ? t("error") : null}
-          onSend={async (text) => {
+          attach={attach}
+          onSend={async (text, attachments) => {
             try {
-              const sent = await reply.mutateAsync(text);
+              const sent = await reply.mutateAsync({ body: text, attachments });
               if (sent.resumed) onResumed?.();
               return true;
             } catch {

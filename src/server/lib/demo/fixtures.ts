@@ -1018,6 +1018,12 @@ const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
   "onboarding/messages": {
     GET: () => ({ threads: [] }) satisfies ApplicationThreads,
   },
+  // No thread to attach to: an upload is refused ({ ok }, no item — the
+  // app shows its generic error), removing one does nothing.
+  "onboarding/messages/[id]/attachments": {
+    POST: () => ({ ok: false }),
+    DELETE: () => OK satisfies Ok,
+  },
   "family/search": { GET: () => ({ items: [] }) satisfies FamilySearch },
   "family/links": {
     POST: () =>

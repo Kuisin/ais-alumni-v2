@@ -1,4 +1,5 @@
 import type {
+  ApplicationAttachmentUploaded,
   ApplicationReplySent,
   ApplicationThread,
   ApplicationThreads,
@@ -13,6 +14,8 @@ import {
 import { familyKeys } from "@/features/family/api";
 import { ONBOARDING_KEY } from "@/features/onboarding/api";
 import { api } from "@/lib/api";
+import { appendPicked, type PickedFile } from "@/lib/upload-image";
+import type { AttachConfig, PendingAttachment } from "./attachments";
 
 /**
  * 「やりとり」 with the committee about an application: the applicant's own
@@ -53,12 +56,17 @@ function refresh(queryClient: QueryClient) {
   ]);
 }
 
+export type ReplyInput = {
+  body: string;
+  attachments?: { key: string; fileName: string }[];
+};
+
 export function useReplyToThread(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (body: string) =>
+    mutationFn: ({ body, attachments }: ReplyInput) =>
       api<ApplicationReplySent>(`/onboarding/messages/${enc(id)}`, {
-        body: { body },
+        body: attachments?.length ? { body, attachments } : { body },
       }),
     onSuccess: (sent) =>
       queryClient.setQueryData(messageKeys.thread(id), sent.thread),
@@ -74,4 +82,30 @@ export function useMarkThreadRead(id: string) {
       api<Ok>(`/onboarding/messages/${enc(id)}/read`, { body: {} }),
     onSuccess: () => refresh(queryClient),
   });
+}
+
+/**
+ * Upload one file to a multipart endpoint that answers { item }; an
+ * answer without one (e.g. the demo) counts as a failure.
+ */
+export async function uploadAttachmentTo(
+  path: string,
+  f: PickedFile,
+): Promise<PendingAttachment> {
+  const fd = new FormData();
+  appendPicked(fd, "file", f);
+  const r = await api<ApplicationAttachmentUploaded>(path, { body: fd });
+  if (!r?.item) throw new Error("generic");
+  return r.item;
+}
+
+/** Attachments for a reply in this thread. */
+export function threadAttachments(id: string): AttachConfig {
+  const path = `/onboarding/messages/${enc(id)}/attachments`;
+  return {
+    upload: (f) => uploadAttachmentTo(path, f),
+    discard: (key) => {
+      void api(`${path}?key=${enc(key)}`, { method: "DELETE" }).catch(() => {});
+    },
+  };
 }

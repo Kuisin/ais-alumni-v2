@@ -369,35 +369,45 @@ model VerificationRequest {
 /// (or the parent managing a child's account) about one application
 /// (src/server/lib/verification/messages.ts).
 model VerificationMessage {
-  id        String              @id @default(cuid())
-  requestId String
-  request   VerificationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  authorId  String?
-  author    User?               @relation("verificationMessages", fields: [authorId], references: [id], onDelete: SetNull)
+  id          String                 @id @default(cuid())
+  requestId   String
+  request     VerificationRequest    @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  authorId    String?
+  author      User?                  @relation("verificationMessages", fields: [authorId], references: [id], onDelete: SetNull)
   /// from the committee (else the applicant / managing parent)
-  fromAdmin Boolean
-  body      String
-  createdAt DateTime            @default(now())
+  fromAdmin   Boolean
+  /// may be empty when the message only carries attachments
+  body        String
+  createdAt   DateTime               @default(now())
+  /// Added: photos / PDFs sent with the message (VerificationEvidence rows
+  /// with messageId set: same private storage and 30-day rule, but not the
+  /// application's evidence)
+  attachments VerificationEvidence[]
 
   @@index([requestId, createdAt])
   @@index([authorId])
 }
 
 model VerificationEvidence {
-  id          String              @id @default(cuid())
+  id          String               @id @default(cuid())
   requestId   String
-  request     VerificationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  request     VerificationRequest  @relation(fields: [requestId], references: [id], onDelete: Cascade)
   storageKey  String
   fileName    String
   mimeType    String
   size        Int
   // Added: 卒業証書 (DIPLOMA) or any other supporting document
-  kind        EvidenceKind        @default(OTHER)
+  kind        EvidenceKind         @default(OTHER)
   // null while the request is undecided; set to decidedAt + 30 days (§6.3)
   deleteAfter DateTime?
-  createdAt   DateTime            @default(now())
+  createdAt   DateTime             @default(now())
+  /// Added: set for a 「やりとり」 message's attachment — then it isn't one
+  /// of the application's evidence files (never listed or counted as one)
+  messageId   String?
+  message     VerificationMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@index([deleteAfter])
+  @@index([messageId])
 }
 
 enum VouchAnswer {
