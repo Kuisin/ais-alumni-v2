@@ -37,7 +37,7 @@
           "Alumni",
           "Aichi"
         ],
-        "releaseNotes": "・「利用できる機能」ページを追加しました（マイページから）。区分・役職ごとに使える機能を表で確認できます。\n・教職員の1対1のトークのルールを変更しました。\n・iPhone Duo を開いた時の余白を整えました。",
+        "releaseNotes": "・アルバムの写真を、形式を気にせずそのままアップロードできるようになりました（本人確認書類・ニュースやイベントの添付）。\n・登録の申請について、委員会とメッセージでやりとりできるようになりました（画像も添付できます）。\n・「利用できる機能」に、プロフィールの公開範囲の表を追加しました。\n・その他の改善",
         "promoText": "AIS の卒業生・保護者・教職員をつなぐ同窓会アプリ。",
         "supportUrl": "https://ais-alumni.kai-lab.net/support",
         "marketingUrl": "https://ais-alumni.kai-lab.net",
@@ -57,7 +57,7 @@
           "events",
           "school"
         ],
-        "releaseNotes": "• New \"What you can use\" page (from Me): tables of what each member type and position can use.\n• Updated the 1:1 talk rules for teachers.\n• Even margins on the open iPhone Duo.",
+        "releaseNotes": "• Upload photos from your album in any format (registration documents, news and event attachments).\n• Message the committee about your registration, with images.\n• \"What you can use\" now shows who sees each profile detail.\n• Other improvements",
         "promoText": "The alumni network of Aichi International School, in your pocket.",
         "supportUrl": "https://ais-alumni.kai-lab.net/support",
         "marketingUrl": "https://ais-alumni.kai-lab.net",
