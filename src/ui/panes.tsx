@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import { type Fold, FoldArea, useFoldArea } from "./fold";
+import { ScreenSides } from "./screen";
 import { colors } from "./theme";
 
 /**
@@ -70,7 +71,7 @@ function PanesBody({
   return (
     <View style={styles.row}>
       <View style={wide ? { width: listWidth } : styles.fill}>
-        {list(wide)}
+        <ScreenSides sides={wide ? LEFT : BOTH}>{list(wide)}</ScreenSides>
       </View>
       {wide ? (
         fold ? (
@@ -79,10 +80,18 @@ function PanesBody({
           <View style={styles.divider} />
         )
       ) : null}
-      {wide ? <View style={styles.fill}>{detail}</View> : null}
+      {wide ? (
+        <View style={styles.fill}>
+          <ScreenSides sides={RIGHT}>{detail}</ScreenSides>
+        </View>
+      ) : null}
     </View>
   );
 }
+
+const LEFT = ["left"] as const;
+const RIGHT = ["right"] as const;
+const BOTH = ["left", "right"] as const;
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },

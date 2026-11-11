@@ -1,6 +1,4 @@
 import { type Href, Stack, useRouter } from "expo-router";
-import { useHeaderHeight } from "expo-router/react-navigation";
-import { useEffect } from "react";
 import { useTranslations } from "use-intl";
 import { LeaveAdminButton } from "@/features/admin/leave-button";
 import { AdminSectionList } from "@/features/admin/section-list";
@@ -17,21 +15,15 @@ export default function AdminHomeScreen() {
   const tc = useTranslations("common");
   const t = useTranslations("mobile.admin");
   const router = useRouter();
-  const { wide, setHeaderHeight } = useAdminSplit();
-  // The list column's header matches the stack's (this screen is always at
-  // the bottom of the stack, so it's there to measure).
-  const headerHeight = useHeaderHeight();
-  useEffect(
-    () => setHeaderHeight(headerHeight),
-    [headerHeight, setHeaderHeight],
-  );
+  const { wide } = useAdminSplit();
 
   return (
     <>
       <Stack.Screen
         options={
           wide
-            ? { title: "", headerLeft: () => null }
+            ? // Nothing chosen yet: no empty header bar beside the list's.
+              { headerShown: false }
             : {
                 title: tc("nav.adminMode"),
                 headerLeft: () => <LeaveAdminButton />,

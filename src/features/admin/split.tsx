@@ -1,12 +1,6 @@
 import { type Href, useNavigation, usePathname, useRouter } from "expo-router";
 import { Header } from "expo-router/react-navigation";
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, type ReactNode, useContext, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useMe } from "@/lib/auth";
@@ -14,6 +8,7 @@ import { stackScreenOptions } from "@/lib/navigation";
 import { colors } from "@/ui";
 import { FoldArea, useFoldArea } from "@/ui/fold";
 import { panesLayout } from "@/ui/panes";
+import { ScreenSides } from "@/ui/screen";
 import { LeaveAdminButton } from "./leave-button";
 import { adminSections } from "./nav";
 import { ADMIN_PAGES } from "./paths";
@@ -25,13 +20,10 @@ const LIST_WIDTH = { min: 280, max: 320, share: 0.32 };
 type Split = {
   /** the section list is beside the stack */
   wide: boolean;
-  /** the stack's header height (admin/index reports it), for the list's */
-  setHeaderHeight: (height: number) => void;
 };
 
 const SplitContext = createContext<Split>({
   wide: false,
-  setHeaderHeight: () => {},
 });
 
 /** Inside 管理モード: whether the section list is beside the screens. */
@@ -64,14 +56,15 @@ export function AdminSplit({
 
 function SplitBody({ children }: { children: (wide: boolean) => ReactNode }) {
   const { wide, fold, listWidth } = panesLayout(useFoldArea(), LIST_WIDTH);
-  const [headerHeight, setHeaderHeight] = useState<number | null>(null);
-  const split = useMemo(() => ({ wide, setHeaderHeight }), [wide]);
+  const split = useMemo(() => ({ wide }), [wide]);
   return (
     <SplitContext.Provider value={split}>
       <View style={styles.row}>
         {wide ? (
           <View style={{ width: listWidth }}>
-            <ListColumn headerHeight={headerHeight} />
+            <ScreenSides sides={LEFT}>
+              <ListColumn />
+            </ScreenSides>
           </View>
         ) : null}
         {wide ? (
@@ -81,14 +74,18 @@ function SplitBody({ children }: { children: (wide: boolean) => ReactNode }) {
             <View style={styles.divider} />
           )
         ) : null}
-        <View style={styles.fill}>{children(wide)}</View>
+        <View style={styles.fill}>
+          <ScreenSides sides={wide ? RIGHT : BOTH}>
+            {children(wide)}
+          </ScreenSides>
+        </View>
       </View>
     </SplitContext.Provider>
   );
 }
 
 /** The list column: its own header (as tall as the stack's) and scroll. */
-function ListColumn({ headerHeight }: { headerHeight: number | null }) {
+function ListColumn() {
   const tc = useTranslations("common");
   const router = useRouter();
   const pathname = usePathname();
@@ -129,10 +126,6 @@ function ListColumn({ headerHeight }: { headerHeight: number | null }) {
     <View style={styles.fill}>
       <Header
         {...headerOptions}
-        headerStyle={[
-          headerOptions.headerStyle,
-          headerHeight ? { height: headerHeight } : null,
-        ]}
         title={tc("nav.adminMode")}
         headerLeft={() => <LeaveAdminButton onLeave={leave} />}
       />
@@ -165,6 +158,10 @@ const SECTION_ROUTES = new Set(
     return [name, `${name}/index`];
   }),
 );
+
+const LEFT = ["left"] as const;
+const RIGHT = ["right"] as const;
+const BOTH = ["left", "right"] as const;
 
 const styles = StyleSheet.create({
   fill: { flex: 1 },
