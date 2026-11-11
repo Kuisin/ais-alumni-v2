@@ -245,11 +245,18 @@ project id in the config Expo Go needs no sign-in (with one, run
   system bar at its right edge — a right safe-area inset), open flat (no
   fold) and half open, where the fold is a reserved region — top to bottom
   in the book pose, across in the table pose. Nothing interactive across
-  it: bottom sheets go in `SheetPlacement` (`sheetWidth`; past a book fold,
-  below a table one, clear of the side bar), full-screen centred messages
-  in `FoldCenter` (`Loading`, `ErrorState` already are); lists may scroll
-  under it. System sheets (`presentationStyle="pageSheet"`) are placed by
-  iOS — give their `SafeAreaView` all four edges. The regions lag the
+  it: full-screen centred messages go in `FoldCenter` (`Loading`,
+  `ErrorState` already are); lists may scroll under it. Sheets on iOS are
+  the system's, which iOS places: plain menus and confirmations are action
+  sheets (`showActionMenu`, `src/ui/action-menu.ts`; check
+  `systemActionMenus` first), sheets with content page sheets (`Sheet`,
+  `src/ui/sheet.tsx` — a Modal with `presentationStyle="pageSheet"` and
+  `allowSwipeDismissal`; give its `SafeAreaView` all four edges, as
+  `PageSheetFrame` does), date and time the compact `DateTimePicker`.
+  Android and the web draw their bottom sheets in `SheetPlacement`
+  (`sheetWidth`; past a book fold, below a table one, clear of the side
+  bar). Never react-native-screens' `experimental` components: they
+  aren't compiled into our builds. The regions lag the
   hinge by about a second: `patches/react-native-reserved-regions…` asks
   again after it settles, or a fold could linger after opening flat.
 - Feature code in `src/features/<feature>/` (components, `api.ts` hooks).
@@ -320,10 +327,11 @@ failing on development-build bundles.
 Work goes to `dev` (deployed to staging, ais-alumni-dev.kai-lab.net).
 Pushing `dev` opens the release PR `dev → main` (.github/workflows/
 release-pr.yml); only `dev` may merge into `main` (branch-policy.yml).
-Merge it with a **merge commit**, never squash or rebase: a squashed
-release leaves `main` and `dev` with different histories, and the next
-release then needs a "merge main into dev" first. Merging `main` deploys
-production (ais-alumni.kai-lab.net).
+The owner merges releases with **squash**, so `main` gets one commit per
+release and `dev` keeps the detailed history. After each release, sync
+`dev` before more work: `git fetch origin main && git merge -s ours
+origin/main` (main's tree is dev's at the release, so keep dev's), then
+push. Merging `main` deploys production (ais-alumni.kai-lab.net).
 
 ## Builds and release (EAS)
 

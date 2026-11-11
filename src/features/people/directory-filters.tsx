@@ -14,9 +14,9 @@ import {
   TextField,
   TOUCH,
 } from "@/ui";
+import { Sheet } from "@/ui/sheet";
 import { type DirectoryForm, EMPTY_FORM } from "./api";
 import { Chips, type Choice, ChoiceList, SelectField } from "./choices";
-import { Sheet } from "./sheet";
 
 /**
  * The directory's search (src/components/directory/filter-form.tsx): the

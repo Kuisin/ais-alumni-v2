@@ -2,11 +2,13 @@ import type { FollowUiState } from "@contract/people";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { Clock, MessageCircle, UserCheck, UserPlus } from "lucide-react-native";
-import { type ReactNode, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { type ReactNode, useRef, useState } from "react";
+import { type HostInstance, Platform, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ApiError, api } from "@/lib/api";
 import { Button, space, Text } from "@/ui";
+import { showActionMenu, systemActionMenus } from "@/ui/action-menu";
+import { Sheet } from "@/ui/sheet";
 import {
   CHAT_ERRORS,
   followErrorKey,
@@ -15,7 +17,6 @@ import {
   useFollowMember,
   useUnfollowMember,
 } from "./api";
-import { Sheet } from "./sheet";
 
 function tap() {
   if (Platform.OS !== "web")
@@ -76,9 +77,13 @@ export function FollowButton({
   );
 
   const canRequest = state === "none" || state === "followBack";
-  // Errors belong to the request button; success notes to the state it led to.
+  // Errors belong to the request button; success notes to the state it led
+  // to. iOS asks before unfollowing in an action sheet, which can't show
+  // the outcome: an unfollow error goes under 「フォロー中」 there.
   const message =
-    result && (result.ok ? !canRequest : canRequest) ? result : null;
+    result && (result.ok ? !canRequest : canRequest || systemActionMenus)
+      ? result
+      : null;
   const busy = follow.isPending || unfollow.isPending;
 
   const request = () => {
@@ -108,18 +113,41 @@ export function FollowButton({
     });
   };
 
+  const anchor = useRef<HostInstance>(null);
+  const confirmUnfollow = () => {
+    if (!systemActionMenus) {
+      setConfirming(true);
+      return;
+    }
+    showActionMenu(
+      {
+        message: t("actions.unfollowConfirm", { name }),
+        actions: [
+          { label: t("actions.unfollow"), destructive: true, onPress: remove },
+        ],
+        cancelLabel: t("actions.cancel"),
+      },
+      anchor,
+    );
+  };
+
   let button: ReactNode;
   if (state === "following") {
     button = (
-      <Button
-        variant="secondary"
-        compact={compact}
-        label={t("actions.following")}
-        icon={(c) => <UserCheck size={16} color={c} aria-hidden />}
-        accessibilityState={{ expanded: confirming }}
-        onPress={() => setConfirming(true)}
-        disabled={busy}
-      />
+      <View ref={anchor} collapsable={false}>
+        <Button
+          variant="secondary"
+          compact={compact}
+          label={
+            unfollow.isPending ? t("actions.working") : t("actions.following")
+          }
+          icon={(c) => <UserCheck size={16} color={c} aria-hidden />}
+          accessibilityState={{ expanded: confirming }}
+          loading={unfollow.isPending}
+          onPress={confirmUnfollow}
+          disabled={busy}
+        />
+      </View>
     );
   } else if (state === "requested") {
     button = (
@@ -158,7 +186,7 @@ export function FollowButton({
       {button}
       <StatusLine text={message?.text ?? null} ok={message?.ok} />
       <Sheet
-        visible={confirming}
+        visible={confirming && !systemActionMenus}
         onClose={() => setConfirming(false)}
         title={t("actions.following")}
       >

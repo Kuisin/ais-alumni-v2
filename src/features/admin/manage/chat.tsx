@@ -10,7 +10,6 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { useLocale, useTranslations } from "use-intl";
 import { Notice, SegmentedTabs } from "@/features/events/parts";
 import { ChoiceList, SelectField } from "@/features/people/choices";
-import { Sheet } from "@/features/people/sheet";
 import { formatDateTime } from "@/lib/format";
 import { hrefFor } from "@/lib/links";
 import {
@@ -26,6 +25,7 @@ import {
   Text,
   TOUCH,
 } from "@/ui";
+import { Sheet } from "@/ui/sheet";
 import {
   adminManageApi,
   type InboxTab,

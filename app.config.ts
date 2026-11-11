@@ -22,7 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: "kaisei0807s",
   // Google / LINE sign-in returns to aisalumni://auth (src/lib/auth.tsx).
   scheme: "aisalumni",
-  version: "1.0.2",
+  version: "1.0.4",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "light",

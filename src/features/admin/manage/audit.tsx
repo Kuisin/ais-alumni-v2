@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useLocale, useTranslations } from "use-intl";
 import { ChoiceList, SelectField } from "@/features/people/choices";
-import { Sheet } from "@/features/people/sheet";
 import { formatDate, formatTime, TIME_ZONE } from "@/lib/format";
 import { hrefFor } from "@/lib/links";
 import {
@@ -23,6 +22,7 @@ import {
   TextField,
   TOUCH,
 } from "@/ui";
+import { Sheet } from "@/ui/sheet";
 import { useAdminAudit } from "./api";
 
 /** Action prefixes offered in the filter (the website's AUDIT_CATEGORIES). */

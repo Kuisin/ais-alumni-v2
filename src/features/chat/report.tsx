@@ -300,6 +300,7 @@ function WhoPicker({
       visible={visible}
       animationType="slide"
       presentationStyle="pageSheet"
+      allowSwipeDismissal
       onRequestClose={onClose}
     >
       <SafeAreaView style={styles.picker}>

@@ -1,11 +1,11 @@
 import type { ProfileAudience } from "@contract/people";
 import { Redirect, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { MoreHorizontal } from "lucide-react-native";
-import { useState } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { useRef, useState } from "react";
+import { type HostInstance, Pressable, StyleSheet } from "react-native";
 import { useTranslations } from "use-intl";
 import { useMember } from "@/features/people/api";
-import { MemberMenu } from "@/features/people/member-menu";
+import { useMemberMenu } from "@/features/people/member-menu";
 import {
   AboutSection,
   ContactSection,
@@ -41,8 +41,13 @@ export default function MemberScreen() {
   const self = id === me.user.id && !preview;
   const query = useMember(id, preview, !self);
   const [refreshing, setRefreshing] = useState(false);
-  const [menu, setMenu] = useState(false);
   const profile = query.data;
+  const menu = useMemberMenu({
+    memberId: profile?.id ?? id,
+    name: profile?.name ?? "",
+  });
+  // The ⋯ button: on a wide window iOS points its menu's popover here.
+  const menuButton = useRef<HostInstance>(null);
 
   if (self) return <Redirect href={"/profile"} />;
 
@@ -60,9 +65,10 @@ export default function MemberScreen() {
           headerRight: profile?.relationship.menu
             ? () => (
                 <Pressable
+                  ref={menuButton}
                   accessibilityRole="button"
                   accessibilityLabel={tf("menu.label")}
-                  onPress={() => setMenu(true)}
+                  onPress={() => menu.open(menuButton)}
                   hitSlop={4}
                   style={({ pressed }) => [
                     styles.menu,
@@ -98,14 +104,7 @@ export default function MemberScreen() {
           </Screen>
         )}
       </QueryState>
-      {profile?.relationship.menu ? (
-        <MemberMenu
-          visible={menu}
-          onClose={() => setMenu(false)}
-          memberId={profile.id}
-          name={profile.name}
-        />
-      ) : null}
+      {profile?.relationship.menu ? menu.element : null}
     </>
   );
 }

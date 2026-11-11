@@ -11,7 +11,6 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Switch, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { ChoiceList, SelectField } from "@/features/people/choices";
-import { Sheet } from "@/features/people/sheet";
 import { hrefFor } from "@/lib/links";
 import {
   Badge,
@@ -25,6 +24,7 @@ import {
   Text,
   TOUCH,
 } from "@/ui";
+import { Sheet } from "@/ui/sheet";
 import { type DestinationParams, useAdminDestinations } from "./api";
 import { BarTable, StatCard } from "./parts";
 
