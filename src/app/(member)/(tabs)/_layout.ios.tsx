@@ -6,12 +6,13 @@ import { colors } from "@/ui/theme";
 const badge = (n: number) => (n > 0 ? (n > 99 ? "99+" : String(n)) : null);
 
 /**
- * iOS: the system's tab bar (Android and the web: _layout.tsx). Where there
- * is room — the iPhone Duo open, a Pro Max in landscape — iOS shows the
- * tabs as a sidebar; folded, in the Duo's vertical bar. (Tried and undone:
- * forcing the compact icon bar when open — started open, the tabs were
- * often missing altogether.) Each tab's own stack draws its header
- * (features/tabs/tab-stack).
+ * iOS: the system's tab bar (Android and the web: _layout.tsx), with iOS's
+ * defaults — on the iPhone Duo the icon bar in its vertical bar, folded or
+ * open. react-native-screens ≥ 4.30.1 sizes the tab bar controller before
+ * attaching it; before that, started on the Duo's open display the tabs
+ * were missing until it was folded and opened
+ * (software-mansion/react-native-screens#4989). Each tab's own stack draws
+ * its header (features/tabs/tab-stack).
  */
 export default function TabLayout() {
   const t = useTranslations("common.nav");
@@ -20,7 +21,6 @@ export default function TabLayout() {
   const chat = badge(badges.chat);
   return (
     <NativeTabs
-      preferredPlacement="sidebar"
       tintColor={colors.brand700}
       badgeBackgroundColor={colors.red600}
     >

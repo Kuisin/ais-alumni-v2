@@ -232,10 +232,11 @@ project id in the config Expo Go needs no sign-in (with one, run
   titles and header buttons with `<Stack.Screen options={{ … }} />`. Keep
   `src/lib/site-paths.ts` in step.
 - The tab bar: iOS uses the system's (`(tabs)/_layout.ios.tsx`, native
-  tabs, in the sidebar where there's room — the open iPhone Duo; folded,
-  in its vertical bar. Forcing the compact icon bar when open (a
-  react-native-screens patch) left the tabs missing when started open, so
-  it was undone; revisit with care);
+  tabs with iOS's defaults — on the iPhone Duo the icon bar in its vertical
+  bar, folded or open; react-native-screens ≥ 4.30.1 is needed: before it,
+  started open the tabs were missing (software-mansion/react-native-screens#4989).
+  Expo SDK 58's template enables react-native-screens' experimental
+  ("gamma") parts in the generated Podfile, so they are in our builds);
   Android and the web the JS one (`(tabs)/_layout.tsx`). Declare a
   new tab in both.
 - iPhone Duo and other wide windows: `Screen` / `ScreenView` keep clear of
