@@ -19,6 +19,7 @@ import type {
   OrgKind,
   RichMenuResult,
 } from "@contract/admin-manage";
+import type { AdminDonations } from "@contract/donations";
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -114,6 +115,20 @@ export function useAdminAudit(action: string, target: string) {
     queryFn: ({ pageParam, signal }) =>
       api<AdminAudit>(
         `/admin/audit${qs({ action, target, cursor: pageParam ?? undefined })}`,
+        { signal },
+      ),
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+  });
+}
+
+/** 寄付: every donation, newest first (Stripe cursors). */
+export function useAdminDonations() {
+  return useInfiniteQuery({
+    queryKey: ["admin", "donations"],
+    initialPageParam: null as string | null,
+    queryFn: ({ pageParam, signal }) =>
+      api<AdminDonations>(
+        `/admin/donations${qs({ cursor: pageParam ?? undefined })}`,
         { signal },
       ),
     getNextPageParam: (last) => last.nextCursor ?? undefined,

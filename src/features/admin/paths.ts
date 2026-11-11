@@ -43,6 +43,8 @@ export const ADMIN_PAGES = {
   },
   roster: { webPath: "/app/admin/roster", href: "/admin/roster" },
   audit: { webPath: "/app/admin/audit", href: "/admin/audit" },
+  // App only (Stripe is the ledger; the website has no such page).
+  donations: { webPath: "/app/admin/donations", href: "/admin/donations" },
 } as const satisfies Record<string, { webPath: string; href: Href }>;
 
 /** Admin detail pages with a native screen: website path → app route. */

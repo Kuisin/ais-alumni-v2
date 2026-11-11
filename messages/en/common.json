@@ -83,7 +83,8 @@
     "support": "Support requests",
     "line": "LINE menu",
     "chat": "Chat",
-    "testAccounts": "Test accounts"
+    "testAccounts": "Test accounts",
+    "donations": "Donations"
   },
   "notFoundTitle": "Page not found",
   "goHome": "Go to home",

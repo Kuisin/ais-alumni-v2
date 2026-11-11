@@ -112,7 +112,9 @@ export async function createDonationCheckout(params: {
       ? { subscription_data: { metadata } }
       : {
           submit_type: "donate" as const,
-          payment_intent_data: { metadata },
+          // donation=once: 寄付の履歴 tells one-time payments from monthly
+          // ones without a lookup (src/server/lib/donations-history.ts).
+          payment_intent_data: { metadata: { ...metadata, donation: "once" } },
           // Guests too, so receipts and the portal know them.
           ...(customer ? {} : { customer_creation: "always" as const }),
         }),

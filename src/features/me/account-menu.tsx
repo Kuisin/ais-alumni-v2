@@ -8,6 +8,7 @@ import {
   ListChecks,
   LogOut,
   MailPlus,
+  Receipt,
   Settings,
   ShieldCheck,
   UserPlus,
@@ -31,7 +32,8 @@ const icon = (I: typeof Settings) => (
  * The account menu (the website's app shell): マイプロフィール, 家族, フォローリクエスト
  * (with the count waiting), 同窓生を招待, 利用できる機能 (what my type and
  * positions let me use), 設定, お問い合わせ, 寄付 (in the
- * browser, when the server takes donations) and, for
+ * app: the website's page in the browser; 準備中 there until the server
+ * takes donations), 寄付の履歴 (when it does) and, for
  * staff, 管理モード.
  */
 export function AccountMenu() {
@@ -99,13 +101,17 @@ export function AccountMenu() {
         title={tc("nav.support")}
         onPress={() => router.push("/support")}
       />
+      {/* Always: /donate says 「準備中」 while the server takes none. */}
+      <Separator />
+      <ListRow leading={icon(HandCoins)} title={td("menu")} onPress={donate} />
       {config.data?.donations ? (
         <>
+          {/* Showing one's own history is fine in the app too. */}
           <Separator />
           <ListRow
-            leading={icon(HandCoins)}
-            title={td("menu")}
-            onPress={donate}
+            leading={icon(Receipt)}
+            title={td("history.menu")}
+            onPress={() => router.push("/donations")}
           />
         </>
       ) : null}

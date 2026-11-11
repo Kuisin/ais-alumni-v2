@@ -1,11 +1,12 @@
 import type { AppConfig } from "@contract/core";
 import { useQuery } from "@tanstack/react-query";
-import { Stack, useLocalSearchParams } from "expo-router";
-import { ExternalLink, HeartHandshake } from "lucide-react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Clock, ExternalLink, HeartHandshake } from "lucide-react-native";
 import { Linking, Platform, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { DonateForm } from "@/features/donate/donate-form";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { API_URL } from "@/lib/config";
 import { Button, Card, colors, Loading, Screen, space, Text } from "@/ui";
 
@@ -14,7 +15,9 @@ import { Button, Card, colors, Loading, Screen, space, Text } from "@/ui";
  * the form (Stripe Checkout; ?done=1 after paying). In the iOS / Android
  * app the page only opens itself in the browser: apps may collect
  * donations for an organization that isn't an Apple-approved nonprofit
- * only outside the app (App Store guideline 3.2.2(iv)).
+ * only outside the app (App Store guideline 3.2.2(iv)). While the server
+ * takes no donations yet (no live Stripe key: config.donations null),
+ * 「寄付の受付は準備中です」 instead of the form.
  */
 export default function DonateScreen() {
   const t = useTranslations("mobile.donate");
@@ -42,7 +45,7 @@ export default function DonateScreen() {
       {config.data === undefined ? (
         <Loading inline />
       ) : !config.data.donations ? (
-        <Text tone="muted">{t("unavailable")}</Text>
+        <Preparing />
       ) : web ? (
         <DonateForm donations={config.data.donations} />
       ) : (
@@ -61,6 +64,32 @@ export default function DonateScreen() {
         {t("note")}
       </Text>
     </Screen>
+  );
+}
+
+/** Donations aren't open on this server yet: say so, and a way back. */
+function Preparing() {
+  const t = useTranslations("mobile.donate.preparing");
+  const router = useRouter();
+  const { status } = useAuth();
+  const signedIn = status === "signedIn";
+  return (
+    <Card style={styles.thanks}>
+      <Clock size={28} color={colors.brand700} aria-hidden />
+      <Text variant="subheading" accessibilityRole="header">
+        {t("title")}
+      </Text>
+      <Text>{t("body")}</Text>
+      <Button
+        variant="secondary"
+        label={signedIn ? t("backMe") : t("backHome")}
+        onPress={() =>
+          router.canGoBack()
+            ? router.back()
+            : router.replace(signedIn ? "/me" : "/")
+        }
+      />
+    </Card>
   );
 }
 

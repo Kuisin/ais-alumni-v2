@@ -178,6 +178,26 @@
     "pickSection": "Choose an item from the list on the left",
     "events": {
       "exportFailed": "Couldn't save or share the file. Please try again."
+    },
+    "donations": {
+      "title": "Donations",
+      "description": "Donations received through Stripe (successful payments only, newest first). Donors who aren't members show as \"Anonymous\" — their names and emails aren't shown.",
+      "month": "This month",
+      "year": "This year",
+      "allTime": "All time",
+      "activeMonthly": "Monthly donations",
+      "activeMonthlyCount": "{count} running",
+      "notCounted": "—",
+      "totalsNote": "Amounts are after refunds (Japan time).",
+      "anonymous": "Anonymous",
+      "date": "Date",
+      "donor": "Donor",
+      "kind": "Type",
+      "amount": "Amount",
+      "empty": "No donations yet",
+      "unavailable": "Stripe isn't set up here, so donations can't be shown.",
+      "more": "Show more",
+      "rowLabel": "{date}, {donor}, {interval}, {amount}"
     }
   },
   "compose": {
@@ -225,7 +245,35 @@
     "manage": "Change or stop a monthly donation",
     "openInSafari": "Open the donation page in Safari",
     "appNote": "Donations are made on the website.",
-    "submitAny": "Donate"
+    "submitAny": "Donate",
+    "history": {
+      "menu": "Donation history",
+      "title": "Donation history",
+      "intro": "Donations you made while signed in to this account. Donations made without signing in aren't shown.",
+      "total": "Donated so far",
+      "count": "{count, plural, one {# payment} other {# payments}}",
+      "monthlyTitle": "Monthly donation",
+      "monthlyAmount": "{amount} a month",
+      "next": "Next on {date}",
+      "endsAt": "Ends on {date}",
+      "listTitle": "Payments",
+      "once": "One-time",
+      "month": "Monthly",
+      "refunded": "Refunded",
+      "partlyRefunded": "Partly refunded ({amount})",
+      "receipt": "Receipt",
+      "receiptLabel": "Open the receipt for {date}",
+      "empty": "No donations yet",
+      "emptyBody": "Your donations will appear here.",
+      "unavailable": "Donation history isn't available here.",
+      "rowLabel": "{date}, {interval}, {amount}"
+    },
+    "preparing": {
+      "title": "Donations are coming soon",
+      "body": "We'll start accepting donations online soon. Once we're ready, you'll be able to give from this page. Thank you for wanting to support us.",
+      "backMe": "Back to My page",
+      "backHome": "Back to home"
+    }
   },
   "offline": {
     "banner": "Offline",

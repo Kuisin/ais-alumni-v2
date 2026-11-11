@@ -54,6 +54,8 @@ const PATTERNS: Rule[] = [
   { re: /^\/app\/profile\/record$/, to: () => "/profile/record" },
   { re: /^\/app\/follows$/, to: () => "/follows", keep: ["tab"] },
   { re: /^\/app\/settings$/, to: () => "/settings" },
+  // 寄付の履歴 (app only; the website has no such page)
+  { re: /^\/app\/donations$/, to: () => "/donations" },
   { re: /^\/app\/family$/, to: () => "/family" },
   {
     re: /^\/app\/family\/application\/ID$/,
