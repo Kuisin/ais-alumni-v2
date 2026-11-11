@@ -320,10 +320,11 @@ failing on development-build bundles.
 Work goes to `dev` (deployed to staging, ais-alumni-dev.kai-lab.net).
 Pushing `dev` opens the release PR `dev → main` (.github/workflows/
 release-pr.yml); only `dev` may merge into `main` (branch-policy.yml).
-Merge it with a **merge commit**, never squash or rebase: a squashed
-release leaves `main` and `dev` with different histories, and the next
-release then needs a "merge main into dev" first. Merging `main` deploys
-production (ais-alumni.kai-lab.net).
+The owner merges releases with **squash**, so `main` gets one commit per
+release and `dev` keeps the detailed history. After each release, sync
+`dev` before more work: `git fetch origin main && git merge -s ours
+origin/main` (main's tree is dev's at the release, so keep dev's), then
+push. Merging `main` deploys production (ais-alumni.kai-lab.net).
 
 ## Builds and release (EAS)
 
