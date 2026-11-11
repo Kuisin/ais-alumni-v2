@@ -3,6 +3,7 @@ import { ChevronLeft, Search } from "lucide-react-native";
 import { memo, useCallback, useMemo, useState } from "react";
 import {
   FlatList,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -68,9 +69,16 @@ export function EmojiPicker({
   const t = useTranslations("chat.reactions");
   const locale = useLocale() as Locale;
   const window = useWindowDimensions();
-  // The sheet's room (on the iPhone Duo: one side of the fold, or below it).
+  // iOS: in the system's page sheet, which iOS sizes and places — the grid
+  // fills it, its columns from the width it measures. Elsewhere: the room
+  // of the drawn sheet (on a folding phone: one side of the fold, or below
+  // it), less the sheet's padding.
+  const ios = Platform.OS === "ios";
   const room = useSheetArea();
-  const width = room.width || window.width;
+  const [measured, setMeasured] = useState(0);
+  const inner = ios
+    ? measured || window.width - space.sm * 2
+    : (room.width || window.width) - space.sm * 2;
   const height = Math.round(
     Math.min(window.height * 0.6, room.height ? room.height * 0.85 : Infinity),
   );
@@ -90,11 +98,8 @@ export function EmojiPicker({
     return out;
   }, [all, group, q]);
 
-  // The sheet's width, less its and the grid's padding.
-  const columns = Math.max(
-    6,
-    Math.floor((width - space.sm * 2 - space.xs * 2) / CELL),
-  );
+  // The picker's width, less the grid's padding.
+  const columns = Math.max(6, Math.floor((inner - space.xs * 2) / CELL));
   const renderItem = useCallback(
     ({ item }: { item: Emoji }) => (
       <EmojiCell
@@ -107,7 +112,17 @@ export function EmojiPicker({
   );
 
   return (
-    <View style={{ height }}>
+    <View
+      style={ios ? styles.flex : { height }}
+      onLayout={
+        ios
+          ? (e) => {
+              const w = Math.round(e.nativeEvent.layout.width);
+              setMeasured((m) => (m === w ? m : w));
+            }
+          : undefined
+      }
+    >
       <View style={styles.top}>
         <Pressable
           accessibilityRole="button"

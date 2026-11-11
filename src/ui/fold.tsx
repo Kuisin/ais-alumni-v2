@@ -118,7 +118,9 @@ function FoldReader({
 export const SHEET_MAX_WIDTH = 560;
 
 /**
- * Where a bottom sheet over the whole screen goes (in a full-screen Modal,
+ * Android and the web: where an app-drawn bottom sheet over the whole
+ * screen goes (src/ui/sheet.tsx, the chat's message sheet; in a full-screen
+ * Modal,
  * around the sheet, filling the rest of it; the dimmed backdrop stays
  * outside it, full screen and behind):
  *  - clear of the side bar (the Duo closed: its right edge);
@@ -127,7 +129,10 @@ export const SHEET_MAX_WIDTH = 560;
  *  - table pose: in the lower half, below the fold, with the controls;
  *  - at most SHEET_MAX_WIDTH wide, at the bottom.
  * The sheet's own maxHeight ("88%"…) is of what's left. useSheetArea gives
- * the room, e.g. for a grid's columns.
+ * the room, e.g. for a grid's columns. iOS draws none of these: it uses
+ * the system's action sheets (src/ui/action-menu.ts), page sheets (Modal
+ * presentationStyle="pageSheet") and compact date pickers, which iOS
+ * places itself, clear of the fold and the side bar.
  */
 export function SheetPlacement({ children }: { children: ReactNode }) {
   return (

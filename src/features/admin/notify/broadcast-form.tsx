@@ -9,9 +9,9 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Notice } from "@/features/news/parts";
 import { ChoiceList, SelectField } from "@/features/people/choices";
-import { Sheet } from "@/features/people/sheet";
 import { ApiError } from "@/lib/api";
 import { Button, colors, radius, space, Text, TextField, TOUCH } from "@/ui";
+import { Sheet } from "@/ui/sheet";
 import { useBroadcast } from "./api";
 
 type AudienceKind = "ALL" | "ROLES" | "COHORT";

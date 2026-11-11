@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ChoiceList, SelectField } from "@/features/people/choices";
-import { Sheet } from "@/features/people/sheet";
 import { Card, colors, radius, space, Text } from "@/ui";
+import { Sheet } from "@/ui/sheet";
 
 type NoticeTone = "success" | "error" | "info" | "warning";
 

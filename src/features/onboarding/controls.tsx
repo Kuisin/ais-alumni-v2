@@ -199,6 +199,7 @@ export function Select({
         visible={open}
         animationType="slide"
         presentationStyle={Platform.OS === "ios" ? "pageSheet" : undefined}
+        allowSwipeDismissal
         transparent={Platform.OS === "web"}
         onRequestClose={() => setOpen(false)}
       >

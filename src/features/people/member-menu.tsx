@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { Ban, Flag } from "lucide-react-native";
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { type RefObject, useState } from "react";
+import { Alert, type HostInstance, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import {
   Button,
@@ -13,13 +13,92 @@ import {
   space,
   Text,
 } from "@/ui";
+import { showActionMenu, systemActionMenus } from "@/ui/action-menu";
+import { Sheet } from "@/ui/sheet";
 import { useBlockMember } from "./api";
 import { StatusLine, useFailureText } from "./follow-button";
-import { Sheet } from "./sheet";
 
 /**
- * 「その他の操作」 on a profile (src/components/follows/member-menu.tsx):
- * report to the committee (お問い合わせ → 会員の言動について), and block,
+ * 「その他の操作」 on a profile: `open` shows it — on iOS the system's
+ * action sheet (report / block, then a confirmation; an error is an
+ * alert), elsewhere MemberMenu's sheet, which is `element`.
+ */
+export function useMemberMenu({
+  memberId,
+  name,
+}: {
+  memberId: string;
+  name: string;
+}) {
+  const t = useTranslations("follows");
+  const failure = useFailureText();
+  const router = useRouter();
+  const block = useBlockMember(memberId);
+  const [visible, setVisible] = useState(false);
+
+  const open = (anchor?: RefObject<HostInstance | null>) => {
+    if (!systemActionMenus) {
+      setVisible(true);
+      return;
+    }
+    const confirmBlock = () =>
+      showActionMenu(
+        {
+          message: t("actions.blockConfirm", { name }),
+          actions: [
+            {
+              label: t("actions.blockYes"),
+              destructive: true,
+              onPress: () =>
+                block.mutate(true, {
+                  onSuccess: () =>
+                    router.replace({
+                      pathname: "/follows",
+                      params: { tab: "blocked" },
+                    }),
+                  onError: (e) => Alert.alert(failure(e)),
+                }),
+            },
+          ],
+          cancelLabel: t("actions.cancel"),
+        },
+        anchor,
+      );
+    showActionMenu(
+      {
+        title: t("menu.label"),
+        actions: [
+          {
+            label: t("actions.report"),
+            onPress: () =>
+              router.push("/support?type=COMPLAINT&topic=MEMBER_CONDUCT"),
+          },
+          {
+            label: t("actions.block"),
+            destructive: true,
+            onPress: confirmBlock,
+          },
+        ],
+        cancelLabel: t("actions.cancel"),
+      },
+      anchor,
+    );
+  };
+
+  const element = systemActionMenus ? null : (
+    <MemberMenu
+      visible={visible}
+      onClose={() => setVisible(false)}
+      memberId={memberId}
+      name={name}
+    />
+  );
+  return { open, element };
+}
+
+/**
+ * Android and the web: 「その他の操作」 on a profile, as a sheet (the
+ * website's src/components/follows/member-menu.tsx): report to the committee (お問い合わせ → 会員の言動について), and block,
  * after a confirmation. Blocking leaves the (now hidden) profile
  * for the blocked list, as the website does.
  */

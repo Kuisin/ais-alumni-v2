@@ -1,15 +1,17 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import {
   KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, radius, space, Text, TOUCH } from "@/ui";
 import { SheetPlacement, sheetWidth } from "@/ui/fold";
+import { PageSheetFrame, useKeptWhileVisible } from "@/ui/sheet";
 
 export type SheetAction = {
   key: string;
@@ -19,22 +21,7 @@ export type SheetAction = {
   onPress: () => void;
 };
 
-/**
- * The actions for a long-pressed message (コピー / 削除), as a bottom sheet
- * over the talk — the website shows the same two under the bubble. `top`:
- * above them (the quick reactions); `content`: in place of the heading and
- * actions (the emoji picker), in the same sheet.
- */
-export function MessageSheet({
-  visible,
-  title,
-  preview,
-  actions,
-  cancelLabel,
-  onClose,
-  top,
-  content,
-}: {
+type MessageSheetProps = {
   visible: boolean;
   title: string;
   preview: string;
@@ -43,7 +30,122 @@ export function MessageSheet({
   onClose: () => void;
   top?: ReactNode;
   content?: ReactNode;
-}) {
+};
+
+/**
+ * The actions for a long-pressed message (コピー / 削除) — the website shows
+ * the same two under the bubble. `top`: above them (the quick reactions);
+ * `content`: in place of the preview and actions (the emoji picker), in the
+ * same sheet. iOS: the system's page sheet (swipe down or 閉じる to close);
+ * Android and the web: a bottom sheet over the talk, off the fold.
+ */
+export function MessageSheet(props: MessageSheetProps) {
+  return Platform.OS === "ios" ? (
+    <MessagePageSheet {...props} />
+  ) : (
+    <MessageBottomSheet {...props} />
+  );
+}
+
+function ActionRows({ actions }: { actions: SheetAction[] }) {
+  return actions.map((a) => {
+    const color = a.destructive ? colors.red700 : colors.slate900;
+    return (
+      <Pressable
+        key={a.key}
+        accessibilityRole="button"
+        accessibilityLabel={a.label}
+        onPress={a.onPress}
+        style={({ pressed }) => [
+          styles.action,
+          pressed ? styles.pressed : null,
+        ]}
+      >
+        {a.icon(color)}
+        <Text weight="medium" style={{ color }}>
+          {a.label}
+        </Text>
+      </Pressable>
+    );
+  });
+}
+
+function MessagePageSheet({
+  visible,
+  title,
+  preview,
+  actions,
+  onClose,
+  top,
+  content,
+}: MessageSheetProps) {
+  // What it showed, while it slides away after the talk cleared it.
+  const shown = {
+    title: useKeptWhileVisible(visible, title),
+    preview: useKeptWhileVisible(visible, preview),
+    actions: useKeptWhileVisible(visible, actions),
+    top: useKeptWhileVisible(visible, top),
+    content: useKeptWhileVisible(visible, content),
+  };
+  // An action runs once the sheet is gone: its alert (削除's confirmation)
+  // can't open over a sheet that is closing.
+  const [pending, setPending] = useState<(() => void) | null>(null);
+  const deferred = shown.actions.map((a) => ({
+    ...a,
+    onPress: () => {
+      setPending(() => a.onPress);
+      onClose();
+    },
+  }));
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      allowSwipeDismissal
+      onRequestClose={onClose}
+      onDismiss={() => {
+        const run = pending;
+        setPending(null);
+        run?.();
+      }}
+    >
+      <PageSheetFrame title={shown.title} onClose={onClose}>
+        {shown.content ? (
+          <KeyboardAvoidingView style={styles.flex} behavior="padding">
+            <View style={styles.pageContent}>{shown.content}</View>
+          </KeyboardAvoidingView>
+        ) : (
+          <ScrollView contentContainerStyle={styles.pageBody}>
+            {shown.preview ? (
+              <Text
+                variant="small"
+                tone="subtle"
+                numberOfLines={4}
+                style={styles.pagePreview}
+              >
+                {shown.preview}
+              </Text>
+            ) : null}
+            {shown.top}
+            <ActionRows actions={deferred} />
+          </ScrollView>
+        )}
+      </PageSheetFrame>
+    </Modal>
+  );
+}
+
+function MessageBottomSheet({
+  visible,
+  title,
+  preview,
+  actions,
+  cancelLabel,
+  onClose,
+  top,
+  content,
+}: MessageSheetProps) {
   const insets = useSafeAreaInsets();
   return (
     <Modal
@@ -85,26 +187,7 @@ export function MessageSheet({
                   ) : null}
                 </View>
                 {top}
-                {actions.map((a) => {
-                  const color = a.destructive ? colors.red700 : colors.slate900;
-                  return (
-                    <Pressable
-                      key={a.key}
-                      accessibilityRole="button"
-                      accessibilityLabel={a.label}
-                      onPress={a.onPress}
-                      style={({ pressed }) => [
-                        styles.action,
-                        pressed ? styles.pressed : null,
-                      ]}
-                    >
-                      {a.icon(color)}
-                      <Text weight="medium" style={{ color }}>
-                        {a.label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
+                <ActionRows actions={actions} />
               </>
             )}
             <Pressable
@@ -164,4 +247,12 @@ const styles = StyleSheet.create({
   },
   pressed: { backgroundColor: colors.slate100 },
   flex: { flex: 1 },
+  pageBody: {
+    paddingHorizontal: space.sm,
+    paddingTop: space.xs,
+    paddingBottom: space.lg,
+    gap: space.xs,
+  },
+  pagePreview: { paddingHorizontal: space.md, paddingBottom: space.sm },
+  pageContent: { flex: 1, paddingHorizontal: space.sm },
 });

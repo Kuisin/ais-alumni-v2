@@ -245,11 +245,18 @@ project id in the config Expo Go needs no sign-in (with one, run
   system bar at its right edge — a right safe-area inset), open flat (no
   fold) and half open, where the fold is a reserved region — top to bottom
   in the book pose, across in the table pose. Nothing interactive across
-  it: bottom sheets go in `SheetPlacement` (`sheetWidth`; past a book fold,
-  below a table one, clear of the side bar), full-screen centred messages
-  in `FoldCenter` (`Loading`, `ErrorState` already are); lists may scroll
-  under it. System sheets (`presentationStyle="pageSheet"`) are placed by
-  iOS — give their `SafeAreaView` all four edges. The regions lag the
+  it: full-screen centred messages go in `FoldCenter` (`Loading`,
+  `ErrorState` already are); lists may scroll under it. Sheets on iOS are
+  the system's, which iOS places: plain menus and confirmations are action
+  sheets (`showActionMenu`, `src/ui/action-menu.ts`; check
+  `systemActionMenus` first), sheets with content page sheets (`Sheet`,
+  `src/ui/sheet.tsx` — a Modal with `presentationStyle="pageSheet"` and
+  `allowSwipeDismissal`; give its `SafeAreaView` all four edges, as
+  `PageSheetFrame` does), date and time the compact `DateTimePicker`.
+  Android and the web draw their bottom sheets in `SheetPlacement`
+  (`sheetWidth`; past a book fold, below a table one, clear of the side
+  bar). Never react-native-screens' `experimental` components: they
+  aren't compiled into our builds. The regions lag the
   hinge by about a second: `patches/react-native-reserved-regions…` asks
   again after it settles, or a fold could linger after opening flat.
 - Feature code in `src/features/<feature>/` (components, `api.ts` hooks).

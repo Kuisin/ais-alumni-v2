@@ -7,8 +7,8 @@ import {
   ChoiceList,
   SelectField,
 } from "@/features/people/choices";
-import { Sheet } from "@/features/people/sheet";
 import { colors, radius, Screen, space, Text } from "@/ui";
+import { Sheet } from "@/ui/sheet";
 import type { FormStatus } from "./api";
 
 /** A form screen: scrolls, and keeps its fields above the keyboard. */
