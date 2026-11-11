@@ -50,7 +50,24 @@
       "pushOff": "App notifications are off on this device.",
       "openSettings": "Notification settings"
     },
-    "pickTalk": "Choose a talk"
+    "pickTalk": "Choose a talk",
+    "peek": {
+      "hint": "Long press to preview (without marking it read)",
+      "action": "Preview",
+      "label": "Latest messages",
+      "notRead": "Previewing doesn't mark messages as read",
+      "open": "Open",
+      "markRead": "Mark as read",
+      "notifyOff": "Turn off notifications",
+      "notifyOn": "Turn on notifications",
+      "digest": "Daily summary (email)",
+      "digestOff": "Turn off the daily summary",
+      "digestOn": "Turn on the daily summary",
+      "on": "On",
+      "off": "Off",
+      "empty": "No messages yet",
+      "error": "Couldn't load the messages"
+    }
   },
   "people": {},
   "me": {
