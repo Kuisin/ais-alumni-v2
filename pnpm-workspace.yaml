@@ -16,3 +16,4 @@ minimumReleaseAgeExclude:
   - expo-task-manager@57.0.21
 patchedDependencies:
   react-native-reserved-regions@0.2.0: patches/react-native-reserved-regions@0.2.0.patch
+  react-native-screens@4.30.0: patches/react-native-screens@4.30.0.patch
