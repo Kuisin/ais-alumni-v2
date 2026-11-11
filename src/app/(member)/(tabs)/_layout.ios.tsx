@@ -6,14 +6,12 @@ import { colors } from "@/ui/theme";
 const badge = (n: number) => (n > 0 ? (n > 99 ? "99+" : String(n)) : null);
 
 /**
- * iOS: the system's tab bar (Android and the web: _layout.tsx). On iPhones
- * — the iPhone Duo folded or open — it's always iOS's icon tab bar, in the
- * vertical bar at the side on the Duo: patches/react-native-screens@4.30.0
- * keeps the tab bar controller compact-width on iPhones (no sidebar) and,
- * once on screen, makes UIKit lay the vertical bar out again (started on
- * the Duo's open display, the tabs are otherwise missing until it's folded
- * and opened). preferredPlacement only matters on iPad-wide idioms. Each
- * tab's own stack draws its header (features/tabs/tab-stack).
+ * iOS: the system's tab bar (Android and the web: _layout.tsx). Where there
+ * is room — the iPhone Duo open, a Pro Max in landscape — iOS shows the
+ * tabs as a sidebar; folded, in the Duo's vertical bar. (Tried and undone:
+ * forcing the compact icon bar when open — started open, the tabs were
+ * often missing altogether.) Each tab's own stack draws its header
+ * (features/tabs/tab-stack).
  */
 export default function TabLayout() {
   const t = useTranslations("common.nav");
