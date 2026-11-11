@@ -1,4 +1,4 @@
-import type { ReactNode, Ref } from "react";
+import { createContext, type ReactNode, type Ref, useContext } from "react";
 import {
   RefreshControl,
   ScrollView,
@@ -26,6 +26,29 @@ export const CONTENT_MAX_WIDTH = 720;
  */
 const SIDES = ["left", "right"] as const;
 
+type Side = (typeof SIDES)[number];
+
+/**
+ * The screen edges a panel touches. Side by side (Panes, 管理モード's split)
+ * the left panel touches only the left edge and the right one only the
+ * right: the iPhone Duo's vertical bar beside the right panel mustn't pad
+ * the left one. SafeAreaView reports the window's insets, so each panel
+ * says which edges are its own.
+ */
+const SidesContext = createContext<readonly Side[]>(SIDES);
+
+export function ScreenSides({
+  sides,
+  children,
+}: {
+  sides: readonly Side[];
+  children: ReactNode;
+}) {
+  return (
+    <SidesContext.Provider value={sides}>{children}</SidesContext.Provider>
+  );
+}
+
 /**
  * Scrolling page body on the slate background, with pull-to-refresh when
  * `onRefresh` is given. Headers come from the navigator (Stack / Tabs).
@@ -45,6 +68,7 @@ export function Screen({
   onRefresh?: () => void;
   contentStyle?: ViewStyle;
 }) {
+  const sides = useContext(SidesContext);
   return (
     <ScrollView
       ref={ref}
@@ -69,7 +93,7 @@ export function Screen({
     >
       {/* The side bar first, across the full width (its inset is the part
           of it over the page), then the column centred in what's left. */}
-      <SafeAreaView edges={SIDES} style={styles.sides}>
+      <SafeAreaView edges={sides} style={styles.sides}>
         <View style={[styles.content, contentStyle]}>{children}</View>
       </SafeAreaView>
     </ScrollView>
@@ -84,8 +108,9 @@ export function ScreenView({
   children: ReactNode;
   style?: ViewStyle;
 }) {
+  const sides = useContext(SidesContext);
   return (
-    <SafeAreaView edges={SIDES} style={[styles.screen, style]}>
+    <SafeAreaView edges={sides} style={[styles.screen, style]}>
       {children}
     </SafeAreaView>
   );

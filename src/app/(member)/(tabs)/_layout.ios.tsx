@@ -7,10 +7,10 @@ const badge = (n: number) => (n > 0 ? (n > 99 ? "99+" : String(n)) : null);
 
 /**
  * iOS: the system's tab bar (Android and the web: _layout.tsx). Where there
- * is room — the iPhone Duo open, landscape — the tabs move into the sidebar
- * (iOS 27). Not a plain tab bar there: with `sidebarAdaptable={false}` or
- * `preferredPlacement="tabBar"` the open Duo showed no tabs at all (Xcode
- * 27.1's Duo simulator). Each tab's own stack draws its header
+ * is room — the iPhone Duo open, a Pro Max in landscape — iOS shows the
+ * tabs as a sidebar; folded, in the Duo's vertical bar. (Tried and undone:
+ * forcing the compact icon bar when open — started open, the tabs were
+ * often missing altogether.) Each tab's own stack draws its header
  * (features/tabs/tab-stack).
  */
 export default function TabLayout() {

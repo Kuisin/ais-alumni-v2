@@ -13,6 +13,7 @@ export function ListRow({
   onPress,
   chevron = Boolean(onPress),
   destructive = false,
+  selected,
   accessibilityLabel,
 }: {
   title: string;
@@ -22,6 +23,8 @@ export function ListRow({
   onPress?: () => void;
   chevron?: boolean;
   destructive?: boolean;
+  /** a list beside its detail: whether this row is the one shown there */
+  selected?: boolean;
   accessibilityLabel?: string;
 }) {
   const body = (
@@ -53,8 +56,13 @@ export function ListRow({
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
+      accessibilityState={selected === undefined ? undefined : { selected }}
       onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [
+        styles.row,
+        selected ? styles.selected : null,
+        pressed ? styles.pressed : null,
+      ]}
     >
       {body}
     </Pressable>
@@ -81,6 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   pressed: { backgroundColor: colors.slate100 },
+  selected: { backgroundColor: colors.brand100 },
   leading: { alignItems: "center", justifyContent: "center" },
   text: { flex: 1, gap: 2 },
   group: {

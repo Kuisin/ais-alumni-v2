@@ -50,7 +50,24 @@
       "pushOff": "この端末ではアプリの通知がオフです。",
       "openSettings": "通知の設定"
     },
-    "pickTalk": "トークを選んでください"
+    "pickTalk": "トークを選んでください",
+    "peek": {
+      "hint": "長押しでプレビュー（既読にはなりません）",
+      "action": "プレビュー",
+      "label": "最新のメッセージ",
+      "notRead": "プレビューでは既読になりません",
+      "open": "開く",
+      "markRead": "既読にする",
+      "notifyOff": "通知をオフ",
+      "notifyOn": "通知をオン",
+      "digest": "毎日のまとめ（メール）",
+      "digestOff": "毎日のまとめをオフ",
+      "digestOn": "毎日のまとめをオン",
+      "on": "オン",
+      "off": "オフ",
+      "empty": "まだメッセージはありません",
+      "error": "メッセージを読み込めませんでした"
+    }
   },
   "people": {},
   "me": {
@@ -158,8 +175,29 @@
   },
   "admin": {
     "empty": "このアプリで使える管理機能は、まだありません。",
+    "pickSection": "左の一覧から項目を選んでください",
     "events": {
       "exportFailed": "ファイルを保存・共有できませんでした。もう一度お試しください。"
+    },
+    "donations": {
+      "title": "寄付",
+      "description": "Stripe で受け付けた寄付です（成功した支払いのみ、新しい順）。会員以外の寄付者は「匿名」と表示し、氏名やメールアドレスは表示しません。",
+      "month": "今月",
+      "year": "今年",
+      "allTime": "累計",
+      "activeMonthly": "毎月の寄付",
+      "activeMonthlyCount": "{count}件",
+      "notCounted": "—",
+      "totalsNote": "金額は返金を差し引いた額です（日本時間）。",
+      "anonymous": "匿名",
+      "date": "日時",
+      "donor": "寄付者",
+      "kind": "種類",
+      "amount": "金額",
+      "empty": "まだ寄付はありません",
+      "unavailable": "この環境では Stripe が設定されていないため、寄付を表示できません。",
+      "more": "さらに表示",
+      "rowLabel": "{date}、{donor}、{interval}、{amount}"
     }
   },
   "compose": {
@@ -207,7 +245,35 @@
     "manage": "毎月の寄付を変更・停止する",
     "openInSafari": "Safari で寄付ページを開く",
     "appNote": "寄付はウェブサイトで受け付けています。",
-    "submitAny": "寄付する"
+    "submitAny": "寄付する",
+    "history": {
+      "menu": "寄付の履歴",
+      "title": "寄付の履歴",
+      "intro": "このアカウントでログインして行った寄付です。ログインせずに行った寄付は表示されません。",
+      "total": "これまでの寄付",
+      "count": "{count}件",
+      "monthlyTitle": "毎月の寄付",
+      "monthlyAmount": "毎月 {amount}",
+      "next": "次回 {date}",
+      "endsAt": "{date} に終了",
+      "listTitle": "お支払い",
+      "once": "1回",
+      "month": "毎月",
+      "refunded": "返金済み",
+      "partlyRefunded": "一部返金（{amount}）",
+      "receipt": "領収書",
+      "receiptLabel": "{date} の領収書を開く",
+      "empty": "寄付の履歴はまだありません",
+      "emptyBody": "ご寄付いただくと、ここに表示されます。",
+      "unavailable": "この環境では寄付の履歴を表示できません。",
+      "rowLabel": "{date}、{interval}、{amount}"
+    },
+    "preparing": {
+      "title": "寄付の受付は準備中です",
+      "body": "オンラインでの寄付の受付は、まもなく開始します。準備が整いしだい、このページからご寄付いただけるようになります。応援のお気持ち、ありがとうございます。",
+      "backMe": "マイページに戻る",
+      "backHome": "ホームに戻る"
+    }
   },
   "offline": {
     "banner": "オフライン",

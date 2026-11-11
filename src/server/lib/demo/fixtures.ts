@@ -22,6 +22,7 @@ import type {
   StartDirectResult,
 } from "@contract/chat";
 import type { Locale, Me, MyAccess } from "@contract/core";
+import type { MyDonations } from "@contract/donations";
 import type {
   EventDetail,
   EventList,
@@ -652,6 +653,17 @@ type Handler = (ctx: {
 const ROUTES: Record<string, Partial<Record<string, Handler>>> = {
   me: { GET: () => demoMe() },
   "me/export": { GET: () => exportData() },
+  // 寄付の履歴: the demo account has given nothing (no Stripe lookup).
+  "me/donations": {
+    GET: () =>
+      ({
+        available: true,
+        donations: [],
+        total: 0,
+        monthly: [],
+        portalUrl: null,
+      }) satisfies MyDonations,
+  },
   access: {
     GET: () => ({
       directRules: {

@@ -1,14 +1,25 @@
 import type { ChatList, ChatListRow } from "@contract/chat";
 import type { Locale } from "@contract/core";
 import {
+  Link,
   Stack,
   useFocusEffect,
   useLocalSearchParams,
   useRouter,
 } from "expo-router";
 import { MessageCirclePlus, Search, Users } from "lucide-react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  type ReactNode,
+  type Ref,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  type AccessibilityActionEvent,
+  type HostInstance,
+  Platform,
   Pressable,
   RefreshControl,
   SectionList,
@@ -31,12 +42,28 @@ import {
   TOUCH,
 } from "@/ui";
 import { useChatList } from "./api";
+import {
+  ChatPeek,
+  ChatPeekSheet,
+  useCachedRoom,
+  useChatQuickActions,
+} from "./peek";
 import { ChatRoomPane } from "./room/chat-room";
 import { listTime } from "./time";
 
 type Filter = "all" | "direct" | "groups";
 
 const POLL_MS = 20_000;
+
+/**
+ * iOS: long press is the system's context menu with a preview of the talk
+ * (Link.Preview / Link.Menu). Elsewhere — and in the side-by-side layout,
+ * where a row selects instead of opening — it opens ChatPeekSheet.
+ */
+const NATIVE_PEEK = Platform.OS === "ios";
+
+/** Height of the iOS context-menu preview. */
+const PREVIEW_HEIGHT = 460;
 
 /**
  * チャット (the website's /app/chat): talks and group chats, newest
@@ -136,6 +163,15 @@ function ChatListBody({
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [refreshing, setRefreshing] = useState(false);
+  const [peek, setPeek] = useState<ChatListRow | null>(null);
+  const router = useRouter();
+  const open = useCallback(
+    (r: ChatListRow) =>
+      selected === undefined
+        ? router.push({ pathname: "/chat/[id]", params: { id: r.id } })
+        : router.setParams({ room: r.id }),
+    [router, selected],
+  );
 
   const term = q.trim().toLowerCase();
   const shown = data.rows.filter(
@@ -161,96 +197,101 @@ function ChatListBody({
   };
 
   return (
-    <SectionList
-      sections={sections}
-      keyExtractor={(r) => r.id}
-      renderItem={({ item }) => (
-        <ChatRowItem
-          row={item}
-          selected={selected === undefined ? undefined : selected === item.id}
-        />
-      )}
-      extraData={selected}
-      renderSectionHeader={({ section }) =>
-        section.title ? (
-          <View style={styles.sectionHeader}>
-            <Text
-              variant="caption"
-              weight="semibold"
-              tone="muted"
-              accessibilityRole="header"
+    <>
+      <SectionList
+        sections={sections}
+        keyExtractor={(r) => r.id}
+        renderItem={({ item }) => (
+          <ChatRowItem
+            row={item}
+            selected={selected === undefined ? undefined : selected === item.id}
+            onOpen={open}
+            onPeek={setPeek}
+          />
+        )}
+        extraData={selected}
+        renderSectionHeader={({ section }) =>
+          section.title ? (
+            <View style={styles.sectionHeader}>
+              <Text
+                variant="caption"
+                weight="semibold"
+                tone="muted"
+                accessibilityRole="header"
+              >
+                {section.title}
+              </Text>
+            </View>
+          ) : null
+        }
+        stickySectionHeadersEnabled={false}
+        ItemSeparatorComponent={RowSeparator}
+        ListHeaderComponent={
+          <View style={styles.toolbar}>
+            <View style={styles.search}>
+              <Search size={16} color={colors.slate400} aria-hidden />
+              <TextInput
+                value={q}
+                onChangeText={setQ}
+                placeholder={t("search")}
+                placeholderTextColor={colors.slate500}
+                accessibilityLabel={t("search")}
+                returnKeyType="search"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                style={styles.searchInput}
+              />
+            </View>
+            <View
+              style={styles.chips}
+              accessibilityRole="radiogroup"
+              accessibilityLabel={t("filter")}
             >
-              {section.title}
-            </Text>
+              {(["all", "direct", "groups"] as const).map((f) => {
+                const on = filter === f;
+                return (
+                  <Pressable
+                    key={f}
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: on }}
+                    onPress={() => setFilter(f)}
+                    style={[styles.chip, on ? styles.chipOn : null]}
+                  >
+                    <Text
+                      variant="small"
+                      weight={on ? "semibold" : "regular"}
+                      style={{ color: on ? colors.brand800 : colors.slate700 }}
+                    >
+                      {t(`filters.${f}`)}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
-        ) : null
-      }
-      stickySectionHeadersEnabled={false}
-      ItemSeparatorComponent={RowSeparator}
-      ListHeaderComponent={
-        <View style={styles.toolbar}>
-          <View style={styles.search}>
-            <Search size={16} color={colors.slate400} aria-hidden />
-            <TextInput
-              value={q}
-              onChangeText={setQ}
-              placeholder={t("search")}
-              placeholderTextColor={colors.slate500}
-              accessibilityLabel={t("search")}
-              returnKeyType="search"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              style={styles.searchInput}
+        }
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <EmptyState
+              title={term ? t("noMatch") : t("empty")}
+              hint={term ? undefined : t("emptyHint")}
             />
           </View>
-          <View
-            style={styles.chips}
-            accessibilityRole="radiogroup"
-            accessibilityLabel={t("filter")}
-          >
-            {(["all", "direct", "groups"] as const).map((f) => {
-              const on = filter === f;
-              return (
-                <Pressable
-                  key={f}
-                  accessibilityRole="radio"
-                  accessibilityState={{ checked: on }}
-                  onPress={() => setFilter(f)}
-                  style={[styles.chip, on ? styles.chipOn : null]}
-                >
-                  <Text
-                    variant="small"
-                    weight={on ? "semibold" : "regular"}
-                    style={{ color: on ? colors.brand800 : colors.slate700 }}
-                  >
-                    {t(`filters.${f}`)}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View>
-      }
-      ListEmptyComponent={
-        <View style={styles.empty}>
-          <EmptyState
-            title={term ? t("noMatch") : t("empty")}
-            hint={term ? undefined : t("emptyHint")}
+        }
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.brand700}
+            colors={[colors.brand700]}
           />
-        </View>
-      }
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      contentContainerStyle={styles.content}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          tintColor={colors.brand700}
-          colors={[colors.brand700]}
-        />
-      }
-    />
+        }
+      />
+      <ChatPeekSheet row={peek} onClose={() => setPeek(null)} onOpen={open} />
+    </>
   );
 }
 
@@ -261,14 +302,19 @@ function RowSeparator() {
 function ChatRowItem({
   row: r,
   selected,
+  onOpen,
+  onPeek,
 }: {
   row: ChatListRow;
   /** side by side: whether it's the talk in the pane (undefined: not) */
   selected?: boolean;
+  onOpen: (row: ChatListRow) => void;
+  /** long press without the native preview: the peek sheet */
+  onPeek: (row: ChatListRow) => void;
 }) {
   const t = useTranslations("chat");
+  const tm = useTranslations("mobile.chat");
   const locale = useLocale() as Locale;
-  const router = useRouter();
   const when = r.lastAt
     ? listTime(r.lastAt, locale, t("room.yesterday"))
     : null;
@@ -281,21 +327,8 @@ function ChatRowItem({
   ]
     .filter(Boolean)
     .join(", ");
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityState={selected === undefined ? undefined : { selected }}
-      onPress={() =>
-        selected === undefined
-          ? router.push({ pathname: "/chat/[id]", params: { id: r.id } })
-          : router.setParams({ room: r.id })
-      }
-      style={({ pressed }) => [
-        styles.row,
-        selected ? styles.rowSelected : pressed ? styles.rowPressed : null,
-      ]}
-    >
+  const content = (
+    <>
       {r.direct ? (
         <Avatar uri={r.avatar} size={52} />
       ) : (
@@ -342,7 +375,162 @@ function ChatRowItem({
           ) : null}
         </View>
       </View>
+    </>
+  );
+  // VoiceOver / TalkBack: 「プレビュー」 in the actions rotor opens the sheet.
+  const a11y = {
+    label,
+    hint: tm("peek.hint"),
+    actionLabel: tm("peek.action"),
+    onAction: () => onPeek(r),
+  };
+
+  if (NATIVE_PEEK && selected === undefined)
+    return (
+      <NativePeekRow row={r} a11y={a11y}>
+        {content}
+      </NativePeekRow>
+    );
+
+  return (
+    <RowButton
+      a11y={a11y}
+      selected={selected}
+      onPress={() => onOpen(r)}
+      onLongPress={() => onPeek(r)}
+    >
+      {content}
+    </RowButton>
+  );
+}
+
+type RowA11y = {
+  label: string;
+  hint: string;
+  actionLabel: string;
+  onAction: () => void;
+};
+
+/**
+ * The row's pressable. Also Link.Trigger's child (iOS), which hands it
+ * onPress (and a style of its own, ignored here).
+ */
+function RowButton({
+  a11y,
+  selected,
+  onPress,
+  onLongPress,
+  ref,
+  children,
+}: {
+  a11y: RowA11y;
+  selected?: boolean;
+  onPress?: () => void;
+  onLongPress?: () => void;
+  ref?: Ref<HostInstance>;
+  children: ReactNode;
+}) {
+  return (
+    <Pressable
+      ref={ref}
+      accessibilityRole="button"
+      accessibilityLabel={a11y.label}
+      accessibilityHint={a11y.hint}
+      accessibilityState={selected === undefined ? undefined : { selected }}
+      accessibilityActions={[{ name: "preview", label: a11y.actionLabel }]}
+      onAccessibilityAction={(e: AccessibilityActionEvent) => {
+        if (e.nativeEvent.actionName === "preview") a11y.onAction();
+      }}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={400}
+      style={({ pressed }) => [
+        styles.row,
+        selected ? styles.rowSelected : pressed ? styles.rowPressed : null,
+      ]}
+    >
+      {children}
     </Pressable>
+  );
+}
+
+/**
+ * iOS: tap opens the talk; long press is the system's context menu with
+ * the latest messages (ChatPeek — not marked read) and the quick actions.
+ * Tapping the preview opens the talk, which then marks it read as usual.
+ */
+function NativePeekRow({
+  row: r,
+  a11y,
+  children,
+}: {
+  row: ChatListRow;
+  a11y: RowA11y;
+  children: ReactNode;
+}) {
+  const t = useTranslations("chat");
+  const tm = useTranslations("mobile.chat");
+  const tl = useTranslations("mobile.chat.levels");
+  const actions = useChatQuickActions(r);
+  // Known once the preview has loaded it (or the talk was opened before).
+  const room = useCachedRoom(r.id);
+  return (
+    <Link href={{ pathname: "/chat/[id]", params: { id: r.id } }} push asChild>
+      <Link.Trigger>
+        <RowButton a11y={a11y}>{children}</RowButton>
+      </Link.Trigger>
+      <Link.Preview style={{ height: PREVIEW_HEIGHT }}>
+        <ChatPeek id={r.id} height={PREVIEW_HEIGHT} />
+      </Link.Preview>
+      <Link.Menu>
+        {actions.canMarkRead ? (
+          <Link.MenuAction icon="checkmark.circle" onPress={actions.markRead}>
+            {tm("peek.markRead")}
+          </Link.MenuAction>
+        ) : null}
+        {actions.canNotify && r.direct ? (
+          <Link.Menu title={tm("peek.digest")} icon="bell">
+            <Link.MenuAction
+              isOn={room ? !room.muted : false}
+              onPress={() => actions.setMuted(false)}
+            >
+              {tm("peek.on")}
+            </Link.MenuAction>
+            <Link.MenuAction
+              isOn={room ? room.muted : false}
+              onPress={() => actions.setMuted(true)}
+            >
+              {tm("peek.off")}
+            </Link.MenuAction>
+          </Link.Menu>
+        ) : null}
+        {actions.canNotify && !r.direct ? (
+          <Link.Menu title={tm("notifications")} icon="bell">
+            <Link.MenuAction
+              isOn={room?.notifyLevel === "all"}
+              onPress={() => actions.setLevel("all")}
+            >
+              {tl("all")}
+            </Link.MenuAction>
+            <Link.MenuAction
+              isOn={room?.notifyLevel === "mentions"}
+              onPress={() => actions.setLevel("mentions")}
+            >
+              {tl("mentions")}
+            </Link.MenuAction>
+            <Link.MenuAction
+              isOn={room?.notifyLevel === "off"}
+              onPress={() => actions.setLevel("off")}
+            >
+              {tl("off")}
+            </Link.MenuAction>
+          </Link.Menu>
+        ) : null}
+        <Link.MenuAction icon="info.circle" onPress={actions.openInfo}>
+          {t("info.open")}
+        </Link.MenuAction>
+      </Link.Menu>
+    </Link>
   );
 }
 

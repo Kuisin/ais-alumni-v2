@@ -37,7 +37,7 @@
           "Alumni",
           "Aichi"
         ],
-        "releaseNotes": "・アルバムの写真を、形式を気にせずそのままアップロードできるようになりました（本人確認書類・ニュースやイベントの添付）。\n・登録の申請について、委員会とメッセージでやりとりできるようになりました（画像も添付できます）。\n・「利用できる機能」に、プロフィールの公開範囲の表を追加しました。\n・その他の改善",
+        "releaseNotes": "・チャット一覧でトークを長押しすると、既読をつけずに最新のメッセージをプレビューできるようになりました。\n・メニューや日時の選択を、iPhone 標準の表示に変更しました。\n・iPhone Duo などの広い画面で、管理モードを2画面で表示するようにしました。\n・その他の改善",
         "promoText": "AIS の卒業生・保護者・教職員をつなぐ同窓会アプリ。",
         "supportUrl": "https://ais-alumni.kai-lab.net/support",
         "marketingUrl": "https://ais-alumni.kai-lab.net",
@@ -57,7 +57,7 @@
           "events",
           "school"
         ],
-        "releaseNotes": "• Upload photos from your album in any format (registration documents, news and event attachments).\n• Message the committee about your registration, with images.\n• \"What you can use\" now shows who sees each profile detail.\n• Other improvements",
+        "releaseNotes": "• Long-press a chat in the list to preview the latest messages without marking them read.\n• Menus and date pickers now use the standard iPhone style.\n• On wide screens such as the open iPhone Duo, admin mode shows two panels.\n• Other improvements",
         "promoText": "The alumni network of Aichi International School, in your pocket.",
         "supportUrl": "https://ais-alumni.kai-lab.net/support",
         "marketingUrl": "https://ais-alumni.kai-lab.net",

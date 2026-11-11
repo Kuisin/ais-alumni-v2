@@ -8,6 +8,7 @@ import {
   ChartColumn,
   FilePen,
   FlaskConical,
+  HandCoins,
   IdCard,
   Layers,
   LifeBuoy,
@@ -183,6 +184,13 @@ export const ADMIN_NAV: AdminNavItem[] = [
     label: "adminNav.roster",
     icon: TableProperties,
     ...ADMIN_PAGES.roster,
+    allowed: admin,
+  },
+  {
+    group: "data",
+    label: "adminNav.donations",
+    icon: HandCoins,
+    ...ADMIN_PAGES.donations,
     allowed: admin,
   },
   {

@@ -44,8 +44,10 @@ export function Sheet(props: SheetProps) {
 }
 
 /**
- * iOS: the content of a system page sheet (a Modal with
- * presentationStyle="pageSheet"): a header with the title and 閉じる, then
+ * iOS: the content of a system form sheet (a Modal with
+ * presentationStyle="formSheet" — full width on a phone, a centred card of
+ * normal width on wide windows such as the open iPhone Duo, as iOS's own
+ * apps do): a header with the title and 閉じる, then
  * the children. Exported for sheets with their own body (MessageSheet).
  */
 export function PageSheetFrame({
@@ -113,7 +115,7 @@ function PageSheet({ visible, onClose, title, children }: SheetProps) {
     <Modal
       visible={visible}
       animationType="slide"
-      presentationStyle="pageSheet"
+      presentationStyle="formSheet"
       allowSwipeDismissal
       onRequestClose={onClose}
     >

@@ -232,8 +232,10 @@ project id in the config Expo Go needs no sign-in (with one, run
   titles and header buttons with `<Stack.Screen options={{ … }} />`. Keep
   `src/lib/site-paths.ts` in step.
 - The tab bar: iOS uses the system's (`(tabs)/_layout.ios.tsx`, native
-  tabs, in the sidebar where there's room — the open iPhone Duo; a plain
-  tab bar there shows no tabs at all, so keep `preferredPlacement="sidebar"`);
+  tabs, in the sidebar where there's room — the open iPhone Duo; folded,
+  in its vertical bar. Forcing the compact icon bar when open (a
+  react-native-screens patch) left the tabs missing when started open, so
+  it was undone; revisit with care);
   Android and the web the JS one (`(tabs)/_layout.tsx`). Declare a
   new tab in both.
 - iPhone Duo and other wide windows: `Screen` / `ScreenView` keep clear of
@@ -250,7 +252,7 @@ project id in the config Expo Go needs no sign-in (with one, run
   the system's, which iOS places: plain menus and confirmations are action
   sheets (`showActionMenu`, `src/ui/action-menu.ts`; check
   `systemActionMenus` first), sheets with content page sheets (`Sheet`,
-  `src/ui/sheet.tsx` — a Modal with `presentationStyle="pageSheet"` and
+  `src/ui/sheet.tsx` — a Modal with `presentationStyle="formSheet"` and
   `allowSwipeDismissal`; give its `SafeAreaView` all four edges, as
   `PageSheetFrame` does), date and time the compact `DateTimePicker`.
   Android and the web draw their bottom sheets in `SheetPlacement`

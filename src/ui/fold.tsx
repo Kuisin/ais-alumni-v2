@@ -131,7 +131,7 @@ export const SHEET_MAX_WIDTH = 560;
  * The sheet's own maxHeight ("88%"…) is of what's left. useSheetArea gives
  * the room, e.g. for a grid's columns. iOS draws none of these: it uses
  * the system's action sheets (src/ui/action-menu.ts), page sheets (Modal
- * presentationStyle="pageSheet") and compact date pickers, which iOS
+ * presentationStyle="formSheet") and compact date pickers, which iOS
  * places itself, clear of the fold and the side bar.
  */
 export function SheetPlacement({ children }: { children: ReactNode }) {

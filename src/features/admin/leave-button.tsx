@@ -9,7 +9,12 @@ import { colors, Text, TOUCH } from "@/ui";
  * website's 「会員画面」 switch). Admin mode is its own stack, so its first
  * screen has no back button of its own.
  */
-export function LeaveAdminButton() {
+export function LeaveAdminButton({
+  onLeave,
+}: {
+  /** how to leave (default: back, or home) */
+  onLeave?: () => void;
+} = {}) {
   const t = useTranslations("common.nav");
   const router = useRouter();
   return (
@@ -17,8 +22,9 @@ export function LeaveAdminButton() {
       accessibilityRole="button"
       accessibilityLabel={t("memberMode")}
       hitSlop={4}
-      onPress={() =>
-        router.canGoBack() ? router.back() : router.replace("/home")
+      onPress={
+        onLeave ??
+        (() => (router.canGoBack() ? router.back() : router.replace("/home")))
       }
       style={({ pressed }) => [styles.button, pressed ? styles.pressed : null]}
     >

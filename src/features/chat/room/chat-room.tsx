@@ -10,6 +10,7 @@ import * as Haptics from "expo-haptics";
 import {
   Stack,
   useIsFocused,
+  useIsPreview,
   useLocalSearchParams,
   useRouter,
 } from "expo-router";
@@ -258,7 +259,11 @@ function Room({
   // 処分 (投稿制限): read-only — no sending or reacting.
   const restricted = myAccount.sanction?.level === "RESTRICTED";
   const me = meUser.id;
-  const focused = useIsFocused();
+  // Rendered as a link preview (iOS context menu), the talk is not in
+  // front: nothing is marked read. (The chat list's preview is ChatPeek;
+  // this guards any other Link.Preview of a talk.)
+  const preview = useIsPreview();
+  const focused = useIsFocused() && !preview;
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
   const state = useRoom({

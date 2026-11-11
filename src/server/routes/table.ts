@@ -15,6 +15,7 @@ import * as adminCohort from "./mobile/v1/admin/cohorts/[id]";
 import * as adminCohortReps from "./mobile/v1/admin/cohorts/[id]/reps";
 import * as adminCohortStudents from "./mobile/v1/admin/cohorts/[id]/students";
 import * as adminDestinations from "./mobile/v1/admin/destinations";
+import * as adminDonations from "./mobile/v1/admin/donations";
 import * as ae0 from "./mobile/v1/admin/events";
 import * as ae1 from "./mobile/v1/admin/events/[id]";
 import * as ae2 from "./mobile/v1/admin/events/[id]/approve";
@@ -134,6 +135,7 @@ import * as lineLink from "./mobile/v1/line/link";
 import * as lineLinkStart from "./mobile/v1/line/link/start";
 import * as r29 from "./mobile/v1/me";
 import * as meAccess from "./mobile/v1/me/access";
+import * as meDonations from "./mobile/v1/me/donations";
 import * as meExport from "./mobile/v1/me/export";
 import * as meSanctionAck from "./mobile/v1/me/sanction/ack";
 import * as r30 from "./mobile/v1/members/[id]";
@@ -318,6 +320,7 @@ export const ROUTES: [string, RouteModule][] = [
     adminCohortStudents as unknown as RouteModule,
   ],
   ["admin/destinations", adminDestinations as unknown as RouteModule],
+  ["admin/donations", adminDonations as unknown as RouteModule],
   ["admin/line", adminLine as unknown as RouteModule],
   ["admin/line/announce", adminLineAnnounce as unknown as RouteModule],
   ["admin/line/preview", adminLinePreview as unknown as RouteModule],
@@ -381,6 +384,7 @@ export const ROUTES: [string, RouteModule][] = [
   ["me", r29 as unknown as RouteModule],
   ["access", publicAccess as unknown as RouteModule],
   ["me/access", meAccess as unknown as RouteModule],
+  ["me/donations", meDonations as unknown as RouteModule],
   ["me/export", meExport as unknown as RouteModule],
   ["me/sanction/ack", meSanctionAck as unknown as RouteModule],
   ["members/[id]", r30 as unknown as RouteModule],

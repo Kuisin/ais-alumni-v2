@@ -83,7 +83,8 @@
     "support": "お問い合わせ",
     "line": "LINEメニュー",
     "chat": "チャット",
-    "testAccounts": "テストアカウント"
+    "testAccounts": "テストアカウント",
+    "donations": "寄付"
   },
   "notFoundTitle": "ページが見つかりません",
   "goHome": "ホームへ",

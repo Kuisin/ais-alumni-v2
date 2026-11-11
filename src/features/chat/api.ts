@@ -43,10 +43,13 @@ export function useChatList() {
   });
 }
 
+/** GET /chat/:id — read-only (marking read is POST /read). */
+export const fetchRoom = (id: string) => api<ChatRoom>(path(id));
+
 export function useChatRoom(id: string) {
   return useQuery({
     queryKey: roomKey(id),
-    queryFn: () => api<ChatRoom>(path(id)),
+    queryFn: () => fetchRoom(id),
     // Shown at once from the cache; the unread line waits for fresh data.
     refetchOnMount: "always",
   });
