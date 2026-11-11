@@ -198,7 +198,7 @@ export function Select({
       <Modal
         visible={open}
         animationType="slide"
-        presentationStyle={Platform.OS === "ios" ? "pageSheet" : undefined}
+        presentationStyle={Platform.OS === "ios" ? "formSheet" : undefined}
         allowSwipeDismissal
         transparent={Platform.OS === "web"}
         onRequestClose={() => setOpen(false)}

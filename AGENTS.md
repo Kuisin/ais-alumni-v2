@@ -250,7 +250,7 @@ project id in the config Expo Go needs no sign-in (with one, run
   the system's, which iOS places: plain menus and confirmations are action
   sheets (`showActionMenu`, `src/ui/action-menu.ts`; check
   `systemActionMenus` first), sheets with content page sheets (`Sheet`,
-  `src/ui/sheet.tsx` — a Modal with `presentationStyle="pageSheet"` and
+  `src/ui/sheet.tsx` — a Modal with `presentationStyle="formSheet"` and
   `allowSwipeDismissal`; give its `SafeAreaView` all four edges, as
   `PageSheetFrame` does), date and time the compact `DateTimePicker`.
   Android and the web draw their bottom sheets in `SheetPlacement`

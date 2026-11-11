@@ -1,5 +1,6 @@
 import { NativeTabs } from "expo-router/native-tabs";
 import { useTranslations } from "use-intl";
+import { useTabPlacement } from "@/features/tabs/placement";
 import { useMe } from "@/lib/auth";
 import { colors } from "@/ui/theme";
 
@@ -18,9 +19,15 @@ export default function TabLayout() {
   const { badges } = useMe();
   const news = badge(badges.news + badges.messages);
   const chat = badge(badges.chat);
+  // TEMPORARY: switchable from 設定 for iPhone Duo testing (placement.ts).
+  const placement = useTabPlacement();
+  const place =
+    placement === "fixed"
+      ? { sidebarAdaptable: false }
+      : { preferredPlacement: placement };
   return (
     <NativeTabs
-      preferredPlacement="sidebar"
+      {...place}
       tintColor={colors.brand700}
       badgeBackgroundColor={colors.red600}
     >

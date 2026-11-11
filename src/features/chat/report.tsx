@@ -299,7 +299,7 @@ function WhoPicker({
     <Modal
       visible={visible}
       animationType="slide"
-      presentationStyle="pageSheet"
+      presentationStyle="formSheet"
       allowSwipeDismissal
       onRequestClose={onClose}
     >
