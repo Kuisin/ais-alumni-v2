@@ -175,6 +175,7 @@
   },
   "admin": {
     "empty": "No admin tools are available in the app yet.",
+    "pickSection": "Choose an item from the list on the left",
     "events": {
       "exportFailed": "Couldn't save or share the file. Please try again."
     }
