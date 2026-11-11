@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useMe } from "@/lib/auth";
 import { Avatar, CountDot, colors, space, TOUCH } from "@/ui";
@@ -40,7 +40,10 @@ const styles = StyleSheet.create({
   button: {
     width: TOUCH,
     height: TOUCH,
-    marginLeft: space.sm,
+    // iOS wraps a header button in a glass bubble sized to its box, margin
+    // included: a margin there makes an off-centre oval. iOS spaces header
+    // items itself; Android's and the web's headers need the gap.
+    marginLeft: Platform.OS === "ios" ? 0 : space.sm,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: TOUCH / 2,
