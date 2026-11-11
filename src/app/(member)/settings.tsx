@@ -22,7 +22,6 @@ import {
   NotifySection,
 } from "@/features/me/settings-sections";
 import { PushSection } from "@/features/notifications/push-section";
-import { TabPlacementSection } from "@/features/tabs/placement-section";
 import { QueryState, Screen, Text } from "@/ui";
 
 /**
@@ -68,7 +67,6 @@ export default function SettingsScreen() {
             ) : null}
             <ExportSection />
             <DevicesSection />
-            <TabPlacementSection />
             {s.adminMode.length ? (
               <AdminModeSection areas={s.adminMode} />
             ) : null}

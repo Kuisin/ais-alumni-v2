@@ -667,15 +667,5 @@
     "errors": {
       "decode": "{name}: this browser can't read this image. If it's an iPhone photo (HEIC), choose another photo, take a screenshot of it and choose that, or send it from your iPhone (the app or Safari)."
     }
-  },
-  "tabPlacement": {
-    "title": "Tab layout (testing)",
-    "description": "For trying the iPhone Duo: switch how the tabs are shown and see how the open display looks. Shown to admins only.",
-    "options": {
-      "sidebar": "Sidebar (current default)",
-      "tabBar": "Tab bar",
-      "automatic": "Automatic",
-      "fixed": "Fixed tab bar (no sidebar)"
-    }
   }
 }

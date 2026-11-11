@@ -1,33 +1,28 @@
 import { NativeTabs } from "expo-router/native-tabs";
 import { useTranslations } from "use-intl";
-import { useTabPlacement } from "@/features/tabs/placement";
 import { useMe } from "@/lib/auth";
 import { colors } from "@/ui/theme";
 
 const badge = (n: number) => (n > 0 ? (n > 99 ? "99+" : String(n)) : null);
 
 /**
- * iOS: the system's tab bar (Android and the web: _layout.tsx). Where there
- * is room — the iPhone Duo open, landscape — the tabs move into the sidebar
- * (iOS 27). Not a plain tab bar there: with `sidebarAdaptable={false}` or
- * `preferredPlacement="tabBar"` the open Duo showed no tabs at all (Xcode
- * 27.1's Duo simulator). Each tab's own stack draws its header
- * (features/tabs/tab-stack).
+ * iOS: the system's tab bar (Android and the web: _layout.tsx). On iPhones
+ * — the iPhone Duo folded or open — it's always iOS's icon tab bar, in the
+ * vertical bar at the side on the Duo: patches/react-native-screens@4.30.0
+ * keeps the tab bar controller compact-width on iPhones (no sidebar) and,
+ * once on screen, makes UIKit lay the vertical bar out again (started on
+ * the Duo's open display, the tabs are otherwise missing until it's folded
+ * and opened). preferredPlacement only matters on iPad-wide idioms. Each
+ * tab's own stack draws its header (features/tabs/tab-stack).
  */
 export default function TabLayout() {
   const t = useTranslations("common.nav");
   const { badges } = useMe();
   const news = badge(badges.news + badges.messages);
   const chat = badge(badges.chat);
-  // TEMPORARY: switchable from 設定 for iPhone Duo testing (placement.ts).
-  const placement = useTabPlacement();
-  const place =
-    placement === "fixed"
-      ? { sidebarAdaptable: false }
-      : { preferredPlacement: placement };
   return (
     <NativeTabs
-      {...place}
+      preferredPlacement="sidebar"
       tintColor={colors.brand700}
       badgeBackgroundColor={colors.red600}
     >
