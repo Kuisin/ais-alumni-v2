@@ -1,5 +1,6 @@
 import type { AdminCounts } from "@contract/admin";
 import type { StaffAccess } from "@contract/core";
+import type { LabelProps } from "@expo/ui/swift-ui";
 import type { Href } from "expo-router";
 import {
   BadgeCheck,
@@ -40,6 +41,8 @@ export type AdminNavItem = {
   /** key in the "common" namespace */
   label: string;
   icon: LucideIcon;
+  /** the same as an SF Symbol: the iOS list (section-list.ios.tsx) */
+  symbol: NonNullable<LabelProps["systemImage"]>;
   /** the website's page (links in notifications open the screen) */
   webPath: string;
   /** who sees it: the same checks as the website's page */
@@ -63,6 +66,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "review",
     label: "adminNav.verification",
     icon: BadgeCheck,
+    symbol: "checkmark.seal",
     ...ADMIN_PAGES.verification,
     allowed: admin,
     count: "verification",
@@ -71,6 +75,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "review",
     label: "adminNav.recordRequests",
     icon: FilePen,
+    symbol: "doc.badge.ellipsis",
     ...ADMIN_PAGES.recordRequests,
     allowed: admin,
     count: "recordRequests",
@@ -79,6 +84,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "review",
     label: "adminNav.nameRequests",
     icon: IdCard,
+    symbol: "person.text.rectangle",
     ...ADMIN_PAGES.nameRequests,
     allowed: admin,
     count: "nameRequests",
@@ -87,6 +93,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "review",
     label: "adminNav.support",
     icon: LifeBuoy,
+    symbol: "lifepreserver",
     ...ADMIN_PAGES.support,
     allowed: admin,
     count: "support",
@@ -95,6 +102,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "review",
     label: "adminNav.chat",
     icon: MessagesSquare,
+    symbol: "bubble.left.and.bubble.right",
     ...ADMIN_PAGES.chat,
     allowed: admin,
     count: "chat",
@@ -104,6 +112,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "people",
     label: "adminNav.members",
     icon: Users,
+    symbol: "person.2",
     ...ADMIN_PAGES.members,
     allowed: admin,
   },
@@ -111,6 +120,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "people",
     label: "adminNav.teachers",
     icon: UserCheck,
+    symbol: "person.crop.circle.badge.checkmark",
     ...ADMIN_PAGES.teachers,
     allowed: (a) => a.teachers,
   },
@@ -118,6 +128,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "people",
     label: "adminNav.testAccounts",
     icon: FlaskConical,
+    symbol: "flask",
     ...ADMIN_PAGES.testAccounts,
     allowed: admin,
   },
@@ -125,6 +136,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "people",
     label: "adminNav.cohorts",
     icon: Layers,
+    symbol: "square.stack.3d.up",
     ...ADMIN_PAGES.cohorts,
     allowed: admin,
   },
@@ -133,6 +145,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "outreach",
     label: "nav.notify",
     icon: Megaphone,
+    symbol: "megaphone",
     ...ADMIN_PAGES.notify,
     allowed: (a) => a.broadcast,
   },
@@ -140,6 +153,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "outreach",
     label: "adminNav.events",
     icon: CalendarDays,
+    symbol: "calendar",
     ...ADMIN_PAGES.events,
     allowed: (a) => a.news,
   },
@@ -147,6 +161,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "outreach",
     label: "adminNav.news",
     icon: Newspaper,
+    symbol: "newspaper",
     ...ADMIN_PAGES.news,
     allowed: (a) => a.news,
   },
@@ -154,6 +169,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "outreach",
     label: "adminNav.line",
     icon: MessageCircle,
+    symbol: "message",
     ...ADMIN_PAGES.line,
     allowed: admin,
   },
@@ -162,6 +178,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "data",
     label: "adminNav.destinations",
     icon: Route,
+    symbol: "signpost.right",
     ...ADMIN_PAGES.destinations,
     allowed: admin,
   },
@@ -169,6 +186,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "data",
     label: "adminNav.stats",
     icon: ChartColumn,
+    symbol: "chart.bar",
     ...ADMIN_PAGES.stats,
     allowed: admin,
   },
@@ -176,6 +194,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "data",
     label: "adminNav.organizations",
     icon: Building2,
+    symbol: "building.2",
     ...ADMIN_PAGES.organizations,
     allowed: admin,
   },
@@ -183,6 +202,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "data",
     label: "adminNav.roster",
     icon: TableProperties,
+    symbol: "tablecells",
     ...ADMIN_PAGES.roster,
     allowed: admin,
   },
@@ -190,6 +210,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "data",
     label: "adminNav.donations",
     icon: HandCoins,
+    symbol: "yensign.circle",
     ...ADMIN_PAGES.donations,
     allowed: admin,
   },
@@ -197,6 +218,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     group: "data",
     label: "adminNav.audit",
     icon: ScrollText,
+    symbol: "clock.arrow.circlepath",
     ...ADMIN_PAGES.audit,
     allowed: admin,
   },

@@ -26,6 +26,7 @@ import {
   ErrorState,
   Loading,
   radius,
+  ScreenView,
   space,
   Text,
 } from "@/ui";
@@ -91,74 +92,76 @@ export default function NotificationsScreen() {
           <Loading />
         )
       ) : (
-        <FlatList
-          style={styles.list}
-          contentContainerStyle={styles.content}
-          contentInsetAdjustmentBehavior="automatic"
-          data={items}
-          keyExtractor={(i) => i.id}
-          renderItem={({ item }) => (
-            <InboxRow item={item} onPress={() => onOpen(item)} />
-          )}
-          ItemSeparatorComponent={Gap}
-          ListHeaderComponent={
-            <View style={styles.header}>
-              <Text variant="small" tone="muted">
-                {t("description")}
-              </Text>
-              {anyUnread ? (
-                <Button
-                  variant="secondary"
-                  compact
-                  label={t("markAll")}
-                  icon={(c) => <CheckCheck size={18} color={c} aria-hidden />}
-                  loading={markAll.isPending}
-                  onPress={() => markAll.mutate()}
-                  style={styles.markAll}
-                />
-              ) : null}
-            </View>
-          }
-          ListEmptyComponent={
-            <EmptyState
-              icon={<Bell size={32} color={colors.slate400} aria-hidden />}
-              title={t("empty")}
-            />
-          }
-          ListFooterComponent={
-            list.isFetchingNextPage ? (
-              <Loading inline />
-            ) : list.isFetchNextPageError ? (
-              <View style={styles.footer}>
-                <Text variant="small" tone="muted" center>
-                  {tm("generic")}
+        <ScreenView>
+          <FlatList
+            style={styles.list}
+            contentContainerStyle={styles.content}
+            contentInsetAdjustmentBehavior="automatic"
+            data={items}
+            keyExtractor={(i) => i.id}
+            renderItem={({ item }) => (
+              <InboxRow item={item} onPress={() => onOpen(item)} />
+            )}
+            ItemSeparatorComponent={Gap}
+            ListHeaderComponent={
+              <View style={styles.header}>
+                <Text variant="small" tone="muted">
+                  {t("description")}
                 </Text>
-                <Button
-                  variant="secondary"
-                  label={tm("retry")}
-                  onPress={() => void list.fetchNextPage()}
-                />
+                {anyUnread ? (
+                  <Button
+                    variant="secondary"
+                    compact
+                    label={t("markAll")}
+                    icon={(c) => <CheckCheck size={18} color={c} aria-hidden />}
+                    loading={markAll.isPending}
+                    onPress={() => markAll.mutate()}
+                    style={styles.markAll}
+                  />
+                ) : null}
               </View>
-            ) : undefined
-          }
-          onEndReachedThreshold={0.5}
-          onEndReached={() => {
-            if (
-              list.hasNextPage &&
-              !list.isFetching &&
-              !list.isFetchNextPageError
-            )
-              void list.fetchNextPage();
-          }}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={refresh}
-              tintColor={colors.brand700}
-              colors={[colors.brand700]}
-            />
-          }
-        />
+            }
+            ListEmptyComponent={
+              <EmptyState
+                icon={<Bell size={32} color={colors.slate400} aria-hidden />}
+                title={t("empty")}
+              />
+            }
+            ListFooterComponent={
+              list.isFetchingNextPage ? (
+                <Loading inline />
+              ) : list.isFetchNextPageError ? (
+                <View style={styles.footer}>
+                  <Text variant="small" tone="muted" center>
+                    {tm("generic")}
+                  </Text>
+                  <Button
+                    variant="secondary"
+                    label={tm("retry")}
+                    onPress={() => void list.fetchNextPage()}
+                  />
+                </View>
+              ) : undefined
+            }
+            onEndReachedThreshold={0.5}
+            onEndReached={() => {
+              if (
+                list.hasNextPage &&
+                !list.isFetching &&
+                !list.isFetchNextPageError
+              )
+                void list.fetchNextPage();
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={refresh}
+                tintColor={colors.brand700}
+                colors={[colors.brand700]}
+              />
+            }
+          />
+        </ScreenView>
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import type { EventTab } from "@contract/events";
-import { Stack, useRouter } from "expo-router";
-import { CalendarDays } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import { CalendarDays, Plus } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -12,7 +12,6 @@ import {
   colors,
   EmptyState,
   ErrorState,
-  HeaderButton,
   Loading,
   ScreenView,
   space,
@@ -22,7 +21,7 @@ import {
 /**
  * イベント (the website's /app/events): upcoming (incl. in progress) or past
  * events for this member, 20 at a time, with their own answer. Authors
- * create events on the website screen.
+ * get 「イベントを作成」 at the top of the list (/events/new).
  */
 export default function EventsTab() {
   const t = useTranslations("events");
@@ -42,18 +41,6 @@ export default function EventsTab() {
 
   return (
     <ScreenView>
-      <Stack.Screen
-        options={{
-          headerRight: canCreate
-            ? () => (
-                <HeaderButton
-                  label={t("create")}
-                  onPress={() => router.push("/events/new")}
-                />
-              )
-            : undefined,
-        }}
-      />
       <FlatList
         data={events}
         keyExtractor={(e) => e.id}
@@ -70,6 +57,14 @@ export default function EventsTab() {
         contentInsetAdjustmentBehavior="automatic"
         ListHeaderComponent={
           <View style={styles.header}>
+            {canCreate ? (
+              <Button
+                variant="secondary"
+                label={t("create")}
+                icon={(color) => <Plus size={20} color={color} aria-hidden />}
+                onPress={() => router.push("/events/new")}
+              />
+            ) : null}
             <Text variant="small" tone="muted">
               {t("description")}
             </Text>

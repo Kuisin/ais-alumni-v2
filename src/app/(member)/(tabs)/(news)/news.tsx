@@ -1,31 +1,21 @@
 import type { MessageSummary, NewsSummary } from "@contract/news";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { Mail, Newspaper } from "lucide-react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Plus } from "lucide-react-native";
 import { type ReactElement, useEffect, useState } from "react";
-import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { SegmentedTabs } from "@/features/events/parts";
 import { useMessageList, useNewsList } from "@/features/news/api";
-import { MessageRow } from "@/features/news/message-row";
-import { NewsCard } from "@/features/news/news-card";
+import { MessageFeed, NewsFeed } from "@/features/news/feed";
 import { useMe } from "@/lib/auth";
-import {
-  Button,
-  colors,
-  EmptyState,
-  ErrorState,
-  HeaderButton,
-  Loading,
-  space,
-  Text,
-} from "@/ui";
+import { Button, ErrorState, Loading, Text } from "@/ui";
 
 type Tab = "news" | "messages";
 
 /**
  * ニュース (the website's /app/news): pinned posts first, 10 per page,
- * loaded as the member scrolls. News authors get 「ニュースを作成」 in the
- * header (/news/new), like イベント's 「イベントを作成」. While messages are switched on (me.features.messages), a
+ * loaded as the member scrolls. News authors get 「ニュースを作成」 at the
+ * top of the list (/news/new), like イベント's 「イベントを作成」. While
+ * messages are switched on (me.features.messages), a
  * second tab lists あなた宛ての連絡 (?tab=messages).
  */
 export default function NewsScreen() {
@@ -40,21 +30,7 @@ export default function NewsScreen() {
   const t = useTranslations("news");
   const router = useRouter();
   const canCreate = useNewsList().data?.pages[0]?.canCreate ?? false;
-  const header = (
-    <Stack.Screen
-      options={{
-        headerRight: canCreate
-          ? () => (
-              <HeaderButton
-                label={t("create")}
-                onPress={() => router.push("/news/new")}
-              />
-            )
-          : undefined,
-      }}
-    />
-  );
-  const tabs = messagesOn ? (
+  const segments = messagesOn ? (
     <SegmentedTabs
       label={t("tabs.label")}
       value={tab}
@@ -68,15 +44,24 @@ export default function NewsScreen() {
       ]}
     />
   ) : null;
-  return (
-    <>
-      {header}
-      {tab === "messages" ? (
-        <MessagesTab tabs={tabs} />
-      ) : (
-        <NewsTab tabs={tabs} />
-      )}
-    </>
+  const tabs =
+    canCreate || segments ? (
+      <>
+        {canCreate ? (
+          <Button
+            variant="secondary"
+            label={t("create")}
+            icon={(color) => <Plus size={20} color={color} aria-hidden />}
+            onPress={() => router.push("/news/new")}
+          />
+        ) : null}
+        {segments}
+      </>
+    ) : null;
+  return tab === "messages" ? (
+    <MessagesTab tabs={tabs} />
+  ) : (
+    <NewsTab tabs={tabs} />
   );
 }
 
@@ -84,10 +69,7 @@ const withCount = (label: string, n: number) => (n ? `${label} ${n}` : label);
 
 function NewsTab({ tabs }: { tabs: ReactElement | null }) {
   const t = useTranslations("news");
-  const tm = useTranslations("mobile.errors");
-  const router = useRouter();
   const list = useNewsList();
-  const [refreshing, setRefreshing] = useState(false);
 
   // Pages can shift while scrolling (a new post): show each post once.
   const seen = new Set<string>();
@@ -99,12 +81,6 @@ function NewsTab({ tabs }: { tabs: ReactElement | null }) {
         posts.push(p);
       }
 
-  const refresh = async () => {
-    setRefreshing(true);
-    await list.refetch().catch(() => {});
-    setRefreshing(false);
-  };
-
   if (list.data === undefined)
     return list.isError ? (
       <ErrorState error={list.error} onRetry={() => list.refetch()} />
@@ -113,60 +89,16 @@ function NewsTab({ tabs }: { tabs: ReactElement | null }) {
     );
 
   return (
-    <FlatList
-      style={styles.list}
-      contentContainerStyle={styles.content}
-      contentInsetAdjustmentBehavior="automatic"
-      data={posts}
-      keyExtractor={(p) => p.id}
-      renderItem={({ item }) => (
-        <NewsCard post={item} onPress={() => router.push(`/news/${item.id}`)} />
-      )}
-      ItemSeparatorComponent={Gap}
-      ListHeaderComponent={
-        <View style={styles.header}>
+    <NewsFeed
+      items={posts}
+      pager={list}
+      header={
+        <>
           {tabs}
           <Text variant="small" tone="muted">
             {t("description")}
           </Text>
-        </View>
-      }
-      ListEmptyComponent={
-        <EmptyState
-          icon={<Newspaper size={32} color={colors.slate400} aria-hidden />}
-          title={t("empty")}
-          hint={t("emptyHint")}
-        />
-      }
-      ListFooterComponent={
-        list.isFetchingNextPage ? (
-          <Loading inline />
-        ) : list.isFetchNextPageError ? (
-          <View style={styles.footer}>
-            <Text variant="small" tone="muted" center>
-              {tm("generic")}
-            </Text>
-            <Button
-              variant="secondary"
-              label={tm("retry")}
-              onPress={() => void list.fetchNextPage()}
-            />
-          </View>
-        ) : undefined
-      }
-      onEndReachedThreshold={0.5}
-      onEndReached={() => {
-        // After a failed page, the footer's retry button takes over.
-        if (list.hasNextPage && !list.isFetching && !list.isFetchNextPageError)
-          void list.fetchNextPage();
-      }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={refresh}
-          tintColor={colors.brand700}
-          colors={[colors.brand700]}
-        />
+        </>
       }
     />
   );
@@ -174,11 +106,7 @@ function NewsTab({ tabs }: { tabs: ReactElement | null }) {
 
 /** あなた宛ての連絡 (20 per page, newest first). */
 function MessagesTab({ tabs }: { tabs: ReactElement | null }) {
-  const t = useTranslations("news");
-  const tm = useTranslations("mobile.errors");
-  const router = useRouter();
   const list = useMessageList(true);
-  const [refreshing, setRefreshing] = useState(false);
   const seen = new Set<string>();
   const rows: MessageSummary[] = [];
   for (const page of list.data?.pages ?? [])
@@ -188,12 +116,6 @@ function MessagesTab({ tabs }: { tabs: ReactElement | null }) {
         rows.push(m);
       }
 
-  const refresh = async () => {
-    setRefreshing(true);
-    await list.refetch().catch(() => {});
-    setRefreshing(false);
-  };
-
   if (list.data === undefined)
     return list.isError ? (
       <ErrorState error={list.error} onRetry={() => list.refetch()} />
@@ -201,69 +123,5 @@ function MessagesTab({ tabs }: { tabs: ReactElement | null }) {
       <Loading />
     );
 
-  return (
-    <FlatList
-      style={styles.list}
-      contentContainerStyle={styles.content}
-      contentInsetAdjustmentBehavior="automatic"
-      data={rows}
-      keyExtractor={(m) => m.id}
-      renderItem={({ item }) => (
-        <MessageRow
-          message={item}
-          onPress={() => router.push(`/news/messages/${item.id}`)}
-        />
-      )}
-      ItemSeparatorComponent={Gap}
-      ListHeaderComponent={<View style={styles.header}>{tabs}</View>}
-      ListEmptyComponent={
-        <EmptyState
-          icon={<Mail size={32} color={colors.slate400} aria-hidden />}
-          title={t("messages.empty")}
-          hint={t("messages.emptyHint")}
-        />
-      }
-      ListFooterComponent={
-        list.isFetchingNextPage ? (
-          <Loading inline />
-        ) : list.isFetchNextPageError ? (
-          <View style={styles.footer}>
-            <Text variant="small" tone="muted" center>
-              {tm("generic")}
-            </Text>
-            <Button
-              variant="secondary"
-              label={tm("retry")}
-              onPress={() => void list.fetchNextPage()}
-            />
-          </View>
-        ) : undefined
-      }
-      onEndReachedThreshold={0.5}
-      onEndReached={() => {
-        if (list.hasNextPage && !list.isFetching && !list.isFetchNextPageError)
-          void list.fetchNextPage();
-      }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={refresh}
-          tintColor={colors.brand700}
-          colors={[colors.brand700]}
-        />
-      }
-    />
-  );
+  return <MessageFeed items={rows} pager={list} header={tabs} />;
 }
-
-function Gap() {
-  return <View style={styles.gap} />;
-}
-
-const styles = StyleSheet.create({
-  list: { flex: 1, backgroundColor: colors.background },
-  content: { padding: space.lg, paddingBottom: space.xxl },
-  header: { gap: space.md, marginBottom: space.lg },
-  gap: { height: space.md },
-  footer: { gap: space.md, paddingVertical: space.lg },
-});
