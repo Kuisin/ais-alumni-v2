@@ -17,6 +17,11 @@ import { colors } from "@/ui";
  * updated, so both are right items.
  * Android and the web: tab-header.tsx.
  */
+/** Our stored photos (/api/files) come round from the server. */
+function roundPhotoUrl(url: string): string {
+  return /\/api\/files\?/.test(url) ? `${url}&round=90` : url;
+}
+
 export function useTabHeaderOptions(): NativeStackNavigationOptions {
   const t = useTranslations("common.nav");
   const tf = useTranslations("dashboard.todo");
@@ -39,7 +44,14 @@ export function useTabHeaderOptions(): NativeStackNavigationOptions {
       photo && !/\.svg(\?|$)/i.test(photo)
         ? {
             type: "image",
-            source: { uri: absoluteUrl(photo), width: 30, height: 30 },
+            // Drawn round by the server (?round=, /api/files), 3× for the
+            // screen: iOS neither rounds nor scales bar item images well.
+            source: {
+              uri: roundPhotoUrl(absoluteUrl(photo)),
+              width: 30,
+              height: 30,
+              scale: 3,
+            },
             tinted: false,
           }
         : { type: "sfSymbol", name: "person.crop.circle" },

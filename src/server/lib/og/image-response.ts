@@ -24,6 +24,23 @@ function loadResvg(): Promise<void> {
   return ready;
 }
 
+/**
+ * A photo (JPEG / PNG bytes) cropped to a circle — filling it, centred —
+ * as a PNG `size` px wide: for iOS header buttons, which can't round an
+ * image themselves.
+ */
+export async function roundImagePng(
+  bytes: Uint8Array,
+  mime: string,
+  size: number,
+): Promise<Uint8Array> {
+  await loadResvg();
+  const r = size / 2;
+  const data = `data:${mime};base64,${Buffer.from(bytes).toString("base64")}`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><defs><clipPath id="c"><circle cx="${r}" cy="${r}" r="${r}"/></clipPath></defs><image xlink:href="${data}" href="${data}" x="0" y="0" width="${size}" height="${size}" preserveAspectRatio="xMidYMid slice" clip-path="url(#c)"/></svg>`;
+  return new Resvg(svg, { fitTo: { mode: "original" } }).render().asPng();
+}
+
 export type ImageOptions = {
   width: number;
   height: number;
