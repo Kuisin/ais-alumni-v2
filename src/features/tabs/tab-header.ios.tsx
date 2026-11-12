@@ -4,61 +4,26 @@ import {
   useRouter,
 } from "expo-router";
 import { useTranslations } from "use-intl";
+import { ProfileButton } from "@/features/me/profile-button";
 import { useMe } from "@/lib/auth";
-import { absoluteUrl } from "@/lib/config";
 import { colors } from "@/ui";
 
 /**
- * Every tab's header on iOS: マイページ (the member's photo, with the number of
- * follow requests waiting) and お知らせ's bell (unread count), both as native
- * items on the right — so on the iPhone Duo iOS keeps them together in its
- * vertical bar above the tab bar (React views stay in the header). A left
- * item moved between the header and the vertical bar as the screen
- * updated, so both are right items.
- * Android and the web: tab-header.tsx.
+ * Every tab's header on iOS: マイページ's button (the member's photo, round,
+ * with the number of follow requests waiting) at the top left, and
+ * お知らせ's bell (unread count) as a native item at the right — which on
+ * the iPhone Duo iOS puts in its vertical bar above the tab bar.
+ *
+ * The photo stays a React view on purpose: as a native left item, iOS moved
+ * it between the header and the vertical bar as the screen updated; React
+ * views always stay in the header. Android and the web: tab-header.tsx.
  */
-/** Our stored photos (/api/files) come round from the server. */
-function roundPhotoUrl(url: string): string {
-  return /\/api\/files\?/.test(url) ? `${url}&round=90` : url;
-}
-
 export function useTabHeaderOptions(): NativeStackNavigationOptions {
-  const t = useTranslations("common.nav");
-  const tf = useTranslations("dashboard.todo");
   const ti = useTranslations("mobile.inbox");
   const router = useRouter();
   const me = useMe();
-  const waiting = me.badges.follows;
   const unread = me.badges.inbox;
-  const photo = me.user.avatar;
 
-  const profile: NativeStackHeaderItem = {
-    type: "button",
-    label: t("profileShort"),
-    accessibilityLabel:
-      waiting > 0
-        ? `${t("profileShort")}, ${tf("followRequests", { count: waiting })}`
-        : t("profileShort"),
-    // A bar item's image can't be SVG (the default icon without a gender).
-    icon:
-      photo && !/\.svg(\?|$)/i.test(photo)
-        ? {
-            type: "image",
-            // Drawn round by the server (?round=, /api/files), 3× for the
-            // screen: iOS neither rounds nor scales bar item images well.
-            source: {
-              uri: roundPhotoUrl(absoluteUrl(photo)),
-              width: 30,
-              height: 30,
-              scale: 3,
-            },
-            tinted: false,
-          }
-        : { type: "sfSymbol", name: "person.crop.circle" },
-    badge: waiting > 0 ? { value: waiting } : undefined,
-    identifier: "tab-profile",
-    onPress: () => router.push("/me"),
-  };
   const bell: NativeStackHeaderItem = {
     type: "button",
     label: ti("bell"),
@@ -71,8 +36,7 @@ export function useTabHeaderOptions(): NativeStackNavigationOptions {
     onPress: () => router.push("/notifications"),
   };
   return {
-    unstable_headerLeftItems: () => [],
-    // The first right item sits outermost: the photo above the bell.
-    unstable_headerRightItems: () => [profile, bell],
+    headerLeft: () => <ProfileButton />,
+    unstable_headerRightItems: () => [bell],
   };
 }
