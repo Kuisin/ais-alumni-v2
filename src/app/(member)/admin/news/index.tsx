@@ -26,6 +26,7 @@ import {
   EmptyState,
   ErrorState,
   Loading,
+  ScreenView,
   space,
   Text,
 } from "@/ui";
@@ -84,81 +85,85 @@ export default function AdminNewsScreen() {
           <Loading />
         )
       ) : (
-        <FlatList
-          style={styles.list}
-          contentContainerStyle={styles.content}
-          contentInsetAdjustmentBehavior="automatic"
-          data={posts}
-          keyExtractor={(p) => p.id}
-          renderItem={({ item, index }) => (
-            <PostRow
-              post={item}
-              first={index === 0}
-              last={index === posts.length - 1}
-              onPress={() => router.push(`/admin/news/${item.id}`)}
-            />
-          )}
-          ListHeaderComponent={
-            <View style={styles.header}>
-              <Text variant="small" tone="muted">
-                {first?.isAdmin ? t("description") : t("descriptionOwn")}
-              </Text>
-              {newButton("primary")}
-              <Chips
-                label={t("archiveTabs")}
-                choices={[
-                  { value: "active", label: t("tabActive") },
-                  {
-                    value: "archived",
-                    label: `${t("tabArchived")} (${first?.archivedCount ?? 0})`,
-                  },
-                ]}
-                value={archived ? "archived" : "active"}
-                onChange={(v) => setArchived(v === "archived")}
+        <ScreenView>
+          <FlatList
+            style={styles.list}
+            contentContainerStyle={styles.content}
+            contentInsetAdjustmentBehavior="automatic"
+            data={posts}
+            keyExtractor={(p) => p.id}
+            renderItem={({ item, index }) => (
+              <PostRow
+                post={item}
+                first={index === 0}
+                last={index === posts.length - 1}
+                onPress={() => router.push(`/admin/news/${item.id}`)}
               />
-              {deleted === "1" ? (
-                <Notice tone="success">{t("deleted")}</Notice>
-              ) : null}
-            </View>
-          }
-          ListEmptyComponent={
-            <EmptyState
-              icon={<Newspaper size={32} color={colors.slate400} aria-hidden />}
-              title={t("empty")}
-              hint={t("emptyHint")}
-              action={newButton("secondary")}
-            />
-          }
-          onEndReached={() => {
-            if (list.hasNextPage && !list.isFetchingNextPage)
-              void list.fetchNextPage();
-          }}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            list.isFetchingNextPage ? (
-              <Loading inline />
-            ) : list.isFetchNextPageError ? (
-              <View style={styles.footer}>
-                <Text variant="small" tone="muted" center>
-                  {tm("generic")}
+            )}
+            ListHeaderComponent={
+              <View style={styles.header}>
+                <Text variant="small" tone="muted">
+                  {first?.isAdmin ? t("description") : t("descriptionOwn")}
                 </Text>
-                <Button
-                  variant="secondary"
-                  label={tm("retry")}
-                  onPress={() => void list.fetchNextPage()}
+                {newButton("primary")}
+                <Chips
+                  label={t("archiveTabs")}
+                  choices={[
+                    { value: "active", label: t("tabActive") },
+                    {
+                      value: "archived",
+                      label: `${t("tabArchived")} (${first?.archivedCount ?? 0})`,
+                    },
+                  ]}
+                  value={archived ? "archived" : "active"}
+                  onChange={(v) => setArchived(v === "archived")}
                 />
+                {deleted === "1" ? (
+                  <Notice tone="success">{t("deleted")}</Notice>
+                ) : null}
               </View>
-            ) : undefined
-          }
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={refresh}
-              tintColor={colors.brand700}
-              colors={[colors.brand700]}
-            />
-          }
-        />
+            }
+            ListEmptyComponent={
+              <EmptyState
+                icon={
+                  <Newspaper size={32} color={colors.slate400} aria-hidden />
+                }
+                title={t("empty")}
+                hint={t("emptyHint")}
+                action={newButton("secondary")}
+              />
+            }
+            onEndReached={() => {
+              if (list.hasNextPage && !list.isFetchingNextPage)
+                void list.fetchNextPage();
+            }}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              list.isFetchingNextPage ? (
+                <Loading inline />
+              ) : list.isFetchNextPageError ? (
+                <View style={styles.footer}>
+                  <Text variant="small" tone="muted" center>
+                    {tm("generic")}
+                  </Text>
+                  <Button
+                    variant="secondary"
+                    label={tm("retry")}
+                    onPress={() => void list.fetchNextPage()}
+                  />
+                </View>
+              ) : undefined
+            }
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={refresh}
+                tintColor={colors.brand700}
+                colors={[colors.brand700]}
+              />
+            }
+          />
+        </ScreenView>
       )}
     </>
   );
