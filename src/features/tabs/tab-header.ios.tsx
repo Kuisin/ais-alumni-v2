@@ -10,9 +10,11 @@ import { colors } from "@/ui";
 
 /**
  * Every tab's header on iOS: マイページ (the member's photo, with the number of
- * follow requests waiting) at the left and お知らせ's bell (unread count) at
- * the right, as native bar items — so on the iPhone Duo iOS moves them into
- * its vertical bar above the tab bar, which it doesn't do with React views.
+ * follow requests waiting) and お知らせ's bell (unread count), both as native
+ * items on the right — so on the iPhone Duo iOS keeps them together in its
+ * vertical bar above the tab bar (React views stay in the header). A left
+ * item moved between the header and the vertical bar as the screen
+ * updated, so both are right items.
  * Android and the web: tab-header.tsx.
  */
 export function useTabHeaderOptions(): NativeStackNavigationOptions {
@@ -57,7 +59,8 @@ export function useTabHeaderOptions(): NativeStackNavigationOptions {
     onPress: () => router.push("/notifications"),
   };
   return {
-    unstable_headerLeftItems: () => [profile],
-    unstable_headerRightItems: () => [bell],
+    unstable_headerLeftItems: () => [],
+    // The first right item sits outermost: the photo above the bell.
+    unstable_headerRightItems: () => [profile, bell],
   };
 }
