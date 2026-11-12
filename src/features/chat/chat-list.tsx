@@ -2,7 +2,6 @@ import type { ChatList, ChatListRow } from "@contract/chat";
 import type { Locale } from "@contract/core";
 import {
   Link,
-  Stack,
   useFocusEffect,
   useLocalSearchParams,
   useRouter,
@@ -31,9 +30,9 @@ import { useLocale, useTranslations } from "use-intl";
 import { useRealtimeLive } from "@/lib/realtime";
 import {
   Avatar,
+  Button,
   colors,
   EmptyState,
-  HeaderButton,
   Panes,
   QueryState,
   ScreenView,
@@ -68,13 +67,12 @@ const PREVIEW_HEIGHT = 460;
 /**
  * チャット (the website's /app/chat): talks and group chats, newest
  * activity first — search, filter chips, unread counts, 「あなた宛」 for
- * mentions; admins also see the groups they're not in. On a wide window
- * the selected talk (?room=) is beside the list (Panes).
+ * mentions; admins also see the groups they're not in. 「新しいトーク」 is
+ * at the top of the list. On a wide window the selected talk (?room=) is
+ * beside the list (Panes).
  */
 export function ChatListScreen() {
-  const t = useTranslations("chat");
   const tm = useTranslations("mobile.chat");
-  const router = useRouter();
   const { room } = useLocalSearchParams<{ room?: string }>();
   const live = useRealtimeLive();
   const list = useChatList();
@@ -94,19 +92,6 @@ export function ChatListScreen() {
 
   return (
     <ScreenView>
-      <Stack.Screen
-        options={{
-          headerRight: list.data?.canStartDirect
-            ? () => (
-                <HeaderButton
-                  label={t("newTalk")}
-                  icon={MessageCirclePlus}
-                  onPress={() => router.push("/chat/new")}
-                />
-              )
-            : undefined,
-        }}
-      />
       <Panes
         list={(wide) => (
           <>
@@ -228,6 +213,16 @@ function ChatListBody({
         ItemSeparatorComponent={RowSeparator}
         ListHeaderComponent={
           <View style={styles.toolbar}>
+            {data.canStartDirect ? (
+              <Button
+                variant="secondary"
+                label={t("newTalk")}
+                icon={(color) => (
+                  <MessageCirclePlus size={20} color={color} aria-hidden />
+                )}
+                onPress={() => router.push("/chat/new")}
+              />
+            ) : null}
             <View style={styles.search}>
               <Search size={16} color={colors.slate400} aria-hidden />
               <TextInput

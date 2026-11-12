@@ -1,6 +1,6 @@
 import type { MessageSummary, NewsSummary } from "@contract/news";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { Mail, Newspaper } from "lucide-react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Mail, Newspaper, Plus } from "lucide-react-native";
 import { type ReactElement, useEffect, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -14,7 +14,6 @@ import {
   colors,
   EmptyState,
   ErrorState,
-  HeaderButton,
   Loading,
   space,
   Text,
@@ -24,8 +23,9 @@ type Tab = "news" | "messages";
 
 /**
  * ニュース (the website's /app/news): pinned posts first, 10 per page,
- * loaded as the member scrolls. News authors get 「ニュースを作成」 in the
- * header (/news/new), like イベント's 「イベントを作成」. While messages are switched on (me.features.messages), a
+ * loaded as the member scrolls. News authors get 「ニュースを作成」 at the
+ * top of the list (/news/new), like イベント's 「イベントを作成」. While
+ * messages are switched on (me.features.messages), a
  * second tab lists あなた宛ての連絡 (?tab=messages).
  */
 export default function NewsScreen() {
@@ -40,21 +40,7 @@ export default function NewsScreen() {
   const t = useTranslations("news");
   const router = useRouter();
   const canCreate = useNewsList().data?.pages[0]?.canCreate ?? false;
-  const header = (
-    <Stack.Screen
-      options={{
-        headerRight: canCreate
-          ? () => (
-              <HeaderButton
-                label={t("create")}
-                onPress={() => router.push("/news/new")}
-              />
-            )
-          : undefined,
-      }}
-    />
-  );
-  const tabs = messagesOn ? (
+  const segments = messagesOn ? (
     <SegmentedTabs
       label={t("tabs.label")}
       value={tab}
@@ -68,15 +54,24 @@ export default function NewsScreen() {
       ]}
     />
   ) : null;
-  return (
-    <>
-      {header}
-      {tab === "messages" ? (
-        <MessagesTab tabs={tabs} />
-      ) : (
-        <NewsTab tabs={tabs} />
-      )}
-    </>
+  const tabs =
+    canCreate || segments ? (
+      <>
+        {canCreate ? (
+          <Button
+            variant="secondary"
+            label={t("create")}
+            icon={(color) => <Plus size={20} color={color} aria-hidden />}
+            onPress={() => router.push("/news/new")}
+          />
+        ) : null}
+        {segments}
+      </>
+    ) : null;
+  return tab === "messages" ? (
+    <MessagesTab tabs={tabs} />
+  ) : (
+    <NewsTab tabs={tabs} />
   );
 }
 

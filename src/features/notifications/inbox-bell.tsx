@@ -5,7 +5,7 @@ import { useTranslations } from "use-intl";
 import { useMe } from "@/lib/auth";
 import { CountDot, colors, TOUCH } from "@/ui";
 
-/** Home's header button to お知らせ, with the unseen count. */
+/** Every tab's header button to お知らせ, with the unseen count (Android, web; iOS: tab-header.ios.tsx). */
 export function InboxBell() {
   const t = useTranslations("mobile.inbox");
   const router = useRouter();
