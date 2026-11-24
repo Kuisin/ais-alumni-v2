@@ -37,12 +37,15 @@ const CLIENT_ID = "net.kailab.aisalumni";
 const KEYS = createRemoteJWKSet(new URL(`${ISSUER}/auth/keys`));
 
 /**
- * Who the token must be issued to: the app's bundle id. Expo Go's too on
- * servers that aren't production (developing the sign-in there).
+ * Who the token must be issued to: the app's bundle id. Expo Go's too only
+ * on a local development server: any Expo Go project can obtain a token for
+ * that audience (with a nonce it chose), and staging shares the production
+ * database — accepting it there would let such a project sign in as anyone.
  */
 function audiences(): string[] {
   const ids = [CLIENT_ID];
-  if (process.env.VERCEL_ENV !== "production") ids.push("host.exp.Exponent");
+  if (process.env.NODE_ENV !== "production" && !process.env.VERCEL)
+    ids.push("host.exp.Exponent");
   return ids;
 }
 

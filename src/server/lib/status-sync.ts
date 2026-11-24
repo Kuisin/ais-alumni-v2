@@ -2,6 +2,7 @@ import type { Prisma } from "@/server/generated/prisma/client";
 import { RoleKey } from "@/server/generated/prisma/enums";
 import { syncChatMembership } from "@/server/lib/chat-db";
 import { db } from "@/server/lib/db";
+import { trustedLinkWhere } from "@/server/lib/family-trust";
 import {
   childIsCurrent,
   PARENT_ROLES,
@@ -74,7 +75,7 @@ export async function syncMemberStatus(
   const parentRow = roles.find((r) => PARENT_ROLES.includes(r.role));
   if (parentRow) {
     const links = await client.familyLink.findMany({
-      where: { parentId: userId },
+      where: { parentId: userId, ...trustedLinkWhere },
       select: {
         childLeftYear: true,
         childCohort: { select: { elementaryEndYear: true } },

@@ -98,7 +98,7 @@ export function FamilyCard({ m }: { m: AdminMemberDetail }) {
                 </Text>
               )}
               <View style={styles.row}>
-                {!l.confirmed && l.other ? (
+                {!l.confirmed ? (
                   <Button
                     label={t("confirm")}
                     variant="secondary"

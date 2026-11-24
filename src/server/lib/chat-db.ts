@@ -19,6 +19,7 @@ import {
   directAllowed,
   mergeDirectRules,
 } from "@/server/lib/direct-policy";
+import { trustedLinkWhere } from "@/server/lib/family-trust";
 import {
   ADULTS_CHAT_ENABLED,
   CLASS_REPS_CHAT_ENABLED,
@@ -63,6 +64,7 @@ export async function syncChatMembership(
       },
       roles: { select: { role: true, cohortId: true, didGraduate: true } },
       parentLinks: {
+        where: trustedLinkWhere,
         select: {
           childCohortId: true,
           child: {

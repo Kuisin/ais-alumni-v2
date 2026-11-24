@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { RoleKey } from "@/server/generated/prisma/enums";
 import { db } from "@/server/lib/db";
+import { trustedLinkWhere } from "@/server/lib/family-trust";
 import { publishedWhere } from "@/server/lib/news";
 import {
   type AudienceViewer,
@@ -14,7 +15,7 @@ import type { CurrentUser } from "@/server/lib/session";
 export const newsViewer = cache(
   async (user: CurrentUser): Promise<AudienceViewer> => {
     const links = await db.familyLink.findMany({
-      where: { parentId: user.id },
+      where: { parentId: user.id, ...trustedLinkWhere },
       select: {
         childCohortId: true,
         child: {

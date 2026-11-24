@@ -8,6 +8,12 @@ import { sendEmail } from "@/server/lib/email";
 export const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes (§4.1)
 export const OTP_MAX_ATTEMPTS = 5;
 export const OTP_MAX_PER_HOUR = 5;
+/**
+ * Codes per email + purpose a day. With OTP_MAX_ATTEMPTS each, it bounds how
+ * many guesses anyone gets at one address: requesting a new code resets the
+ * attempts, so without it 5 an hour allowed ~600 guesses a day, forever.
+ */
+export const OTP_MAX_PER_DAY = 10;
 export const OTP_RESEND_COOLDOWN_MS = 30 * 1000;
 
 export function normalizeEmail(email: string): string {
@@ -36,14 +42,20 @@ export async function issueOtp(params: {
   userId?: string;
 }): Promise<IssueResult> {
   const email = normalizeEmail(params.email);
-  const since = new Date(Date.now() - 60 * 60 * 1000);
+  const hourAgo = Date.now() - 60 * 60 * 1000;
   const recent = await db.otpCode.findMany({
-    where: { email, purpose: params.purpose, createdAt: { gte: since } },
+    where: {
+      email,
+      purpose: params.purpose,
+      createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+    },
     orderBy: { createdAt: "desc" },
     select: { createdAt: true },
   });
   if (
-    recent.length >= OTP_MAX_PER_HOUR ||
+    recent.length >= OTP_MAX_PER_DAY ||
+    recent.filter((r) => r.createdAt.getTime() >= hourAgo).length >=
+      OTP_MAX_PER_HOUR ||
     (recent[0] &&
       Date.now() - recent[0].createdAt.getTime() < OTP_RESEND_COOLDOWN_MS)
   ) {
@@ -113,8 +125,17 @@ export async function verifyOtp(params: {
   });
   if (!row) return { ok: false, error: "invalid" };
   if (row.expiresAt < new Date()) return { ok: false, error: "expired" };
-  if (row.attempts >= OTP_MAX_ATTEMPTS)
-    return { ok: false, error: "too_many_attempts" };
+  // Count the attempt before checking the code, atomically: concurrent
+  // guesses can't each pass a check of the same old count.
+  const counted = await db.otpCode.updateMany({
+    where: {
+      id: row.id,
+      consumedAt: null,
+      attempts: { lt: OTP_MAX_ATTEMPTS },
+    },
+    data: { attempts: { increment: 1 } },
+  });
+  if (counted.count === 0) return { ok: false, error: "too_many_attempts" };
 
   const code = params.code.replace(/\s/g, "");
   const expected = Buffer.from(row.codeHash, "hex");
@@ -125,10 +146,6 @@ export async function verifyOtp(params: {
     timingSafeEqual(expected, given);
 
   if (!match) {
-    await db.otpCode.update({
-      where: { id: row.id },
-      data: { attempts: { increment: 1 } },
-    });
     return {
       ok: false,
       error:

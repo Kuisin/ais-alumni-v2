@@ -6,6 +6,7 @@ import {
   TeacherStatus,
 } from "@/server/generated/prisma/enums";
 import { audiencesForRoles, rolesForAudiences } from "@/server/lib/audience";
+import { trustedLinkWhere } from "@/server/lib/family-trust";
 
 /**
  * Who receives a ニュース post (pure; unit-tested). A member receives it if
@@ -218,19 +219,22 @@ export function audienceUserWhere(s: AudienceSpec): Prisma.UserWhereInput {
       roles: { some: { role: { in: PARENT_ROLES } } },
       parentLinks: {
         some: {
-          OR: [
-            { childCohortId: { in: s.cohortIds } },
-            {
-              child: {
-                roles: {
-                  some: {
-                    role: { in: STUDENT_ROLES },
-                    cohortId: { in: s.cohortIds },
+          ...trustedLinkWhere,
+          AND: {
+            OR: [
+              { childCohortId: { in: s.cohortIds } },
+              {
+                child: {
+                  roles: {
+                    some: {
+                      role: { in: STUDENT_ROLES },
+                      cohortId: { in: s.cohortIds },
+                    },
                   },
                 },
               },
-            },
-          ],
+            ],
+          },
         },
       },
     });

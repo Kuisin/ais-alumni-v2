@@ -326,6 +326,10 @@ model FamilyLink {
   initiatedBy   FamilyLinkInitiator @default(PARENT)
   confirmedAt   DateTime?
   confirmedBy   String? // userId or "ADMIN"
+  /// Added: claimed by an already-approved member (not part of an application
+  /// the committee reviewed): grants nothing — chats, news, parent status —
+  /// until confirmed (src/server/lib/family.ts trustedLinkWhere)
+  unreviewed    Boolean             @default(false)
   createdAt     DateTime            @default(now())
 
   @@index([parentId])

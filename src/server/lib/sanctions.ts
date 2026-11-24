@@ -107,12 +107,18 @@ export const RESTRICTED_WRITES: readonly [
   ["admin/line/announce", ["POST"]],
   // フォロー: new follow requests (unfollowing is DELETE: allowed)
   ["members/[id]/follow", ["POST"]],
+  // 家族: requests to another member and children named on the profile
+  ["family/links", ["POST"]],
+  ["family/children", ["POST"]],
   // 招待 and 在籍確認 (vouching for an applicant)
   ["invites", ["POST"]],
   ["vouch/[id]", ["POST"]],
   // what other members see on the profile: 自己紹介 and the photo
   ["profile/about", ["PUT"]],
   ["profile/photo", ["POST"]],
+  // 学歴・職歴: shown on the profile, and new school / company names join
+  // everyone's suggestions
+  ["profile/history", ["POST"]],
 ];
 
 /** SUSPENDED / BANNED: the signed-in routes that still work. */
@@ -345,6 +351,8 @@ export async function liftSanction(
 ): Promise<Sanction> {
   const s = await db.sanction.findUnique({ where: { id: sanctionId } });
   if (!s) throw notFound();
+  // Like applySanction: another admin decides about an admin's own sanction.
+  if (s.userId === admin.id) throw new ApiError(400, "not_self");
   if (s.liftedAt) return s;
   const lifted = await db.$transaction(async (tx) => {
     const row = await tx.sanction.update({

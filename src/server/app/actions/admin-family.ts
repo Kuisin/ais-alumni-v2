@@ -106,7 +106,10 @@ export async function addFamilyLinkAction(
   return { ok: true, message: "family.linked" };
 }
 
-/** Confirm a pending link (both people have accounts). */
+/**
+ * Confirm a pending link: between two accounts (families merge), or a child
+ * named without an account (FamilyLink.unreviewed claims count from then).
+ */
 export async function confirmFamilyLinkAdminAction(
   linkId: string,
 ): Promise<AdminFamilyResult> {
@@ -114,9 +117,15 @@ export async function confirmFamilyLinkAdminAction(
   if (!admin || !isId(linkId))
     return { ok: false, message: "errors.forbidden" };
   const link = await db.familyLink.findUnique({ where: { id: linkId } });
-  if (!link || link.confirmedAt || !link.childId)
+  if (!link || link.confirmedAt)
     return { ok: false, message: "family.errors.notFound" };
-  await db.$transaction((tx) => confirmLinkInTx(tx, link, "ADMIN"));
+  if (link.childId)
+    await db.$transaction((tx) => confirmLinkInTx(tx, link, "ADMIN"));
+  else
+    await db.familyLink.update({
+      where: { id: link.id },
+      data: { confirmedAt: new Date(), confirmedBy: "ADMIN" },
+    });
   await audit(
     admin.id,
     "family.confirmed",
@@ -126,7 +135,9 @@ export async function confirmFamilyLinkAdminAction(
       childId: link.childId,
     },
   );
-  await afterChange([link.parentId, link.childId]);
+  await afterChange(
+    link.childId ? [link.parentId, link.childId] : [link.parentId],
+  );
   return { ok: true, message: "family.confirmed" };
 }
 

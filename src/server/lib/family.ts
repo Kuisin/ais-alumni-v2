@@ -355,6 +355,8 @@ export async function createFamilyLink(
     },
   });
   if (pending >= MAX_PENDING_LINKS) return { ok: false, error: "tooMany" };
+  // An approved member's own claim wasn't reviewed with an application.
+  const unreviewed = me.state === AccountState.ACTIVE;
 
   if ("childName" in input) {
     const link = await db.$transaction(async (tx) => {
@@ -368,6 +370,7 @@ export async function createFamilyLink(
           childCohortId: input.childCohortId ?? null,
           childLeftYear: input.childLeftYear ?? null,
           initiatedBy: FamilyLinkInitiator.PARENT,
+          unreviewed,
         },
         select: { id: true },
       });
@@ -408,6 +411,7 @@ export async function createFamilyLink(
           input.direction === "child"
             ? FamilyLinkInitiator.PARENT
             : FamilyLinkInitiator.CHILD,
+        unreviewed,
       },
       select: { id: true },
     });

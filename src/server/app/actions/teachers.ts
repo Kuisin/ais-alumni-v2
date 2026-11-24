@@ -6,23 +6,34 @@ import { AccountState, RoleKey } from "@/server/generated/prisma/enums";
 import { audit } from "@/server/lib/audit";
 import { db } from "@/server/lib/db";
 import { calendarYear } from "@/server/lib/school";
-import { actionTeacherRegistrar } from "@/server/lib/session";
+import { AuthError, actionTeacherRegistrar } from "@/server/lib/session";
 import { syncMemberStatus } from "@/server/lib/status-sync";
 
 const idSchema = z.string().min(1).max(64);
 
 /**
  * 教職員登録担当 / admin: make a member a current teacher (現職). Adds the
- * 教職員 role, or clears the leave year of an existing one.
+ * 教職員 role, or clears the leave year of an existing one. A 教職員登録担当
+ * can't make themselves one (being a current teacher opens minors' profiles
+ * and wider posting) — only an admin can — and nobody can make a current
+ * student one.
  */
 export async function assignTeacherAction(fd: FormData): Promise<void> {
   const actor = await actionTeacherRegistrar();
   const userId = idSchema.parse(fd.get("userId"));
+  if (userId === actor.id && !actor.isAdmin) throw new AuthError("forbidden");
   const target = await db.user.findUnique({
     where: { id: userId },
-    select: { state: true },
+    select: {
+      state: true,
+      roles: {
+        where: { role: RoleKey.CURRENT_STUDENT },
+        select: { id: true },
+      },
+    },
   });
   if (target?.state !== AccountState.ACTIVE) return;
+  if (target.roles.length) throw new AuthError("forbidden");
   await db.$transaction(async (tx) => {
     await tx.userRole.upsert({
       where: { userId_role: { userId, role: RoleKey.TEACHER } },

@@ -1,3 +1,4 @@
+import { decodableImage } from "@/server/components/profile/image-type";
 import { roundImagePng } from "@/server/lib/og/image-response";
 import { getPrivate, verifySignedFile } from "@/server/lib/storage";
 
@@ -28,6 +29,9 @@ export async function GET(request: Request) {
     const bytes = new Uint8Array(
       await new Response(file.body as BodyInit).arrayBuffer(),
     );
+    // Too many pixels to decode safely (older uploads weren't checked).
+    if (!decodableImage(bytes))
+      return new Response("Image too large", { status: 422 });
     const png = await roundImagePng(bytes, file.contentType, size);
     return new Response(png as BodyInit, {
       headers: {

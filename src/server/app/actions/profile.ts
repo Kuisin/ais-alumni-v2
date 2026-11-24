@@ -5,6 +5,7 @@ import { refresh } from "next/cache";
 import { z } from "zod";
 import {
   AVATAR_MAX_BYTES,
+  decodableImage,
   detectAvatarType,
 } from "@/server/components/profile/image-type";
 import {
@@ -193,6 +194,9 @@ export async function uploadAvatarAction(
   const type = detectAvatarType(buf);
   if (!type)
     return { ok: false, message: "errors.fileType", fields: ["avatar"] };
+  // Rounded for the iOS header on the server: refuse what can't be decoded.
+  if (!decodableImage(buf))
+    return { ok: false, message: "errors.fileSize", fields: ["avatar"] };
 
   const stored = await putPrivate(
     `avatars/${me.id}/${randomUUID()}.${type.ext}`,

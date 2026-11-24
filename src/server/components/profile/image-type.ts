@@ -26,3 +26,55 @@ export function detectAvatarType(bytes: Uint8Array): AvatarType | null {
   }
   return null;
 }
+
+/**
+ * Most pixels an image may have to be decoded on the server (rounded photos,
+ * /api/files?round=). A few hundred KB of PNG can declare 16000×16000 pixels
+ * and take over a gigabyte to decode; a phone photo is 12–48 MP.
+ */
+export const IMAGE_MAX_PIXELS = 50_000_000;
+
+/**
+ * Width and height from a PNG's IHDR or a JPEG's SOF header, without
+ * decoding; null if they can't be read.
+ */
+export function imageDimensions(
+  bytes: Uint8Array,
+): { width: number; height: number } | null {
+  const type = detectAvatarType(bytes);
+  if (!type) return null;
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (type.ext === "png") {
+    // signature (8), IHDR length (4) + type (4), then width, height
+    if (bytes.length < 24) return null;
+    return { width: view.getUint32(16), height: view.getUint32(20) };
+  }
+  // JPEG: walk the segments to the first start-of-frame marker.
+  let i = 2;
+  while (i + 9 < bytes.length) {
+    if (bytes[i] !== 0xff) return null;
+    const marker = bytes[i + 1];
+    if (marker === 0xff) {
+      i++;
+      continue;
+    }
+    const isSof =
+      marker >= 0xc0 &&
+      marker <= 0xcf &&
+      marker !== 0xc4 &&
+      marker !== 0xc8 &&
+      marker !== 0xcc;
+    if (isSof)
+      return { height: view.getUint16(i + 5), width: view.getUint16(i + 7) };
+    i += 2 + view.getUint16(i + 2);
+  }
+  return null;
+}
+
+/** Small enough to decode on the server (see IMAGE_MAX_PIXELS). */
+export function decodableImage(bytes: Uint8Array): boolean {
+  const d = imageDimensions(bytes);
+  return Boolean(
+    d && d.width > 0 && d.height > 0 && d.width * d.height <= IMAGE_MAX_PIXELS,
+  );
+}
